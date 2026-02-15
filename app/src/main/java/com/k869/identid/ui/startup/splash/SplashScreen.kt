@@ -21,33 +21,47 @@ import androidx.compose.animation.core.MutableTransitionState
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
+import androidx.compose.animation.slideIn
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.font.FontFamily
+import androidx.compose.ui.text.font.FontStyle
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.IntOffset
+import androidx.compose.ui.unit.IntSize
+import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
-import com.k869.identid.ui.component.AppIcons
-import com.k869.identid.ui.component.utils.OneTimeLaunchedEffect
-import com.k869.identid.ui.component.wrap.WrapImage
 import com.k869.identid.navigation.ModuleRoute
 import com.k869.identid.navigation.StartupScreens
+import com.k869.identid.ui.component.AppIcons
+import com.k869.identid.ui.component.preview.PreviewTheme
+import com.k869.identid.ui.component.utils.OneTimeLaunchedEffect
+import com.k869.identid.ui.component.wrap.WrapImage
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.emptyFlow
 import kotlinx.coroutines.flow.onEach
 
 @Composable
 fun SplashScreen(
     navController: NavController,
-    viewModel: SplashViewModel
+    viewModel: SplashViewModel,
 ) {
     val state: State by viewModel.viewState.collectAsStateWithLifecycle()
     Content(
@@ -67,7 +81,7 @@ fun SplashScreen(
                     }
                 }
             }
-        }
+        },
     )
 
     OneTimeLaunchedEffect {
@@ -79,38 +93,66 @@ fun SplashScreen(
 private fun Content(
     state: State,
     effectFlow: Flow<Effect>,
-    onNavigationRequested: (navigationEffect: Effect.Navigation) -> Unit
+    onNavigationRequested: (navigationEffect: Effect.Navigation) -> Unit,
 ) {
-    val visibilityState = remember {
-        MutableTransitionState(false).apply {
-            targetState = true
+    val visibilityState =
+        remember {
+            MutableTransitionState(false).apply {
+                targetState = true
+            }
         }
-    }
     Scaffold { paddingValues ->
         Box(
             Modifier
                 .fillMaxSize()
                 .padding(paddingValues)
                 .background(MaterialTheme.colorScheme.surface),
-            contentAlignment = Alignment.Center
+            contentAlignment = Alignment.Center,
         ) {
             AnimatedVisibility(
                 visibleState = visibilityState,
-                enter = fadeIn(animationSpec = tween(state.logoAnimationDuration)),
+                enter =
+                    fadeIn(animationSpec = tween(state.logoAnimationDuration)) +
+                        slideIn(
+                            animationSpec = tween(state.logoAnimationDuration),
+                            initialOffset = { fullSize -> IntOffset(fullSize.width / 4, 100) },
+                        ),
                 exit = fadeOut(animationSpec = tween(state.logoAnimationDuration)),
             ) {
-                WrapImage(
-                    iconData = AppIcons.LogoFull
-                )
+                Column {
+                    WrapImage(
+                        iconData = AppIcons.LogoFull,
+                        modifier = Modifier.size(250.dp),
+                    )
+                    Text(
+                        text = "IdentID",
+                        fontSize = 50.sp,
+                        fontWeight = FontWeight.Bold,
+                        modifier = Modifier.align(Alignment.CenterHorizontally),
+                    )
+                }
             }
         }
     }
 
     LaunchedEffect(Unit) {
-        effectFlow.onEach { effect ->
-            when (effect) {
-                is Effect.Navigation -> onNavigationRequested(effect)
-            }
-        }.collect()
+        effectFlow
+            .onEach { effect ->
+                when (effect) {
+                    is Effect.Navigation -> onNavigationRequested(effect)
+                }
+            }.collect()
+    }
+}
+
+@Preview
+@Composable
+private fun SplashScreenPreview() {
+    PreviewTheme {
+        Content(
+            state = State(),
+            effectFlow = emptyFlow(),
+            onNavigationRequested = {},
+        )
     }
 }

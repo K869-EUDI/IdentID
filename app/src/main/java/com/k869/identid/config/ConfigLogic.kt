@@ -20,7 +20,6 @@ import com.k869.identid.BuildConfig
 import eu.europa.ec.eudi.rqesui.infrastructure.config.EudiRQESUiConfig
 
 interface ConfigLogic {
-
     /**
      * Build Type.
      */
@@ -56,18 +55,20 @@ interface ConfigLogic {
 }
 
 enum class AppFlavor {
-    DEV, DEMO
+    DEV,
+    DEMO,
 }
 
 enum class AppBuildType {
-    DEBUG, RELEASE;
+    DEBUG,
+    RELEASE,
+    ;
 
     companion object {
-        fun getType(): AppBuildType {
-            return when (BuildConfig.BUILD_TYPE) {
+        fun getType(): AppBuildType =
+            when (BuildConfig.BUILD_TYPE) {
                 "debug" -> DEBUG
                 else -> RELEASE
             }
-        }
     }
 }

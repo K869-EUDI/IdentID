@@ -18,42 +18,45 @@ package com.k869.identid.config
 
 import android.content.Context
 import com.k869.identid.BuildConfig
+import com.k869.identid.R
 import eu.europa.ec.eudi.rqes.HashAlgorithmOID
 import eu.europa.ec.eudi.rqesui.domain.extension.toUriOrEmpty
 import eu.europa.ec.eudi.rqesui.infrastructure.config.DocumentRetrievalConfig
 import eu.europa.ec.eudi.rqesui.infrastructure.config.EudiRQESUiConfig
 import eu.europa.ec.eudi.rqesui.infrastructure.config.data.QtspData
-import com.k869.identid.R
 import java.net.URI
 
-class RQESConfigImpl(val context: Context) : EudiRQESUiConfig {
-
+class RQESConfigImpl(
+    val context: Context,
+) : EudiRQESUiConfig {
     override val qtsps: List<QtspData>
-        get() = listOf(
-            QtspData(
-                name = "Wallet-Centric",
-                endpoint = "https://walletcentric.signer.eudiw.dev/csc/v2".toUriOrEmpty(),
-                tsaUrl = "https://timestamp.sectigo.com/qualified",
-                clientId = "wallet-client",
-                clientSecret = "somesecret2",
-                authFlowRedirectionURI = URI.create(BuildConfig.RQES_DEEPLINK),
-                hashAlgorithm = HashAlgorithmOID.SHA_256,
+        get() =
+            listOf(
+                QtspData(
+                    name = "Wallet-Centric",
+                    endpoint = "https://walletcentric.signer.eudiw.dev/csc/v2".toUriOrEmpty(),
+                    tsaUrl = "https://timestamp.sectigo.com/qualified",
+                    clientId = "wallet-client",
+                    clientSecret = "somesecret2",
+                    authFlowRedirectionURI = URI.create(BuildConfig.RQES_DEEPLINK),
+                    hashAlgorithm = HashAlgorithmOID.SHA_256,
+                ),
             )
-        )
 
     override val printLogs: Boolean get() = BuildConfig.DEBUG
 
     override val documentRetrievalConfig: DocumentRetrievalConfig
-        get() = DocumentRetrievalConfig.X509Certificates(
-            context,
-            listOf(
-                R.raw.pidissuerca02_cz,
-                R.raw.pidissuerca02_ee,
-                R.raw.pidissuerca02_eu,
-                R.raw.pidissuerca02_lu,
-                R.raw.pidissuerca02_nl,
-                R.raw.pidissuerca02_pt,
-                R.raw.pidissuerca02_ut
+        get() =
+            DocumentRetrievalConfig.X509Certificates(
+                context,
+                listOf(
+                    R.raw.pidissuerca02_cz,
+                    R.raw.pidissuerca02_ee,
+                    R.raw.pidissuerca02_eu,
+                    R.raw.pidissuerca02_lu,
+                    R.raw.pidissuerca02_nl,
+                    R.raw.pidissuerca02_pt,
+                    R.raw.pidissuerca02_ut,
+                ),
             )
-        )
 }

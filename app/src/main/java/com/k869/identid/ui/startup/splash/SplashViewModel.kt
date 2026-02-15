@@ -18,17 +18,17 @@ package com.k869.identid.ui.startup.splash
 
 import androidx.lifecycle.viewModelScope
 import com.k869.identid.interactor.startup.SplashInteractor
+import com.k869.identid.navigation.ModuleRoute
 import com.k869.identid.ui.mvi.MviViewModel
 import com.k869.identid.ui.mvi.ViewEvent
 import com.k869.identid.ui.mvi.ViewSideEffect
 import com.k869.identid.ui.mvi.ViewState
-import com.k869.identid.navigation.ModuleRoute
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import org.koin.android.annotation.KoinViewModel
 
 data class State(
-    val logoAnimationDuration: Int = 1500
+    val logoAnimationDuration: Int = 750,
 ) : ViewState
 
 sealed class Event : ViewEvent {
@@ -36,10 +36,14 @@ sealed class Event : ViewEvent {
 }
 
 sealed class Effect : ViewSideEffect {
-
     sealed class Navigation : Effect() {
-        data class SwitchModule(val moduleRoute: ModuleRoute) : Navigation()
-        data class SwitchScreen(val route: String) : Navigation()
+        data class SwitchModule(
+            val moduleRoute: ModuleRoute,
+        ) : Navigation()
+
+        data class SwitchScreen(
+            val route: String,
+        ) : Navigation()
     }
 }
 

@@ -22,24 +22,25 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.navigation
 import androidx.navigation.navDeepLink
 import com.k869.identid.BuildConfig
-import com.k869.identid.ui.startup.splash.SplashScreen
 import com.k869.identid.navigation.ModuleRoute
 import com.k869.identid.navigation.StartupScreens
+import com.k869.identid.ui.startup.splash.SplashScreen
 import org.koin.androidx.compose.koinViewModel
 
 fun NavGraphBuilder.featureStartupGraph(navController: NavController) {
     navigation(
         startDestination = StartupScreens.Splash.screenRoute,
-        route = ModuleRoute.StartupModule.route
+        route = ModuleRoute.StartupModule.route,
     ) {
         composable(
             route = StartupScreens.Splash.screenRoute,
-            deepLinks = listOf(
-                navDeepLink {
-                    uriPattern =
-                        BuildConfig.DEEPLINK + StartupScreens.Splash.screenRoute
-                }
-            )
+            deepLinks =
+                listOf(
+                    navDeepLink {
+                        uriPattern =
+                            BuildConfig.DEEPLINK + StartupScreens.Splash.screenRoute
+                    },
+                ),
         ) {
             SplashScreen(navController, koinViewModel())
         }

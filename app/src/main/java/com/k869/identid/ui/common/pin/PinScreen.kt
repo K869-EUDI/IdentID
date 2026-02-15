@@ -43,9 +43,10 @@ import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
-import com.k869.identid.model.common.PinFlow
-import com.k869.identid.util.common.TestTag
 import com.k869.identid.R
+import com.k869.identid.extension.ui.finish
+import com.k869.identid.model.common.PinFlow
+import com.k869.identid.navigation.CommonScreens
 import com.k869.identid.ui.component.AppIconAndText
 import com.k869.identid.ui.component.AppIconAndTextDataUi
 import com.k869.identid.ui.component.content.ContentScreen
@@ -63,8 +64,7 @@ import com.k869.identid.ui.component.wrap.StickyBottomType
 import com.k869.identid.ui.component.wrap.WrapModalBottomSheet
 import com.k869.identid.ui.component.wrap.WrapPinTextField
 import com.k869.identid.ui.component.wrap.WrapStickyBottomContent
-import com.k869.identid.extension.ui.finish
-import com.k869.identid.navigation.CommonScreens
+import com.k869.identid.util.common.TestTag
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.Flow
@@ -84,9 +84,10 @@ fun PinScreen(
 
     val isBottomSheetOpen = state.isBottomSheetOpen
     val scope = rememberCoroutineScope()
-    val bottomSheetState = rememberModalBottomSheetState(
-        skipPartiallyExpanded = true
-    )
+    val bottomSheetState =
+        rememberModalBottomSheetState(
+            skipPartiallyExpanded = true,
+        )
 
     ContentScreen(
         isLoading = state.isLoading,
@@ -95,25 +96,29 @@ fun PinScreen(
         imePaddingConfig = ImePaddingConfig.ONLY_CONTENT,
         stickyBottom = { paddingValues ->
             WrapStickyBottomContent(
-                modifier = Modifier
-                    .testTag(TestTag.PinScreen.BUTTON)
-                    .fillMaxWidth()
-                    .padding(paddingValues),
-                stickyBottomConfig = StickyBottomConfig(
-                    type = StickyBottomType.OneButton(
-                        config = ButtonConfig(
-                            type = ButtonType.PRIMARY,
-                            enabled = state.isButtonEnabled,
-                            onClick = {
-                                viewModel.setEvent(Event.NextButtonPressed(pin = state.pin))
-                            }
-                        )
-                    )
-                )
+                modifier =
+                    Modifier
+                        .testTag(TestTag.PinScreen.BUTTON)
+                        .fillMaxWidth()
+                        .padding(paddingValues),
+                stickyBottomConfig =
+                    StickyBottomConfig(
+                        type =
+                            StickyBottomType.OneButton(
+                                config =
+                                    ButtonConfig(
+                                        type = ButtonType.PRIMARY,
+                                        enabled = state.isButtonEnabled,
+                                        onClick = {
+                                            viewModel.setEvent(Event.NextButtonPressed(pin = state.pin))
+                                        },
+                                    ),
+                            ),
+                    ),
             ) {
                 Text(text = state.buttonText)
             }
-        }
+        },
     ) { paddingValues ->
         Content(
             state = state,
@@ -123,7 +128,7 @@ fun PinScreen(
                 handleNavigationEffect(
                     context,
                     navigationEffect,
-                    navController
+                    navController,
                 )
             },
             paddingValues = paddingValues,
@@ -136,16 +141,16 @@ fun PinScreen(
                 onDismissRequest = {
                     viewModel.setEvent(
                         Event.BottomSheet.UpdateBottomSheetState(
-                            isOpen = false
-                        )
+                            isOpen = false,
+                        ),
                     )
                 },
-                sheetState = bottomSheetState
+                sheetState = bottomSheetState,
             ) {
                 SheetContent(
                     onEventSent = {
                         viewModel.setEvent(it)
-                    }
+                    },
                 )
             }
         }
@@ -155,7 +160,7 @@ fun PinScreen(
 private fun handleNavigationEffect(
     context: Context,
     navigationEffect: Effect.Navigation,
-    navController: NavController
+    navController: NavController,
 ) {
     when (navigationEffect) {
         is Effect.Navigation.SwitchScreen -> {
@@ -166,10 +171,17 @@ private fun handleNavigationEffect(
             }
         }
 
-        is Effect.Navigation.SwitchModule -> navController.navigate(navigationEffect.moduleRoute.route)
+        is Effect.Navigation.SwitchModule -> {
+            navController.navigate(navigationEffect.moduleRoute.route)
+        }
 
-        is Effect.Navigation.Pop -> navController.popBackStack()
-        is Effect.Navigation.Finish -> context.finish()
+        is Effect.Navigation.Pop -> {
+            navController.popBackStack()
+        }
+
+        is Effect.Navigation.Finish -> {
+            context.finish()
+        }
     }
 }
 
@@ -185,91 +197,100 @@ private fun Content(
     modalBottomSheetState: SheetState,
 ) {
     Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .padding(paddingValues)
-            .verticalScroll(rememberScrollState())
+        modifier =
+            Modifier
+                .fillMaxSize()
+                .padding(paddingValues)
+                .verticalScroll(rememberScrollState()),
     ) {
         AppIconAndText(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(bottom = SPACING_LARGE.dp),
+            modifier =
+                Modifier
+                    .fillMaxWidth()
+                    .padding(bottom = SPACING_LARGE.dp),
             appIconAndTextData = AppIconAndTextDataUi(),
         )
 
         Column(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(vertical = SPACING_LARGE.dp),
-            verticalArrangement = Arrangement.spacedBy(SPACING_SMALL.dp, Alignment.Top)
+            modifier =
+                Modifier
+                    .fillMaxWidth()
+                    .padding(vertical = SPACING_LARGE.dp),
+            verticalArrangement = Arrangement.spacedBy(SPACING_SMALL.dp, Alignment.Top),
         ) {
             Text(
                 text = state.title,
                 modifier = Modifier.testTag(TestTag.PinScreen.TITLE),
-                style = MaterialTheme.typography.headlineMedium.copy(
-                    color = MaterialTheme.colorScheme.onSurface
-                )
+                style =
+                    MaterialTheme.typography.headlineMedium.copy(
+                        color = MaterialTheme.colorScheme.onSurface,
+                    ),
             )
             Text(
                 text = state.subtitle,
-                style = MaterialTheme.typography.bodyLarge.copy(
-                    color = MaterialTheme.colorScheme.onSurface
-                )
+                style =
+                    MaterialTheme.typography.bodyLarge.copy(
+                        color = MaterialTheme.colorScheme.onSurface,
+                    ),
             )
         }
 
         Column(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(top = SPACING_LARGE.dp),
-            verticalArrangement = Arrangement.spacedBy(SPACING_SMALL.dp, Alignment.Top)
+            modifier =
+                Modifier
+                    .fillMaxWidth()
+                    .padding(top = SPACING_LARGE.dp),
+            verticalArrangement = Arrangement.spacedBy(SPACING_SMALL.dp, Alignment.Top),
         ) {
             PinFieldLayout(
                 modifier = Modifier.fillMaxWidth(),
                 state = state,
                 onPinInput = { quickPin ->
                     onEventSend(Event.OnQuickPinEntered(quickPin))
-                }
+                },
             )
         }
     }
 
     LaunchedEffect(Unit) {
-        effectFlow.onEach { effect ->
-            when (effect) {
-                is Effect.Navigation -> onNavigationRequested(effect)
+        effectFlow
+            .onEach { effect ->
+                when (effect) {
+                    is Effect.Navigation -> {
+                        onNavigationRequested(effect)
+                    }
 
-                is Effect.CloseBottomSheet -> {
-                    coroutineScope.launch {
-                        modalBottomSheetState.hide()
-                    }.invokeOnCompletion {
-                        if (!modalBottomSheetState.isVisible) {
-                            onEventSend(Event.BottomSheet.UpdateBottomSheetState(isOpen = false))
-                        }
+                    is Effect.CloseBottomSheet -> {
+                        coroutineScope
+                            .launch {
+                                modalBottomSheetState.hide()
+                            }.invokeOnCompletion {
+                                if (!modalBottomSheetState.isVisible) {
+                                    onEventSend(Event.BottomSheet.UpdateBottomSheetState(isOpen = false))
+                                }
+                            }
+                    }
+
+                    is Effect.ShowBottomSheet -> {
+                        onEventSend(Event.BottomSheet.UpdateBottomSheetState(isOpen = true))
                     }
                 }
-
-                is Effect.ShowBottomSheet -> {
-                    onEventSend(Event.BottomSheet.UpdateBottomSheetState(isOpen = true))
-                }
-            }
-        }.collect()
+            }.collect()
     }
 }
 
 @Composable
-private fun SheetContent(
-    onEventSent: (event: Event) -> Unit
-) {
+private fun SheetContent(onEventSent: (event: Event) -> Unit) {
     DialogBottomSheet(
-        textData = BottomSheetTextDataUi(
-            title = stringResource(id = R.string.quick_pin_bottom_sheet_cancel_title),
-            message = stringResource(id = R.string.quick_pin_bottom_sheet_cancel_subtitle),
-            positiveButtonText = stringResource(id = R.string.quick_pin_bottom_sheet_cancel_primary_button_text),
-            negativeButtonText = stringResource(id = R.string.quick_pin_bottom_sheet_cancel_secondary_button_text),
-        ),
+        textData =
+            BottomSheetTextDataUi(
+                title = stringResource(id = R.string.quick_pin_bottom_sheet_cancel_title),
+                message = stringResource(id = R.string.quick_pin_bottom_sheet_cancel_subtitle),
+                positiveButtonText = stringResource(id = R.string.quick_pin_bottom_sheet_cancel_primary_button_text),
+                negativeButtonText = stringResource(id = R.string.quick_pin_bottom_sheet_cancel_secondary_button_text),
+            ),
         onPositiveClick = { onEventSent(Event.BottomSheet.Cancel.PrimaryButtonPressed) },
-        onNegativeClick = { onEventSent(Event.BottomSheet.Cancel.SecondaryButtonPressed) }
+        onNegativeClick = { onEventSent(Event.BottomSheet.Cancel.SecondaryButtonPressed) },
     )
 }
 
@@ -288,7 +309,7 @@ private fun PinFieldLayout(
         visualTransformation = PasswordVisualTransformation(),
         pinWidth = 42.dp,
         clearCode = state.resetPin,
-        focusOnCreate = true
+        focusOnCreate = true,
     )
 }
 
@@ -298,10 +319,11 @@ private fun PinFieldLayout(
 private fun PinScreenEmptyPreview() {
     PreviewTheme {
         Content(
-            state = State(
-                pinFlow = PinFlow.CREATE,
-                pinState = PinValidationState.ENTER
-            ),
+            state =
+                State(
+                    pinFlow = PinFlow.CREATE,
+                    pinState = PinValidationState.ENTER,
+                ),
             effectFlow = Channel<Effect>().receiveAsFlow(),
             onEventSend = {},
             onNavigationRequested = {},
@@ -317,7 +339,7 @@ private fun PinScreenEmptyPreview() {
 private fun SheetContentCancelPreview() {
     PreviewTheme {
         SheetContent(
-            onEventSent = {}
+            onEventSent = {},
         )
     }
 }

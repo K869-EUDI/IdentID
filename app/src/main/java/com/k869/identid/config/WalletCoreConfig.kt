@@ -25,8 +25,6 @@ import eu.europa.ec.eudi.wallet.issue.openid4vci.OpenId4VciManager
 import java.time.Duration
 
 interface WalletCoreConfig {
-
-
     /**
      * Holds the configuration settings for the EudiWallet.
      * This configuration includes settings such as API endpoints, cryptographic parameters,
@@ -62,96 +60,105 @@ interface WalletCoreConfig {
      * currently defined for that category.
      */
     val documentCategories: DocumentCategories
-        get() = DocumentCategories(
-            value = mapOf(
-                DocumentCategory.Government to listOf(
-                    DocumentIdentifier.MdocPid,
-                    DocumentIdentifier.SdJwtPid,
-                    DocumentIdentifier.OTHER(
-                        formatType = "org.iso.18013.5.1.mDL"
+        get() =
+            DocumentCategories(
+                value =
+                    mapOf(
+                        DocumentCategory.Government to
+                            listOf(
+                                DocumentIdentifier.MdocPid,
+                                DocumentIdentifier.SdJwtPid,
+                                DocumentIdentifier.OTHER(
+                                    formatType = "org.iso.18013.5.1.mDL",
+                                ),
+                                DocumentIdentifier.OTHER(
+                                    formatType = "eu.europa.ec.eudi.tax.1",
+                                ),
+                                DocumentIdentifier.OTHER(
+                                    formatType = "urn:eu.europa.ec.eudi:tax:1",
+                                ),
+                                DocumentIdentifier.OTHER(
+                                    formatType = "eu.europa.ec.eudi.pseudonym.age_over_18.1",
+                                ),
+                                DocumentIdentifier.OTHER(
+                                    formatType = "urn:eu.europa.ec.eudi:pseudonym_age_over_18:1",
+                                ),
+                                DocumentIdentifier.OTHER(
+                                    formatType = "eu.europa.ec.eudi.pseudonym.age_over_18.deferred_endpoint",
+                                ),
+                                DocumentIdentifier.OTHER(
+                                    formatType = "eu.europa.ec.eudi.cor.1",
+                                ),
+                            ),
+                        DocumentCategory.Travel to
+                            listOf(
+                                DocumentIdentifier.OTHER(
+                                    formatType = "org.iso.23220.2.photoid.1",
+                                ),
+                                DocumentIdentifier.OTHER(
+                                    formatType = "org.iso.23220.photoID.1",
+                                ),
+                                DocumentIdentifier.OTHER(
+                                    formatType = "org.iso.18013.5.1.reservation",
+                                ),
+                            ),
+                        DocumentCategory.Finance to
+                            listOf(
+                                DocumentIdentifier.OTHER(
+                                    formatType = "eu.europa.ec.eudi.iban.1",
+                                ),
+                                DocumentIdentifier.OTHER(
+                                    formatType = "urn:eu.europa.ec.eudi:iban:1",
+                                ),
+                            ),
+                        DocumentCategory.Education to emptyList(),
+                        DocumentCategory.Health to
+                            listOf(
+                                DocumentIdentifier.OTHER(
+                                    formatType = "eu.europa.ec.eudi.hiid.1",
+                                ),
+                                DocumentIdentifier.OTHER(
+                                    formatType = "urn:eu.europa.ec.eudi:hiid:1",
+                                ),
+                                DocumentIdentifier.OTHER(
+                                    formatType = "eu.europa.ec.eudi.ehic.1",
+                                ),
+                                DocumentIdentifier.OTHER(
+                                    formatType = "urn:eu.europa.ec.eudi:ehic:1",
+                                ),
+                            ),
+                        DocumentCategory.SocialSecurity to
+                            listOf(
+                                DocumentIdentifier.OTHER(
+                                    formatType = "eu.europa.ec.eudi.pda1.1",
+                                ),
+                                DocumentIdentifier.OTHER(
+                                    formatType = "urn:eu.europa.ec.eudi:pda1:1",
+                                ),
+                            ),
+                        DocumentCategory.Retail to
+                            listOf(
+                                DocumentIdentifier.OTHER(
+                                    formatType = "eu.europa.ec.eudi.loyalty.1",
+                                ),
+                                DocumentIdentifier.OTHER(
+                                    formatType = "eu.europa.ec.eudi.msisdn.1",
+                                ),
+                                DocumentIdentifier.OTHER(
+                                    formatType = "urn:eu.europa.ec.eudi:msisdn:1",
+                                ),
+                            ),
+                        DocumentCategory.Other to
+                            listOf(
+                                DocumentIdentifier.OTHER(
+                                    formatType = "eu.europa.ec.eudi.por.1",
+                                ),
+                                DocumentIdentifier.OTHER(
+                                    formatType = "urn:eu.europa.ec.eudi:por:1",
+                                ),
+                            ),
                     ),
-                    DocumentIdentifier.OTHER(
-                        formatType = "eu.europa.ec.eudi.tax.1"
-                    ),
-                    DocumentIdentifier.OTHER(
-                        formatType = "urn:eu.europa.ec.eudi:tax:1"
-                    ),
-                    DocumentIdentifier.OTHER(
-                        formatType = "eu.europa.ec.eudi.pseudonym.age_over_18.1"
-                    ),
-                    DocumentIdentifier.OTHER(
-                        formatType = "urn:eu.europa.ec.eudi:pseudonym_age_over_18:1"
-                    ),
-                    DocumentIdentifier.OTHER(
-                        formatType = "eu.europa.ec.eudi.pseudonym.age_over_18.deferred_endpoint"
-                    ),
-                    DocumentIdentifier.OTHER(
-                        formatType = "eu.europa.ec.eudi.cor.1"
-                    ),
-                ),
-                DocumentCategory.Travel to listOf(
-                    DocumentIdentifier.OTHER(
-                        formatType = "org.iso.23220.2.photoid.1"
-                    ),
-                    DocumentIdentifier.OTHER(
-                        formatType = "org.iso.23220.photoID.1"
-                    ),
-                    DocumentIdentifier.OTHER(
-                        formatType = "org.iso.18013.5.1.reservation"
-                    ),
-                ),
-                DocumentCategory.Finance to listOf(
-                    DocumentIdentifier.OTHER(
-                        formatType = "eu.europa.ec.eudi.iban.1"
-                    ),
-                    DocumentIdentifier.OTHER(
-                        formatType = "urn:eu.europa.ec.eudi:iban:1"
-                    ),
-                ),
-                DocumentCategory.Education to emptyList(),
-                DocumentCategory.Health to listOf(
-                    DocumentIdentifier.OTHER(
-                        formatType = "eu.europa.ec.eudi.hiid.1"
-                    ),
-                    DocumentIdentifier.OTHER(
-                        formatType = "urn:eu.europa.ec.eudi:hiid:1"
-                    ),
-                    DocumentIdentifier.OTHER(
-                        formatType = "eu.europa.ec.eudi.ehic.1"
-                    ),
-                    DocumentIdentifier.OTHER(
-                        formatType = "urn:eu.europa.ec.eudi:ehic:1"
-                    ),
-                ),
-                DocumentCategory.SocialSecurity to listOf(
-                    DocumentIdentifier.OTHER(
-                        formatType = "eu.europa.ec.eudi.pda1.1"
-                    ),
-                    DocumentIdentifier.OTHER(
-                        formatType = "urn:eu.europa.ec.eudi:pda1:1"
-                    ),
-                ),
-                DocumentCategory.Retail to listOf(
-                    DocumentIdentifier.OTHER(
-                        formatType = "eu.europa.ec.eudi.loyalty.1"
-                    ),
-                    DocumentIdentifier.OTHER(
-                        formatType = "eu.europa.ec.eudi.msisdn.1"
-                    ),
-                    DocumentIdentifier.OTHER(
-                        formatType = "urn:eu.europa.ec.eudi:msisdn:1"
-                    ),
-                ),
-                DocumentCategory.Other to listOf(
-                    DocumentIdentifier.OTHER(
-                        formatType = "eu.europa.ec.eudi.por.1"
-                    ),
-                    DocumentIdentifier.OTHER(
-                        formatType = "urn:eu.europa.ec.eudi:por:1"
-                    ),
-                ),
             )
-        )
 
     /**
      * The interval at which revocations are checked.
@@ -181,22 +188,27 @@ interface WalletCoreConfig {
      * Any document type not listed in `documentSpecificRules` will use the `defaultRule`.
      */
     val documentIssuanceConfig: DocumentIssuanceConfig
-        get() = DocumentIssuanceConfig(
-            defaultRule = DocumentIssuanceRule(
-                policy = CredentialPolicy.RotateUse,
-                numberOfCredentials = 1
-            ),
-            documentSpecificRules = mapOf(
-                DocumentIdentifier.MdocPid to DocumentIssuanceRule(
-                    policy = CredentialPolicy.OneTimeUse,
-                    numberOfCredentials = 10
-                ),
-                DocumentIdentifier.SdJwtPid to DocumentIssuanceRule(
-                    policy = CredentialPolicy.OneTimeUse,
-                    numberOfCredentials = 10
-                ),
+        get() =
+            DocumentIssuanceConfig(
+                defaultRule =
+                    DocumentIssuanceRule(
+                        policy = CredentialPolicy.RotateUse,
+                        numberOfCredentials = 1,
+                    ),
+                documentSpecificRules =
+                    mapOf(
+                        DocumentIdentifier.MdocPid to
+                            DocumentIssuanceRule(
+                                policy = CredentialPolicy.OneTimeUse,
+                                numberOfCredentials = 10,
+                            ),
+                        DocumentIdentifier.SdJwtPid to
+                            DocumentIssuanceRule(
+                                policy = CredentialPolicy.OneTimeUse,
+                                numberOfCredentials = 10,
+                            ),
+                    ),
             )
-        )
 
     /**
      * Host for the Wallet Provider.

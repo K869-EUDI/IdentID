@@ -20,16 +20,15 @@ import android.app.Application
 import androidx.work.ExistingPeriodicWorkPolicy
 import androidx.work.PeriodicWorkRequest
 import androidx.work.WorkManager
-import com.k869.identid.di.setupKoin
 import com.k869.identid.config.ConfigLogic
 import com.k869.identid.config.WalletCoreConfig
+import com.k869.identid.di.setupKoin
 import com.k869.identid.worker.RevocationWorkManager
 import eu.europa.ec.eudi.rqesui.infrastructure.EudiRQESUi
 import org.koin.android.ext.android.inject
 import org.koin.core.KoinApplication
 
 class Application : Application() {
-
     private val configLogic: ConfigLogic by inject()
     private val walletCoreConfig: WalletCoreConfig by inject()
 
@@ -43,25 +42,24 @@ class Application : Application() {
         EudiRQESUi.setup(
             application = this@Application,
             config = configLogic.rqesConfig,
-            koinApplication = this@initializeRqes
+            koinApplication = this@initializeRqes,
         )
     }
 
-    private fun initializeKoin(): KoinApplication {
-        return setupKoin()
-    }
+    private fun initializeKoin(): KoinApplication = setupKoin()
 
     private fun initializeRevocationWorkManager() {
-
-        val periodicWorkRequest = PeriodicWorkRequest.Builder(
-            workerClass = RevocationWorkManager::class.java,
-            repeatInterval = walletCoreConfig.revocationInterval,
-        ).build()
+        val periodicWorkRequest =
+            PeriodicWorkRequest
+                .Builder(
+                    workerClass = RevocationWorkManager::class.java,
+                    repeatInterval = walletCoreConfig.revocationInterval,
+                ).build()
 
         WorkManager.getInstance(this).enqueueUniquePeriodicWork(
             RevocationWorkManager.REVOCATION_WORK_NAME,
             ExistingPeriodicWorkPolicy.KEEP,
-            periodicWorkRequest
+            periodicWorkRequest,
         )
     }
 }

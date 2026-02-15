@@ -18,82 +18,86 @@ package com.k869.identid.config
 
 import android.content.Context
 import com.k869.identid.BuildConfig
+import com.k869.identid.R
 import eu.europa.ec.eudi.wallet.EudiWalletConfig
 import eu.europa.ec.eudi.wallet.issue.openid4vci.OpenId4VciManager
 import eu.europa.ec.eudi.wallet.transfer.openId4vp.ClientIdScheme
 import eu.europa.ec.eudi.wallet.transfer.openId4vp.Format
-import com.k869.identid.R
 import kotlin.time.Duration.Companion.seconds
 
 internal class WalletCoreConfigImpl(
-    private val context: Context
+    private val context: Context,
 ) : WalletCoreConfig {
-
     private var _config: EudiWalletConfig? = null
 
     override val config: EudiWalletConfig
         get() {
             if (_config == null) {
-                _config = EudiWalletConfig {
-                    configureDocumentKeyCreation(
-                        userAuthenticationRequired = false,
-                        userAuthenticationTimeout = 30.seconds,
-                        useStrongBoxForKeys = true
-                    )
-                    configureOpenId4Vp {
-                        withClientIdSchemes(
-                            listOf(
-                                ClientIdScheme.X509SanDns,
-                                ClientIdScheme.X509Hash
-                            )
+                _config =
+                    EudiWalletConfig {
+                        configureDocumentKeyCreation(
+                            userAuthenticationRequired = false,
+                            userAuthenticationTimeout = 30.seconds,
+                            useStrongBoxForKeys = true,
                         )
-                        withSchemes(
-                            listOf(
-                                BuildConfig.OPENID4VP_SCHEME,
-                                BuildConfig.EUDI_OPENID4VP_SCHEME,
-                                BuildConfig.MDOC_OPENID4VP_SCHEME,
-                                BuildConfig.HAIP_OPENID4VP_SCHEME
+                        configureOpenId4Vp {
+                            withClientIdSchemes(
+                                listOf(
+                                    ClientIdScheme.X509SanDns,
+                                    ClientIdScheme.X509Hash,
+                                ),
                             )
-                        )
-                        withFormats(
-                            Format.MsoMdoc.ES256, Format.SdJwtVc.ES256
+                            withSchemes(
+                                listOf(
+                                    BuildConfig.OPENID4VP_SCHEME,
+                                    BuildConfig.EUDI_OPENID4VP_SCHEME,
+                                    BuildConfig.MDOC_OPENID4VP_SCHEME,
+                                    BuildConfig.HAIP_OPENID4VP_SCHEME,
+                                ),
+                            )
+                            withFormats(
+                                Format.MsoMdoc.ES256,
+                                Format.SdJwtVc.ES256,
+                            )
+                        }
+
+                        configureReaderTrustStore(
+                            context,
+                            R.raw.pidissuerca02_cz,
+                            R.raw.pidissuerca02_ee,
+                            R.raw.pidissuerca02_eu,
+                            R.raw.pidissuerca02_lu,
+                            R.raw.pidissuerca02_nl,
+                            R.raw.pidissuerca02_pt,
+                            R.raw.pidissuerca02_ut,
+                            R.raw.dc4eu,
+                            R.raw.r45_staging,
                         )
                     }
-
-                    configureReaderTrustStore(
-                        context,
-                        R.raw.pidissuerca02_cz,
-                        R.raw.pidissuerca02_ee,
-                        R.raw.pidissuerca02_eu,
-                        R.raw.pidissuerca02_lu,
-                        R.raw.pidissuerca02_nl,
-                        R.raw.pidissuerca02_pt,
-                        R.raw.pidissuerca02_ut,
-                        R.raw.dc4eu,
-                        R.raw.r45_staging
-                    )
-                }
             }
             return _config!!
         }
 
     override val vciConfig: List<OpenId4VciManager.Config>
-        get() = listOf(
-            OpenId4VciManager.Config.Builder()
-                .withIssuerUrl(issuerUrl = "https://issuer.eudiw.dev")
-                .withClientAuthenticationType(OpenId4VciManager.ClientAuthenticationType.AttestationBased)
-                .withAuthFlowRedirectionURI(BuildConfig.ISSUE_AUTHORIZATION_DEEPLINK)
-                .withParUsage(OpenId4VciManager.Config.ParUsage.IF_SUPPORTED)
-                .withDPoPUsage(OpenId4VciManager.Config.DPoPUsage.IfSupported())
-                .build(),
-            OpenId4VciManager.Config.Builder()
-                .withIssuerUrl(issuerUrl = "https://issuer-backend.eudiw.dev")
-                .withClientAuthenticationType(OpenId4VciManager.ClientAuthenticationType.AttestationBased)
-                .withAuthFlowRedirectionURI(BuildConfig.ISSUE_AUTHORIZATION_DEEPLINK)
-                .withParUsage(OpenId4VciManager.Config.ParUsage.IF_SUPPORTED)
-                .withDPoPUsage(OpenId4VciManager.Config.DPoPUsage.IfSupported())
-                .build()
-        )
+        get() =
+            listOf(
+                OpenId4VciManager.Config
+                    .Builder()
+                    .withIssuerUrl(issuerUrl = "https://issuer.eudiw.dev")
+                    .withClientAuthenticationType(OpenId4VciManager.ClientAuthenticationType.AttestationBased)
+                    .withAuthFlowRedirectionURI(BuildConfig.ISSUE_AUTHORIZATION_DEEPLINK)
+                    .withParUsage(OpenId4VciManager.Config.ParUsage.IF_SUPPORTED)
+                    .withDPoPUsage(OpenId4VciManager.Config.DPoPUsage.IfSupported())
+                    .build(),
+                OpenId4VciManager.Config
+                    .Builder()
+                    .withIssuerUrl(issuerUrl = "https://issuer-backend.eudiw.dev")
+                    .withClientAuthenticationType(OpenId4VciManager.ClientAuthenticationType.AttestationBased)
+                    .withAuthFlowRedirectionURI(BuildConfig.ISSUE_AUTHORIZATION_DEEPLINK)
+                    .withParUsage(OpenId4VciManager.Config.ParUsage.IF_SUPPORTED)
+                    .withDPoPUsage(OpenId4VciManager.Config.DPoPUsage.IfSupported())
+                    .build(),
+            )
 
     override val walletProviderHost: String
         get() = "https://wallet-provider.eudiw.dev"

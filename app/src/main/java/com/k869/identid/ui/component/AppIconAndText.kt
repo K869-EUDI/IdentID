@@ -35,15 +35,16 @@ data class AppIconAndTextDataUi(
 @Composable
 fun AppIconAndText(
     modifier: Modifier = Modifier,
-    appIconAndTextData: AppIconAndTextDataUi
+    appIconAndTextData: AppIconAndTextDataUi,
 ) {
     Row(
         modifier = modifier,
-        horizontalArrangement = Arrangement.spacedBy(
-            space = SPACING_SMALL.dp,
-            alignment = Alignment.CenterHorizontally
-        ),
-        verticalAlignment = Alignment.Top
+        horizontalArrangement =
+            Arrangement.spacedBy(
+                space = SPACING_SMALL.dp,
+                alignment = Alignment.CenterHorizontally,
+            ),
+        verticalAlignment = Alignment.Top,
     ) {
         WrapImage(iconData = appIconAndTextData.appIcon)
         WrapImage(iconData = appIconAndTextData.appText)
@@ -55,10 +56,11 @@ fun AppIconAndText(
 private fun AppIconAndTextPreview() {
     PreviewTheme {
         AppIconAndText(
-            appIconAndTextData = AppIconAndTextDataUi(
-                appIcon = AppIcons.LogoPlain,
-                appText = AppIcons.LogoText,
-            )
+            appIconAndTextData =
+                AppIconAndTextDataUi(
+                    appIcon = AppIcons.LogoPlain,
+                    appText = AppIcons.LogoText,
+                ),
         )
     }
 }
