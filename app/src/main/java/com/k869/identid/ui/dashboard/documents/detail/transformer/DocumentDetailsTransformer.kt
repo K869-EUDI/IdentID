@@ -1,0 +1,102 @@
+/*
+ * Copyright (c) 2025 European Commission
+ *
+ * Licensed under the EUPL, Version 1.2 or - as soon they will be approved by the European
+ * Commission - subsequent versions of the EUPL (the "Licence"); You may not use this work
+ * except in compliance with the Licence.
+ *
+ * You may obtain a copy of the Licence at:
+ * https://joinup.ec.europa.eu/software/page/eupl
+ *
+ * Unless required by applicable law or agreed to in writing, software distributed under
+ * the Licence is distributed on an "AS IS" basis, WITHOUT WARRANTIES OR CONDITIONS OF
+ * ANY KIND, either express or implied. See the Licence for the specific language
+ * governing permissions and limitations under the Licence.
+ */
+
+package com.k869.identid.ui.dashboard.documents.detail.transformer
+
+import com.k869.identid.provider.UuidProvider
+import com.k869.identid.extension.common.toExpandableListItems
+import com.k869.identid.util.common.transformPathsToDomainClaims
+import com.k869.identid.extension.core.toClaimPaths
+import com.k869.identid.model.core.toDocumentIdentifier
+import com.k869.identid.ui.dashboard.documents.detail.model.DocumentDetailsDomain
+import com.k869.identid.ui.dashboard.documents.detail.model.DocumentDetailsUi
+import com.k869.identid.ui.dashboard.documents.detail.model.DocumentIssuanceStateUi
+import com.k869.identid.ui.dashboard.documents.model.DocumentCredentialsInfoUi
+import eu.europa.ec.eudi.wallet.document.IssuedDocument
+import com.k869.identid.R
+import com.k869.identid.provider.resources.ResourceProvider
+
+object DocumentDetailsTransformer {
+
+    fun transformToDocumentDetailsDomain(
+        document: IssuedDocument,
+        resourceProvider: ResourceProvider,
+        uuidProvider: UuidProvider
+    ): Result<DocumentDetailsDomain> = runCatching {
+        val claimsPaths = document.data.claims.flatMap { claim ->
+            claim.toClaimPaths()
+        }
+
+        val domainClaims = transformPathsToDomainClaims(
+            paths = claimsPaths,
+            claims = document.data.claims,
+            resourceProvider = resourceProvider,
+            uuidProvider = uuidProvider
+        )
+
+        return@runCatching DocumentDetailsDomain(
+            docName = document.name,
+            docId = document.id,
+            documentIdentifier = document.toDocumentIdentifier(),
+            documentClaims = domainClaims,
+        )
+    }
+
+    fun DocumentDetailsDomain.transformToDocumentDetailsUi(): DocumentDetailsUi {
+        val documentDetailsUi = this.documentClaims.map { domainClaim ->
+            domainClaim.toExpandableListItems(docId = this.docId)
+        }
+        return DocumentDetailsUi(
+            documentId = this.docId,
+            documentName = this.docName,
+            documentIdentifier = this.documentIdentifier,
+            documentIssuanceStateUi = DocumentIssuanceStateUi.Issued,
+            documentClaims = documentDetailsUi,
+        )
+    }
+
+    suspend fun createDocumentCredentialsInfoUi(
+        document: IssuedDocument,
+        isLowOnCredentials: Boolean,
+        resourceProvider: ResourceProvider,
+    ): DocumentCredentialsInfoUi {
+        val availableCredentials = document.credentialsCount()
+        val totalCredentials = document.initialCredentialsCount()
+
+        return DocumentCredentialsInfoUi(
+            availableCredentials = availableCredentials,
+            totalCredentials = totalCredentials,
+            title = resourceProvider.getString(
+                R.string.document_details_document_credentials_info_text,
+                availableCredentials,
+                totalCredentials
+            ),
+            collapsedInfo = DocumentCredentialsInfoUi.CollapsedInfo(
+                moreInfoText = resourceProvider.getString(R.string.document_details_document_credentials_info_more_info_text),
+            ),
+            expandedInfo = DocumentCredentialsInfoUi.ExpandedInfo(
+                subtitle = resourceProvider.getString(R.string.document_details_document_credentials_info_expanded_text_subtitle),
+                updateNowButtonText = if (isLowOnCredentials) {
+                    resourceProvider.getString(R.string.document_details_document_credentials_info_expanded_button_update_now_text)
+                } else {
+                    null
+                },
+                hideButtonText = resourceProvider.getString(R.string.document_details_document_credentials_info_expanded_button_hide_text),
+            ),
+            isExpanded = isLowOnCredentials,
+        )
+    }
+}

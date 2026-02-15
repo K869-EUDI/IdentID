@@ -1,0 +1,390 @@
+/*
+ * Copyright (c) 2025 European Commission
+ *
+ * Licensed under the EUPL, Version 1.2 or - as soon they will be approved by the European
+ * Commission - subsequent versions of the EUPL (the "Licence"); You may not use this work
+ * except in compliance with the Licence.
+ *
+ * You may obtain a copy of the Licence at:
+ * https://joinup.ec.europa.eu/software/page/eupl
+ *
+ * Unless required by applicable law or agreed to in writing, software distributed under
+ * the Licence is distributed on an "AS IS" basis, WITHOUT WARRANTIES OR CONDITIONS OF
+ * ANY KIND, either express or implied. See the Licence for the specific language
+ * governing permissions and limitations under the Licence.
+ */
+
+package com.k869.identid.ui.common.biometric
+
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.navigationBarsPadding
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.testTag
+import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.input.PasswordVisualTransformation
+import androidx.compose.ui.unit.dp
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.navigation.NavController
+import com.k869.identid.config.BiometricMode
+import com.k869.identid.config.BiometricUiConfig
+import com.k869.identid.config.OnBackNavigationConfig
+import com.k869.identid.util.common.TestTag
+import com.k869.identid.R
+import com.k869.identid.ui.component.AppIconAndText
+import com.k869.identid.ui.component.AppIconAndTextDataUi
+import com.k869.identid.ui.component.AppIcons
+import com.k869.identid.ui.component.content.ContentHeader
+import com.k869.identid.ui.component.content.ContentHeaderConfig
+import com.k869.identid.ui.component.content.ContentScreen
+import com.k869.identid.ui.component.content.ImePaddingConfig
+import com.k869.identid.ui.component.content.ScreenNavigateAction
+import com.k869.identid.ui.component.preview.PreviewTheme
+import com.k869.identid.ui.component.preview.ThemeModePreviews
+import com.k869.identid.ui.component.utils.OneTimeLaunchedEffect
+import com.k869.identid.ui.component.utils.SIZE_MEDIUM
+import com.k869.identid.ui.component.utils.SPACING_LARGE
+import com.k869.identid.ui.component.utils.SPACING_SMALL
+import com.k869.identid.ui.component.wrap.WrapIconButton
+import com.k869.identid.ui.component.wrap.WrapPinTextField
+import com.k869.identid.config.ConfigNavigation
+import com.k869.identid.config.FlowCompletion
+import com.k869.identid.config.NavigationType
+import com.k869.identid.extension.ui.cacheDeepLink
+import com.k869.identid.extension.ui.finish
+import com.k869.identid.extension.ui.paddingFrom
+import com.k869.identid.extension.ui.resetBackStack
+import com.k869.identid.extension.ui.setBackStackFlowCancelled
+import com.k869.identid.extension.ui.setBackStackFlowSuccess
+import com.k869.identid.navigation.CommonScreens
+import com.k869.identid.navigation.helper.handleDeepLinkAction
+import kotlinx.coroutines.channels.Channel
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.onEach
+import kotlinx.coroutines.flow.receiveAsFlow
+
+@Composable
+fun BiometricScreen(
+    navController: NavController,
+    viewModel: BiometricViewModel
+) {
+    val state: State by viewModel.viewState.collectAsStateWithLifecycle()
+    val context = LocalContext.current
+
+    ContentScreen(
+        isLoading = state.isLoading,
+        navigatableAction = if (state.isBackable) {
+            ScreenNavigateAction.BACKABLE
+        } else {
+            ScreenNavigateAction.NONE
+        },
+        onBack = {
+            viewModel.setEvent(Event.OnNavigateBack)
+        },
+        contentErrorConfig = state.error,
+        imePaddingConfig = ImePaddingConfig.ONLY_CONTENT
+    ) {
+        Body(
+            state = state,
+            effectFlow = viewModel.effect,
+            onEventSent = { event -> viewModel.setEvent(event) },
+            onNavigationRequested = { navigationEffect ->
+                when (navigationEffect) {
+                    is Effect.Navigation.SwitchScreen -> {
+                        navController.navigate(navigationEffect.screen) {
+                            popUpTo(CommonScreens.Biometric.screenRoute) { inclusive = true }
+                        }
+                    }
+
+                    is Effect.Navigation.LaunchBiometricsSystemScreen -> {
+                        viewModel.setEvent(Event.LaunchBiometricSystemScreen)
+                    }
+
+                    is Effect.Navigation.PopBackStackUpTo -> {
+                        when (navigationEffect.indicateFlowCompletion) {
+                            FlowCompletion.CANCEL -> {
+                                navController.setBackStackFlowCancelled(
+                                    navigationEffect.screenRoute
+                                )
+                            }
+
+                            FlowCompletion.SUCCESS -> {
+                                navController.setBackStackFlowSuccess(
+                                    navigationEffect.screenRoute
+                                )
+                            }
+
+                            FlowCompletion.NONE -> {
+                                navController.resetBackStack(
+                                    navigationEffect.screenRoute
+                                )
+                            }
+                        }
+                        navController.popBackStack(
+                            route = navigationEffect.screenRoute,
+                            inclusive = navigationEffect.inclusive
+                        )
+                    }
+
+                    is Effect.Navigation.Deeplink -> {
+                        navigationEffect.routeToPop?.let { route ->
+                            context.cacheDeepLink(navigationEffect.link)
+                            if (navigationEffect.isPreAuthorization) {
+                                navController.navigate(route) {
+                                    popUpTo(CommonScreens.Biometric.screenRoute) {
+                                        inclusive = true
+                                    }
+                                }
+                            } else {
+                                navController.popBackStack(
+                                    route = route,
+                                    inclusive = false
+                                )
+                            }
+                        } ?: handleDeepLinkAction(navController, navigationEffect.link)
+
+                    }
+
+                    is Effect.Navigation.Pop -> navController.popBackStack()
+                    is Effect.Navigation.Finish -> context.finish()
+                }
+            },
+            padding = it
+        )
+    }
+
+    OneTimeLaunchedEffect {
+        viewModel.setEvent(Event.Init)
+    }
+}
+
+@Composable
+private fun Body(
+    state: State,
+    effectFlow: Flow<Effect>,
+    onEventSent: ((event: Event) -> Unit),
+    onNavigationRequested: ((navigationEffect: Effect.Navigation) -> Unit),
+    padding: PaddingValues
+) {
+
+    // Get application context.
+    val context = LocalContext.current
+
+    Column(
+        Modifier
+            .fillMaxSize()
+            .paddingFrom(padding, bottom = false)
+    ) {
+        Column(
+            modifier = Modifier
+                .fillMaxWidth()
+                .weight(1f)
+                .verticalScroll(rememberScrollState())
+        ) {
+            MainContent(
+                state = state,
+                onEventSent = onEventSent,
+            )
+        }
+
+        if (state.userBiometricsAreEnabled) {
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .navigationBarsPadding()
+                    .padding(bottom = 5.dp),
+                horizontalArrangement = Arrangement.End,
+            ) {
+                WrapIconButton(
+                    iconData = AppIcons.TouchId,
+                    onClick = {
+                        onEventSent(
+                            Event.OnBiometricsClicked(
+                                context = context,
+                                shouldThrowErrorIfNotAvailable = true
+                            )
+                        )
+                    }
+                )
+            }
+        }
+    }
+
+    LaunchedEffect(Unit) {
+        effectFlow.onEach { effect ->
+            when (effect) {
+                is Effect.Navigation -> {
+                    onNavigationRequested(effect)
+                }
+
+                is Effect.InitializeBiometricAuthOnCreate -> {
+                    onEventSent(
+                        Event.OnBiometricsClicked(
+                            context = context,
+                            shouldThrowErrorIfNotAvailable = false,
+                        )
+                    )
+                }
+            }
+        }.collect()
+    }
+}
+
+@Composable
+private fun MainContent(
+    state: State,
+    onEventSent: (event: Event) -> Unit
+) {
+    when (val mode = state.config.mode) {
+        is BiometricMode.Default -> {
+            val description = if (state.userBiometricsAreEnabled) {
+                mode.descriptionWhenBiometricsEnabled
+            } else {
+                mode.descriptionWhenBiometricsNotEnabled
+            }
+            ContentHeader(
+                modifier = Modifier.fillMaxWidth(),
+                config = ContentHeaderConfig(description = description)
+            )
+
+            Column(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(vertical = SPACING_SMALL.dp)
+            ) {
+                Text(
+                    modifier = Modifier
+                        .testTag(TestTag.BiometricScreen.PIN_TEXT)
+                        .fillMaxWidth()
+                        .padding(vertical = SPACING_SMALL.dp),
+                    text = mode.textAbovePin,
+                    style = MaterialTheme.typography.titleMedium.copy(
+                        color = MaterialTheme.colorScheme.onSurface
+                    )
+                )
+
+                PinFieldLayout(
+                    modifier = Modifier.fillMaxWidth(),
+                    state = state,
+                    onPinInput = { quickPin ->
+                        onEventSent(Event.OnQuickPinEntered(quickPin))
+                    }
+                )
+            }
+        }
+
+        is BiometricMode.Login -> {
+            AppIconAndText(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(bottom = SPACING_LARGE.dp),
+                appIconAndTextData = AppIconAndTextDataUi(),
+            )
+
+            Column(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(vertical = SPACING_LARGE.dp),
+                verticalArrangement = Arrangement.spacedBy(SPACING_SMALL.dp, Alignment.Top)
+            ) {
+                Text(
+                    text = mode.title,
+                    modifier = Modifier.testTag(TestTag.BiometricScreen.PIN_TITLE),
+                    style = MaterialTheme.typography.headlineMedium.copy(
+                        color = MaterialTheme.colorScheme.onSurface
+                    )
+                )
+
+                val subtitle = if (state.userBiometricsAreEnabled) {
+                    mode.subTitleWhenBiometricsEnabled
+                } else {
+                    mode.subTitleWhenBiometricsNotEnabled
+                }
+                Text(
+                    text = subtitle,
+                    style = MaterialTheme.typography.bodyLarge.copy(
+                        color = MaterialTheme.colorScheme.onSurface
+                    )
+                )
+            }
+
+            PinFieldLayout(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(vertical = SPACING_LARGE.dp),
+                state = state,
+                onPinInput = { quickPin ->
+                    onEventSent(Event.OnQuickPinEntered(quickPin))
+                }
+            )
+        }
+    }
+}
+
+@Composable
+private fun PinFieldLayout(
+    modifier: Modifier = Modifier,
+    state: State,
+    onPinInput: (String) -> Unit,
+) {
+    WrapPinTextField(
+        modifier = modifier,
+        onPinUpdate = onPinInput,
+        length = state.quickPinSize,
+        hasError = !state.quickPinError.isNullOrEmpty(),
+        errorMessage = state.quickPinError,
+        visualTransformation = PasswordVisualTransformation(),
+        pinWidth = 42.dp,
+        focusOnCreate = !state.userBiometricsAreEnabled
+    )
+}
+
+/**
+ * Preview composable of [Body].
+ */
+@ThemeModePreviews
+@Composable
+private fun PreviewBiometricScreen() {
+    PreviewTheme {
+        Body(
+            state = State(
+                config = BiometricUiConfig(
+                    mode = BiometricMode.Default(
+                        descriptionWhenBiometricsEnabled = stringResource(R.string.loading_biometry_biometrics_enabled_description),
+                        descriptionWhenBiometricsNotEnabled = stringResource(R.string.loading_biometry_biometrics_not_enabled_description),
+                        textAbovePin = stringResource(R.string.biometric_default_mode_text_above_pin_field),
+                    ),
+                    isPreAuthorization = true,
+                    onSuccessNavigation = ConfigNavigation(
+                        navigationType = NavigationType.PushScreen(CommonScreens.Biometric)
+                    ),
+                    onBackNavigationConfig = OnBackNavigationConfig(
+                        onBackNavigation = ConfigNavigation(
+                            navigationType = NavigationType.PushScreen(CommonScreens.Biometric),
+                        ),
+                        hasToolbarBackIcon = true
+                    )
+                )
+            ),
+            effectFlow = Channel<Effect>().receiveAsFlow(),
+            onEventSent = {},
+            onNavigationRequested = {},
+            padding = PaddingValues(SIZE_MEDIUM.dp)
+        )
+    }
+}

@@ -1,0 +1,83 @@
+/*
+ * Copyright (c) 2025 European Commission
+ *
+ * Licensed under the EUPL, Version 1.2 or - as soon they will be approved by the European
+ * Commission - subsequent versions of the EUPL (the "Licence"); You may not use this work
+ * except in compliance with the Licence.
+ *
+ * You may obtain a copy of the Licence at:
+ * https://joinup.ec.europa.eu/software/page/eupl
+ *
+ * Unless required by applicable law or agreed to in writing, software distributed under
+ * the Licence is distributed on an "AS IS" basis, WITHOUT WARRANTIES OR CONDITIONS OF
+ * ANY KIND, either express or implied. See the Licence for the specific language
+ * governing permissions and limitations under the Licence.
+ */
+
+package com.k869.identid.di.common
+
+import com.k869.identid.controller.authentication.BiometricAuthenticationController
+import com.k869.identid.controller.authentication.DeviceAuthenticationController
+import com.k869.identid.controller.storage.BiometryStorageController
+import com.k869.identid.controller.storage.PinStorageController
+import com.k869.identid.validator.FormValidator
+import com.k869.identid.interactor.common.BiometricInteractor
+import com.k869.identid.interactor.common.BiometricInteractorImpl
+import com.k869.identid.interactor.common.DeviceAuthenticationInteractor
+import com.k869.identid.interactor.common.DeviceAuthenticationInteractorImpl
+import com.k869.identid.interactor.common.QrScanInteractor
+import com.k869.identid.interactor.common.QrScanInteractorImpl
+import com.k869.identid.interactor.common.QuickPinInteractor
+import com.k869.identid.interactor.common.QuickPinInteractorImpl
+import com.k869.identid.provider.resources.ResourceProvider
+import org.koin.core.annotation.ComponentScan
+import org.koin.core.annotation.Factory
+import com.k869.identid.ui.common.CredentialOfferIssuanceScope
+import org.koin.core.annotation.Module
+import org.koin.mp.KoinPlatform
+
+const val CREDENTIAL_OFFER_ISSUANCE_SCOPE_ID = "credential_offer_scope_id"
+
+@Module
+@ComponentScan("com.k869.identid.ui.common", "com.k869.identid.di.common")
+class FeatureCommonModule
+
+@Factory
+fun provideQuickPinInteractor(
+    formValidator: FormValidator,
+    pinStorageController: PinStorageController,
+    resourceProvider: ResourceProvider
+): QuickPinInteractor {
+    return QuickPinInteractorImpl(formValidator, pinStorageController, resourceProvider)
+}
+
+@Factory
+fun provideBiometricInteractor(
+    biometryStorageController: BiometryStorageController,
+    biometricAuthenticationController: BiometricAuthenticationController,
+    quickPinInteractor: QuickPinInteractor
+): BiometricInteractor {
+    return BiometricInteractorImpl(
+        biometryStorageController,
+        biometricAuthenticationController,
+        quickPinInteractor
+    )
+}
+
+@Factory
+fun provideDeviceAuthenticationInteractor(
+    deviceAuthenticationController: DeviceAuthenticationController
+): DeviceAuthenticationInteractor {
+    return DeviceAuthenticationInteractorImpl(deviceAuthenticationController)
+}
+
+@Factory
+fun provideQrScanInteractor(
+    formValidator: FormValidator
+): QrScanInteractor {
+    return QrScanInteractorImpl(formValidator)
+}
+
+fun getOrCreateCredentialOfferScope(): org.koin.core.scope.Scope =
+    KoinPlatform.getKoin()
+        .getOrCreateScope<CredentialOfferIssuanceScope>(CREDENTIAL_OFFER_ISSUANCE_SCOPE_ID)

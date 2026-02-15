@@ -1,0 +1,73 @@
+{
+  "formatVersion": 1,
+  "database": {
+    "version": 1,
+    "identityHash": "a45cd890449eeae8965e7d33b0c728c1",
+    "entities": [
+      {
+        "tableName": "bookmarks",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`identifier` TEXT NOT NULL, PRIMARY KEY(`identifier`))",
+        "fields": [
+          {
+            "fieldPath": "identifier",
+            "columnName": "identifier",
+            "affinity": "TEXT",
+            "notNull": true
+          }
+        ],
+        "primaryKey": {
+          "autoGenerate": false,
+          "columnNames": [
+            "identifier"
+          ]
+        }
+      },
+      {
+        "tableName": "revokedDocuments",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`identifier` TEXT NOT NULL, PRIMARY KEY(`identifier`))",
+        "fields": [
+          {
+            "fieldPath": "identifier",
+            "columnName": "identifier",
+            "affinity": "TEXT",
+            "notNull": true
+          }
+        ],
+        "primaryKey": {
+          "autoGenerate": false,
+          "columnNames": [
+            "identifier"
+          ]
+        }
+      },
+      {
+        "tableName": "transactionLogs",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`identifier` TEXT NOT NULL, `value` TEXT NOT NULL, PRIMARY KEY(`identifier`))",
+        "fields": [
+          {
+            "fieldPath": "identifier",
+            "columnName": "identifier",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "value",
+            "columnName": "value",
+            "affinity": "TEXT",
+            "notNull": true
+          }
+        ],
+        "primaryKey": {
+          "autoGenerate": false,
+          "columnNames": [
+            "identifier"
+          ]
+        }
+      }
+    ],
+    "setupQueries": [
+      "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, 'a45cd890449eeae8965e7d33b0c728c1')"
+    ]
+  }
+}

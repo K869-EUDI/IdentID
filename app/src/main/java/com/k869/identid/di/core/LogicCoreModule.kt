@@ -1,0 +1,120 @@
+/*
+ * Copyright (c) 2023 European Commission
+ *
+ * Licensed under the EUPL, Version 1.2 or - as soon they will be approved by the European
+ * Commission - subsequent versions of the EUPL (the "Licence"); You may not use this work
+ * except in compliance with the Licence.
+ *
+ * You may obtain a copy of the Licence at:
+ * https://joinup.ec.europa.eu/software/page/eupl
+ *
+ * Unless required by applicable law or agreed to in writing, software distributed under
+ * the Licence is distributed on an "AS IS" basis, WITHOUT WARRANTIES OR CONDITIONS OF
+ * ANY KIND, either express or implied. See the Licence for the specific language
+ * governing permissions and limitations under the Licence.
+ */
+
+package com.k869.identid.di.core
+
+import android.content.Context
+import com.k869.identid.controller.log.LogController
+import com.k869.identid.provider.UuidProvider
+import com.k869.identid.config.WalletCoreConfig
+import com.k869.identid.config.WalletCoreConfigImpl
+import com.k869.identid.controller.core.WalletCoreDocumentsController
+import com.k869.identid.controller.core.WalletCoreDocumentsControllerImpl
+import com.k869.identid.controller.core.WalletCoreLogController
+import com.k869.identid.controller.core.WalletCoreLogControllerImpl
+import com.k869.identid.controller.core.WalletCoreTransactionLogController
+import com.k869.identid.controller.core.WalletCoreTransactionLogControllerImpl
+import com.k869.identid.provider.core.WalletCoreAttestationProvider
+import com.k869.identid.provider.core.WalletCoreAttestationProviderImpl
+import eu.europa.ec.eudi.wallet.EudiWallet
+import com.k869.identid.network.repository.WalletAttestationRepository
+import com.k869.identid.provider.resources.ResourceProvider
+import com.k869.identid.storage.dao.BookmarkDao
+import com.k869.identid.storage.dao.RevokedDocumentDao
+import com.k869.identid.storage.dao.TransactionLogDao
+import com.k869.identid.controller.core.WalletPresentationScope
+import io.ktor.client.HttpClient
+import org.koin.core.annotation.ComponentScan
+import org.koin.core.annotation.Factory
+import org.koin.core.annotation.Module
+import org.koin.core.annotation.Single
+import org.koin.mp.KoinPlatform
+
+const val PRESENTATION_SCOPE_ID = "presentation_scope_id"
+
+@Module
+@ComponentScan("com.k869.identid.controller.core", "com.k869.identid.di.core")
+class LogicCoreModule
+
+@Single
+fun provideEudiWallet(
+    context: Context,
+    walletCoreConfig: WalletCoreConfig,
+    walletCoreLogController: WalletCoreLogController,
+    walletCoreTransactionLogController: WalletCoreTransactionLogController,
+    walletCoreAttestationProvider: WalletCoreAttestationProvider,
+    httpClient: HttpClient
+): EudiWallet = EudiWallet(
+    context = context,
+    config = walletCoreConfig.config,
+    walletProvider = walletCoreAttestationProvider
+) {
+    withLogger(walletCoreLogController)
+    withTransactionLogger(walletCoreTransactionLogController)
+    withKtorHttpClientFactory { httpClient }
+}
+
+@Single
+fun provideWalletCoreConfig(
+    context: Context,
+): WalletCoreConfig = WalletCoreConfigImpl(context)
+
+@Single
+fun provideWalletCoreLogController(logController: LogController): WalletCoreLogController =
+    WalletCoreLogControllerImpl(logController)
+
+@Single
+fun provideWalletCoreTransactionLogController(
+    transactionLogDao: TransactionLogDao,
+    uuidProvider: UuidProvider
+): WalletCoreTransactionLogController = WalletCoreTransactionLogControllerImpl(
+    transactionLogDao = transactionLogDao,
+    uuidProvider = uuidProvider
+)
+
+@Single
+fun provideWalletCoreAttestationProvider(
+    walletAttestationRepository: WalletAttestationRepository,
+    walletCoreConfig: WalletCoreConfig
+): WalletCoreAttestationProvider =
+    WalletCoreAttestationProviderImpl(
+        walletCoreConfig = walletCoreConfig,
+        walletAttestationRepository = walletAttestationRepository
+    )
+
+@Factory
+fun provideWalletCoreDocumentsController(
+    resourceProvider: ResourceProvider,
+    eudiWallet: EudiWallet,
+    walletCoreConfig: WalletCoreConfig,
+    bookmarkDao: BookmarkDao,
+    transactionLogDao: TransactionLogDao,
+    revokedDocumentDao: RevokedDocumentDao
+): WalletCoreDocumentsController =
+    WalletCoreDocumentsControllerImpl(
+        resourceProvider,
+        eudiWallet,
+        walletCoreConfig,
+        bookmarkDao,
+        transactionLogDao,
+        revokedDocumentDao
+    )
+
+/**
+ * Get Koin scope that lives during document presentation flow
+ * */
+fun getOrCreatePresentationScope(): org.koin.core.scope.Scope =
+    KoinPlatform.getKoin().getOrCreateScope<WalletPresentationScope>(PRESENTATION_SCOPE_ID)
