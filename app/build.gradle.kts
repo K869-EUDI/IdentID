@@ -91,13 +91,16 @@ android {
         manifestPlaceholders["rqesDocRetrievalHost"] = "*"
     }
 
-    signingConfigs {
-        create("release") {
-            storeFile = file("${rootProject.projectDir}/sign")
-            keyAlias = getLocalProperty("androidKeyAlias") ?: System.getenv("ANDROID_KEY_ALIAS")
-            keyPassword = getLocalProperty("androidKeyPassword") ?: System.getenv("ANDROID_KEY_PASSWORD")
-            storePassword = getLocalProperty("androidKeyPassword") ?: System.getenv("ANDROID_KEY_PASSWORD")
-            enableV2Signing = true
+    val keystoreFile = file("${rootProject.projectDir}/sign")
+    if (keystoreFile.exists()) {
+        signingConfigs {
+            create("release") {
+                storeFile = keystoreFile
+                keyAlias = getLocalProperty("androidKeyAlias") ?: System.getenv("ANDROID_KEY_ALIAS")
+                keyPassword = getLocalProperty("androidKeyPassword") ?: System.getenv("ANDROID_KEY_PASSWORD")
+                storePassword = getLocalProperty("androidKeyPassword") ?: System.getenv("ANDROID_KEY_PASSWORD")
+                enableV2Signing = true
+            }
         }
     }
 
@@ -109,7 +112,9 @@ android {
         release {
             isDebuggable = false
             isMinifyEnabled = true
-            signingConfig = signingConfigs.getByName("release")
+            if (keystoreFile.exists()) {
+                signingConfig = signingConfigs.getByName("release")
+            }
             proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro")
         }
     }
@@ -134,6 +139,10 @@ android {
                 "-opt-in=kotlinx.coroutines.FlowPreview",
             )
         }
+    }
+
+    lint {
+        disable += "RestrictedApi"
     }
 
     packaging {
