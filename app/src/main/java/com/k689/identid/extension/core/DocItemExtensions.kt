@@ -18,14 +18,21 @@ package com.k689.identid.extension.core
 
 import com.k689.identid.model.core.ClaimPathDomain
 import com.k689.identid.model.core.ClaimPathDomain.Companion.toClaimPathDomain
+import com.k689.identid.model.core.ClaimType
 import eu.europa.ec.eudi.iso18013.transfer.response.DocItem
 import eu.europa.ec.eudi.iso18013.transfer.response.device.MsoMdocItem
 import eu.europa.ec.eudi.wallet.transfer.openId4vp.SdJwtVcItem
 
 fun DocItem.toClaimPath(): ClaimPathDomain {
+    val type =
+        when (this) {
+            is MsoMdocItem -> ClaimType.MsoMdoc(namespace = this.namespace)
+            is SdJwtVcItem -> ClaimType.SdJwtVc
+            else -> ClaimType.Unknown
+        }
     return when (this) {
         is MsoMdocItem -> listOf(this.elementIdentifier)
         is SdJwtVcItem -> this.path
         else -> emptyList()
-    }.toClaimPathDomain()
+    }.toClaimPathDomain(type = type)
 }

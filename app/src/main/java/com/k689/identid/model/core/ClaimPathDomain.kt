@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2025 European Commission
+ * Copyright (c) 2023 European Commission
  *
  * Licensed under the EUPL, Version 1.2 or - as soon they will be approved by the European
  * Commission - subsequent versions of the EUPL (the "Licence"); You may not use this work
@@ -16,27 +16,43 @@
 
 package com.k689.identid.model.core
 
-data class ClaimPathDomain(val value: List<String>) {
+import eu.europa.ec.eudi.wallet.document.NameSpace
 
+sealed interface ClaimType {
+    data object SdJwtVc : ClaimType
+
+    data class MsoMdoc(
+        val namespace: NameSpace,
+    ) : ClaimType
+
+    data object Unknown : ClaimType
+}
+
+data class ClaimPathDomain(
+    val value: List<String>,
+    val type: ClaimType,
+) {
     companion object {
         const val PATH_SEPARATOR = ","
 
-        fun toElementIdentifier(itemId: String): String {
-            return itemId
+        fun toElementIdentifier(itemId: String): String =
+            itemId
+                .split(PATH_SEPARATOR)
+                .drop(2)
+                .first()
+
+        fun toNameSpace(itemId: String): NameSpace =
+            itemId
                 .split(PATH_SEPARATOR)
                 .drop(1)
                 .first()
-        }
 
-        fun toSdJwtVcPath(itemId: String): List<String> {
-            return itemId
+        fun toSdJwtVcPath(itemId: String): List<String> =
+            itemId
                 .split(PATH_SEPARATOR)
                 .drop(1)
-        }
 
-        fun List<String>.toClaimPathDomain(): ClaimPathDomain {
-            return ClaimPathDomain(value = this)
-        }
+        fun List<String>.toClaimPathDomain(type: ClaimType): ClaimPathDomain = ClaimPathDomain(value = this, type = type)
 
         /**
          * Checks whether this [ClaimPathDomain] is a prefix of another [ClaimPathDomain].
@@ -56,15 +72,32 @@ data class ClaimPathDomain(val value: List<String>) {
          * @param other The [ClaimPathDomain] to compare against.
          * @return `true` if this path is a prefix of [other]; `false` otherwise.
          */
-        fun ClaimPathDomain.isPrefixOf(other: ClaimPathDomain): Boolean {
-            return this.value.size <= other.value.size &&
-                    this.value.zip(other.value).all { (a, b) -> a == b }
-        }
+        fun ClaimPathDomain.isPrefixOf(other: ClaimPathDomain): Boolean =
+            this.value.size <= other.value.size &&
+                this.type == other.type &&
+                this.value.zip(other.value).all { (a, b) -> a == b }
     }
 
     val joined: String
         get() = value.joinToString(PATH_SEPARATOR)
 
-    fun toId(docId: String): String =
-        (listOf(docId) + value).joinToString(separator = PATH_SEPARATOR)
+    fun toId(docId: String): String {
+        val namespaceOrNull: String? =
+            when (type) {
+                is ClaimType.MsoMdoc -> type.namespace
+                is ClaimType.SdJwtVc -> null
+                is ClaimType.Unknown -> null
+            }
+
+        val finalId: String =
+            buildList {
+                add(docId)
+                namespaceOrNull?.let { safeNamespace ->
+                    add(safeNamespace)
+                }
+                addAll(value)
+            }.joinToString(separator = PATH_SEPARATOR)
+
+        return finalId
+    }
 }

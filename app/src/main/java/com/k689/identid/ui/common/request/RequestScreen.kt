@@ -39,14 +39,14 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
+import com.k689.identid.R
+import com.k689.identid.model.core.ClaimDomain
+import com.k689.identid.model.core.ClaimPathDomain
+import com.k689.identid.model.core.ClaimType
+import com.k689.identid.theme.values.warning
 import com.k689.identid.ui.common.request.model.DocumentPayloadDomain
 import com.k689.identid.ui.common.request.model.DomainDocumentFormat
 import com.k689.identid.ui.common.request.model.RequestDocumentItemUi
-import com.k689.identid.util.common.TestTag
-import com.k689.identid.model.core.ClaimDomain
-import com.k689.identid.model.core.ClaimPathDomain
-import com.k689.identid.R
-import com.k689.identid.theme.values.warning
 import com.k689.identid.ui.component.AppIcons
 import com.k689.identid.ui.component.ErrorInfo
 import com.k689.identid.ui.component.ListItemDataUi
@@ -75,6 +75,7 @@ import com.k689.identid.ui.component.wrap.TextConfig
 import com.k689.identid.ui.component.wrap.WrapExpandableListItem
 import com.k689.identid.ui.component.wrap.WrapModalBottomSheet
 import com.k689.identid.ui.component.wrap.WrapStickyBottomContent
+import com.k689.identid.util.common.TestTag
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.Flow
@@ -93,9 +94,10 @@ fun RequestScreen(
 
     val isBottomSheetOpen = state.isBottomSheetOpen
     val scope = rememberCoroutineScope()
-    val bottomSheetState = rememberModalBottomSheetState(
-        skipPartiallyExpanded = true
-    )
+    val bottomSheetState =
+        rememberModalBottomSheetState(
+            skipPartiallyExpanded = true,
+        )
 
     ContentScreen(
         navigatableAction = ScreenNavigateAction.BACKABLE,
@@ -103,24 +105,28 @@ fun RequestScreen(
         onBack = { viewModel.setEvent(Event.Pop) },
         stickyBottom = { paddingValues ->
             WrapStickyBottomContent(
-                modifier = Modifier
-                    .testTag(TestTag.RequestScreen.BUTTON)
-                    .fillMaxWidth()
-                    .padding(paddingValues),
-                stickyBottomConfig = StickyBottomConfig(
-                    type = StickyBottomType.OneButton(
-                        config = ButtonConfig(
-                            type = ButtonType.PRIMARY,
-                            enabled = !state.isLoading && state.allowShare,
-                            onClick = { viewModel.setEvent(Event.StickyButtonPressed) }
-                        )
-                    )
-                )
+                modifier =
+                    Modifier
+                        .testTag(TestTag.RequestScreen.BUTTON)
+                        .fillMaxWidth()
+                        .padding(paddingValues),
+                stickyBottomConfig =
+                    StickyBottomConfig(
+                        type =
+                            StickyBottomType.OneButton(
+                                config =
+                                    ButtonConfig(
+                                        type = ButtonType.PRIMARY,
+                                        enabled = !state.isLoading && state.allowShare,
+                                        onClick = { viewModel.setEvent(Event.StickyButtonPressed) },
+                                    ),
+                            ),
+                    ),
             ) {
                 Text(text = stringResource(R.string.request_sticky_button_text))
             }
         },
-        contentErrorConfig = state.error
+        contentErrorConfig = state.error,
     ) { paddingValues ->
         Content(
             state = state,
@@ -128,7 +134,6 @@ fun RequestScreen(
             onEventSend = { viewModel.setEvent(it) },
             onNavigationRequested = { navigationEffect ->
                 when (navigationEffect) {
-
                     is Effect.Navigation.SwitchScreen -> {
                         navController.navigate(navigationEffect.screenRoute)
                     }
@@ -140,14 +145,14 @@ fun RequestScreen(
                     is Effect.Navigation.PopTo -> {
                         navController.popBackStack(
                             route = navigationEffect.screenRoute,
-                            inclusive = false
+                            inclusive = false,
                         )
                     }
                 }
             },
             paddingValues = paddingValues,
             coroutineScope = scope,
-            modalBottomSheetState = bottomSheetState
+            modalBottomSheetState = bottomSheetState,
         )
 
         if (isBottomSheetOpen) {
@@ -155,11 +160,11 @@ fun RequestScreen(
                 onDismissRequest = {
                     viewModel.setEvent(
                         Event.BottomSheet.UpdateBottomSheetState(
-                            isOpen = false
-                        )
+                            isOpen = false,
+                        ),
                     )
                 },
-                sheetState = bottomSheetState
+                sheetState = bottomSheetState,
             ) {
                 SheetContent(
                     sheetContent = state.sheetContent,
@@ -185,15 +190,20 @@ private fun Content(
     modalBottomSheetState: SheetState,
 ) {
     Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .then(
-                other = if (state.noItems) Modifier else Modifier.verticalScroll(
-                    rememberScrollState()
-                )
-            )
-            .padding(paddingValues),
-        verticalArrangement = Arrangement.Top
+        modifier =
+            Modifier
+                .fillMaxSize()
+                .then(
+                    other =
+                        if (state.noItems) {
+                            Modifier
+                        } else {
+                            Modifier.verticalScroll(
+                                rememberScrollState(),
+                            )
+                        },
+                ).padding(paddingValues),
+        verticalArrangement = Arrangement.Top,
     ) {
         // Screen Header.
         ContentHeader(
@@ -204,9 +214,10 @@ private fun Content(
 
         // Screen Main Content.
         DisplayRequestItems(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(vertical = SPACING_SMALL.dp),
+            modifier =
+                Modifier
+                    .fillMaxWidth()
+                    .padding(vertical = SPACING_SMALL.dp),
             requestDocuments = state.items,
             noData = state.noItems,
             onEventSend = onEventSend,
@@ -214,25 +225,29 @@ private fun Content(
     }
 
     LaunchedEffect(Unit) {
-        effectFlow.onEach { effect ->
-            when (effect) {
-                is Effect.Navigation -> onNavigationRequested(effect)
+        effectFlow
+            .onEach { effect ->
+                when (effect) {
+                    is Effect.Navigation -> {
+                        onNavigationRequested(effect)
+                    }
 
-                is Effect.CloseBottomSheet -> {
-                    coroutineScope.launch {
-                        modalBottomSheetState.hide()
-                    }.invokeOnCompletion {
-                        if (!modalBottomSheetState.isVisible) {
-                            onEventSend(Event.BottomSheet.UpdateBottomSheetState(isOpen = false))
-                        }
+                    is Effect.CloseBottomSheet -> {
+                        coroutineScope
+                            .launch {
+                                modalBottomSheetState.hide()
+                            }.invokeOnCompletion {
+                                if (!modalBottomSheetState.isVisible) {
+                                    onEventSend(Event.BottomSheet.UpdateBottomSheetState(isOpen = false))
+                                }
+                            }
+                    }
+
+                    is Effect.ShowBottomSheet -> {
+                        onEventSend(Event.BottomSheet.UpdateBottomSheetState(isOpen = true))
                     }
                 }
-
-                is Effect.ShowBottomSheet -> {
-                    onEventSend(Event.BottomSheet.UpdateBottomSheetState(isOpen = true))
-                }
-            }
-        }.collect()
+            }.collect()
     }
 }
 
@@ -254,13 +269,14 @@ private fun DisplayRequestItems(
         } else {
             Column(
                 modifier = Modifier.fillMaxSize(),
-                verticalArrangement = Arrangement.spacedBy(SPACING_MEDIUM.dp)
+                verticalArrangement = Arrangement.spacedBy(SPACING_MEDIUM.dp),
             ) {
                 requestDocuments.forEachIndexed { index, requestDocument ->
                     WrapExpandableListItem(
-                        modifier = Modifier
-                            .testTag(TestTag.RequestScreen.requestedDocument(index = index))
-                            .fillMaxWidth(),
+                        modifier =
+                            Modifier
+                                .testTag(TestTag.RequestScreen.requestedDocument(index = index))
+                                .fillMaxWidth(),
                         header = requestDocument.headerUi.header,
                         data = requestDocument.headerUi.nestedItems,
                         onItemClick = { item ->
@@ -280,14 +296,16 @@ private fun DisplayRequestItems(
 
             if (requestDocuments.isNotEmpty()) {
                 SectionTitle(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(vertical = SPACING_SMALL.dp),
+                    modifier =
+                        Modifier
+                            .fillMaxWidth()
+                            .padding(vertical = SPACING_SMALL.dp),
                     text = stringResource(R.string.request_warning_text),
-                    textConfig = TextConfig(
-                        style = MaterialTheme.typography.bodySmall,
-                        color = MaterialTheme.colorScheme.onSurface,
-                    )
+                    textConfig =
+                        TextConfig(
+                            style = MaterialTheme.typography.bodySmall,
+                            color = MaterialTheme.colorScheme.onSurface,
+                        ),
                 )
             }
         }
@@ -301,12 +319,13 @@ private fun SheetContent(
     when (sheetContent) {
         RequestBottomSheetContent.WARNING -> {
             SimpleBottomSheet(
-                textData = BottomSheetTextDataUi(
-                    title = stringResource(id = R.string.request_bottom_sheet_warning_title),
-                    message = stringResource(id = R.string.request_bottom_sheet_warning_subtitle),
-                ),
+                textData =
+                    BottomSheetTextDataUi(
+                        title = stringResource(id = R.string.request_bottom_sheet_warning_title),
+                        message = stringResource(id = R.string.request_bottom_sheet_warning_subtitle),
+                    ),
                 leadingIcon = AppIcons.Warning,
-                leadingIconTint = MaterialTheme.colorScheme.warning
+                leadingIconTint = MaterialTheme.colorScheme.warning,
             )
         }
     }
@@ -318,79 +337,95 @@ private fun SheetContent(
 private fun ContentPreview() {
     PreviewTheme {
         Content(
-            state = State(
-                headerConfig = ContentHeaderConfig(
-                    description = stringResource(R.string.request_header_description),
-                    mainText = stringResource(R.string.request_header_main_text),
-                    relyingPartyData = RelyingPartyDataUi(
-                        isVerified = true,
-                        name = stringResource(R.string.request_relying_party_default_name),
-                        description = stringResource(R.string.request_relying_party_description)
-                    )
-                ),
-                items = listOf(
-                    RequestDocumentItemUi(
-                        domainPayload = DocumentPayloadDomain(
-                            docName = "docName",
-                            docId = "docId",
-                            domainDocFormat = DomainDocumentFormat.MsoMdoc(namespace = "pid"),
-                            docClaimsDomain = listOf(
-                                ClaimDomain.Primitive(
-                                    key = "key",
-                                    displayTitle = "title",
-                                    value = "value",
-                                    isRequired = false,
-                                    path = ClaimPathDomain(value = listOf())
+            state =
+                State(
+                    headerConfig =
+                        ContentHeaderConfig(
+                            description = stringResource(R.string.request_header_description),
+                            mainText = stringResource(R.string.request_header_main_text),
+                            relyingPartyData =
+                                RelyingPartyDataUi(
+                                    isVerified = true,
+                                    name = stringResource(R.string.request_relying_party_default_name),
+                                    description = stringResource(R.string.request_relying_party_description),
                                 ),
-                            )
                         ),
-                        headerUi = ExpandableListItemUi.NestedListItem(
-                            header = ListItemDataUi(
-                                itemId = "000",
-                                mainContentData = ListItemMainContentDataUi.Text(text = "Digital ID"),
-                                supportingText = stringResource(R.string.request_collapsed_supporting_text),
-                                trailingContentData = ListItemTrailingContentDataUi.Icon(
-                                    iconData = AppIcons.KeyboardArrowDown
-                                ),
-                            ),
-                            nestedItems = listOf(
-                                ExpandableListItemUi.SingleListItem(
-                                    ListItemDataUi(
-                                        itemId = "00",
-                                        overlineText = "Family name",
-                                        mainContentData = ListItemMainContentDataUi.Text(text = "Doe"),
-                                        trailingContentData = ListItemTrailingContentDataUi.Checkbox(
-                                            checkboxData = CheckboxDataUi(
-                                                isChecked = true
-                                            )
-                                        )
-                                    )
-                                ),
-                                ExpandableListItemUi.SingleListItem(
-                                    ListItemDataUi(
-                                        itemId = "01",
-                                        overlineText = "Given name",
-                                        mainContentData = ListItemMainContentDataUi.Text(text = "John"),
-                                        trailingContentData = ListItemTrailingContentDataUi.Checkbox(
-                                            checkboxData = CheckboxDataUi(
-                                                isChecked = true
-                                            )
-                                        )
+                    items =
+                        listOf(
+                            RequestDocumentItemUi(
+                                domainPayload =
+                                    DocumentPayloadDomain(
+                                        docName = "docName",
+                                        docId = "docId",
+                                        domainDocFormat = DomainDocumentFormat.MsoMdoc,
+                                        docClaimsDomain =
+                                            listOf(
+                                                ClaimDomain.Primitive(
+                                                    key = "key",
+                                                    displayTitle = "title",
+                                                    value = "value",
+                                                    isRequired = false,
+                                                    path = ClaimPathDomain(
+                                                        value = listOf(),
+                                                        type = ClaimType.MsoMdoc(namespace = "namespace")
+                                                    )
+                                                ),
+                                            ),
                                     ),
-                                )
-
+                                headerUi =
+                                    ExpandableListItemUi.NestedListItem(
+                                        header =
+                                            ListItemDataUi(
+                                                itemId = "000",
+                                                mainContentData = ListItemMainContentDataUi.Text(text = "Digital ID"),
+                                                supportingText = stringResource(R.string.request_collapsed_supporting_text),
+                                                trailingContentData =
+                                                    ListItemTrailingContentDataUi.Icon(
+                                                        iconData = AppIcons.KeyboardArrowDown,
+                                                    ),
+                                            ),
+                                        nestedItems =
+                                            listOf(
+                                                ExpandableListItemUi.SingleListItem(
+                                                    ListItemDataUi(
+                                                        itemId = "00",
+                                                        overlineText = "Family name",
+                                                        mainContentData = ListItemMainContentDataUi.Text(text = "Doe"),
+                                                        trailingContentData =
+                                                            ListItemTrailingContentDataUi.Checkbox(
+                                                                checkboxData =
+                                                                    CheckboxDataUi(
+                                                                        isChecked = true,
+                                                                    ),
+                                                            ),
+                                                    ),
+                                                ),
+                                                ExpandableListItemUi.SingleListItem(
+                                                    ListItemDataUi(
+                                                        itemId = "01",
+                                                        overlineText = "Given name",
+                                                        mainContentData = ListItemMainContentDataUi.Text(text = "John"),
+                                                        trailingContentData =
+                                                            ListItemTrailingContentDataUi.Checkbox(
+                                                                checkboxData =
+                                                                    CheckboxDataUi(
+                                                                        isChecked = true,
+                                                                    ),
+                                                            ),
+                                                    ),
+                                                ),
+                                            ),
+                                        isExpanded = true,
+                                    ),
                             ),
-                            isExpanded = true
-                        )
-                    )
-                )
-            ),
+                        ),
+                ),
             effectFlow = Channel<Effect>().receiveAsFlow(),
             onEventSend = {},
             onNavigationRequested = {},
             paddingValues = PaddingValues(SPACING_MEDIUM.dp),
             coroutineScope = rememberCoroutineScope(),
-            modalBottomSheetState = rememberModalBottomSheetState()
+            modalBottomSheetState = rememberModalBottomSheetState(),
         )
     }
 }
@@ -401,25 +436,28 @@ private fun ContentPreview() {
 private fun ContentNoDataPreview() {
     PreviewTheme {
         Content(
-            state = State(
-                headerConfig = ContentHeaderConfig(
-                    description = stringResource(R.string.request_header_description),
-                    mainText = stringResource(R.string.request_header_main_text),
-                    relyingPartyData = RelyingPartyDataUi(
-                        isVerified = true,
-                        name = stringResource(R.string.request_relying_party_default_name),
-                        description = stringResource(R.string.request_relying_party_description)
-                    )
+            state =
+                State(
+                    headerConfig =
+                        ContentHeaderConfig(
+                            description = stringResource(R.string.request_header_description),
+                            mainText = stringResource(R.string.request_header_main_text),
+                            relyingPartyData =
+                                RelyingPartyDataUi(
+                                    isVerified = true,
+                                    name = stringResource(R.string.request_relying_party_default_name),
+                                    description = stringResource(R.string.request_relying_party_description),
+                                ),
+                        ),
+                    items = emptyList(),
+                    noItems = true,
                 ),
-                items = emptyList(),
-                noItems = true,
-            ),
             effectFlow = Channel<Effect>().receiveAsFlow(),
             onEventSend = {},
             onNavigationRequested = {},
             paddingValues = PaddingValues(SPACING_MEDIUM.dp),
             coroutineScope = rememberCoroutineScope(),
-            modalBottomSheetState = rememberModalBottomSheetState()
+            modalBottomSheetState = rememberModalBottomSheetState(),
         )
     }
 }

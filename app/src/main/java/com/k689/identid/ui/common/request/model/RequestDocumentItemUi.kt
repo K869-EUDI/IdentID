@@ -17,26 +17,23 @@
 package com.k689.identid.ui.common.request.model
 
 import com.k689.identid.model.core.ClaimDomain
+import com.k689.identid.ui.component.wrap.ExpandableListItemUi
 import eu.europa.ec.eudi.wallet.document.DocumentId
 import eu.europa.ec.eudi.wallet.document.format.DocumentFormat
 import eu.europa.ec.eudi.wallet.document.format.MsoMdocFormat
 import eu.europa.ec.eudi.wallet.document.format.SdJwtVcFormat
-import com.k689.identid.ui.component.wrap.ExpandableListItemUi
 
 sealed class DomainDocumentFormat {
     data object SdJwtVc : DomainDocumentFormat()
-    data class MsoMdoc(val namespace: String) :
-        DomainDocumentFormat()
+
+    data object MsoMdoc : DomainDocumentFormat()
 
     companion object {
-        fun getFormat(format: DocumentFormat, namespace: String?): DomainDocumentFormat {
-            return when (format) {
+        fun getFormat(format: DocumentFormat): DomainDocumentFormat =
+            when (format) {
                 is SdJwtVcFormat -> SdJwtVc
-                is MsoMdocFormat -> MsoMdoc(
-                    namespace = namespace.toString()
-                )
+                is MsoMdocFormat -> MsoMdoc
             }
-        }
     }
 }
 

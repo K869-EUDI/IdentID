@@ -16,109 +16,113 @@
 
 package com.k689.identid.ui.common.request.transformer
 
-import com.k689.identid.provider.UuidProvider
+import com.k689.identid.R
 import com.k689.identid.extension.common.toSelectiveExpandableListItems
-import com.k689.identid.ui.common.request.model.DocumentPayloadDomain
-import com.k689.identid.ui.common.request.model.DomainDocumentFormat
-import com.k689.identid.ui.common.request.model.RequestDocumentItemUi
-import com.k689.identid.util.common.docNamespace
-import com.k689.identid.util.common.transformPathsToDomainClaims
 import com.k689.identid.extension.core.toClaimPath
 import com.k689.identid.extension.core.toClaimPaths
 import com.k689.identid.model.core.ClaimPathDomain
 import com.k689.identid.model.core.ClaimPathDomain.Companion.isPrefixOf
+import com.k689.identid.provider.UuidProvider
+import com.k689.identid.provider.resources.ResourceProvider
+import com.k689.identid.ui.common.request.model.DocumentPayloadDomain
+import com.k689.identid.ui.common.request.model.DomainDocumentFormat
+import com.k689.identid.ui.common.request.model.RequestDocumentItemUi
+import com.k689.identid.ui.component.AppIcons
+import com.k689.identid.ui.component.ListItemDataUi
+import com.k689.identid.ui.component.ListItemMainContentDataUi
+import com.k689.identid.ui.component.ListItemTrailingContentDataUi
+import com.k689.identid.ui.component.wrap.ExpandableListItemUi
+import com.k689.identid.util.common.transformPathsToDomainClaims
 import eu.europa.ec.eudi.iso18013.transfer.response.DisclosedDocument
 import eu.europa.ec.eudi.iso18013.transfer.response.DisclosedDocuments
 import eu.europa.ec.eudi.iso18013.transfer.response.RequestedDocument
 import eu.europa.ec.eudi.iso18013.transfer.response.device.MsoMdocItem
 import eu.europa.ec.eudi.wallet.document.IssuedDocument
 import eu.europa.ec.eudi.wallet.transfer.openId4vp.SdJwtVcItem
-import com.k689.identid.R
-import com.k689.identid.provider.resources.ResourceProvider
-import com.k689.identid.ui.component.AppIcons
-import com.k689.identid.ui.component.ListItemDataUi
-import com.k689.identid.ui.component.ListItemMainContentDataUi
-import com.k689.identid.ui.component.ListItemTrailingContentDataUi
-import com.k689.identid.ui.component.wrap.ExpandableListItemUi
 
 object RequestTransformer {
-
     fun transformToDomainItems(
         storageDocuments: List<IssuedDocument>,
         resourceProvider: ResourceProvider,
         uuidProvider: UuidProvider,
         requestDocuments: List<RequestedDocument>,
-    ): Result<List<DocumentPayloadDomain>> = runCatching {
-        val resultList = mutableListOf<DocumentPayloadDomain>()
+    ): Result<List<DocumentPayloadDomain>> =
+        runCatching {
+            val resultList = mutableListOf<DocumentPayloadDomain>()
 
-        requestDocuments.forEach { requestDocument ->
+            requestDocuments.forEach { requestDocument ->
 
-            val storageDocument =
-                storageDocuments.first { it.id == requestDocument.documentId }
+                val storageDocument =
+                    storageDocuments.first { it.id == requestDocument.documentId }
 
-            val claimsPaths = storageDocument.data.claims.flatMap { claim ->
-                claim.toClaimPaths()
-            }
+                val claimsPaths =
+                    storageDocument.data.claims.flatMap { claim ->
+                        claim.toClaimPaths()
+                    }
 
-            val requestedItemsPaths = requestDocument.requestedItems.keys
-                .map {
-                    it.toClaimPath()
-                }
+                val requestedItemsPaths =
+                    requestDocument.requestedItems.keys
+                        .map {
+                            it.toClaimPath()
+                        }
 
-            val filteredPaths = claimsPaths.filter { available ->
-                requestedItemsPaths.any { requested ->
-                    requested.isPrefixOf(available)
-                }
-            }
+                val filteredPaths =
+                    claimsPaths.filter { available ->
+                        requestedItemsPaths.any { requested ->
+                            requested.isPrefixOf(available)
+                        }
+                    }
 
-            val domainClaims = transformPathsToDomainClaims(
-                paths = filteredPaths,
-                claims = storageDocument.data.claims,
-                resourceProvider = resourceProvider,
-                uuidProvider = uuidProvider
-            )
-
-            if (domainClaims.isNotEmpty()) {
-                resultList.add(
-                    DocumentPayloadDomain(
-                        docName = storageDocument.name,
-                        docId = storageDocument.id,
-                        domainDocFormat = DomainDocumentFormat.getFormat(
-                            format = storageDocument.format,
-                            namespace = storageDocument.docNamespace
-                        ),
-                        docClaimsDomain = domainClaims
+                val domainClaims =
+                    transformPathsToDomainClaims(
+                        paths = filteredPaths,
+                        claims = storageDocument.data.claims,
+                        resourceProvider = resourceProvider,
+                        uuidProvider = uuidProvider,
                     )
-                )
+
+                if (domainClaims.isNotEmpty()) {
+                    resultList.add(
+                        DocumentPayloadDomain(
+                            docName = storageDocument.name,
+                            docId = storageDocument.id,
+                            domainDocFormat =
+                                DomainDocumentFormat.getFormat(
+                                    format = storageDocument.format,
+                                ),
+                            docClaimsDomain = domainClaims,
+                        ),
+                    )
+                }
             }
+
+            resultList
         }
-
-        resultList
-    }
-
 
     fun transformToUiItems(
         documentsDomain: List<DocumentPayloadDomain>,
         resourceProvider: ResourceProvider,
-    ): List<RequestDocumentItemUi> {
-        return documentsDomain.map {
+    ): List<RequestDocumentItemUi> =
+        documentsDomain.map {
             RequestDocumentItemUi(
                 domainPayload = it,
-                headerUi = ExpandableListItemUi.NestedListItem(
-                    header = ListItemDataUi(
-                        itemId = it.docId,
-                        mainContentData = ListItemMainContentDataUi.Text(text = it.docName),
-                        supportingText = resourceProvider.getString(R.string.request_collapsed_supporting_text),
-                        trailingContentData = ListItemTrailingContentDataUi.Icon(
-                            iconData = AppIcons.KeyboardArrowDown
-                        )
+                headerUi =
+                    ExpandableListItemUi.NestedListItem(
+                        header =
+                            ListItemDataUi(
+                                itemId = it.docId,
+                                mainContentData = ListItemMainContentDataUi.Text(text = it.docName),
+                                supportingText = resourceProvider.getString(R.string.request_collapsed_supporting_text),
+                                trailingContentData =
+                                    ListItemTrailingContentDataUi.Icon(
+                                        iconData = AppIcons.KeyboardArrowDown,
+                                    ),
+                            ),
+                        nestedItems = it.toSelectiveExpandableListItems(),
+                        isExpanded = false,
                     ),
-                    nestedItems = it.toSelectiveExpandableListItems(),
-                    isExpanded = false,
-                ),
             )
         }
-    }
 
     fun createDisclosedDocuments(items: List<RequestDocumentItemUi>): DisclosedDocuments {
         // Collect all selected expanded items from the list
@@ -127,21 +131,27 @@ object RequestTransformer {
                 is ExpandableListItemUi.SingleListItem -> {
                     val isSelected =
                         header.trailingContentData is ListItemTrailingContentDataUi.Checkbox &&
-                                header.trailingContentData.checkboxData.isChecked
+                            (header.trailingContentData as ListItemTrailingContentDataUi.Checkbox)
+                                .checkboxData.isChecked
                     if (isSelected) listOf(this) else emptyList()
                 }
 
-                is ExpandableListItemUi.NestedListItem -> nestedItems.flatMap { it.collectSingles() }
+                is ExpandableListItemUi.NestedListItem -> {
+                    nestedItems.flatMap { it.collectSingles() }
+                }
             }
 
-        val groupedByDocument = items.map { document ->
-            document.domainPayload to document.headerUi.nestedItems.flatMap { uiItem ->
-                uiItem.collectSingles()
-                    .distinctBy { listItemDataUi ->
-                        listItemDataUi.header.itemId // Distinct by item ID to prevent duplicate sending of the same group
+        val groupedByDocument =
+            items.map { document ->
+                document.domainPayload to
+                    document.headerUi.nestedItems.flatMap { uiItem ->
+                        uiItem
+                            .collectSingles()
+                            .distinctBy { listItemDataUi ->
+                                listItemDataUi.header.itemId // Distinct by item ID to prevent duplicate sending of the same group
+                            }
                     }
             }
-        }
 
         // Convert to the format required by DisclosedDocuments
         val disclosedDocuments: List<DisclosedDocument> =
@@ -155,31 +165,50 @@ object RequestTransformer {
                     val selectedItemId = selectedItem.header.itemId
 
                     when (documentPayload.domainDocFormat) {
-
-                        is DomainDocumentFormat.SdJwtVc -> sdJwtItems.add(
-                            SdJwtVcItem(
-                                path = ClaimPathDomain.toSdJwtVcPath(selectedItemId)
+                        is DomainDocumentFormat.SdJwtVc -> {
+                            sdJwtItems.add(
+                                SdJwtVcItem(
+                                    path = ClaimPathDomain.toSdJwtVcPath(selectedItemId),
+                                ),
                             )
-                        )
+                        }
 
-                        is DomainDocumentFormat.MsoMdoc -> mDocItems.add(
-                            MsoMdocItem(
-                                namespace = documentPayload.domainDocFormat.namespace,
-                                elementIdentifier = ClaimPathDomain.toElementIdentifier(
-                                    selectedItemId
+                        is DomainDocumentFormat.MsoMdoc -> {
+                            val elementIdentifier =
+                                ClaimPathDomain.toElementIdentifier(
+                                    selectedItemId,
                                 )
-                            )
-                        )
+
+                            val nameSpace = ClaimPathDomain.toNameSpace(selectedItemId)
+
+                            documentPayload.docClaimsDomain
+                                .find { claimDomain ->
+                                    claimDomain.key == elementIdentifier && claimDomain.nameSpace == nameSpace
+                                }?.let { safeClaimDomain ->
+                                    safeClaimDomain.nameSpace?.let { safeNamespace ->
+                                        mDocItems.add(
+                                            MsoMdocItem(
+                                                namespace = safeNamespace,
+                                                elementIdentifier = elementIdentifier,
+                                            ),
+                                        )
+                                    }
+                                }
+                        }
                     }
                 }
 
-                val disclosedItems = mDocItems.distinctBy { it.elementIdentifier } + sdJwtItems
+                val disclosedItems =
+                    mDocItems
+                        .distinctBy {
+                            it.namespace to it.elementIdentifier
+                        } + sdJwtItems
 
                 return@mapNotNull if (disclosedItems.isNotEmpty()) {
                     DisclosedDocument(
                         documentId = documentPayload.docId,
                         disclosedItems = disclosedItems,
-                        keyUnlockData = null
+                        keyUnlockData = null,
                     )
                 } else {
                     null

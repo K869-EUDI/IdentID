@@ -50,7 +50,7 @@ class PrefsBiometryStorageProvider(
     }
 
     /**
-     * Key to use Biometrics Auth instead of quick pin.
+     * Key to use Biometrics Auth instead of pin.
      *
      * Setting an empty value will clear the entry from shared prefs.
      */
@@ -59,7 +59,7 @@ class PrefsBiometryStorageProvider(
     }
 
     /**
-     * Key to use Biometrics Auth instead of quick pin.
+     * Key to use Biometrics Auth instead of pin.
      *
      * Setting an empty value will clear the entry from shared prefs.
      */
