@@ -14,10 +14,10 @@
  * governing permissions and limitations under the Licence.
  */
 
-package com.k869.identid.ui.dashboard.documents.detail.model
+package com.k689.identid.ui.dashboard.documents.detail.model
 
-import com.k869.identid.model.core.ClaimDomain
-import com.k869.identid.model.core.DocumentIdentifier
+import com.k689.identid.model.core.ClaimDomain
+import com.k689.identid.model.core.DocumentIdentifier
 import eu.europa.ec.eudi.wallet.document.DocumentId
 
 data class DocumentDetailsDomain(

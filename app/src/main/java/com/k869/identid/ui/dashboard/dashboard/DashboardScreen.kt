@@ -14,7 +14,7 @@
  * governing permissions and limitations under the Licence.
  */
 
-package com.k869.identid.ui.dashboard.dashboard
+package com.k689.identid.ui.dashboard.dashboard
 
 import android.content.Context
 import androidx.compose.animation.AnimatedVisibility
@@ -41,31 +41,31 @@ import androidx.navigation.NavController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import com.k869.identid.extension.business.getParcelableArrayListExtra
-import com.k869.identid.model.core.RevokedDocumentDataDomain
-import com.k869.identid.util.core.CoreActions
-import com.k869.identid.ui.dashboard.component.BottomNavigationBar
-import com.k869.identid.ui.dashboard.component.BottomNavigationItem
-import com.k869.identid.ui.dashboard.dashboard.sidemenu.SideMenuScreen
-import com.k869.identid.ui.dashboard.documents.list.DocumentsScreen
-import com.k869.identid.ui.dashboard.documents.list.DocumentsViewModel
-import com.k869.identid.ui.dashboard.home.HomeScreen
-import com.k869.identid.ui.dashboard.home.HomeViewModel
-import com.k869.identid.ui.dashboard.transactions.list.TransactionsScreen
-import com.k869.identid.ui.dashboard.transactions.list.TransactionsViewModel
-import com.k869.identid.R
-import com.k869.identid.ui.component.SystemBroadcastReceiver
-import com.k869.identid.ui.component.utils.LifecycleEffect
-import com.k869.identid.ui.component.wrap.BottomSheetTextDataUi
-import com.k869.identid.ui.component.wrap.BottomSheetWithOptionsList
-import com.k869.identid.ui.component.wrap.WrapModalBottomSheet
-import com.k869.identid.extension.ui.finish
-import com.k869.identid.extension.ui.getPendingDeepLink
-import com.k869.identid.extension.ui.openAppSettings
-import com.k869.identid.extension.ui.openBleSettings
-import com.k869.identid.extension.ui.openIntentChooser
-import com.k869.identid.extension.ui.openUrl
-import com.k869.identid.navigation.helper.handleDeepLinkAction
+import com.k689.identid.extension.business.getParcelableArrayListExtra
+import com.k689.identid.model.core.RevokedDocumentDataDomain
+import com.k689.identid.util.core.CoreActions
+import com.k689.identid.ui.dashboard.component.BottomNavigationBar
+import com.k689.identid.ui.dashboard.component.BottomNavigationItem
+import com.k689.identid.ui.dashboard.dashboard.sidemenu.SideMenuScreen
+import com.k689.identid.ui.dashboard.documents.list.DocumentsScreen
+import com.k689.identid.ui.dashboard.documents.list.DocumentsViewModel
+import com.k689.identid.ui.dashboard.home.HomeScreen
+import com.k689.identid.ui.dashboard.home.HomeViewModel
+import com.k689.identid.ui.dashboard.transactions.list.TransactionsScreen
+import com.k689.identid.ui.dashboard.transactions.list.TransactionsViewModel
+import com.k689.identid.R
+import com.k689.identid.ui.component.SystemBroadcastReceiver
+import com.k689.identid.ui.component.utils.LifecycleEffect
+import com.k689.identid.ui.component.wrap.BottomSheetTextDataUi
+import com.k689.identid.ui.component.wrap.BottomSheetWithOptionsList
+import com.k689.identid.ui.component.wrap.WrapModalBottomSheet
+import com.k689.identid.extension.ui.finish
+import com.k689.identid.extension.ui.getPendingDeepLink
+import com.k689.identid.extension.ui.openAppSettings
+import com.k689.identid.extension.ui.openBleSettings
+import com.k689.identid.extension.ui.openIntentChooser
+import com.k689.identid.extension.ui.openUrl
+import com.k689.identid.navigation.helper.handleDeepLinkAction
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch

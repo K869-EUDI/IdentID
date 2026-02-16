@@ -14,16 +14,16 @@
  * governing permissions and limitations under the Licence.
  */
 
-package com.k869.identid.controller.core
+package com.k689.identid.controller.core
 
 import androidx.activity.ComponentActivity
-import com.k869.identid.model.authentication.BiometricCrypto
-import com.k869.identid.extension.business.addOrReplace
-import com.k869.identid.extension.business.safeAsync
-import com.k869.identid.extension.business.toUri
-import com.k869.identid.controller.core.WalletPresentationScope
-import com.k869.identid.model.core.AuthenticationData
-import com.k869.identid.util.core.EudiWalletListenerWrapper
+import com.k689.identid.model.authentication.BiometricCrypto
+import com.k689.identid.extension.business.addOrReplace
+import com.k689.identid.extension.business.safeAsync
+import com.k689.identid.extension.business.toUri
+import com.k689.identid.controller.core.WalletPresentationScope
+import com.k689.identid.model.core.AuthenticationData
+import com.k689.identid.util.core.EudiWalletListenerWrapper
 import eu.europa.ec.eudi.iso18013.transfer.response.DisclosedDocument
 import eu.europa.ec.eudi.iso18013.transfer.response.DisclosedDocuments
 import eu.europa.ec.eudi.iso18013.transfer.response.RequestProcessor
@@ -31,7 +31,7 @@ import eu.europa.ec.eudi.iso18013.transfer.response.RequestedDocument
 import eu.europa.ec.eudi.iso18013.transfer.toKotlinResult
 import eu.europa.ec.eudi.wallet.EudiWallet
 import eu.europa.ec.eudi.wallet.document.DocumentExtensions.getDefaultKeyUnlockData
-import com.k869.identid.provider.resources.ResourceProvider
+import com.k689.identid.provider.resources.ResourceProvider
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers

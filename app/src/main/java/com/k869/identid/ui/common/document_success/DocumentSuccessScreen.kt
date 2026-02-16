@@ -14,7 +14,7 @@
  * governing permissions and limitations under the Licence.
  */
 
-package com.k869.identid.ui.common.document_success
+package com.k689.identid.ui.common.document_success
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -37,21 +37,21 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
-import com.k869.identid.util.common.TestTag
-import com.k869.identid.R
-import com.k869.identid.ui.component.content.ContentHeader
-import com.k869.identid.ui.component.content.ContentScreen
-import com.k869.identid.ui.component.content.ScreenNavigateAction
-import com.k869.identid.ui.component.utils.OneTimeLaunchedEffect
-import com.k869.identid.ui.component.utils.SPACING_MEDIUM
-import com.k869.identid.ui.component.utils.SPACING_SMALL
-import com.k869.identid.ui.component.wrap.ButtonConfig
-import com.k869.identid.ui.component.wrap.ButtonType
-import com.k869.identid.ui.component.wrap.StickyBottomConfig
-import com.k869.identid.ui.component.wrap.StickyBottomType
-import com.k869.identid.ui.component.wrap.WrapExpandableListItem
-import com.k869.identid.ui.component.wrap.WrapStickyBottomContent
-import com.k869.identid.extension.ui.cacheDeepLink
+import com.k689.identid.util.common.TestTag
+import com.k689.identid.R
+import com.k689.identid.ui.component.content.ContentHeader
+import com.k689.identid.ui.component.content.ContentScreen
+import com.k689.identid.ui.component.content.ScreenNavigateAction
+import com.k689.identid.ui.component.utils.OneTimeLaunchedEffect
+import com.k689.identid.ui.component.utils.SPACING_MEDIUM
+import com.k689.identid.ui.component.utils.SPACING_SMALL
+import com.k689.identid.ui.component.wrap.ButtonConfig
+import com.k689.identid.ui.component.wrap.ButtonType
+import com.k689.identid.ui.component.wrap.StickyBottomConfig
+import com.k689.identid.ui.component.wrap.StickyBottomType
+import com.k689.identid.ui.component.wrap.WrapExpandableListItem
+import com.k689.identid.ui.component.wrap.WrapStickyBottomContent
+import com.k689.identid.extension.ui.cacheDeepLink
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.onEach

@@ -14,25 +14,25 @@
  * governing permissions and limitations under the Licence.
  */
 
-package com.k869.identid.controller.core
+package com.k689.identid.controller.core
 
 import androidx.core.net.toUri
-import com.k869.identid.controller.authentication.DeviceAuthenticationResult
-import com.k869.identid.model.authentication.BiometricCrypto
-import com.k869.identid.extension.business.safeAsync
-import com.k869.identid.config.WalletCoreConfig
-import com.k869.identid.extension.core.documentIdentifier
-import com.k869.identid.extension.core.getLocalizedDisplayName
-import com.k869.identid.extension.core.parseTransactionLog
-import com.k869.identid.extension.core.toCoreTransactionLog
-import com.k869.identid.extension.core.toTransactionLogData
-import com.k869.identid.model.core.DeferredDocumentDataDomain
-import com.k869.identid.model.core.DocumentCategories
-import com.k869.identid.model.core.DocumentIdentifier
-import com.k869.identid.model.core.FormatType
-import com.k869.identid.model.core.ScopedDocumentDomain
-import com.k869.identid.model.core.TransactionLogDataDomain
-import com.k869.identid.model.core.toDocumentIdentifier
+import com.k689.identid.controller.authentication.DeviceAuthenticationResult
+import com.k689.identid.model.authentication.BiometricCrypto
+import com.k689.identid.extension.business.safeAsync
+import com.k689.identid.config.WalletCoreConfig
+import com.k689.identid.extension.core.documentIdentifier
+import com.k689.identid.extension.core.getLocalizedDisplayName
+import com.k689.identid.extension.core.parseTransactionLog
+import com.k689.identid.extension.core.toCoreTransactionLog
+import com.k689.identid.extension.core.toTransactionLogData
+import com.k689.identid.model.core.DeferredDocumentDataDomain
+import com.k689.identid.model.core.DocumentCategories
+import com.k689.identid.model.core.DocumentIdentifier
+import com.k689.identid.model.core.FormatType
+import com.k689.identid.model.core.ScopedDocumentDomain
+import com.k689.identid.model.core.TransactionLogDataDomain
+import com.k689.identid.model.core.toDocumentIdentifier
 import eu.europa.ec.eudi.openid4vci.CredentialIssuerMetadata
 import eu.europa.ec.eudi.openid4vci.MsoMdocCredential
 import eu.europa.ec.eudi.openid4vci.SdJwtVcCredential
@@ -52,12 +52,12 @@ import eu.europa.ec.eudi.wallet.issue.openid4vci.IssueEvent
 import eu.europa.ec.eudi.wallet.issue.openid4vci.Offer
 import eu.europa.ec.eudi.wallet.issue.openid4vci.OfferResult
 import eu.europa.ec.eudi.wallet.issue.openid4vci.OpenId4VciManager
-import com.k869.identid.R
-import com.k869.identid.provider.resources.ResourceProvider
-import com.k869.identid.storage.dao.BookmarkDao
-import com.k869.identid.storage.dao.RevokedDocumentDao
-import com.k869.identid.storage.dao.TransactionLogDao
-import com.k869.identid.model.storage.Bookmark
+import com.k689.identid.R
+import com.k689.identid.provider.resources.ResourceProvider
+import com.k689.identid.storage.dao.BookmarkDao
+import com.k689.identid.storage.dao.RevokedDocumentDao
+import com.k689.identid.storage.dao.TransactionLogDao
+import com.k689.identid.model.storage.Bookmark
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.channels.ProducerScope

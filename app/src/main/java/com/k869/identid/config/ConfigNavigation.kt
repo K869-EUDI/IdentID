@@ -14,9 +14,9 @@
  * governing permissions and limitations under the Licence.
  */
 
-package com.k869.identid.config
+package com.k689.identid.config
 
-import com.k869.identid.navigation.Screen
+import com.k689.identid.navigation.Screen
 
 data class ConfigNavigation(
     val navigationType: NavigationType,

@@ -14,16 +14,16 @@
  * governing permissions and limitations under the Licence.
  */
 
-package com.k869.identid.app
+package com.k689.identid.app
 
 import android.app.Application
 import androidx.work.ExistingPeriodicWorkPolicy
 import androidx.work.PeriodicWorkRequest
 import androidx.work.WorkManager
-import com.k869.identid.config.ConfigLogic
-import com.k869.identid.config.WalletCoreConfig
-import com.k869.identid.di.setupKoin
-import com.k869.identid.worker.RevocationWorkManager
+import com.k689.identid.config.ConfigLogic
+import com.k689.identid.config.WalletCoreConfig
+import com.k689.identid.di.setupKoin
+import com.k689.identid.worker.RevocationWorkManager
 import eu.europa.ec.eudi.rqesui.infrastructure.EudiRQESUi
 import org.koin.android.ext.android.inject
 import org.koin.core.KoinApplication

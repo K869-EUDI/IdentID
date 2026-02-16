@@ -14,10 +14,10 @@
  * governing permissions and limitations under the Licence.
  */
 
-package com.k869.identid.extension.ui
+package com.k689.identid.extension.ui
 
 import androidx.navigation.NavController
-import com.k869.identid.config.FlowCompletion
+import com.k689.identid.config.FlowCompletion
 
 private const val FLOW_CANCELLATION = "FLOW_CANCELLATION"
 private const val FLOW_SUCCESS = "FLOW_SUCCESS"

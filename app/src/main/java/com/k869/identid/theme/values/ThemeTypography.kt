@@ -14,15 +14,15 @@
  * governing permissions and limitations under the Licence.
  */
 
-package com.k869.identid.theme.values
+package com.k689.identid.theme.values
 
-import com.k869.identid.R
-import com.k869.identid.theme.templates.ThemeTextStyle
-import com.k869.identid.theme.templates.ThemeTypographyTemplate
-import com.k869.identid.theme.templates.structures.ThemeFont
-import com.k869.identid.theme.templates.structures.ThemeFontStyle
-import com.k869.identid.theme.templates.structures.ThemeFontWeight
-import com.k869.identid.theme.templates.structures.ThemeTextAlign
+import com.k689.identid.R
+import com.k689.identid.theme.templates.ThemeTextStyle
+import com.k689.identid.theme.templates.ThemeTypographyTemplate
+import com.k689.identid.theme.templates.structures.ThemeFont
+import com.k689.identid.theme.templates.structures.ThemeFontStyle
+import com.k689.identid.theme.templates.structures.ThemeFontWeight
+import com.k689.identid.theme.templates.structures.ThemeTextAlign
 
 internal class ThemeTypography {
     companion object {

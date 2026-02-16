@@ -14,7 +14,7 @@
  * governing permissions and limitations under the Licence.
  */
 
-package com.k869.identid.ui.common.pin
+package com.k689.identid.ui.common.pin
 
 import android.content.Context
 import androidx.compose.foundation.layout.Arrangement
@@ -43,28 +43,28 @@ import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
-import com.k869.identid.R
-import com.k869.identid.extension.ui.finish
-import com.k869.identid.model.common.PinFlow
-import com.k869.identid.navigation.CommonScreens
-import com.k869.identid.ui.component.AppIconAndText
-import com.k869.identid.ui.component.AppIconAndTextDataUi
-import com.k869.identid.ui.component.content.ContentScreen
-import com.k869.identid.ui.component.content.ImePaddingConfig
-import com.k869.identid.ui.component.preview.PreviewTheme
-import com.k869.identid.ui.component.preview.ThemeModePreviews
-import com.k869.identid.ui.component.utils.SPACING_LARGE
-import com.k869.identid.ui.component.utils.SPACING_SMALL
-import com.k869.identid.ui.component.wrap.BottomSheetTextDataUi
-import com.k869.identid.ui.component.wrap.ButtonConfig
-import com.k869.identid.ui.component.wrap.ButtonType
-import com.k869.identid.ui.component.wrap.DialogBottomSheet
-import com.k869.identid.ui.component.wrap.StickyBottomConfig
-import com.k869.identid.ui.component.wrap.StickyBottomType
-import com.k869.identid.ui.component.wrap.WrapModalBottomSheet
-import com.k869.identid.ui.component.wrap.WrapPinTextField
-import com.k869.identid.ui.component.wrap.WrapStickyBottomContent
-import com.k869.identid.util.common.TestTag
+import com.k689.identid.R
+import com.k689.identid.extension.ui.finish
+import com.k689.identid.model.common.PinFlow
+import com.k689.identid.navigation.CommonScreens
+import com.k689.identid.ui.component.AppIconAndText
+import com.k689.identid.ui.component.AppIconAndTextDataUi
+import com.k689.identid.ui.component.content.ContentScreen
+import com.k689.identid.ui.component.content.ImePaddingConfig
+import com.k689.identid.ui.component.preview.PreviewTheme
+import com.k689.identid.ui.component.preview.ThemeModePreviews
+import com.k689.identid.ui.component.utils.SPACING_LARGE
+import com.k689.identid.ui.component.utils.SPACING_SMALL
+import com.k689.identid.ui.component.wrap.BottomSheetTextDataUi
+import com.k689.identid.ui.component.wrap.ButtonConfig
+import com.k689.identid.ui.component.wrap.ButtonType
+import com.k689.identid.ui.component.wrap.DialogBottomSheet
+import com.k689.identid.ui.component.wrap.StickyBottomConfig
+import com.k689.identid.ui.component.wrap.StickyBottomType
+import com.k689.identid.ui.component.wrap.WrapModalBottomSheet
+import com.k689.identid.ui.component.wrap.WrapPinTextField
+import com.k689.identid.ui.component.wrap.WrapStickyBottomContent
+import com.k689.identid.util.common.TestTag
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.Flow

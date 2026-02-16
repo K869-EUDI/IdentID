@@ -14,15 +14,15 @@
  * governing permissions and limitations under the Licence.
  */
 
-package com.k869.identid.ui.startup.splash
+package com.k689.identid.ui.startup.splash
 
 import androidx.lifecycle.viewModelScope
-import com.k869.identid.interactor.startup.SplashInteractor
-import com.k869.identid.navigation.ModuleRoute
-import com.k869.identid.ui.mvi.MviViewModel
-import com.k869.identid.ui.mvi.ViewEvent
-import com.k869.identid.ui.mvi.ViewSideEffect
-import com.k869.identid.ui.mvi.ViewState
+import com.k689.identid.interactor.startup.SplashInteractor
+import com.k689.identid.navigation.ModuleRoute
+import com.k689.identid.ui.mvi.MviViewModel
+import com.k689.identid.ui.mvi.ViewEvent
+import com.k689.identid.ui.mvi.ViewSideEffect
+import com.k689.identid.ui.mvi.ViewState
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import org.koin.android.annotation.KoinViewModel

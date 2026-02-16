@@ -14,7 +14,7 @@
  * governing permissions and limitations under the Licence.
  */
 
-package com.k869.identid.ui.component
+package com.k689.identid.ui.component
 
 import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
@@ -28,7 +28,7 @@ import androidx.compose.material.icons.filled.KeyboardArrowDown
 import androidx.compose.material.icons.filled.KeyboardArrowUp
 import androidx.compose.runtime.Stable
 import androidx.compose.ui.graphics.vector.ImageVector
-import com.k869.identid.R
+import com.k689.identid.R
 
 /**
  * Data class to be used when we want to display an Icon.

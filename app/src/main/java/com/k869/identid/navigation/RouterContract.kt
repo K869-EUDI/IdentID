@@ -14,7 +14,7 @@
  * governing permissions and limitations under the Licence.
  */
 
-package com.k869.identid.navigation
+package com.k689.identid.navigation
 
 interface NavigatableItem
 

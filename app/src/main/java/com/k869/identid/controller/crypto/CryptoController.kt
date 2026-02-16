@@ -14,7 +14,7 @@
  * governing permissions and limitations under the Licence.
  */
 
-package com.k869.identid.controller.crypto
+package com.k689.identid.controller.crypto
 
 import android.util.Base64
 import java.security.SecureRandom

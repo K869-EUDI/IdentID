@@ -14,7 +14,7 @@
  * governing permissions and limitations under the Licence.
  */
 
-package com.k869.identid.util.business
+package com.k689.identid.util.business
 
 import java.text.DateFormat
 import java.text.SimpleDateFormat

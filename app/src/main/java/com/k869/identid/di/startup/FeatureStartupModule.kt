@@ -14,20 +14,20 @@
  * governing permissions and limitations under the Licence.
  */
 
-package com.k869.identid.di.startup
+package com.k689.identid.di.startup
 
-import com.k869.identid.interactor.common.QuickPinInteractor
-import com.k869.identid.controller.core.WalletCoreDocumentsController
-import com.k869.identid.provider.resources.ResourceProvider
-import com.k869.identid.interactor.startup.SplashInteractor
-import com.k869.identid.interactor.startup.SplashInteractorImpl
-import com.k869.identid.ui.serializer.UiSerializer
+import com.k689.identid.interactor.common.QuickPinInteractor
+import com.k689.identid.controller.core.WalletCoreDocumentsController
+import com.k689.identid.provider.resources.ResourceProvider
+import com.k689.identid.interactor.startup.SplashInteractor
+import com.k689.identid.interactor.startup.SplashInteractorImpl
+import com.k689.identid.ui.serializer.UiSerializer
 import org.koin.core.annotation.ComponentScan
 import org.koin.core.annotation.Factory
 import org.koin.core.annotation.Module
 
 @Module
-@ComponentScan("com.k869.identid.ui.startup", "com.k869.identid.di.startup")
+@ComponentScan("com.k689.identid.ui.startup", "com.k689.identid.di.startup")
 class FeatureStartupModule
 
 @Factory

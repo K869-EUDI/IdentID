@@ -14,12 +14,12 @@
  * governing permissions and limitations under the Licence.
  */
 
-package com.k869.identid.ui.dashboard.transactions.model
+package com.k689.identid.ui.dashboard.transactions.model
 
-import com.k869.identid.model.core.TransactionLogDataDomain
+import com.k689.identid.model.core.TransactionLogDataDomain
 import eu.europa.ec.eudi.wallet.transactionLogging.TransactionLog
-import com.k869.identid.R
-import com.k869.identid.provider.resources.ResourceProvider
+import com.k689.identid.R
+import com.k689.identid.provider.resources.ResourceProvider
 
 enum class TransactionStatusUi {
     Completed, Failed;

@@ -14,11 +14,11 @@
  * governing permissions and limitations under the Licence.
  */
 
-package com.k869.identid.ui.presentation.success
+package com.k689.identid.ui.presentation.success
 
 import androidx.compose.runtime.Composable
 import androidx.navigation.NavController
-import com.k869.identid.ui.common.document_success.DocumentSuccessScreen
+import com.k689.identid.ui.common.document_success.DocumentSuccessScreen
 
 @Composable
 fun PresentationSuccessScreen(

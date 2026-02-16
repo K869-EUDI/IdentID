@@ -14,11 +14,11 @@
  * governing permissions and limitations under the Licence.
  */
 
-package com.k869.identid.interactor.common
+package com.k689.identid.interactor.common
 
 import android.content.Context
 import android.net.Uri
-import com.k869.identid.validator.FormValidator
+import com.k689.identid.validator.FormValidator
 import eu.europa.ec.eudi.rqesui.infrastructure.EudiRQESUi
 import eu.europa.ec.eudi.rqesui.infrastructure.RemoteUri
 

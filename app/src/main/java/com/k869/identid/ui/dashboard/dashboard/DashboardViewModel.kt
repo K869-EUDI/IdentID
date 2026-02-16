@@ -14,38 +14,38 @@
  * governing permissions and limitations under the Licence.
  */
 
-package com.k869.identid.ui.dashboard.dashboard
+package com.k689.identid.ui.dashboard.dashboard
 
 import android.content.Intent
 import android.net.Uri
-import com.k869.identid.config.OfferUiConfig
-import com.k869.identid.config.PresentationMode
-import com.k869.identid.config.RequestUriConfig
-import com.k869.identid.di.common.getOrCreateCredentialOfferScope
-import com.k869.identid.model.common.PinFlow
-import com.k869.identid.di.core.getOrCreatePresentationScope
-import com.k869.identid.model.core.RevokedDocumentDataDomain
-import com.k869.identid.interactor.dashboard.DashboardInteractor
-import com.k869.identid.ui.dashboard.dashboard.model.SideMenuItemUi
-import com.k869.identid.ui.dashboard.dashboard.model.SideMenuTypeUi
+import com.k689.identid.config.OfferUiConfig
+import com.k689.identid.config.PresentationMode
+import com.k689.identid.config.RequestUriConfig
+import com.k689.identid.di.common.getOrCreateCredentialOfferScope
+import com.k689.identid.model.common.PinFlow
+import com.k689.identid.di.core.getOrCreatePresentationScope
+import com.k689.identid.model.core.RevokedDocumentDataDomain
+import com.k689.identid.interactor.dashboard.DashboardInteractor
+import com.k689.identid.ui.dashboard.dashboard.model.SideMenuItemUi
+import com.k689.identid.ui.dashboard.dashboard.model.SideMenuTypeUi
 import eu.europa.ec.eudi.wallet.document.DocumentId
-import com.k869.identid.R
-import com.k869.identid.provider.resources.ResourceProvider
-import com.k869.identid.ui.component.AppIcons
-import com.k869.identid.ui.component.ModalOptionUi
-import com.k869.identid.config.ConfigNavigation
-import com.k869.identid.config.NavigationType
-import com.k869.identid.ui.mvi.MviViewModel
-import com.k869.identid.ui.mvi.ViewEvent
-import com.k869.identid.ui.mvi.ViewSideEffect
-import com.k869.identid.ui.mvi.ViewState
-import com.k869.identid.navigation.CommonScreens
-import com.k869.identid.navigation.DashboardScreens
-import com.k869.identid.navigation.helper.DeepLinkType
-import com.k869.identid.navigation.helper.generateComposableArguments
-import com.k869.identid.navigation.helper.generateComposableNavigationLink
-import com.k869.identid.navigation.helper.hasDeepLink
-import com.k869.identid.ui.serializer.UiSerializer
+import com.k689.identid.R
+import com.k689.identid.provider.resources.ResourceProvider
+import com.k689.identid.ui.component.AppIcons
+import com.k689.identid.ui.component.ModalOptionUi
+import com.k689.identid.config.ConfigNavigation
+import com.k689.identid.config.NavigationType
+import com.k689.identid.ui.mvi.MviViewModel
+import com.k689.identid.ui.mvi.ViewEvent
+import com.k689.identid.ui.mvi.ViewSideEffect
+import com.k689.identid.ui.mvi.ViewState
+import com.k689.identid.navigation.CommonScreens
+import com.k689.identid.navigation.DashboardScreens
+import com.k689.identid.navigation.helper.DeepLinkType
+import com.k689.identid.navigation.helper.generateComposableArguments
+import com.k689.identid.navigation.helper.generateComposableNavigationLink
+import com.k689.identid.navigation.helper.hasDeepLink
+import com.k689.identid.ui.serializer.UiSerializer
 import org.koin.android.annotation.KoinViewModel
 
 data class State(

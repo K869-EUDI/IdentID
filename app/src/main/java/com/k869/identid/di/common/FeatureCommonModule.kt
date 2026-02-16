@@ -14,32 +14,32 @@
  * governing permissions and limitations under the Licence.
  */
 
-package com.k869.identid.di.common
+package com.k689.identid.di.common
 
-import com.k869.identid.controller.authentication.BiometricAuthenticationController
-import com.k869.identid.controller.authentication.DeviceAuthenticationController
-import com.k869.identid.controller.storage.BiometryStorageController
-import com.k869.identid.controller.storage.PinStorageController
-import com.k869.identid.validator.FormValidator
-import com.k869.identid.interactor.common.BiometricInteractor
-import com.k869.identid.interactor.common.BiometricInteractorImpl
-import com.k869.identid.interactor.common.DeviceAuthenticationInteractor
-import com.k869.identid.interactor.common.DeviceAuthenticationInteractorImpl
-import com.k869.identid.interactor.common.QrScanInteractor
-import com.k869.identid.interactor.common.QrScanInteractorImpl
-import com.k869.identid.interactor.common.QuickPinInteractor
-import com.k869.identid.interactor.common.QuickPinInteractorImpl
-import com.k869.identid.provider.resources.ResourceProvider
+import com.k689.identid.controller.authentication.BiometricAuthenticationController
+import com.k689.identid.controller.authentication.DeviceAuthenticationController
+import com.k689.identid.controller.storage.BiometryStorageController
+import com.k689.identid.controller.storage.PinStorageController
+import com.k689.identid.validator.FormValidator
+import com.k689.identid.interactor.common.BiometricInteractor
+import com.k689.identid.interactor.common.BiometricInteractorImpl
+import com.k689.identid.interactor.common.DeviceAuthenticationInteractor
+import com.k689.identid.interactor.common.DeviceAuthenticationInteractorImpl
+import com.k689.identid.interactor.common.QrScanInteractor
+import com.k689.identid.interactor.common.QrScanInteractorImpl
+import com.k689.identid.interactor.common.QuickPinInteractor
+import com.k689.identid.interactor.common.QuickPinInteractorImpl
+import com.k689.identid.provider.resources.ResourceProvider
 import org.koin.core.annotation.ComponentScan
 import org.koin.core.annotation.Factory
-import com.k869.identid.ui.common.CredentialOfferIssuanceScope
+import com.k689.identid.ui.common.CredentialOfferIssuanceScope
 import org.koin.core.annotation.Module
 import org.koin.mp.KoinPlatform
 
 const val CREDENTIAL_OFFER_ISSUANCE_SCOPE_ID = "credential_offer_scope_id"
 
 @Module
-@ComponentScan("com.k869.identid.ui.common", "com.k869.identid.di.common")
+@ComponentScan("com.k689.identid.ui.common", "com.k689.identid.di.common")
 class FeatureCommonModule
 
 @Factory

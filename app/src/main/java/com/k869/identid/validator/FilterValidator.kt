@@ -14,17 +14,17 @@
  * governing permissions and limitations under the Licence.
  */
 
-package com.k869.identid.validator
+package com.k689.identid.validator
 
-import com.k869.identid.extension.business.applySort
-import com.k869.identid.extension.business.filterByQuery
-import com.k869.identid.model.validator.FilterAction
-import com.k869.identid.model.validator.FilterElement
-import com.k869.identid.model.validator.FilterElement.FilterItem
-import com.k869.identid.model.validator.FilterGroup
-import com.k869.identid.model.validator.FilterableList
-import com.k869.identid.model.validator.Filters
-import com.k869.identid.model.validator.SortOrder
+import com.k689.identid.extension.business.applySort
+import com.k689.identid.extension.business.filterByQuery
+import com.k689.identid.model.validator.FilterAction
+import com.k689.identid.model.validator.FilterElement
+import com.k689.identid.model.validator.FilterElement.FilterItem
+import com.k689.identid.model.validator.FilterGroup
+import com.k689.identid.model.validator.FilterableList
+import com.k689.identid.model.validator.Filters
+import com.k689.identid.model.validator.SortOrder
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow

@@ -14,11 +14,11 @@
  * governing permissions and limitations under the Licence.
  */
 
-package com.k869.identid.extension.ui
+package com.k689.identid.extension.ui
 
-import com.k869.identid.ui.component.AppIcons
-import com.k869.identid.ui.component.ListItemTrailingContentDataUi
-import com.k869.identid.ui.component.wrap.ExpandableListItemUi
+import com.k689.identid.ui.component.AppIcons
+import com.k689.identid.ui.component.ListItemTrailingContentDataUi
+import com.k689.identid.ui.component.wrap.ExpandableListItemUi
 
 /**
  * Recursively traverses an [ExpandableListItemUi] and toggles the `isChecked` state of a checkbox if the item with the given [id] is found.

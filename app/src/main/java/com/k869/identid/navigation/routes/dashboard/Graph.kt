@@ -14,7 +14,7 @@
  * governing permissions and limitations under the Licence.
  */
 
-package com.k869.identid.navigation.routes.dashboard
+package com.k689.identid.navigation.routes.dashboard
 
 import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
@@ -23,14 +23,14 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.navigation
 import androidx.navigation.navArgument
 import androidx.navigation.navDeepLink
-import com.k869.identid.BuildConfig
-import com.k869.identid.ui.dashboard.dashboard.DashboardScreen
-import com.k869.identid.ui.dashboard.document_sign.DocumentSignScreen
-import com.k869.identid.ui.dashboard.documents.detail.DocumentDetailsScreen
-import com.k869.identid.ui.dashboard.settings.SettingsScreen
-import com.k869.identid.ui.dashboard.transactions.detail.TransactionDetailsScreen
-import com.k869.identid.navigation.DashboardScreens
-import com.k869.identid.navigation.ModuleRoute
+import com.k689.identid.BuildConfig
+import com.k689.identid.ui.dashboard.dashboard.DashboardScreen
+import com.k689.identid.ui.dashboard.document_sign.DocumentSignScreen
+import com.k689.identid.ui.dashboard.documents.detail.DocumentDetailsScreen
+import com.k689.identid.ui.dashboard.settings.SettingsScreen
+import com.k689.identid.ui.dashboard.transactions.detail.TransactionDetailsScreen
+import com.k689.identid.navigation.DashboardScreens
+import com.k689.identid.navigation.ModuleRoute
 import org.koin.androidx.compose.koinViewModel
 import org.koin.core.parameter.parametersOf
 

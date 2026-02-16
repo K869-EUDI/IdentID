@@ -14,7 +14,7 @@
  * governing permissions and limitations under the Licence.
  */
 
-package com.k869.identid.ui.component.wrap
+package com.k689.identid.ui.component.wrap
 
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.layout.PaddingValues
@@ -30,11 +30,11 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.unit.dp
-import com.k869.identid.ui.component.preview.PreviewTheme
-import com.k869.identid.ui.component.preview.ThemeModePreviews
-import com.k869.identid.ui.component.utils.ALPHA_DISABLED
-import com.k869.identid.ui.component.utils.SIZE_100
-import com.k869.identid.ui.component.utils.SPACING_LARGE
+import com.k689.identid.ui.component.preview.PreviewTheme
+import com.k689.identid.ui.component.preview.ThemeModePreviews
+import com.k689.identid.ui.component.utils.ALPHA_DISABLED
+import com.k689.identid.ui.component.utils.SIZE_100
+import com.k689.identid.ui.component.utils.SPACING_LARGE
 
 enum class ButtonType {
     PRIMARY,

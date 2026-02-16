@@ -14,37 +14,37 @@
  * governing permissions and limitations under the Licence.
  */
 
-package com.k869.identid.di.dashboard
+package com.k689.identid.di.dashboard
 
-import com.k869.identid.config.ConfigLogic
-import com.k869.identid.controller.log.LogController
-import com.k869.identid.provider.UuidProvider
-import com.k869.identid.validator.FilterValidator
-import com.k869.identid.config.WalletCoreConfig
-import com.k869.identid.controller.core.WalletCoreDocumentsController
-import com.k869.identid.interactor.dashboard.DashboardInteractor
-import com.k869.identid.interactor.dashboard.DashboardInteractorImpl
-import com.k869.identid.interactor.dashboard.DocumentDetailsInteractor
-import com.k869.identid.interactor.dashboard.DocumentDetailsInteractorImpl
-import com.k869.identid.interactor.dashboard.DocumentSignInteractor
-import com.k869.identid.interactor.dashboard.DocumentSignInteractorImpl
-import com.k869.identid.interactor.dashboard.DocumentsInteractor
-import com.k869.identid.interactor.dashboard.DocumentsInteractorImpl
-import com.k869.identid.interactor.dashboard.HomeInteractor
-import com.k869.identid.interactor.dashboard.HomeInteractorImpl
-import com.k869.identid.interactor.dashboard.SettingsInteractor
-import com.k869.identid.interactor.dashboard.SettingsInteractorImpl
-import com.k869.identid.interactor.dashboard.TransactionDetailsInteractor
-import com.k869.identid.interactor.dashboard.TransactionDetailsInteractorImpl
-import com.k869.identid.interactor.dashboard.TransactionsInteractor
-import com.k869.identid.interactor.dashboard.TransactionsInteractorImpl
-import com.k869.identid.provider.resources.ResourceProvider
+import com.k689.identid.config.ConfigLogic
+import com.k689.identid.controller.log.LogController
+import com.k689.identid.provider.UuidProvider
+import com.k689.identid.validator.FilterValidator
+import com.k689.identid.config.WalletCoreConfig
+import com.k689.identid.controller.core.WalletCoreDocumentsController
+import com.k689.identid.interactor.dashboard.DashboardInteractor
+import com.k689.identid.interactor.dashboard.DashboardInteractorImpl
+import com.k689.identid.interactor.dashboard.DocumentDetailsInteractor
+import com.k689.identid.interactor.dashboard.DocumentDetailsInteractorImpl
+import com.k689.identid.interactor.dashboard.DocumentSignInteractor
+import com.k689.identid.interactor.dashboard.DocumentSignInteractorImpl
+import com.k689.identid.interactor.dashboard.DocumentsInteractor
+import com.k689.identid.interactor.dashboard.DocumentsInteractorImpl
+import com.k689.identid.interactor.dashboard.HomeInteractor
+import com.k689.identid.interactor.dashboard.HomeInteractorImpl
+import com.k689.identid.interactor.dashboard.SettingsInteractor
+import com.k689.identid.interactor.dashboard.SettingsInteractorImpl
+import com.k689.identid.interactor.dashboard.TransactionDetailsInteractor
+import com.k689.identid.interactor.dashboard.TransactionDetailsInteractorImpl
+import com.k689.identid.interactor.dashboard.TransactionsInteractor
+import com.k689.identid.interactor.dashboard.TransactionsInteractorImpl
+import com.k689.identid.provider.resources.ResourceProvider
 import org.koin.core.annotation.ComponentScan
 import org.koin.core.annotation.Factory
 import org.koin.core.annotation.Module
 
 @Module
-@ComponentScan("com.k869.identid.ui.dashboard", "com.k869.identid.di.dashboard")
+@ComponentScan("com.k689.identid.ui.dashboard", "com.k689.identid.di.dashboard")
 class FeatureDashboardModule
 
 @Factory

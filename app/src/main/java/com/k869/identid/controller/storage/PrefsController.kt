@@ -14,14 +14,14 @@
  * governing permissions and limitations under the Licence.
  */
 
-package com.k869.identid.controller.storage
+package com.k689.identid.controller.storage
 
 import android.content.Context.MODE_PRIVATE
 import android.content.SharedPreferences
 import androidx.core.content.edit
-import com.k869.identid.extension.business.shuffle
-import com.k869.identid.extension.business.unShuffle
-import com.k869.identid.provider.resources.ResourceProvider
+import com.k689.identid.extension.business.shuffle
+import com.k689.identid.extension.business.unShuffle
+import com.k689.identid.provider.resources.ResourceProvider
 
 interface PrefsController {
 

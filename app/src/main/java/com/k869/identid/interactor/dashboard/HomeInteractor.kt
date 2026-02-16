@@ -14,16 +14,16 @@
  * governing permissions and limitations under the Licence.
  */
 
-package com.k869.identid.interactor.dashboard
+package com.k689.identid.interactor.dashboard
 
 import android.bluetooth.BluetoothManager
 import android.content.Context
-import com.k869.identid.extension.business.safeAsync
-import com.k869.identid.util.common.DocumentJsonKeys
-import com.k869.identid.util.common.extractValueFromDocumentOrEmpty
-import com.k869.identid.config.WalletCoreConfig
-import com.k869.identid.controller.core.WalletCoreDocumentsController
-import com.k869.identid.provider.resources.ResourceProvider
+import com.k689.identid.extension.business.safeAsync
+import com.k689.identid.util.common.DocumentJsonKeys
+import com.k689.identid.util.common.extractValueFromDocumentOrEmpty
+import com.k689.identid.config.WalletCoreConfig
+import com.k689.identid.controller.core.WalletCoreDocumentsController
+import com.k689.identid.provider.resources.ResourceProvider
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 

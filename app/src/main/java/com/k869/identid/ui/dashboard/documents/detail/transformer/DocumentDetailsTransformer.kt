@@ -14,20 +14,20 @@
  * governing permissions and limitations under the Licence.
  */
 
-package com.k869.identid.ui.dashboard.documents.detail.transformer
+package com.k689.identid.ui.dashboard.documents.detail.transformer
 
-import com.k869.identid.provider.UuidProvider
-import com.k869.identid.extension.common.toExpandableListItems
-import com.k869.identid.util.common.transformPathsToDomainClaims
-import com.k869.identid.extension.core.toClaimPaths
-import com.k869.identid.model.core.toDocumentIdentifier
-import com.k869.identid.ui.dashboard.documents.detail.model.DocumentDetailsDomain
-import com.k869.identid.ui.dashboard.documents.detail.model.DocumentDetailsUi
-import com.k869.identid.ui.dashboard.documents.detail.model.DocumentIssuanceStateUi
-import com.k869.identid.ui.dashboard.documents.model.DocumentCredentialsInfoUi
+import com.k689.identid.provider.UuidProvider
+import com.k689.identid.extension.common.toExpandableListItems
+import com.k689.identid.util.common.transformPathsToDomainClaims
+import com.k689.identid.extension.core.toClaimPaths
+import com.k689.identid.model.core.toDocumentIdentifier
+import com.k689.identid.ui.dashboard.documents.detail.model.DocumentDetailsDomain
+import com.k689.identid.ui.dashboard.documents.detail.model.DocumentDetailsUi
+import com.k689.identid.ui.dashboard.documents.detail.model.DocumentIssuanceStateUi
+import com.k689.identid.ui.dashboard.documents.model.DocumentCredentialsInfoUi
 import eu.europa.ec.eudi.wallet.document.IssuedDocument
-import com.k869.identid.R
-import com.k869.identid.provider.resources.ResourceProvider
+import com.k689.identid.R
+import com.k689.identid.provider.resources.ResourceProvider
 
 object DocumentDetailsTransformer {
 

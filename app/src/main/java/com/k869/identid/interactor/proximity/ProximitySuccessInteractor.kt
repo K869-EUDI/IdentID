@@ -14,26 +14,26 @@
  * governing permissions and limitations under the Licence.
  */
 
-package com.k869.identid.interactor.proximity
+package com.k689.identid.interactor.proximity
 
-import com.k869.identid.extension.business.ifEmptyOrNull
-import com.k869.identid.extension.business.safeAsync
-import com.k869.identid.provider.UuidProvider
-import com.k869.identid.extension.common.toExpandableListItems
-import com.k869.identid.util.common.transformPathsToDomainClaims
-import com.k869.identid.controller.core.WalletCoreDocumentsController
-import com.k869.identid.controller.core.WalletCorePresentationController
-import com.k869.identid.extension.core.toClaimPath
+import com.k689.identid.extension.business.ifEmptyOrNull
+import com.k689.identid.extension.business.safeAsync
+import com.k689.identid.provider.UuidProvider
+import com.k689.identid.extension.common.toExpandableListItems
+import com.k689.identid.util.common.transformPathsToDomainClaims
+import com.k689.identid.controller.core.WalletCoreDocumentsController
+import com.k689.identid.controller.core.WalletCorePresentationController
+import com.k689.identid.extension.core.toClaimPath
 import eu.europa.ec.eudi.wallet.document.IssuedDocument
-import com.k869.identid.R
-import com.k869.identid.provider.resources.ResourceProvider
-import com.k869.identid.ui.component.AppIcons
-import com.k869.identid.ui.component.ListItemDataUi
-import com.k869.identid.ui.component.ListItemMainContentDataUi
-import com.k869.identid.ui.component.ListItemTrailingContentDataUi
-import com.k869.identid.ui.component.RelyingPartyDataUi
-import com.k869.identid.ui.component.content.ContentHeaderConfig
-import com.k869.identid.ui.component.wrap.ExpandableListItemUi
+import com.k689.identid.R
+import com.k689.identid.provider.resources.ResourceProvider
+import com.k689.identid.ui.component.AppIcons
+import com.k689.identid.ui.component.ListItemDataUi
+import com.k689.identid.ui.component.ListItemMainContentDataUi
+import com.k689.identid.ui.component.ListItemTrailingContentDataUi
+import com.k689.identid.ui.component.RelyingPartyDataUi
+import com.k689.identid.ui.component.content.ContentHeaderConfig
+import com.k689.identid.ui.component.wrap.ExpandableListItemUi
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 

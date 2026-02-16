@@ -14,11 +14,11 @@
  * governing permissions and limitations under the Licence.
  */
 
-package com.k869.identid.config
+package com.k689.identid.config
 
-import com.k869.identid.model.core.DocumentCategories
-import com.k869.identid.model.core.DocumentCategory
-import com.k869.identid.model.core.DocumentIdentifier
+import com.k689.identid.model.core.DocumentCategories
+import com.k689.identid.model.core.DocumentCategory
+import com.k689.identid.model.core.DocumentIdentifier
 import eu.europa.ec.eudi.wallet.EudiWalletConfig
 import eu.europa.ec.eudi.wallet.document.CreateDocumentSettings.CredentialPolicy
 import eu.europa.ec.eudi.wallet.issue.openid4vci.OpenId4VciManager

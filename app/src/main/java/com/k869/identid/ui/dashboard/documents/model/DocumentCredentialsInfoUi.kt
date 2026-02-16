@@ -14,7 +14,7 @@
  * governing permissions and limitations under the Licence.
  */
 
-package com.k869.identid.ui.dashboard.documents.model
+package com.k689.identid.ui.dashboard.documents.model
 
 data class DocumentCredentialsInfoUi(
     val availableCredentials: Int,

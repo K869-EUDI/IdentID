@@ -14,7 +14,7 @@
  * governing permissions and limitations under the Licence.
  */
 
-package com.k869.identid.ui.common.qr_scan.component
+package com.k689.identid.ui.common.qr_scan.component
 
 import androidx.compose.ui.geometry.CornerRadius
 import androidx.compose.ui.geometry.Offset
@@ -25,7 +25,7 @@ import androidx.compose.ui.graphics.StrokeCap
 import androidx.compose.ui.graphics.drawscope.DrawScope
 import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.unit.Dp
-import com.k869.identid.ui.component.utils.SIZE_LARGE
+import com.k689.identid.ui.component.utils.SIZE_LARGE
 
 fun DrawScope.qrBorderCanvas(
     borderColor: Color = Color.White,

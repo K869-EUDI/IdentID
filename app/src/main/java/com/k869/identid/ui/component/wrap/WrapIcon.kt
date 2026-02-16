@@ -14,7 +14,7 @@
  * governing permissions and limitations under the Licence.
  */
 
-package com.k869.identid.ui.component.wrap
+package com.k689.identid.ui.component.wrap
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
@@ -37,14 +37,14 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
-import com.k869.identid.ui.component.AppIcons
-import com.k869.identid.ui.component.IconDataUi
-import com.k869.identid.ui.component.preview.PreviewTheme
-import com.k869.identid.ui.component.preview.ThemeModePreviews
-import com.k869.identid.ui.component.utils.ALPHA_DISABLED
-import com.k869.identid.ui.component.utils.ALPHA_ENABLED
-import com.k869.identid.ui.component.utils.DEFAULT_ICON_SIZE
-import com.k869.identid.extension.ui.throttledClickable
+import com.k689.identid.ui.component.AppIcons
+import com.k689.identid.ui.component.IconDataUi
+import com.k689.identid.ui.component.preview.PreviewTheme
+import com.k689.identid.ui.component.preview.ThemeModePreviews
+import com.k689.identid.ui.component.utils.ALPHA_DISABLED
+import com.k689.identid.ui.component.utils.ALPHA_ENABLED
+import com.k689.identid.ui.component.utils.DEFAULT_ICON_SIZE
+import com.k689.identid.extension.ui.throttledClickable
 
 /**
  * Reusable Wrapper Composable to be used instead of plain Icon.

@@ -14,7 +14,7 @@
  * governing permissions and limitations under the Licence.
  */
 
-package com.k869.identid.navigation.routes.proximity
+package com.k689.identid.navigation.routes.proximity
 
 import ProximityRequestScreen
 import androidx.navigation.NavController
@@ -24,13 +24,13 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.navigation
 import androidx.navigation.navArgument
 import androidx.navigation.navDeepLink
-import com.k869.identid.config.RequestUriConfig
-import com.k869.identid.BuildConfig
-import com.k869.identid.ui.proximity.loading.ProximityLoadingScreen
-import com.k869.identid.ui.proximity.qr.ProximityQRScreen
-import com.k869.identid.ui.proximity.success.ProximitySuccessScreen
-import com.k869.identid.navigation.ModuleRoute
-import com.k869.identid.navigation.ProximityScreens
+import com.k689.identid.config.RequestUriConfig
+import com.k689.identid.BuildConfig
+import com.k689.identid.ui.proximity.loading.ProximityLoadingScreen
+import com.k689.identid.ui.proximity.qr.ProximityQRScreen
+import com.k689.identid.ui.proximity.success.ProximitySuccessScreen
+import com.k689.identid.navigation.ModuleRoute
+import com.k689.identid.navigation.ProximityScreens
 import org.koin.androidx.compose.koinViewModel
 import org.koin.core.parameter.parametersOf
 

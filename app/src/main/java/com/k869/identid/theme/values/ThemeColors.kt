@@ -14,14 +14,14 @@
  * governing permissions and limitations under the Licence.
  */
 
-package com.k869.identid.theme.values
+package com.k689.identid.theme.values
 
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.material3.ColorScheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.Color
-import com.k869.identid.theme.ThemeManager
-import com.k869.identid.theme.templates.ThemeColorsTemplate
+import com.k689.identid.theme.ThemeManager
+import com.k689.identid.theme.templates.ThemeColorsTemplate
 
 private val isInDarkMode: Boolean
     get() {

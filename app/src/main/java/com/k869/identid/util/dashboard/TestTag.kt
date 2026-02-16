@@ -14,7 +14,7 @@
  * governing permissions and limitations under the Licence.
  */
 
-package com.k869.identid.util.dashboard
+package com.k689.identid.util.dashboard
 
 object TestTag {
 

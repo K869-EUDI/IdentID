@@ -14,7 +14,7 @@
  * governing permissions and limitations under the Licence.
  */
 
-package com.k869.identid.ui.component
+package com.k689.identid.ui.component
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -42,17 +42,17 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.isUnspecified
 import androidx.compose.ui.unit.sp
-import com.k869.identid.R
-import com.k869.identid.ui.component.content.ContentErrorConfig
-import com.k869.identid.ui.component.preview.PreviewTheme
-import com.k869.identid.ui.component.preview.ThemeModePreviews
-import com.k869.identid.ui.component.utils.SIZE_LARGE
-import com.k869.identid.ui.component.utils.SIZE_SMALL
-import com.k869.identid.ui.component.utils.SPACING_EXTRA_SMALL
-import com.k869.identid.ui.component.utils.SPACING_MEDIUM
-import com.k869.identid.ui.component.utils.SPACING_SMALL
-import com.k869.identid.ui.component.wrap.WrapIcon
-import com.k869.identid.extension.ui.clickableNoRipple
+import com.k689.identid.R
+import com.k689.identid.ui.component.content.ContentErrorConfig
+import com.k689.identid.ui.component.preview.PreviewTheme
+import com.k689.identid.ui.component.preview.ThemeModePreviews
+import com.k689.identid.ui.component.utils.SIZE_LARGE
+import com.k689.identid.ui.component.utils.SIZE_SMALL
+import com.k689.identid.ui.component.utils.SPACING_EXTRA_SMALL
+import com.k689.identid.ui.component.utils.SPACING_MEDIUM
+import com.k689.identid.ui.component.utils.SPACING_SMALL
+import com.k689.identid.ui.component.wrap.WrapIcon
+import com.k689.identid.extension.ui.clickableNoRipple
 
 @Composable
 fun InlineSnackbar(

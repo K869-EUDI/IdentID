@@ -14,11 +14,11 @@
  * governing permissions and limitations under the Licence.
  */
 
-package com.k869.identid.ui.presentation.request
+package com.k689.identid.ui.presentation.request
 
 import androidx.compose.runtime.Composable
 import androidx.navigation.NavController
-import com.k869.identid.ui.common.request.RequestScreen
+import com.k689.identid.ui.common.request.RequestScreen
 
 @Composable
 fun PresentationRequestScreen(

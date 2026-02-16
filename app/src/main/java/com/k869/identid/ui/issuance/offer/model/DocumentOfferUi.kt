@@ -14,7 +14,7 @@
  * governing permissions and limitations under the Licence.
  */
 
-package com.k869.identid.ui.issuance.offer.model
+package com.k689.identid.ui.issuance.offer.model
 
 data class DocumentOfferUi(
     val title: String,

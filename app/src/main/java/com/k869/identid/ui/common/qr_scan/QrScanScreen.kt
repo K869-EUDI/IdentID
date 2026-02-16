@@ -14,7 +14,7 @@
  * governing permissions and limitations under the Licence.
  */
 
-package com.k869.identid.ui.common.qr_scan
+package com.k689.identid.ui.common.qr_scan
 
 import android.content.Context
 import androidx.camera.core.CameraSelector
@@ -57,28 +57,28 @@ import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import com.google.accompanist.permissions.isGranted
 import com.google.accompanist.permissions.rememberPermissionState
 import com.google.accompanist.permissions.shouldShowRationale
-import com.k869.identid.ui.common.qr_scan.component.QrCodeAnalyzer
-import com.k869.identid.ui.common.qr_scan.component.qrBorderCanvas
-import com.k869.identid.R
-import com.k869.identid.ui.component.AppIcons
-import com.k869.identid.ui.component.ErrorInfo
-import com.k869.identid.ui.component.content.ContentScreen
-import com.k869.identid.ui.component.content.ContentTitle
-import com.k869.identid.ui.component.content.ScreenNavigateAction
-import com.k869.identid.ui.component.preview.PreviewTheme
-import com.k869.identid.ui.component.preview.ThemeModePreviews
-import com.k869.identid.ui.component.utils.SIZE_100
-import com.k869.identid.ui.component.utils.SIZE_EXTRA_SMALL
-import com.k869.identid.ui.component.utils.SIZE_LARGE
-import com.k869.identid.ui.component.utils.SPACING_LARGE
-import com.k869.identid.ui.component.utils.SPACING_SMALL
-import com.k869.identid.ui.component.utils.screenWidthInDp
-import com.k869.identid.ui.component.wrap.WrapCard
-import com.k869.identid.ui.component.wrap.WrapIcon
-import com.k869.identid.extension.ui.openAppSettings
-import com.k869.identid.extension.ui.paddingFrom
-import com.k869.identid.extension.ui.throttledClickable
-import com.k869.identid.navigation.CommonScreens
+import com.k689.identid.ui.common.qr_scan.component.QrCodeAnalyzer
+import com.k689.identid.ui.common.qr_scan.component.qrBorderCanvas
+import com.k689.identid.R
+import com.k689.identid.ui.component.AppIcons
+import com.k689.identid.ui.component.ErrorInfo
+import com.k689.identid.ui.component.content.ContentScreen
+import com.k689.identid.ui.component.content.ContentTitle
+import com.k689.identid.ui.component.content.ScreenNavigateAction
+import com.k689.identid.ui.component.preview.PreviewTheme
+import com.k689.identid.ui.component.preview.ThemeModePreviews
+import com.k689.identid.ui.component.utils.SIZE_100
+import com.k689.identid.ui.component.utils.SIZE_EXTRA_SMALL
+import com.k689.identid.ui.component.utils.SIZE_LARGE
+import com.k689.identid.ui.component.utils.SPACING_LARGE
+import com.k689.identid.ui.component.utils.SPACING_SMALL
+import com.k689.identid.ui.component.utils.screenWidthInDp
+import com.k689.identid.ui.component.wrap.WrapCard
+import com.k689.identid.ui.component.wrap.WrapIcon
+import com.k689.identid.extension.ui.openAppSettings
+import com.k689.identid.extension.ui.paddingFrom
+import com.k689.identid.extension.ui.throttledClickable
+import com.k689.identid.navigation.CommonScreens
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.onEach

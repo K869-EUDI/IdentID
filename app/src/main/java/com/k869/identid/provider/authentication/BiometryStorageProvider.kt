@@ -14,9 +14,9 @@
  * governing permissions and limitations under the Licence.
  */
 
-package com.k869.identid.provider.authentication
+package com.k689.identid.provider.authentication
 
-import com.k869.identid.model.authentication.BiometricAuthentication
+import com.k689.identid.model.authentication.BiometricAuthentication
 
 interface BiometryStorageProvider {
     fun getBiometricAuthentication(): BiometricAuthentication?

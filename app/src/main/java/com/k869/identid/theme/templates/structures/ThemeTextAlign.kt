@@ -14,7 +14,7 @@
  * governing permissions and limitations under the Licence.
  */
 
-package com.k869.identid.theme.templates.structures
+package com.k689.identid.theme.templates.structures
 
 import androidx.compose.ui.text.style.TextAlign
 

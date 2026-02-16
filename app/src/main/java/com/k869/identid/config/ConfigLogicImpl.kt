@@ -14,7 +14,7 @@
  * governing permissions and limitations under the Licence.
  */
 
-package com.k869.identid.config
+package com.k689.identid.config
 
 import android.content.Context
 import eu.europa.ec.eudi.rqesui.infrastructure.config.EudiRQESUiConfig

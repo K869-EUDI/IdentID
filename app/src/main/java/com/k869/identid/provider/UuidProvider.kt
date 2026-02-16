@@ -14,7 +14,7 @@
  * governing permissions and limitations under the Licence.
  */
 
-package com.k869.identid.provider
+package com.k689.identid.provider
 
 import kotlin.uuid.ExperimentalUuidApi
 import kotlin.uuid.Uuid

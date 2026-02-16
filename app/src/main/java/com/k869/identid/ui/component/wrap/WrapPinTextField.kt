@@ -14,7 +14,7 @@
  * governing permissions and limitations under the Licence.
  */
 
-package com.k869.identid.ui.component.wrap
+package com.k689.identid.ui.component.wrap
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -61,14 +61,14 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.core.text.isDigitsOnly
-import com.k869.identid.ui.component.preview.PreviewTheme
-import com.k869.identid.ui.component.preview.ThemeModePreviews
-import com.k869.identid.ui.component.utils.EmptyTextToolbar
-import com.k869.identid.ui.component.utils.HSpacer
-import com.k869.identid.ui.component.utils.OneTimeLaunchedEffect
-import com.k869.identid.ui.component.utils.SIZE_SMALL
-import com.k869.identid.ui.component.utils.SPACING_SMALL
-import com.k869.identid.util.ui.TestTag
+import com.k689.identid.ui.component.preview.PreviewTheme
+import com.k689.identid.ui.component.preview.ThemeModePreviews
+import com.k689.identid.ui.component.utils.EmptyTextToolbar
+import com.k689.identid.ui.component.utils.HSpacer
+import com.k689.identid.ui.component.utils.OneTimeLaunchedEffect
+import com.k689.identid.ui.component.utils.SIZE_SMALL
+import com.k689.identid.ui.component.utils.SPACING_SMALL
+import com.k689.identid.util.ui.TestTag
 
 @Composable
 fun WrapPinTextField(

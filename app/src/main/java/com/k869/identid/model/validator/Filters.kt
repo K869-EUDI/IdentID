@@ -14,9 +14,9 @@
  * governing permissions and limitations under the Licence.
  */
 
-package com.k869.identid.model.validator
+package com.k689.identid.model.validator
 
-import com.k869.identid.extension.business.sortByOrder
+import com.k689.identid.extension.business.sortByOrder
 import java.time.LocalDateTime
 
 data class Filters(

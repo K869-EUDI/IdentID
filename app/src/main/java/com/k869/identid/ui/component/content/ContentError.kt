@@ -14,7 +14,7 @@
  * governing permissions and limitations under the Licence.
  */
 
-package com.k869.identid.ui.component.content
+package com.k689.identid.ui.component.content
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -25,13 +25,13 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
-import com.k869.identid.R
-import com.k869.identid.ui.component.preview.PreviewTheme
-import com.k869.identid.ui.component.preview.ThemeModePreviews
-import com.k869.identid.ui.component.utils.SIZE_MEDIUM
-import com.k869.identid.ui.component.wrap.ButtonConfig
-import com.k869.identid.ui.component.wrap.ButtonType
-import com.k869.identid.ui.component.wrap.WrapButton
+import com.k689.identid.R
+import com.k689.identid.ui.component.preview.PreviewTheme
+import com.k689.identid.ui.component.preview.ThemeModePreviews
+import com.k689.identid.ui.component.utils.SIZE_MEDIUM
+import com.k689.identid.ui.component.wrap.ButtonConfig
+import com.k689.identid.ui.component.wrap.ButtonType
+import com.k689.identid.ui.component.wrap.WrapButton
 
 @Composable
 internal fun ContentError(

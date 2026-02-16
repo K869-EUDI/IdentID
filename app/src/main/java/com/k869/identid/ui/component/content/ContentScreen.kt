@@ -14,7 +14,7 @@
  * governing permissions and limitations under the Licence.
  */
 
-package com.k869.identid.ui.component.content
+package com.k689.identid.ui.component.content
 
 import android.content.Intent
 import androidx.activity.compose.BackHandler
@@ -49,19 +49,19 @@ import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.platform.SoftwareKeyboardController
 import androidx.compose.ui.zIndex
-import com.k869.identid.ui.component.AppIcons
-import com.k869.identid.ui.component.IconDataUi
-import com.k869.identid.ui.component.SystemBroadcastReceiver
-import com.k869.identid.ui.component.loader.LoadingIndicator
-import com.k869.identid.ui.component.preview.PreviewTheme
-import com.k869.identid.ui.component.preview.ThemeModePreviews
-import com.k869.identid.ui.component.utils.MAX_TOOLBAR_ACTIONS
-import com.k869.identid.ui.component.utils.TopSpacing
-import com.k869.identid.ui.component.utils.Z_STICKY
-import com.k869.identid.ui.component.utils.screenPaddings
-import com.k869.identid.ui.component.utils.stickyBottomPaddings
-import com.k869.identid.ui.component.wrap.WrapIcon
-import com.k869.identid.ui.component.wrap.WrapIconButton
+import com.k689.identid.ui.component.AppIcons
+import com.k689.identid.ui.component.IconDataUi
+import com.k689.identid.ui.component.SystemBroadcastReceiver
+import com.k689.identid.ui.component.loader.LoadingIndicator
+import com.k689.identid.ui.component.preview.PreviewTheme
+import com.k689.identid.ui.component.preview.ThemeModePreviews
+import com.k689.identid.ui.component.utils.MAX_TOOLBAR_ACTIONS
+import com.k689.identid.ui.component.utils.TopSpacing
+import com.k689.identid.ui.component.utils.Z_STICKY
+import com.k689.identid.ui.component.utils.screenPaddings
+import com.k689.identid.ui.component.utils.stickyBottomPaddings
+import com.k689.identid.ui.component.wrap.WrapIcon
+import com.k689.identid.ui.component.wrap.WrapIconButton
 
 data class ToolbarActionUi(
     val icon: IconDataUi,

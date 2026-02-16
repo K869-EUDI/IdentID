@@ -14,7 +14,7 @@
  * governing permissions and limitations under the Licence.
  */
 
-package com.k869.identid.ui.common.success
+package com.k689.identid.ui.common.success
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -39,28 +39,28 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
-import com.k869.identid.config.SuccessUIConfig
-import com.k869.identid.util.common.TestTag
-import com.k869.identid.R
-import com.k869.identid.theme.values.ThemeColors
-import com.k869.identid.theme.values.success
-import com.k869.identid.ui.component.AppIcons
-import com.k869.identid.ui.component.content.ContentHeader
-import com.k869.identid.ui.component.content.ContentScreen
-import com.k869.identid.ui.component.content.ScreenNavigateAction
-import com.k869.identid.ui.component.preview.PreviewTheme
-import com.k869.identid.ui.component.preview.ThemeModePreviews
-import com.k869.identid.ui.component.utils.PERCENTAGE_25
-import com.k869.identid.ui.component.utils.SIZE_MEDIUM
-import com.k869.identid.ui.component.utils.SPACING_SMALL
-import com.k869.identid.ui.component.wrap.ButtonConfig
-import com.k869.identid.ui.component.wrap.ButtonType
-import com.k869.identid.ui.component.wrap.WrapButton
-import com.k869.identid.ui.component.wrap.WrapImage
-import com.k869.identid.config.ConfigNavigation
-import com.k869.identid.config.NavigationType
-import com.k869.identid.extension.ui.cacheDeepLink
-import com.k869.identid.navigation.StartupScreens
+import com.k689.identid.config.SuccessUIConfig
+import com.k689.identid.util.common.TestTag
+import com.k689.identid.R
+import com.k689.identid.theme.values.ThemeColors
+import com.k689.identid.theme.values.success
+import com.k689.identid.ui.component.AppIcons
+import com.k689.identid.ui.component.content.ContentHeader
+import com.k689.identid.ui.component.content.ContentScreen
+import com.k689.identid.ui.component.content.ScreenNavigateAction
+import com.k689.identid.ui.component.preview.PreviewTheme
+import com.k689.identid.ui.component.preview.ThemeModePreviews
+import com.k689.identid.ui.component.utils.PERCENTAGE_25
+import com.k689.identid.ui.component.utils.SIZE_MEDIUM
+import com.k689.identid.ui.component.utils.SPACING_SMALL
+import com.k689.identid.ui.component.wrap.ButtonConfig
+import com.k689.identid.ui.component.wrap.ButtonType
+import com.k689.identid.ui.component.wrap.WrapButton
+import com.k689.identid.ui.component.wrap.WrapImage
+import com.k689.identid.config.ConfigNavigation
+import com.k689.identid.config.NavigationType
+import com.k689.identid.extension.ui.cacheDeepLink
+import com.k689.identid.navigation.StartupScreens
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.collect

@@ -14,10 +14,10 @@
  * governing permissions and limitations under the Licence.
  */
 
-package com.k869.identid.extension.core
+package com.k689.identid.extension.core
 
-import com.k869.identid.model.core.ClaimPathDomain
-import com.k869.identid.model.core.ClaimPathDomain.Companion.toClaimPathDomain
+import com.k689.identid.model.core.ClaimPathDomain
+import com.k689.identid.model.core.ClaimPathDomain.Companion.toClaimPathDomain
 import eu.europa.ec.eudi.iso18013.transfer.response.DocItem
 import eu.europa.ec.eudi.iso18013.transfer.response.device.MsoMdocItem
 import eu.europa.ec.eudi.wallet.transfer.openId4vp.SdJwtVcItem

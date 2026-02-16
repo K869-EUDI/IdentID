@@ -14,16 +14,16 @@
  * governing permissions and limitations under the Licence.
  */
 
-package com.k869.identid.ui.proximity.success
+package com.k689.identid.ui.proximity.success
 
 import androidx.lifecycle.viewModelScope
-import com.k869.identid.ui.common.document_success.DocumentSuccessViewModel
-import com.k869.identid.di.core.getOrCreatePresentationScope
-import com.k869.identid.interactor.proximity.ProximitySuccessInteractor
-import com.k869.identid.interactor.proximity.ProximitySuccessInteractorGetUiItemsPartialState
-import com.k869.identid.config.ConfigNavigation
-import com.k869.identid.config.NavigationType
-import com.k869.identid.navigation.DashboardScreens
+import com.k689.identid.ui.common.document_success.DocumentSuccessViewModel
+import com.k689.identid.di.core.getOrCreatePresentationScope
+import com.k689.identid.interactor.proximity.ProximitySuccessInteractor
+import com.k689.identid.interactor.proximity.ProximitySuccessInteractorGetUiItemsPartialState
+import com.k689.identid.config.ConfigNavigation
+import com.k689.identid.config.NavigationType
+import com.k689.identid.navigation.DashboardScreens
 import kotlinx.coroutines.launch
 import org.koin.android.annotation.KoinViewModel
 

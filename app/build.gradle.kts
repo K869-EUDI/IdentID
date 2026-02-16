@@ -22,11 +22,11 @@ fun getLocalProperty(key: String): String? {
 }
 
 android {
-    namespace = "com.k869.identid"
+    namespace = "com.k689.identid"
     compileSdk = 36
 
     defaultConfig {
-        applicationId = "com.k869.identid"
+        applicationId = "com.k689.identid"
         minSdk = 29
         targetSdk = 36
         versionCode = 1

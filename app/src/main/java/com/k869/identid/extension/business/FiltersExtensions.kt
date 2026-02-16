@@ -14,9 +14,9 @@
  * governing permissions and limitations under the Licence.
  */
 
-package com.k869.identid.extension.business
+package com.k689.identid.extension.business
 
-import com.k869.identid.model.validator.SortOrder
+import com.k689.identid.model.validator.SortOrder
 
 internal fun <T, R : Comparable<R>> List<T>.sortByOrder(
     sortOrder: SortOrder,

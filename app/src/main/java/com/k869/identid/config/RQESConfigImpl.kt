@@ -14,11 +14,11 @@
  * governing permissions and limitations under the Licence.
  */
 
-package com.k869.identid.config
+package com.k689.identid.config
 
 import android.content.Context
-import com.k869.identid.BuildConfig
-import com.k869.identid.R
+import com.k689.identid.BuildConfig
+import com.k689.identid.R
 import eu.europa.ec.eudi.rqes.HashAlgorithmOID
 import eu.europa.ec.eudi.rqesui.domain.extension.toUriOrEmpty
 import eu.europa.ec.eudi.rqesui.infrastructure.config.DocumentRetrievalConfig

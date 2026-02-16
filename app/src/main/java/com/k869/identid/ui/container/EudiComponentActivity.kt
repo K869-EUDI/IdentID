@@ -14,7 +14,7 @@
  * governing permissions and limitations under the Licence.
  */
 
-package com.k869.identid.ui.container
+package com.k689.identid.ui.container
 
 import android.content.Intent
 import android.net.Uri
@@ -27,14 +27,14 @@ import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
-import com.k869.identid.theme.ThemeManager
-import com.k869.identid.extension.ui.exposeTestTagsAsResourceId
-import com.k869.identid.navigation.IssuanceScreens
-import com.k869.identid.navigation.RouterHost
-import com.k869.identid.navigation.helper.DeepLinkAction
-import com.k869.identid.navigation.helper.DeepLinkType
-import com.k869.identid.navigation.helper.handleDeepLinkAction
-import com.k869.identid.navigation.helper.hasDeepLink
+import com.k689.identid.theme.ThemeManager
+import com.k689.identid.extension.ui.exposeTestTagsAsResourceId
+import com.k689.identid.navigation.IssuanceScreens
+import com.k689.identid.navigation.RouterHost
+import com.k689.identid.navigation.helper.DeepLinkAction
+import com.k689.identid.navigation.helper.DeepLinkType
+import com.k689.identid.navigation.helper.handleDeepLinkAction
+import com.k689.identid.navigation.helper.hasDeepLink
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import org.koin.android.ext.android.inject

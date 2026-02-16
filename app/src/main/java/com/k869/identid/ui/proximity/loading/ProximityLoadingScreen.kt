@@ -14,11 +14,11 @@
  * governing permissions and limitations under the Licence.
  */
 
-package com.k869.identid.ui.proximity.loading
+package com.k689.identid.ui.proximity.loading
 
 import androidx.compose.runtime.Composable
 import androidx.navigation.NavController
-import com.k869.identid.ui.common.loading.LoadingScreen
+import com.k689.identid.ui.common.loading.LoadingScreen
 
 @Composable
 fun ProximityLoadingScreen(

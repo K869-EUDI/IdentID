@@ -14,19 +14,19 @@
  * governing permissions and limitations under the Licence.
  */
 
-package com.k869.identid.controller.core
+package com.k689.identid.controller.core
 
 import com.nimbusds.jose.shaded.gson.Gson
-import com.k869.identid.provider.UuidProvider
+import com.k689.identid.provider.UuidProvider
 import eu.europa.ec.eudi.wallet.transactionLogging.TransactionLog
 import eu.europa.ec.eudi.wallet.transactionLogging.TransactionLogger
-import com.k869.identid.storage.dao.TransactionLogDao
+import com.k689.identid.storage.dao.TransactionLogDao
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.launch
 import kotlin.uuid.ExperimentalUuidApi
-import com.k869.identid.model.storage.TransactionLog as TransactionStorage
+import com.k689.identid.model.storage.TransactionLog as TransactionStorage
 
 interface WalletCoreTransactionLogController : TransactionLogger
 

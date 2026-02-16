@@ -14,7 +14,7 @@
  * governing permissions and limitations under the Licence.
  */
 
-package com.k869.identid.ui.component
+package com.k689.identid.ui.component
 
 import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.material3.Text

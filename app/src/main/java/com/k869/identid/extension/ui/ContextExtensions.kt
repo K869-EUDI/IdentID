@@ -14,7 +14,7 @@
  * governing permissions and limitations under the Licence.
  */
 
-package com.k869.identid.extension.ui
+package com.k689.identid.extension.ui
 
 import android.content.ActivityNotFoundException
 import android.content.Context
@@ -23,7 +23,7 @@ import android.content.Intent
 import android.net.Uri
 import android.provider.Settings
 import androidx.activity.ComponentActivity
-import com.k869.identid.ui.container.EudiComponentActivity
+import com.k689.identid.ui.container.EudiComponentActivity
 
 fun Context.openDeepLink(deepLink: Uri) {
     val intent = Intent(Intent.ACTION_VIEW).apply {

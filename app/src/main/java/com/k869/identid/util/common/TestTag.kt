@@ -14,7 +14,7 @@
  * governing permissions and limitations under the Licence.
  */
 
-package com.k869.identid.util.common
+package com.k689.identid.util.common
 
 object TestTag {
 

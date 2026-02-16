@@ -14,7 +14,7 @@
  * governing permissions and limitations under the Licence.
  */
 
-package com.k869.identid.ui.component.wrap
+package com.k689.identid.ui.component.wrap
 
 import androidx.compose.material3.LocalTextStyle
 import androidx.compose.material3.MaterialTheme
@@ -26,9 +26,9 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.PreviewParameter
-import com.k869.identid.ui.component.preview.PreviewTheme
-import com.k869.identid.ui.component.preview.TextLengthPreviewProvider
-import com.k869.identid.ui.component.preview.ThemeModePreviews
+import com.k689.identid.ui.component.preview.PreviewTheme
+import com.k689.identid.ui.component.preview.TextLengthPreviewProvider
+import com.k689.identid.ui.component.preview.ThemeModePreviews
 
 /**
  * Data class representing the configuration for text elements.

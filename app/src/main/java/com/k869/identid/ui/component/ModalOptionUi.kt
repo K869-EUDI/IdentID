@@ -14,10 +14,10 @@
  * governing permissions and limitations under the Licence.
  */
 
-package com.k869.identid.ui.component
+package com.k689.identid.ui.component
 
 import androidx.compose.ui.graphics.Color
-import com.k869.identid.ui.mvi.ViewEvent
+import com.k689.identid.ui.mvi.ViewEvent
 
 data class ModalOptionUi<T : ViewEvent>(
     val title: String,

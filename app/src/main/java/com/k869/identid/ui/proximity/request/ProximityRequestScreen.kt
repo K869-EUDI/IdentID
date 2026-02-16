@@ -16,8 +16,8 @@
 
 import androidx.compose.runtime.Composable
 import androidx.navigation.NavController
-import com.k869.identid.ui.common.request.RequestScreen
-import com.k869.identid.ui.proximity.request.ProximityRequestViewModel
+import com.k689.identid.ui.common.request.RequestScreen
+import com.k689.identid.ui.proximity.request.ProximityRequestViewModel
 
 @Composable
 fun ProximityRequestScreen(

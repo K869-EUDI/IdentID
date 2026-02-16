@@ -14,9 +14,9 @@
  * governing permissions and limitations under the Licence.
  */
 
-package com.k869.identid.extension.core
+package com.k689.identid.extension.core
 
-import com.k869.identid.model.core.ClaimDomain
+import com.k689.identid.model.core.ClaimDomain
 
 /**
  * Recursively removes empty groups from a list of [ClaimDomain].

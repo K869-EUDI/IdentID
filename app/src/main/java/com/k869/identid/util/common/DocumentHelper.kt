@@ -14,19 +14,19 @@
  * governing permissions and limitations under the Licence.
  */
 
-package com.k869.identid.util.common
+package com.k689.identid.util.common
 
 import android.util.Base64
-import com.k869.identid.extension.business.decodeFromBase64
-import com.k869.identid.extension.business.encodeToBase64String
-import com.k869.identid.provider.UuidProvider
-import com.k869.identid.util.business.safeLet
-import com.k869.identid.util.business.toDateFormatted
-import com.k869.identid.extension.core.getLocalizedClaimName
-import com.k869.identid.extension.core.removeEmptyGroups
-import com.k869.identid.extension.core.sortRecursivelyBy
-import com.k869.identid.model.core.ClaimDomain
-import com.k869.identid.model.core.ClaimPathDomain
+import com.k689.identid.extension.business.decodeFromBase64
+import com.k689.identid.extension.business.encodeToBase64String
+import com.k689.identid.provider.UuidProvider
+import com.k689.identid.util.business.safeLet
+import com.k689.identid.util.business.toDateFormatted
+import com.k689.identid.extension.core.getLocalizedClaimName
+import com.k689.identid.extension.core.removeEmptyGroups
+import com.k689.identid.extension.core.sortRecursivelyBy
+import com.k689.identid.model.core.ClaimDomain
+import com.k689.identid.model.core.ClaimPathDomain
 import eu.europa.ec.eudi.wallet.document.IssuedDocument
 import eu.europa.ec.eudi.wallet.document.NameSpace
 import eu.europa.ec.eudi.wallet.document.format.DocumentClaim
@@ -34,8 +34,8 @@ import eu.europa.ec.eudi.wallet.document.format.MsoMdocData
 import eu.europa.ec.eudi.wallet.document.format.SdJwtVcClaim
 import eu.europa.ec.eudi.wallet.document.format.SdJwtVcData
 import eu.europa.ec.eudi.wallet.document.metadata.IssuerMetadata
-import com.k869.identid.R
-import com.k869.identid.provider.resources.ResourceProvider
+import com.k689.identid.R
+import com.k689.identid.provider.resources.ResourceProvider
 import java.time.Instant
 import java.time.LocalDate
 import java.time.ZoneId

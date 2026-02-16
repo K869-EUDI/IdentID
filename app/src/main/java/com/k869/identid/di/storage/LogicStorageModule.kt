@@ -14,20 +14,20 @@
  * governing permissions and limitations under the Licence.
  */
 
-package com.k869.identid.di.storage
+package com.k689.identid.di.storage
 
 import android.content.Context
 import androidx.room.Room
-import com.k869.identid.storage.dao.BookmarkDao
-import com.k869.identid.storage.dao.RevokedDocumentDao
-import com.k869.identid.storage.dao.TransactionLogDao
-import com.k869.identid.storage.service.DatabaseService
+import com.k689.identid.storage.dao.BookmarkDao
+import com.k689.identid.storage.dao.RevokedDocumentDao
+import com.k689.identid.storage.dao.TransactionLogDao
+import com.k689.identid.storage.service.DatabaseService
 import org.koin.core.annotation.ComponentScan
 import org.koin.core.annotation.Module
 import org.koin.core.annotation.Single
 
 @Module
-@ComponentScan("com.k869.identid.di.storage")
+@ComponentScan("com.k689.identid.di.storage")
 class LogicStorageModule
 
 @Single

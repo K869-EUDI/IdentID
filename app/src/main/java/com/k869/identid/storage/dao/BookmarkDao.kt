@@ -14,15 +14,15 @@
  * governing permissions and limitations under the Licence.
  */
 
-package com.k869.identid.storage.dao
+package com.k689.identid.storage.dao
 
 import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import androidx.room.Update
-import com.k869.identid.storage.dao.type.StorageDao
-import com.k869.identid.model.storage.Bookmark
+import com.k689.identid.storage.dao.type.StorageDao
+import com.k689.identid.model.storage.Bookmark
 
 @Dao
 interface BookmarkDao : StorageDao<Bookmark> {

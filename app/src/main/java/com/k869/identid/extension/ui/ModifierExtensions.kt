@@ -14,7 +14,7 @@
  * governing permissions and limitations under the Licence.
  */
 
-package com.k869.identid.extension.ui
+package com.k689.identid.extension.ui
 
 import androidx.compose.foundation.Indication
 import androidx.compose.foundation.LocalIndication

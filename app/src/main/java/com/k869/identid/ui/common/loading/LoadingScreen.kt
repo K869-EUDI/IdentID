@@ -14,7 +14,7 @@
  * governing permissions and limitations under the Licence.
  */
 
-package com.k869.identid.ui.common.loading
+package com.k689.identid.ui.common.loading
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -29,10 +29,10 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
-import com.k869.identid.ui.component.content.ContentHeader
-import com.k869.identid.ui.component.content.ContentScreen
-import com.k869.identid.ui.component.content.ScreenNavigateAction
-import com.k869.identid.ui.component.utils.OneTimeLaunchedEffect
+import com.k689.identid.ui.component.content.ContentHeader
+import com.k689.identid.ui.component.content.ContentScreen
+import com.k689.identid.ui.component.content.ScreenNavigateAction
+import com.k689.identid.ui.component.utils.OneTimeLaunchedEffect
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.onEach

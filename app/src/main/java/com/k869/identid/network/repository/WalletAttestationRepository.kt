@@ -14,7 +14,7 @@
  * governing permissions and limitations under the Licence.
  */
 
-package com.k869.identid.network.repository
+package com.k689.identid.network.repository
 
 import io.ktor.client.HttpClient
 import io.ktor.client.request.post
@@ -32,23 +32,21 @@ import kotlinx.serialization.json.putJsonArray
 import kotlinx.serialization.json.putJsonObject
 
 interface WalletAttestationRepository {
-
     suspend fun getWalletAttestation(
         baseUrl: String,
-        keyInfo: JsonObject
+        keyInfo: JsonObject,
     ): Result<String>
 
     suspend fun getKeyAttestation(
         baseUrl: String,
         keys: List<JsonObject>,
-        nonce: String?
+        nonce: String?,
     ): Result<String>
 }
 
 class WalletAttestationRepositoryImpl(
-    private val httpClient: HttpClient
+    private val httpClient: HttpClient,
 ) : WalletAttestationRepository {
-
     private companion object {
         const val WALLET_INSTANCE_ATTESTATION_PATH = "/wallet-instance-attestation/jwk"
         const val WALLET_UNIT_ATTESTATION_PATH = "/wallet-unit-attestation/jwk-set"
@@ -56,41 +54,45 @@ class WalletAttestationRepositoryImpl(
 
     override suspend fun getWalletAttestation(
         baseUrl: String,
-        keyInfo: JsonObject
-    ): Result<String> = runCatching {
-        httpClient.post(baseUrl + WALLET_INSTANCE_ATTESTATION_PATH) {
-            contentType(ContentType.Application.Json)
-            setBody(
-                buildJsonObject {
-                    put("jwk", keyInfo)
-                }
-            )
-        }.bodyAsText()
-            .let { Json.decodeFromString<JsonObject>(it) }
-            .let { it.jsonObject["walletInstanceAttestation"]?.jsonPrimitive?.content }
-            ?: throw IllegalStateException("No attestation response")
-    }
+        keyInfo: JsonObject,
+    ): Result<String> =
+        runCatching {
+            httpClient
+                .post(baseUrl + WALLET_INSTANCE_ATTESTATION_PATH) {
+                    contentType(ContentType.Application.Json)
+                    setBody(
+                        buildJsonObject {
+                            put("jwk", keyInfo)
+                        },
+                    )
+                }.bodyAsText()
+                .let { Json.decodeFromString<JsonObject>(it) }
+                .let { it.jsonObject["walletInstanceAttestation"]?.jsonPrimitive?.content }
+                ?: throw IllegalStateException("No attestation response")
+        }
 
     override suspend fun getKeyAttestation(
         baseUrl: String,
         keys: List<JsonObject>,
-        nonce: String?
-    ): Result<String> = runCatching {
-        httpClient.post(baseUrl + WALLET_UNIT_ATTESTATION_PATH) {
-            contentType(ContentType.Application.Json)
-            setBody(
-                buildJsonObject {
-                    put("nonce", JsonPrimitive(nonce.orEmpty()))
-                    putJsonObject("jwkSet") {
-                        putJsonArray("keys") {
-                            keys.forEach { keyInfo -> add(keyInfo) }
-                        }
-                    }
-                }
-            )
-        }.bodyAsText()
-            .let { Json.decodeFromString<JsonObject>(it) }
-            .let { it.jsonObject["walletUnitAttestation"]?.jsonPrimitive?.content }
-            ?: throw IllegalStateException("No attestation response")
-    }
+        nonce: String?,
+    ): Result<String> =
+        runCatching {
+            httpClient
+                .post(baseUrl + WALLET_UNIT_ATTESTATION_PATH) {
+                    contentType(ContentType.Application.Json)
+                    setBody(
+                        buildJsonObject {
+                            put("nonce", JsonPrimitive(nonce.orEmpty()))
+                            putJsonObject("jwkSet") {
+                                putJsonArray("keys") {
+                                    keys.forEach { keyInfo -> add(keyInfo) }
+                                }
+                            }
+                        },
+                    )
+                }.bodyAsText()
+                .let { Json.decodeFromString<JsonObject>(it) }
+                .let { it.jsonObject["walletUnitAttestation"]?.jsonPrimitive?.content }
+                ?: throw IllegalStateException("No attestation response")
+        }
 }

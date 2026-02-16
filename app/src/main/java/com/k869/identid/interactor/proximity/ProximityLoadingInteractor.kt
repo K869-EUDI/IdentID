@@ -14,17 +14,17 @@
  * governing permissions and limitations under the Licence.
  */
 
-package com.k869.identid.interactor.proximity
+package com.k689.identid.interactor.proximity
 
 import android.content.Context
-import com.k869.identid.controller.authentication.BiometricsAvailability
-import com.k869.identid.controller.authentication.DeviceAuthenticationResult
-import com.k869.identid.model.authentication.BiometricCrypto
-import com.k869.identid.interactor.common.DeviceAuthenticationInteractor
-import com.k869.identid.controller.core.SendRequestedDocumentsPartialState
-import com.k869.identid.controller.core.WalletCorePartialState
-import com.k869.identid.controller.core.WalletCorePresentationController
-import com.k869.identid.model.core.AuthenticationData
+import com.k689.identid.controller.authentication.BiometricsAvailability
+import com.k689.identid.controller.authentication.DeviceAuthenticationResult
+import com.k689.identid.model.authentication.BiometricCrypto
+import com.k689.identid.interactor.common.DeviceAuthenticationInteractor
+import com.k689.identid.controller.core.SendRequestedDocumentsPartialState
+import com.k689.identid.controller.core.WalletCorePartialState
+import com.k689.identid.controller.core.WalletCorePresentationController
+import com.k689.identid.model.core.AuthenticationData
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.mapNotNull
 

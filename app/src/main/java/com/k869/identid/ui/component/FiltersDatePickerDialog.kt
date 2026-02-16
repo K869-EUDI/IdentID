@@ -14,7 +14,7 @@
  * governing permissions and limitations under the Licence.
  */
 
-package com.k869.identid.ui.component
+package com.k689.identid.ui.component
 
 import androidx.compose.material3.DatePicker
 import androidx.compose.material3.DatePickerDialog
@@ -25,7 +25,7 @@ import androidx.compose.material3.TextButton
 import androidx.compose.material3.rememberDatePickerState
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.res.stringResource
-import com.k869.identid.R
+import com.k689.identid.R
 import java.time.Instant
 import java.time.LocalDate
 import java.time.ZoneId

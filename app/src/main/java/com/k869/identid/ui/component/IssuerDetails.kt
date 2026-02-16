@@ -14,7 +14,7 @@
  * governing permissions and limitations under the Licence.
  */
 
-package com.k869.identid.ui.component
+package com.k689.identid.ui.component
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -32,15 +32,15 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.unit.dp
-import com.k869.identid.theme.values.success
-import com.k869.identid.ui.component.preview.PreviewTheme
-import com.k869.identid.ui.component.preview.ThemeModePreviews
-import com.k869.identid.ui.component.utils.SPACING_EXTRA_SMALL
-import com.k869.identid.ui.component.utils.SPACING_MEDIUM
-import com.k869.identid.ui.component.utils.SPACING_SMALL
-import com.k869.identid.ui.component.wrap.WrapAsyncImage
-import com.k869.identid.ui.component.wrap.WrapCard
-import com.k869.identid.ui.component.wrap.WrapIcon
+import com.k689.identid.theme.values.success
+import com.k689.identid.ui.component.preview.PreviewTheme
+import com.k689.identid.ui.component.preview.ThemeModePreviews
+import com.k689.identid.ui.component.utils.SPACING_EXTRA_SMALL
+import com.k689.identid.ui.component.utils.SPACING_MEDIUM
+import com.k689.identid.ui.component.utils.SPACING_SMALL
+import com.k689.identid.ui.component.wrap.WrapAsyncImage
+import com.k689.identid.ui.component.wrap.WrapCard
+import com.k689.identid.ui.component.wrap.WrapIcon
 import java.net.URI
 
 /**

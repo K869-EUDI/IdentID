@@ -14,31 +14,31 @@
  * governing permissions and limitations under the Licence.
  */
 
-package com.k869.identid.ui.proximity.request
+package com.k689.identid.ui.proximity.request
 
 import androidx.lifecycle.viewModelScope
-import com.k869.identid.extension.business.ifEmptyOrNull
-import com.k869.identid.config.BiometricMode
-import com.k869.identid.config.BiometricUiConfig
-import com.k869.identid.config.OnBackNavigationConfig
-import com.k869.identid.config.RequestUriConfig
-import com.k869.identid.ui.common.request.Event
-import com.k869.identid.ui.common.request.RequestViewModel
-import com.k869.identid.ui.common.request.model.RequestDocumentItemUi
-import com.k869.identid.interactor.proximity.ProximityRequestInteractor
-import com.k869.identid.interactor.proximity.ProximityRequestInteractorPartialState
-import com.k869.identid.R
-import com.k869.identid.provider.resources.ResourceProvider
-import com.k869.identid.ui.component.RelyingPartyDataUi
-import com.k869.identid.ui.component.content.ContentErrorConfig
-import com.k869.identid.ui.component.content.ContentHeaderConfig
-import com.k869.identid.config.ConfigNavigation
-import com.k869.identid.config.NavigationType
-import com.k869.identid.navigation.CommonScreens
-import com.k869.identid.navigation.ProximityScreens
-import com.k869.identid.navigation.helper.generateComposableArguments
-import com.k869.identid.navigation.helper.generateComposableNavigationLink
-import com.k869.identid.ui.serializer.UiSerializer
+import com.k689.identid.extension.business.ifEmptyOrNull
+import com.k689.identid.config.BiometricMode
+import com.k689.identid.config.BiometricUiConfig
+import com.k689.identid.config.OnBackNavigationConfig
+import com.k689.identid.config.RequestUriConfig
+import com.k689.identid.ui.common.request.Event
+import com.k689.identid.ui.common.request.RequestViewModel
+import com.k689.identid.ui.common.request.model.RequestDocumentItemUi
+import com.k689.identid.interactor.proximity.ProximityRequestInteractor
+import com.k689.identid.interactor.proximity.ProximityRequestInteractorPartialState
+import com.k689.identid.R
+import com.k689.identid.provider.resources.ResourceProvider
+import com.k689.identid.ui.component.RelyingPartyDataUi
+import com.k689.identid.ui.component.content.ContentErrorConfig
+import com.k689.identid.ui.component.content.ContentHeaderConfig
+import com.k689.identid.config.ConfigNavigation
+import com.k689.identid.config.NavigationType
+import com.k689.identid.navigation.CommonScreens
+import com.k689.identid.navigation.ProximityScreens
+import com.k689.identid.navigation.helper.generateComposableArguments
+import com.k689.identid.navigation.helper.generateComposableNavigationLink
+import com.k689.identid.ui.serializer.UiSerializer
 import kotlinx.coroutines.launch
 import org.koin.android.annotation.KoinViewModel
 import org.koin.core.annotation.InjectedParam

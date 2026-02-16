@@ -14,35 +14,35 @@
  * governing permissions and limitations under the Licence.
  */
 
-package com.k869.identid.di.business
+package com.k689.identid.di.business
 
 import android.content.Context
-import com.k869.identid.config.ConfigLogic
-import com.k869.identid.config.ConfigLogicImpl
-import com.k869.identid.controller.crypto.CryptoController
-import com.k869.identid.controller.crypto.CryptoControllerImpl
-import com.k869.identid.controller.crypto.KeystoreController
-import com.k869.identid.controller.crypto.KeystoreControllerImpl
-import com.k869.identid.controller.log.LogController
-import com.k869.identid.controller.log.LogControllerImpl
-import com.k869.identid.controller.storage.PrefKeys
-import com.k869.identid.controller.storage.PrefKeysImpl
-import com.k869.identid.controller.storage.PrefsController
-import com.k869.identid.controller.storage.PrefsControllerImpl
-import com.k869.identid.provider.UuidProvider
-import com.k869.identid.provider.UuidProviderImpl
-import com.k869.identid.validator.FilterValidator
-import com.k869.identid.validator.FilterValidatorImpl
-import com.k869.identid.validator.FormValidator
-import com.k869.identid.validator.FormValidatorImpl
-import com.k869.identid.provider.resources.ResourceProvider
+import com.k689.identid.config.ConfigLogic
+import com.k689.identid.config.ConfigLogicImpl
+import com.k689.identid.controller.crypto.CryptoController
+import com.k689.identid.controller.crypto.CryptoControllerImpl
+import com.k689.identid.controller.crypto.KeystoreController
+import com.k689.identid.controller.crypto.KeystoreControllerImpl
+import com.k689.identid.controller.log.LogController
+import com.k689.identid.controller.log.LogControllerImpl
+import com.k689.identid.controller.storage.PrefKeys
+import com.k689.identid.controller.storage.PrefKeysImpl
+import com.k689.identid.controller.storage.PrefsController
+import com.k689.identid.controller.storage.PrefsControllerImpl
+import com.k689.identid.provider.UuidProvider
+import com.k689.identid.provider.UuidProviderImpl
+import com.k689.identid.validator.FilterValidator
+import com.k689.identid.validator.FilterValidatorImpl
+import com.k689.identid.validator.FormValidator
+import com.k689.identid.validator.FormValidatorImpl
+import com.k689.identid.provider.resources.ResourceProvider
 import org.koin.core.annotation.ComponentScan
 import org.koin.core.annotation.Factory
 import org.koin.core.annotation.Module
 import org.koin.core.annotation.Single
 
 @Module
-@ComponentScan("com.k869.identid.di.business")
+@ComponentScan("com.k689.identid.di.business")
 class LogicBusinessModule
 
 @Single

@@ -14,18 +14,18 @@
  * governing permissions and limitations under the Licence.
  */
 
-package com.k869.identid.ui.common.loading
+package com.k689.identid.ui.common.loading
 
 import android.content.Context
 import androidx.lifecycle.viewModelScope
-import com.k869.identid.ui.component.content.ContentErrorConfig
-import com.k869.identid.ui.component.content.ContentHeaderConfig
-import com.k869.identid.config.NavigationType
-import com.k869.identid.ui.mvi.MviViewModel
-import com.k869.identid.ui.mvi.ViewEvent
-import com.k869.identid.ui.mvi.ViewSideEffect
-import com.k869.identid.ui.mvi.ViewState
-import com.k869.identid.navigation.Screen
+import com.k689.identid.ui.component.content.ContentErrorConfig
+import com.k689.identid.ui.component.content.ContentHeaderConfig
+import com.k689.identid.config.NavigationType
+import com.k689.identid.ui.mvi.MviViewModel
+import com.k689.identid.ui.mvi.ViewEvent
+import com.k689.identid.ui.mvi.ViewSideEffect
+import com.k689.identid.ui.mvi.ViewState
+import com.k689.identid.navigation.Screen
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlin.time.Duration

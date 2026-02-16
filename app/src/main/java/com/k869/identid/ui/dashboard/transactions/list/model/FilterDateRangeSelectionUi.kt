@@ -14,9 +14,9 @@
  * governing permissions and limitations under the Licence.
  */
 
-package com.k869.identid.ui.dashboard.transactions.list.model
+package com.k689.identid.ui.dashboard.transactions.list.model
 
-import com.k869.identid.util.business.toDisplayedDate
+import com.k689.identid.util.business.toDisplayedDate
 import java.time.LocalDate
 
 data class FilterDateRangeSelectionUi(

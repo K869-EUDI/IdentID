@@ -14,7 +14,7 @@
  * governing permissions and limitations under the Licence.
  */
 
-package com.k869.identid.ui.component.wrap
+package com.k689.identid.ui.component.wrap
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -47,30 +47,30 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
-import com.k869.identid.R
-import com.k869.identid.theme.values.divider
-import com.k869.identid.theme.values.warning
-import com.k869.identid.ui.component.AppIcons
-import com.k869.identid.ui.component.IconDataUi
-import com.k869.identid.ui.component.ModalOptionUi
-import com.k869.identid.ui.component.preview.PreviewTheme
-import com.k869.identid.ui.component.preview.ThemeModePreviews
-import com.k869.identid.ui.component.utils.ALPHA_DISABLED
-import com.k869.identid.ui.component.utils.ALPHA_ENABLED
-import com.k869.identid.ui.component.utils.DEFAULT_BIG_ICON_SIZE
-import com.k869.identid.ui.component.utils.DEFAULT_ICON_SIZE
-import com.k869.identid.ui.component.utils.HSpacer
-import com.k869.identid.ui.component.utils.SIZE_SMALL
-import com.k869.identid.ui.component.utils.SPACING_EXTRA_SMALL
-import com.k869.identid.ui.component.utils.SPACING_LARGE
-import com.k869.identid.ui.component.utils.SPACING_MEDIUM
-import com.k869.identid.ui.component.utils.SPACING_SMALL
-import com.k869.identid.ui.component.utils.VSpacer
-import com.k869.identid.extension.ui.exposeTestTagsAsResourceId
-import com.k869.identid.extension.ui.optionalTestTag
-import com.k869.identid.extension.ui.throttledClickable
-import com.k869.identid.ui.mvi.ViewEvent
-import com.k869.identid.util.ui.TestTag
+import com.k689.identid.R
+import com.k689.identid.theme.values.divider
+import com.k689.identid.theme.values.warning
+import com.k689.identid.ui.component.AppIcons
+import com.k689.identid.ui.component.IconDataUi
+import com.k689.identid.ui.component.ModalOptionUi
+import com.k689.identid.ui.component.preview.PreviewTheme
+import com.k689.identid.ui.component.preview.ThemeModePreviews
+import com.k689.identid.ui.component.utils.ALPHA_DISABLED
+import com.k689.identid.ui.component.utils.ALPHA_ENABLED
+import com.k689.identid.ui.component.utils.DEFAULT_BIG_ICON_SIZE
+import com.k689.identid.ui.component.utils.DEFAULT_ICON_SIZE
+import com.k689.identid.ui.component.utils.HSpacer
+import com.k689.identid.ui.component.utils.SIZE_SMALL
+import com.k689.identid.ui.component.utils.SPACING_EXTRA_SMALL
+import com.k689.identid.ui.component.utils.SPACING_LARGE
+import com.k689.identid.ui.component.utils.SPACING_MEDIUM
+import com.k689.identid.ui.component.utils.SPACING_SMALL
+import com.k689.identid.ui.component.utils.VSpacer
+import com.k689.identid.extension.ui.exposeTestTagsAsResourceId
+import com.k689.identid.extension.ui.optionalTestTag
+import com.k689.identid.extension.ui.throttledClickable
+import com.k689.identid.ui.mvi.ViewEvent
+import com.k689.identid.util.ui.TestTag
 
 private val defaultBottomSheetPadding: PaddingValues = PaddingValues(
     start = SPACING_LARGE.dp,

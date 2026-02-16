@@ -14,21 +14,21 @@
  * governing permissions and limitations under the Licence.
  */
 
-package com.k869.identid.config
+package com.k689.identid.config
 
 import androidx.compose.ui.graphics.Color
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
-import com.k869.identid.theme.values.ThemeColors
-import com.k869.identid.ui.component.AppIconAndTextDataUi
-import com.k869.identid.ui.component.IconDataUi
-import com.k869.identid.ui.component.content.ContentHeaderConfig
-import com.k869.identid.ui.component.utils.PERCENTAGE_60
-import com.k869.identid.config.ConfigNavigation
-import com.k869.identid.config.NavigationType
-import com.k869.identid.ui.serializer.UiSerializable
-import com.k869.identid.ui.serializer.UiSerializableParser
-import com.k869.identid.ui.serializer.adapter.SerializableTypeAdapter
+import com.k689.identid.theme.values.ThemeColors
+import com.k689.identid.ui.component.AppIconAndTextDataUi
+import com.k689.identid.ui.component.IconDataUi
+import com.k689.identid.ui.component.content.ContentHeaderConfig
+import com.k689.identid.ui.component.utils.PERCENTAGE_60
+import com.k689.identid.config.ConfigNavigation
+import com.k689.identid.config.NavigationType
+import com.k689.identid.ui.serializer.UiSerializable
+import com.k689.identid.ui.serializer.UiSerializableParser
+import com.k689.identid.ui.serializer.adapter.SerializableTypeAdapter
 
 data class SuccessUIConfig(
     val textElementsConfig: TextElementsConfig,

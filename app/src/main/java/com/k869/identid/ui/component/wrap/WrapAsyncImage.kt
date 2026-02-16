@@ -14,7 +14,7 @@
  * governing permissions and limitations under the Licence.
  */
 
-package com.k869.identid.ui.component.wrap
+package com.k689.identid.ui.component.wrap
 
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -25,7 +25,7 @@ import coil3.ImageLoader
 import coil3.compose.AsyncImage
 import coil3.request.ImageRequest
 import coil3.svg.SvgDecoder
-import com.k869.identid.ui.component.IconDataUi
+import com.k689.identid.ui.component.IconDataUi
 
 @Composable
 fun WrapAsyncImage(

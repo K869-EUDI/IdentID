@@ -14,7 +14,7 @@
  * governing permissions and limitations under the Licence.
  */
 
-package com.k869.identid.ui.component.wrap
+package com.k689.identid.ui.component.wrap
 
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.fadeIn
@@ -38,9 +38,9 @@ import androidx.compose.ui.input.key.onKeyEvent
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.dp
-import com.k869.identid.ui.component.utils.SIZE_LARGE
-import com.k869.identid.extension.ui.clickableNoRipple
-import com.k869.identid.extension.ui.throttledClickable
+import com.k689.identid.ui.component.utils.SIZE_LARGE
+import com.k689.identid.extension.ui.clickableNoRipple
+import com.k689.identid.extension.ui.throttledClickable
 
 @Composable
 fun WrapTextField(

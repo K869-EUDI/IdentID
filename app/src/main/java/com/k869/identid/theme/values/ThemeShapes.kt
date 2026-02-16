@@ -14,16 +14,16 @@
  * governing permissions and limitations under the Licence.
  */
 
-package com.k869.identid.theme.values
+package com.k689.identid.theme.values
 
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Shapes
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.unit.dp
-import com.k869.identid.theme.templates.ThemeShapesTemplate
-import com.k869.identid.theme.values.ThemeShapes.Companion.LARGE
-import com.k869.identid.theme.values.ThemeShapes.Companion.SMALL
+import com.k689.identid.theme.templates.ThemeShapesTemplate
+import com.k689.identid.theme.values.ThemeShapes.Companion.LARGE
+import com.k689.identid.theme.values.ThemeShapes.Companion.SMALL
 
 class ThemeShapes {
     companion object {

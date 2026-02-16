@@ -14,12 +14,12 @@
  * governing permissions and limitations under the Licence.
  */
 
-package com.k869.identid.theme.templates.structures
+package com.k689.identid.theme.templates.structures
 
 import androidx.annotation.FontRes
 import androidx.compose.ui.text.font.Font
-import com.k869.identid.theme.templates.structures.ThemeFontStyle.Companion.toFontStyle
-import com.k869.identid.theme.templates.structures.ThemeFontWeight.Companion.toFontWeight
+import com.k689.identid.theme.templates.structures.ThemeFontStyle.Companion.toFontStyle
+import com.k689.identid.theme.templates.structures.ThemeFontWeight.Companion.toFontWeight
 
 data class ThemeFont(
     @param:FontRes val res: Int,

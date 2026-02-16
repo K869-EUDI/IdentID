@@ -14,7 +14,7 @@
  * governing permissions and limitations under the Licence.
  */
 
-package com.k869.identid.ui.component
+package com.k689.identid.ui.component
 
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
@@ -27,7 +27,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.graphics.ImageBitmap
 import androidx.compose.ui.graphics.asImageBitmap
-import com.k869.identid.extension.business.decodeFromBase64
+import com.k689.identid.extension.business.decodeFromBase64
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 

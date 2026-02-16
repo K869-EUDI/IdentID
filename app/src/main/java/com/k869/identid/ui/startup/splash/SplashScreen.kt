@@ -14,7 +14,7 @@
  * governing permissions and limitations under the Licence.
  */
 
-package com.k869.identid.ui.startup.splash
+package com.k689.identid.ui.startup.splash
 
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.core.MutableTransitionState
@@ -47,12 +47,12 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
-import com.k869.identid.navigation.ModuleRoute
-import com.k869.identid.navigation.StartupScreens
-import com.k869.identid.ui.component.AppIcons
-import com.k869.identid.ui.component.preview.PreviewTheme
-import com.k869.identid.ui.component.utils.OneTimeLaunchedEffect
-import com.k869.identid.ui.component.wrap.WrapImage
+import com.k689.identid.navigation.ModuleRoute
+import com.k689.identid.navigation.StartupScreens
+import com.k689.identid.ui.component.AppIcons
+import com.k689.identid.ui.component.preview.PreviewTheme
+import com.k689.identid.ui.component.utils.OneTimeLaunchedEffect
+import com.k689.identid.ui.component.wrap.WrapImage
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.emptyFlow

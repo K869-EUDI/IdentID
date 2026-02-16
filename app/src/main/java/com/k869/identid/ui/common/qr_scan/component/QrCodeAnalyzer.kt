@@ -14,7 +14,7 @@
  * governing permissions and limitations under the Licence.
  */
 
-package com.k869.identid.ui.common.qr_scan.component
+package com.k689.identid.ui.common.qr_scan.component
 
 import android.graphics.ImageFormat
 import androidx.camera.core.ImageAnalysis

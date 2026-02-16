@@ -14,20 +14,20 @@
  * governing permissions and limitations under the Licence.
  */
 
-package com.k869.identid.worker
+package com.k689.identid.worker
 
 import android.content.Context
 import android.content.Intent
 import androidx.work.CoroutineWorker
 import androidx.work.WorkerParameters
-import com.k869.identid.controller.core.WalletCoreDocumentsController
-import com.k869.identid.model.core.RevokedDocumentDataDomain
-import com.k869.identid.util.core.CoreActions
-import com.k869.identid.util.core.CoreActions.REVOCATION_IDS_DETAILS_EXTRA
+import com.k689.identid.controller.core.WalletCoreDocumentsController
+import com.k689.identid.model.core.RevokedDocumentDataDomain
+import com.k689.identid.util.core.CoreActions
+import com.k689.identid.util.core.CoreActions.REVOCATION_IDS_DETAILS_EXTRA
 import eu.europa.ec.eudi.statium.Status
 import eu.europa.ec.eudi.wallet.document.IssuedDocument
-import com.k869.identid.storage.dao.RevokedDocumentDao
-import com.k869.identid.model.storage.RevokedDocument
+import com.k689.identid.storage.dao.RevokedDocumentDao
+import com.k689.identid.model.storage.RevokedDocument
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
 
@@ -35,13 +35,13 @@ import org.koin.core.component.inject
  * [RevocationWorkManager] is a [CoroutineWorker] responsible for checking the revocation status of issued documents
  * and updating the local storage and sending broadcasts when revocations are detected.
  *
- * It utilizes Koin for dependency injection to obtain instances of [com.k869.identid.storage.dao.RevokedDocumentDao] and [WalletCoreDocumentsController].
+ * It utilizes Koin for dependency injection to obtain instances of [com.k689.identid.storage.dao.RevokedDocumentDao] and [WalletCoreDocumentsController].
  *
  * Key functionalities:
  *  - Periodically retrieves all issued documents from the [WalletCoreDocumentsController].
  *  - Checks the status of each document for revocation using [WalletCoreDocumentsController.resolveDocumentStatus].
  *  - Identifies documents with statuses [Status.Invalid] or [Status.Suspended] as revoked.
- *  - Stores revoked documents in the [com.k869.identid.storage.dao.RevokedDocumentDao].
+ *  - Stores revoked documents in the [com.k689.identid.storage.dao.RevokedDocumentDao].
  *  - Sends three broadcasts to notify the application about the revoked documents:
  *      - `CoreActions.REVOCATION_WORK_MESSAGE_ACTION`: Includes a list of [RevokedDocumentPayload] with names and IDs.
  *      - `CoreActions.REVOCATION_WORK_REFRESH_ACTION`: A general refresh action without specific data.

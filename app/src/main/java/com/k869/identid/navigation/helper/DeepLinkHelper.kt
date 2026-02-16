@@ -14,7 +14,7 @@
  * governing permissions and limitations under the Licence.
  */
 
-package com.k869.identid.navigation.helper
+package com.k689.identid.navigation.helper
 
 import android.content.Context
 import android.content.Intent
@@ -22,17 +22,17 @@ import android.net.Uri
 import android.os.Bundle
 import androidx.core.os.bundleOf
 import androidx.navigation.NavController
-import com.k869.identid.extension.business.toUri
-import com.k869.identid.util.business.safeLet
-import com.k869.identid.util.core.CoreActions
+import com.k689.identid.extension.business.toUri
+import com.k689.identid.util.business.safeLet
+import com.k689.identid.util.core.CoreActions
 import eu.europa.ec.eudi.rqesui.infrastructure.EudiRQESUi
 import eu.europa.ec.eudi.rqesui.infrastructure.RemoteUri
-import com.k869.identid.BuildConfig
-import com.k869.identid.ui.container.EudiComponentActivity
-import com.k869.identid.extension.ui.openUrl
-import com.k869.identid.navigation.IssuanceScreens
-import com.k869.identid.navigation.PresentationScreens
-import com.k869.identid.navigation.Screen
+import com.k689.identid.BuildConfig
+import com.k689.identid.ui.container.EudiComponentActivity
+import com.k689.identid.extension.ui.openUrl
+import com.k689.identid.navigation.IssuanceScreens
+import com.k689.identid.navigation.PresentationScreens
+import com.k689.identid.navigation.Screen
 
 fun <T> generateComposableArguments(arguments: Map<String, T>): String {
     if (arguments.isEmpty()) return ""

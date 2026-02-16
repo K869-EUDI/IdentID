@@ -14,7 +14,7 @@
  * governing permissions and limitations under the Licence.
  */
 
-package com.k869.identid.ui.dashboard.settings
+package com.k689.identid.ui.dashboard.settings
 
 import android.content.Context
 import androidx.compose.foundation.layout.Column
@@ -39,24 +39,24 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
-import com.k869.identid.ui.dashboard.settings.model.SettingsItemUi
-import com.k869.identid.ui.dashboard.settings.model.SettingsMenuItemType
-import com.k869.identid.R
-import com.k869.identid.ui.component.AppIcons
-import com.k869.identid.ui.component.ListItemDataUi
-import com.k869.identid.ui.component.ListItemLeadingContentDataUi
-import com.k869.identid.ui.component.ListItemMainContentDataUi
-import com.k869.identid.ui.component.ListItemTrailingContentDataUi
-import com.k869.identid.ui.component.content.ContentScreen
-import com.k869.identid.ui.component.content.ContentTitle
-import com.k869.identid.ui.component.content.ScreenNavigateAction
-import com.k869.identid.ui.component.preview.PreviewTheme
-import com.k869.identid.ui.component.preview.ThemeModePreviews
-import com.k869.identid.ui.component.utils.SPACING_MEDIUM
-import com.k869.identid.ui.component.utils.SPACING_SMALL
-import com.k869.identid.ui.component.wrap.WrapListItem
-import com.k869.identid.extension.ui.openIntentChooser
-import com.k869.identid.extension.ui.openUrl
+import com.k689.identid.ui.dashboard.settings.model.SettingsItemUi
+import com.k689.identid.ui.dashboard.settings.model.SettingsMenuItemType
+import com.k689.identid.R
+import com.k689.identid.ui.component.AppIcons
+import com.k689.identid.ui.component.ListItemDataUi
+import com.k689.identid.ui.component.ListItemLeadingContentDataUi
+import com.k689.identid.ui.component.ListItemMainContentDataUi
+import com.k689.identid.ui.component.ListItemTrailingContentDataUi
+import com.k689.identid.ui.component.content.ContentScreen
+import com.k689.identid.ui.component.content.ContentTitle
+import com.k689.identid.ui.component.content.ScreenNavigateAction
+import com.k689.identid.ui.component.preview.PreviewTheme
+import com.k689.identid.ui.component.preview.ThemeModePreviews
+import com.k689.identid.ui.component.utils.SPACING_MEDIUM
+import com.k689.identid.ui.component.utils.SPACING_SMALL
+import com.k689.identid.ui.component.wrap.WrapListItem
+import com.k689.identid.extension.ui.openIntentChooser
+import com.k689.identid.extension.ui.openUrl
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.emptyFlow

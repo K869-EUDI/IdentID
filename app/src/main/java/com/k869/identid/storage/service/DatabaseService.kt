@@ -14,16 +14,16 @@
  * governing permissions and limitations under the Licence.
  */
 
-package com.k869.identid.storage.service
+package com.k689.identid.storage.service
 
 import androidx.room.Database
 import androidx.room.RoomDatabase
-import com.k869.identid.storage.dao.BookmarkDao
-import com.k869.identid.storage.dao.RevokedDocumentDao
-import com.k869.identid.storage.dao.TransactionLogDao
-import com.k869.identid.model.storage.Bookmark
-import com.k869.identid.model.storage.RevokedDocument
-import com.k869.identid.model.storage.TransactionLog
+import com.k689.identid.storage.dao.BookmarkDao
+import com.k689.identid.storage.dao.RevokedDocumentDao
+import com.k689.identid.storage.dao.TransactionLogDao
+import com.k689.identid.model.storage.Bookmark
+import com.k689.identid.model.storage.RevokedDocument
+import com.k689.identid.model.storage.TransactionLog
 
 @Database(
     entities = [

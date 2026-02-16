@@ -14,18 +14,18 @@
  * governing permissions and limitations under the Licence.
  */
 
-package com.k869.identid.app
+package com.k689.identid.app
 
 import android.os.Bundle
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
-import com.k869.identid.navigation.routes.common.featureCommonGraph
-import com.k869.identid.navigation.routes.dashboard.featureDashboardGraph
-import com.k869.identid.navigation.routes.issuance.featureIssuanceGraph
-import com.k869.identid.navigation.routes.presentation.presentationGraph
-import com.k869.identid.navigation.routes.proximity.featureProximityGraph
-import com.k869.identid.navigation.routes.startup.featureStartupGraph
-import com.k869.identid.ui.container.EudiComponentActivity
+import com.k689.identid.navigation.routes.common.featureCommonGraph
+import com.k689.identid.navigation.routes.dashboard.featureDashboardGraph
+import com.k689.identid.navigation.routes.issuance.featureIssuanceGraph
+import com.k689.identid.navigation.routes.presentation.presentationGraph
+import com.k689.identid.navigation.routes.proximity.featureProximityGraph
+import com.k689.identid.navigation.routes.startup.featureStartupGraph
+import com.k689.identid.ui.container.EudiComponentActivity
 
 class MainActivity : EudiComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {

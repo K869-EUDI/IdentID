@@ -14,13 +14,13 @@
  * governing permissions and limitations under the Licence.
  */
 
-package com.k869.identid.ui.component.preview
+package com.k689.identid.ui.component.preview
 
 import android.content.res.Configuration
 import android.content.res.Configuration.UI_MODE_NIGHT_NO
 import android.content.res.Configuration.UI_MODE_NIGHT_YES
 import androidx.compose.ui.tooling.preview.Preview
-import com.k869.identid.theme.values.ThemeColors
+import com.k689.identid.theme.values.ThemeColors
 
 /**
  * Creates previews for Light and Dark mode

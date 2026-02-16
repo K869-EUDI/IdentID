@@ -14,7 +14,7 @@
  * governing permissions and limitations under the Licence.
  */
 
-package com.k869.identid.util.core
+package com.k689.identid.util.core
 
 object CoreActions {
     const val VCI_RESUME_ACTION = "vci.resume.eudi.action"

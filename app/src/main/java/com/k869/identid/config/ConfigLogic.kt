@@ -14,9 +14,9 @@
  * governing permissions and limitations under the Licence.
  */
 
-package com.k869.identid.config
+package com.k689.identid.config
 
-import com.k869.identid.BuildConfig
+import com.k689.identid.BuildConfig
 import eu.europa.ec.eudi.rqesui.infrastructure.config.EudiRQESUiConfig
 
 interface ConfigLogic {

@@ -14,29 +14,29 @@
  * governing permissions and limitations under the Licence.
  */
 
-package com.k869.identid.di.proximity
+package com.k689.identid.di.proximity
 
-import com.k869.identid.provider.UuidProvider
-import com.k869.identid.interactor.common.DeviceAuthenticationInteractor
-import com.k869.identid.controller.core.WalletCoreDocumentsController
-import com.k869.identid.controller.core.WalletCorePresentationController
-import com.k869.identid.di.core.PRESENTATION_SCOPE_ID
-import com.k869.identid.interactor.proximity.ProximityLoadingInteractor
-import com.k869.identid.interactor.proximity.ProximityLoadingInteractorImpl
-import com.k869.identid.interactor.proximity.ProximityQRInteractor
-import com.k869.identid.interactor.proximity.ProximityQRInteractorImpl
-import com.k869.identid.interactor.proximity.ProximityRequestInteractor
-import com.k869.identid.interactor.proximity.ProximityRequestInteractorImpl
-import com.k869.identid.interactor.proximity.ProximitySuccessInteractor
-import com.k869.identid.interactor.proximity.ProximitySuccessInteractorImpl
-import com.k869.identid.provider.resources.ResourceProvider
+import com.k689.identid.provider.UuidProvider
+import com.k689.identid.interactor.common.DeviceAuthenticationInteractor
+import com.k689.identid.controller.core.WalletCoreDocumentsController
+import com.k689.identid.controller.core.WalletCorePresentationController
+import com.k689.identid.di.core.PRESENTATION_SCOPE_ID
+import com.k689.identid.interactor.proximity.ProximityLoadingInteractor
+import com.k689.identid.interactor.proximity.ProximityLoadingInteractorImpl
+import com.k689.identid.interactor.proximity.ProximityQRInteractor
+import com.k689.identid.interactor.proximity.ProximityQRInteractorImpl
+import com.k689.identid.interactor.proximity.ProximityRequestInteractor
+import com.k689.identid.interactor.proximity.ProximityRequestInteractorImpl
+import com.k689.identid.interactor.proximity.ProximitySuccessInteractor
+import com.k689.identid.interactor.proximity.ProximitySuccessInteractorImpl
+import com.k689.identid.provider.resources.ResourceProvider
 import org.koin.core.annotation.ComponentScan
 import org.koin.core.annotation.Factory
 import org.koin.core.annotation.Module
 import org.koin.core.annotation.ScopeId
 
 @Module
-@ComponentScan("com.k869.identid.ui.proximity", "com.k869.identid.di.proximity")
+@ComponentScan("com.k689.identid.ui.proximity", "com.k689.identid.di.proximity")
 class FeatureProximityModule
 
 @Factory

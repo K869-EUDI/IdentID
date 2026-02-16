@@ -14,17 +14,17 @@
  * governing permissions and limitations under the Licence.
  */
 
-package com.k869.identid.ui.dashboard.transactions.list.model
+package com.k689.identid.ui.dashboard.transactions.list.model
 
 import androidx.annotation.StringRes
-import com.k869.identid.util.business.endOfDay
-import com.k869.identid.util.business.endOfMonth
-import com.k869.identid.util.business.endOfWeek
-import com.k869.identid.util.business.monthYearFormatter
-import com.k869.identid.util.business.startOfDay
-import com.k869.identid.util.business.startOfMonth
-import com.k869.identid.util.business.startOfWeek
-import com.k869.identid.R
+import com.k689.identid.util.business.endOfDay
+import com.k689.identid.util.business.endOfMonth
+import com.k689.identid.util.business.endOfWeek
+import com.k689.identid.util.business.monthYearFormatter
+import com.k689.identid.util.business.startOfDay
+import com.k689.identid.util.business.startOfMonth
+import com.k689.identid.util.business.startOfWeek
+import com.k689.identid.R
 import java.time.LocalDateTime
 
 sealed class TransactionCategoryUi(

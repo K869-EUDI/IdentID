@@ -14,7 +14,7 @@
  * governing permissions and limitations under the Licence.
  */
 
-package com.k869.identid.ui.component.wrap
+package com.k689.identid.ui.component.wrap
 
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.material3.ExtendedFloatingActionButton
@@ -24,10 +24,10 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Shape
-import com.k869.identid.theme.values.allCorneredShapeLarge
-import com.k869.identid.ui.component.AppIcons
-import com.k869.identid.ui.component.preview.PreviewTheme
-import com.k869.identid.ui.component.preview.ThemeModePreviews
+import com.k689.identid.theme.values.allCorneredShapeLarge
+import com.k689.identid.ui.component.AppIcons
+import com.k689.identid.ui.component.preview.PreviewTheme
+import com.k689.identid.ui.component.preview.ThemeModePreviews
 
 private val fabShape: Shape
     @Composable get() = MaterialTheme.shapes.allCorneredShapeLarge

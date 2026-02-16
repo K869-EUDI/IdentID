@@ -14,9 +14,9 @@
  * governing permissions and limitations under the Licence.
  */
 
-package com.k869.identid.config
+package com.k689.identid.config
 
-import com.k869.identid.model.core.DocumentIdentifier
+import com.k689.identid.model.core.DocumentIdentifier
 import eu.europa.ec.eudi.wallet.document.CreateDocumentSettings.CredentialPolicy
 
 /**
@@ -27,7 +27,7 @@ import eu.europa.ec.eudi.wallet.document.CreateDocumentSettings.CredentialPolicy
  *
  * @property defaultRule The default [DocumentIssuanceRule] to be applied when no specific rule
  *                       is defined for a document type.
- * @property documentSpecificRules A map where keys are [com.k869.identid.model.core.DocumentIdentifier]s and values are
+ * @property documentSpecificRules A map where keys are [com.k689.identid.model.core.DocumentIdentifier]s and values are
  *                                  [DocumentIssuanceRule]s, defining specific rules for
  *                                  particular document types.
  */

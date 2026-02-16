@@ -14,17 +14,17 @@
  * governing permissions and limitations under the Licence.
  */
 
-package com.k869.identid.interactor.dashboard
+package com.k689.identid.interactor.dashboard
 
-import com.k869.identid.ui.dashboard.dashboard.model.SideMenuItemUi
-import com.k869.identid.ui.dashboard.dashboard.model.SideMenuTypeUi
-import com.k869.identid.R
-import com.k869.identid.provider.resources.ResourceProvider
-import com.k869.identid.ui.component.AppIcons
-import com.k869.identid.ui.component.ListItemDataUi
-import com.k869.identid.ui.component.ListItemLeadingContentDataUi
-import com.k869.identid.ui.component.ListItemMainContentDataUi
-import com.k869.identid.ui.component.ListItemTrailingContentDataUi
+import com.k689.identid.ui.dashboard.dashboard.model.SideMenuItemUi
+import com.k689.identid.ui.dashboard.dashboard.model.SideMenuTypeUi
+import com.k689.identid.R
+import com.k689.identid.provider.resources.ResourceProvider
+import com.k689.identid.ui.component.AppIcons
+import com.k689.identid.ui.component.ListItemDataUi
+import com.k689.identid.ui.component.ListItemLeadingContentDataUi
+import com.k689.identid.ui.component.ListItemMainContentDataUi
+import com.k689.identid.ui.component.ListItemTrailingContentDataUi
 
 interface DashboardInteractor {
     fun getSideMenuOptions(): List<SideMenuItemUi>

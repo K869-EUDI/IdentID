@@ -14,9 +14,9 @@
  * governing permissions and limitations under the Licence.
  */
 
-package com.k869.identid.ui.dashboard.dashboard.model
+package com.k689.identid.ui.dashboard.dashboard.model
 
-import com.k869.identid.ui.component.ListItemDataUi
+import com.k689.identid.ui.component.ListItemDataUi
 
 data class SideMenuItemUi(
     val type: SideMenuTypeUi,

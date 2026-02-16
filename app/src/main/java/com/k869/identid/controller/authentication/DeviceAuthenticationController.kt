@@ -14,16 +14,16 @@
  * governing permissions and limitations under the Licence.
  */
 
-package com.k869.identid.controller.authentication
+package com.k689.identid.controller.authentication
 
 import android.content.Context
 import androidx.biometric.BiometricManager
 import androidx.biometric.BiometricPrompt
 import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.lifecycleScope
-import com.k869.identid.model.authentication.BiometricCrypto
-import com.k869.identid.R
-import com.k869.identid.provider.resources.ResourceProvider
+import com.k689.identid.model.authentication.BiometricCrypto
+import com.k689.identid.R
+import com.k689.identid.provider.resources.ResourceProvider
 import kotlinx.coroutines.launch
 
 interface DeviceAuthenticationController {

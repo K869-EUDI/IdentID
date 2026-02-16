@@ -14,7 +14,7 @@
  * governing permissions and limitations under the Licence.
  */
 
-package com.k869.identid.controller.authentication
+package com.k689.identid.controller.authentication
 
 import android.content.Context
 import android.content.Intent
@@ -28,14 +28,14 @@ import androidx.biometric.BiometricPrompt.AuthenticationResult
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.lifecycleScope
-import com.k869.identid.controller.storage.BiometryStorageController
-import com.k869.identid.model.authentication.BiometricAuthentication
-import com.k869.identid.model.authentication.BiometricCrypto
-import com.k869.identid.controller.crypto.CryptoController
-import com.k869.identid.extension.business.decodeFromPemBase64String
-import com.k869.identid.extension.business.encodeToPemBase64String
-import com.k869.identid.R
-import com.k869.identid.provider.resources.ResourceProvider
+import com.k689.identid.controller.storage.BiometryStorageController
+import com.k689.identid.model.authentication.BiometricAuthentication
+import com.k689.identid.model.authentication.BiometricCrypto
+import com.k689.identid.controller.crypto.CryptoController
+import com.k689.identid.extension.business.decodeFromPemBase64String
+import com.k689.identid.extension.business.encodeToPemBase64String
+import com.k689.identid.R
+import com.k689.identid.provider.resources.ResourceProvider
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch

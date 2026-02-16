@@ -14,7 +14,7 @@
  * governing permissions and limitations under the Licence.
  */
 
-package com.k869.identid.model.common
+package com.k689.identid.model.common
 
 enum class PinFlow {
     CREATE,

@@ -14,7 +14,7 @@
  * governing permissions and limitations under the Licence.
  */
 
-package com.k869.identid.ui.component
+package com.k689.identid.ui.component
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
@@ -27,11 +27,11 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import com.k869.identid.ui.component.preview.PreviewTheme
-import com.k869.identid.ui.component.preview.ThemeModePreviews
-import com.k869.identid.ui.component.utils.HSpacer
-import com.k869.identid.ui.component.wrap.CheckboxDataUi
-import com.k869.identid.ui.component.wrap.WrapCheckbox
+import com.k689.identid.ui.component.preview.PreviewTheme
+import com.k689.identid.ui.component.preview.ThemeModePreviews
+import com.k689.identid.ui.component.utils.HSpacer
+import com.k689.identid.ui.component.wrap.CheckboxDataUi
+import com.k689.identid.ui.component.wrap.WrapCheckbox
 
 @Composable
 fun CheckboxWithContent(

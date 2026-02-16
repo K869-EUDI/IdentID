@@ -14,7 +14,7 @@
  * governing permissions and limitations under the Licence.
  */
 
-package com.k869.identid.ui.dashboard.documents.list
+package com.k689.identid.ui.dashboard.documents.list
 
 import android.content.Context
 import androidx.compose.foundation.background
@@ -57,53 +57,53 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.compose.LocalLifecycleOwner
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
-import com.k869.identid.model.core.DocumentCategory
-import com.k869.identid.model.core.DocumentIdentifier
-import com.k869.identid.util.core.CoreActions
-import com.k869.identid.model.dashboard.SearchItemUi
-import com.k869.identid.ui.dashboard.component.BottomNavigationItem
-import com.k869.identid.ui.dashboard.documents.detail.model.DocumentIssuanceStateUi
-import com.k869.identid.ui.dashboard.documents.list.model.DocumentUi
-import com.k869.identid.util.dashboard.TestTag
-import com.k869.identid.R
-import com.k869.identid.theme.values.warning
-import com.k869.identid.ui.component.AppIcons
-import com.k869.identid.ui.component.DualSelectorButton
-import com.k869.identid.ui.component.DualSelectorButtonDataUi
-import com.k869.identid.ui.component.DualSelectorButtons
-import com.k869.identid.ui.component.FiltersSearchBar
-import com.k869.identid.ui.component.InlineSnackbar
-import com.k869.identid.ui.component.ListItemDataUi
-import com.k869.identid.ui.component.ListItemMainContentDataUi
-import com.k869.identid.ui.component.ModalOptionUi
-import com.k869.identid.ui.component.SectionTitle
-import com.k869.identid.ui.component.content.BroadcastAction
-import com.k869.identid.ui.component.content.ContentScreen
-import com.k869.identid.ui.component.content.ScreenNavigateAction
-import com.k869.identid.ui.component.preview.PreviewTheme
-import com.k869.identid.ui.component.preview.ThemeModePreviews
-import com.k869.identid.ui.component.utils.HSpacer
-import com.k869.identid.ui.component.utils.LifecycleEffect
-import com.k869.identid.ui.component.utils.OneTimeLaunchedEffect
-import com.k869.identid.ui.component.utils.SPACING_EXTRA_SMALL
-import com.k869.identid.ui.component.utils.SPACING_LARGE
-import com.k869.identid.ui.component.utils.SPACING_MEDIUM
-import com.k869.identid.ui.component.utils.SPACING_SMALL
-import com.k869.identid.ui.component.utils.VSpacer
-import com.k869.identid.ui.component.wrap.BottomSheetTextDataUi
-import com.k869.identid.ui.component.wrap.BottomSheetWithOptionsList
-import com.k869.identid.ui.component.wrap.BottomSheetWithTwoBigIcons
-import com.k869.identid.ui.component.wrap.ButtonConfig
-import com.k869.identid.ui.component.wrap.ButtonType
-import com.k869.identid.ui.component.wrap.DialogBottomSheet
-import com.k869.identid.ui.component.wrap.GenericBottomSheet
-import com.k869.identid.ui.component.wrap.WrapButton
-import com.k869.identid.ui.component.wrap.WrapExpandableListItem
-import com.k869.identid.ui.component.wrap.WrapIconButton
-import com.k869.identid.ui.component.wrap.WrapListItem
-import com.k869.identid.ui.component.wrap.WrapModalBottomSheet
-import com.k869.identid.extension.ui.finish
-import com.k869.identid.extension.ui.paddingFrom
+import com.k689.identid.model.core.DocumentCategory
+import com.k689.identid.model.core.DocumentIdentifier
+import com.k689.identid.util.core.CoreActions
+import com.k689.identid.model.dashboard.SearchItemUi
+import com.k689.identid.ui.dashboard.component.BottomNavigationItem
+import com.k689.identid.ui.dashboard.documents.detail.model.DocumentIssuanceStateUi
+import com.k689.identid.ui.dashboard.documents.list.model.DocumentUi
+import com.k689.identid.util.dashboard.TestTag
+import com.k689.identid.R
+import com.k689.identid.theme.values.warning
+import com.k689.identid.ui.component.AppIcons
+import com.k689.identid.ui.component.DualSelectorButton
+import com.k689.identid.ui.component.DualSelectorButtonDataUi
+import com.k689.identid.ui.component.DualSelectorButtons
+import com.k689.identid.ui.component.FiltersSearchBar
+import com.k689.identid.ui.component.InlineSnackbar
+import com.k689.identid.ui.component.ListItemDataUi
+import com.k689.identid.ui.component.ListItemMainContentDataUi
+import com.k689.identid.ui.component.ModalOptionUi
+import com.k689.identid.ui.component.SectionTitle
+import com.k689.identid.ui.component.content.BroadcastAction
+import com.k689.identid.ui.component.content.ContentScreen
+import com.k689.identid.ui.component.content.ScreenNavigateAction
+import com.k689.identid.ui.component.preview.PreviewTheme
+import com.k689.identid.ui.component.preview.ThemeModePreviews
+import com.k689.identid.ui.component.utils.HSpacer
+import com.k689.identid.ui.component.utils.LifecycleEffect
+import com.k689.identid.ui.component.utils.OneTimeLaunchedEffect
+import com.k689.identid.ui.component.utils.SPACING_EXTRA_SMALL
+import com.k689.identid.ui.component.utils.SPACING_LARGE
+import com.k689.identid.ui.component.utils.SPACING_MEDIUM
+import com.k689.identid.ui.component.utils.SPACING_SMALL
+import com.k689.identid.ui.component.utils.VSpacer
+import com.k689.identid.ui.component.wrap.BottomSheetTextDataUi
+import com.k689.identid.ui.component.wrap.BottomSheetWithOptionsList
+import com.k689.identid.ui.component.wrap.BottomSheetWithTwoBigIcons
+import com.k689.identid.ui.component.wrap.ButtonConfig
+import com.k689.identid.ui.component.wrap.ButtonType
+import com.k689.identid.ui.component.wrap.DialogBottomSheet
+import com.k689.identid.ui.component.wrap.GenericBottomSheet
+import com.k689.identid.ui.component.wrap.WrapButton
+import com.k689.identid.ui.component.wrap.WrapExpandableListItem
+import com.k689.identid.ui.component.wrap.WrapIconButton
+import com.k689.identid.ui.component.wrap.WrapListItem
+import com.k689.identid.ui.component.wrap.WrapModalBottomSheet
+import com.k689.identid.extension.ui.finish
+import com.k689.identid.extension.ui.paddingFrom
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.Flow
@@ -112,8 +112,8 @@ import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
 
-typealias DashboardEvent = com.k869.identid.ui.dashboard.dashboard.Event
-typealias OpenSideMenuEvent = com.k869.identid.ui.dashboard.dashboard.Event.SideMenu.Open
+typealias DashboardEvent = com.k689.identid.ui.dashboard.dashboard.Event
+typealias OpenSideMenuEvent = com.k689.identid.ui.dashboard.dashboard.Event.SideMenu.Open
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable

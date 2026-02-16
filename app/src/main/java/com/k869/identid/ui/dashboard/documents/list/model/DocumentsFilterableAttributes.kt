@@ -14,10 +14,10 @@
  * governing permissions and limitations under the Licence.
  */
 
-package com.k869.identid.ui.dashboard.documents.list.model
+package com.k689.identid.ui.dashboard.documents.list.model
 
-import com.k869.identid.model.validator.FilterableAttributes
-import com.k869.identid.model.core.DocumentCategory
+import com.k689.identid.model.validator.FilterableAttributes
+import com.k689.identid.model.core.DocumentCategory
 import java.time.Instant
 
 data class DocumentsFilterableAttributes(

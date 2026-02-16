@@ -14,26 +14,26 @@
  * governing permissions and limitations under the Licence.
  */
 
-package com.k869.identid.interactor.startup
+package com.k689.identid.interactor.startup
 
-import com.k869.identid.config.BiometricMode
-import com.k869.identid.config.BiometricUiConfig
-import com.k869.identid.config.IssuanceFlowType
-import com.k869.identid.config.IssuanceUiConfig
-import com.k869.identid.config.OnBackNavigationConfig
-import com.k869.identid.interactor.common.QuickPinInteractor
-import com.k869.identid.model.common.PinFlow
-import com.k869.identid.controller.core.WalletCoreDocumentsController
-import com.k869.identid.R
-import com.k869.identid.provider.resources.ResourceProvider
-import com.k869.identid.config.ConfigNavigation
-import com.k869.identid.config.NavigationType
-import com.k869.identid.navigation.CommonScreens
-import com.k869.identid.navigation.DashboardScreens
-import com.k869.identid.navigation.IssuanceScreens
-import com.k869.identid.navigation.helper.generateComposableArguments
-import com.k869.identid.navigation.helper.generateComposableNavigationLink
-import com.k869.identid.ui.serializer.UiSerializer
+import com.k689.identid.config.BiometricMode
+import com.k689.identid.config.BiometricUiConfig
+import com.k689.identid.config.IssuanceFlowType
+import com.k689.identid.config.IssuanceUiConfig
+import com.k689.identid.config.OnBackNavigationConfig
+import com.k689.identid.interactor.common.QuickPinInteractor
+import com.k689.identid.model.common.PinFlow
+import com.k689.identid.controller.core.WalletCoreDocumentsController
+import com.k689.identid.R
+import com.k689.identid.provider.resources.ResourceProvider
+import com.k689.identid.config.ConfigNavigation
+import com.k689.identid.config.NavigationType
+import com.k689.identid.navigation.CommonScreens
+import com.k689.identid.navigation.DashboardScreens
+import com.k689.identid.navigation.IssuanceScreens
+import com.k689.identid.navigation.helper.generateComposableArguments
+import com.k689.identid.navigation.helper.generateComposableNavigationLink
+import com.k689.identid.ui.serializer.UiSerializer
 
 interface SplashInteractor {
     fun getAfterSplashRoute(): String

@@ -14,7 +14,7 @@
  * governing permissions and limitations under the Licence.
  */
 
-package com.k869.identid.model.validator
+package com.k689.identid.model.validator
 
 data class FilterableList(val items: List<FilterableItem>)
 

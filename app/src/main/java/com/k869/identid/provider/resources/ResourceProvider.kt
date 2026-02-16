@@ -14,14 +14,14 @@
  * governing permissions and limitations under the Licence.
  */
 
-package com.k869.identid.provider.resources
+package com.k689.identid.provider.resources
 
 import android.content.ContentResolver
 import android.content.Context
 import androidx.annotation.PluralsRes
 import androidx.annotation.RawRes
 import androidx.annotation.StringRes
-import com.k869.identid.R
+import com.k689.identid.R
 import java.util.Locale
 
 interface ResourceProvider {

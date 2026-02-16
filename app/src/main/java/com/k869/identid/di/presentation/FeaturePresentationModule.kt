@@ -14,27 +14,27 @@
  * governing permissions and limitations under the Licence.
  */
 
-package com.k869.identid.di.presentation
+package com.k689.identid.di.presentation
 
-import com.k869.identid.provider.UuidProvider
-import com.k869.identid.interactor.common.DeviceAuthenticationInteractor
-import com.k869.identid.controller.core.WalletCoreDocumentsController
-import com.k869.identid.controller.core.WalletCorePresentationController
-import com.k869.identid.di.core.PRESENTATION_SCOPE_ID
-import com.k869.identid.interactor.presentation.PresentationLoadingInteractor
-import com.k869.identid.interactor.presentation.PresentationLoadingInteractorImpl
-import com.k869.identid.interactor.presentation.PresentationRequestInteractor
-import com.k869.identid.interactor.presentation.PresentationRequestInteractorImpl
-import com.k869.identid.interactor.presentation.PresentationSuccessInteractor
-import com.k869.identid.interactor.presentation.PresentationSuccessInteractorImpl
-import com.k869.identid.provider.resources.ResourceProvider
+import com.k689.identid.provider.UuidProvider
+import com.k689.identid.interactor.common.DeviceAuthenticationInteractor
+import com.k689.identid.controller.core.WalletCoreDocumentsController
+import com.k689.identid.controller.core.WalletCorePresentationController
+import com.k689.identid.di.core.PRESENTATION_SCOPE_ID
+import com.k689.identid.interactor.presentation.PresentationLoadingInteractor
+import com.k689.identid.interactor.presentation.PresentationLoadingInteractorImpl
+import com.k689.identid.interactor.presentation.PresentationRequestInteractor
+import com.k689.identid.interactor.presentation.PresentationRequestInteractorImpl
+import com.k689.identid.interactor.presentation.PresentationSuccessInteractor
+import com.k689.identid.interactor.presentation.PresentationSuccessInteractorImpl
+import com.k689.identid.provider.resources.ResourceProvider
 import org.koin.core.annotation.ComponentScan
 import org.koin.core.annotation.Factory
 import org.koin.core.annotation.Module
 import org.koin.core.annotation.ScopeId
 
 @Module
-@ComponentScan("com.k869.identid.ui.presentation", "com.k869.identid.di.presentation")
+@ComponentScan("com.k689.identid.ui.presentation", "com.k689.identid.di.presentation")
 class FeaturePresentationModule
 
 @Factory

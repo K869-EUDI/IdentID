@@ -14,12 +14,12 @@
  * governing permissions and limitations under the Licence.
  */
 
-package com.k869.identid.extension.core
+package com.k689.identid.extension.core
 
 import com.nimbusds.jose.shaded.gson.Gson
 import eu.europa.ec.eudi.wallet.transactionLogging.TransactionLog
 import eu.europa.ec.eudi.wallet.transactionLogging.presentation.PresentationTransactionLog
-import com.k869.identid.model.storage.TransactionLog as StorageTransaction
+import com.k689.identid.model.storage.TransactionLog as StorageTransaction
 
 internal fun StorageTransaction.toCoreTransactionLog(): TransactionLog? = try {
     Gson().fromJson(

@@ -14,11 +14,11 @@
  * governing permissions and limitations under the Licence.
  */
 
-package com.k869.identid.ui.issuance.offer.transformer
+package com.k689.identid.ui.issuance.offer.transformer
 
-import com.k869.identid.ui.issuance.offer.model.DocumentOfferUi
-import com.k869.identid.ui.component.ListItemDataUi
-import com.k869.identid.ui.component.ListItemMainContentDataUi
+import com.k689.identid.ui.issuance.offer.model.DocumentOfferUi
+import com.k689.identid.ui.component.ListItemDataUi
+import com.k689.identid.ui.component.ListItemMainContentDataUi
 
 internal object DocumentOfferTransformer {
     fun List<DocumentOfferUi>.toListItemDataUiList(): List<ListItemDataUi> {

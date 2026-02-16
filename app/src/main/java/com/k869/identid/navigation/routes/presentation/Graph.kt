@@ -14,7 +14,7 @@
  * governing permissions and limitations under the Licence.
  */
 
-package com.k869.identid.navigation.routes.presentation
+package com.k689.identid.navigation.routes.presentation
 
 import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
@@ -23,13 +23,13 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.navigation
 import androidx.navigation.navArgument
 import androidx.navigation.navDeepLink
-import com.k869.identid.config.RequestUriConfig
-import com.k869.identid.BuildConfig
-import com.k869.identid.ui.presentation.loading.PresentationLoadingScreen
-import com.k869.identid.ui.presentation.request.PresentationRequestScreen
-import com.k869.identid.ui.presentation.success.PresentationSuccessScreen
-import com.k869.identid.navigation.ModuleRoute
-import com.k869.identid.navigation.PresentationScreens
+import com.k689.identid.config.RequestUriConfig
+import com.k689.identid.BuildConfig
+import com.k689.identid.ui.presentation.loading.PresentationLoadingScreen
+import com.k689.identid.ui.presentation.request.PresentationRequestScreen
+import com.k689.identid.ui.presentation.success.PresentationSuccessScreen
+import com.k689.identid.navigation.ModuleRoute
+import com.k689.identid.navigation.PresentationScreens
 import org.koin.androidx.compose.koinViewModel
 import org.koin.core.parameter.parametersOf
 

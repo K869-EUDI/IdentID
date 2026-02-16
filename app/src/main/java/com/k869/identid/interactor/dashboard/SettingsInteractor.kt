@@ -14,20 +14,20 @@
  * governing permissions and limitations under the Licence.
  */
 
-package com.k869.identid.interactor.dashboard
+package com.k689.identid.interactor.dashboard
 
 import android.net.Uri
-import com.k869.identid.config.ConfigLogic
-import com.k869.identid.controller.log.LogController
-import com.k869.identid.ui.dashboard.settings.model.SettingsItemUi
-import com.k869.identid.ui.dashboard.settings.model.SettingsMenuItemType
-import com.k869.identid.R
-import com.k869.identid.provider.resources.ResourceProvider
-import com.k869.identid.ui.component.AppIcons
-import com.k869.identid.ui.component.ListItemDataUi
-import com.k869.identid.ui.component.ListItemLeadingContentDataUi
-import com.k869.identid.ui.component.ListItemMainContentDataUi
-import com.k869.identid.ui.component.ListItemTrailingContentDataUi
+import com.k689.identid.config.ConfigLogic
+import com.k689.identid.controller.log.LogController
+import com.k689.identid.ui.dashboard.settings.model.SettingsItemUi
+import com.k689.identid.ui.dashboard.settings.model.SettingsMenuItemType
+import com.k689.identid.R
+import com.k689.identid.provider.resources.ResourceProvider
+import com.k689.identid.ui.component.AppIcons
+import com.k689.identid.ui.component.ListItemDataUi
+import com.k689.identid.ui.component.ListItemLeadingContentDataUi
+import com.k689.identid.ui.component.ListItemMainContentDataUi
+import com.k689.identid.ui.component.ListItemTrailingContentDataUi
 
 interface SettingsInteractor {
     fun getAppVersion(): String

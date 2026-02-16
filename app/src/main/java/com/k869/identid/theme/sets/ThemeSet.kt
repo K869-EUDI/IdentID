@@ -14,12 +14,12 @@
  * governing permissions and limitations under the Licence.
  */
 
-package com.k869.identid.theme.sets
+package com.k689.identid.theme.sets
 
 import androidx.compose.material3.ColorScheme
 import androidx.compose.material3.Shapes
 import androidx.compose.material3.Typography
-import com.k869.identid.theme.templates.ThemeDimensTemplate
+import com.k689.identid.theme.templates.ThemeDimensTemplate
 
 data class ThemeSet(
     val isInDarkMode: Boolean,

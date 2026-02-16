@@ -14,7 +14,7 @@
  * governing permissions and limitations under the Licence.
  */
 
-package com.k869.identid.ui.dashboard.transactions.list.model
+package com.k689.identid.ui.dashboard.transactions.list.model
 
 object TransactionFilterIds {
     const val FILTER_SORT_GROUP_ID = "sort_group_id"

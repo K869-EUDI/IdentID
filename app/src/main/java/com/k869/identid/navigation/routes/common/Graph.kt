@@ -14,7 +14,7 @@
  * governing permissions and limitations under the Licence.
  */
 
-package com.k869.identid.navigation.routes.common
+package com.k689.identid.navigation.routes.common
 
 import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
@@ -23,17 +23,17 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.navigation
 import androidx.navigation.navArgument
 import androidx.navigation.navDeepLink
-import com.k869.identid.BuildConfig
-import com.k869.identid.config.BiometricUiConfig
-import com.k869.identid.config.QrScanUiConfig
-import com.k869.identid.config.SuccessUIConfig
-import com.k869.identid.model.common.PinFlow
-import com.k869.identid.ui.common.biometric.BiometricScreen
-import com.k869.identid.ui.common.pin.PinScreen
-import com.k869.identid.ui.common.qr_scan.QrScanScreen
-import com.k869.identid.ui.common.success.SuccessScreen
-import com.k869.identid.navigation.CommonScreens
-import com.k869.identid.navigation.ModuleRoute
+import com.k689.identid.BuildConfig
+import com.k689.identid.config.BiometricUiConfig
+import com.k689.identid.config.QrScanUiConfig
+import com.k689.identid.config.SuccessUIConfig
+import com.k689.identid.model.common.PinFlow
+import com.k689.identid.ui.common.biometric.BiometricScreen
+import com.k689.identid.ui.common.pin.PinScreen
+import com.k689.identid.ui.common.qr_scan.QrScanScreen
+import com.k689.identid.ui.common.success.SuccessScreen
+import com.k689.identid.navigation.CommonScreens
+import com.k689.identid.navigation.ModuleRoute
 import org.koin.androidx.compose.koinViewModel
 import org.koin.core.parameter.parametersOf
 

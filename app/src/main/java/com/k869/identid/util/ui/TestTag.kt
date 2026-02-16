@@ -14,7 +14,7 @@
  * governing permissions and limitations under the Licence.
  */
 
-package com.k869.identid.util.ui
+package com.k689.identid.util.ui
 
 object TestTag {
 

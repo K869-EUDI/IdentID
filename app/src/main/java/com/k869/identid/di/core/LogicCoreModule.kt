@@ -14,28 +14,28 @@
  * governing permissions and limitations under the Licence.
  */
 
-package com.k869.identid.di.core
+package com.k689.identid.di.core
 
 import android.content.Context
-import com.k869.identid.controller.log.LogController
-import com.k869.identid.provider.UuidProvider
-import com.k869.identid.config.WalletCoreConfig
-import com.k869.identid.config.WalletCoreConfigImpl
-import com.k869.identid.controller.core.WalletCoreDocumentsController
-import com.k869.identid.controller.core.WalletCoreDocumentsControllerImpl
-import com.k869.identid.controller.core.WalletCoreLogController
-import com.k869.identid.controller.core.WalletCoreLogControllerImpl
-import com.k869.identid.controller.core.WalletCoreTransactionLogController
-import com.k869.identid.controller.core.WalletCoreTransactionLogControllerImpl
-import com.k869.identid.provider.core.WalletCoreAttestationProvider
-import com.k869.identid.provider.core.WalletCoreAttestationProviderImpl
+import com.k689.identid.controller.log.LogController
+import com.k689.identid.provider.UuidProvider
+import com.k689.identid.config.WalletCoreConfig
+import com.k689.identid.config.WalletCoreConfigImpl
+import com.k689.identid.controller.core.WalletCoreDocumentsController
+import com.k689.identid.controller.core.WalletCoreDocumentsControllerImpl
+import com.k689.identid.controller.core.WalletCoreLogController
+import com.k689.identid.controller.core.WalletCoreLogControllerImpl
+import com.k689.identid.controller.core.WalletCoreTransactionLogController
+import com.k689.identid.controller.core.WalletCoreTransactionLogControllerImpl
+import com.k689.identid.provider.core.WalletCoreAttestationProvider
+import com.k689.identid.provider.core.WalletCoreAttestationProviderImpl
 import eu.europa.ec.eudi.wallet.EudiWallet
-import com.k869.identid.network.repository.WalletAttestationRepository
-import com.k869.identid.provider.resources.ResourceProvider
-import com.k869.identid.storage.dao.BookmarkDao
-import com.k869.identid.storage.dao.RevokedDocumentDao
-import com.k869.identid.storage.dao.TransactionLogDao
-import com.k869.identid.controller.core.WalletPresentationScope
+import com.k689.identid.network.repository.WalletAttestationRepository
+import com.k689.identid.provider.resources.ResourceProvider
+import com.k689.identid.storage.dao.BookmarkDao
+import com.k689.identid.storage.dao.RevokedDocumentDao
+import com.k689.identid.storage.dao.TransactionLogDao
+import com.k689.identid.controller.core.WalletPresentationScope
 import io.ktor.client.HttpClient
 import org.koin.core.annotation.ComponentScan
 import org.koin.core.annotation.Factory
@@ -46,7 +46,7 @@ import org.koin.mp.KoinPlatform
 const val PRESENTATION_SCOPE_ID = "presentation_scope_id"
 
 @Module
-@ComponentScan("com.k869.identid.controller.core", "com.k869.identid.di.core")
+@ComponentScan("com.k689.identid.controller.core", "com.k689.identid.di.core")
 class LogicCoreModule
 
 @Single

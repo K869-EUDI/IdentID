@@ -14,31 +14,31 @@
  * governing permissions and limitations under the Licence.
  */
 
-package com.k869.identid.ui.dashboard.home
+package com.k689.identid.ui.dashboard.home
 
 import androidx.lifecycle.viewModelScope
-import com.k869.identid.config.PresentationMode
-import com.k869.identid.config.QrScanFlow
-import com.k869.identid.config.QrScanUiConfig
-import com.k869.identid.config.RequestUriConfig
-import com.k869.identid.di.core.getOrCreatePresentationScope
-import com.k869.identid.interactor.dashboard.HomeInteractor
-import com.k869.identid.interactor.dashboard.HomeInteractorGetUserNameViaMainPidDocumentPartialState
-import com.k869.identid.ui.dashboard.home.HomeScreenBottomSheetContent.Bluetooth
-import com.k869.identid.R
-import com.k869.identid.provider.resources.ResourceProvider
-import com.k869.identid.ui.component.AppIcons
-import com.k869.identid.ui.component.wrap.ActionCardConfig
-import com.k869.identid.ui.mvi.MviViewModel
-import com.k869.identid.ui.mvi.ViewEvent
-import com.k869.identid.ui.mvi.ViewSideEffect
-import com.k869.identid.ui.mvi.ViewState
-import com.k869.identid.navigation.CommonScreens
-import com.k869.identid.navigation.DashboardScreens
-import com.k869.identid.navigation.ProximityScreens
-import com.k869.identid.navigation.helper.generateComposableArguments
-import com.k869.identid.navigation.helper.generateComposableNavigationLink
-import com.k869.identid.ui.serializer.UiSerializer
+import com.k689.identid.config.PresentationMode
+import com.k689.identid.config.QrScanFlow
+import com.k689.identid.config.QrScanUiConfig
+import com.k689.identid.config.RequestUriConfig
+import com.k689.identid.di.core.getOrCreatePresentationScope
+import com.k689.identid.interactor.dashboard.HomeInteractor
+import com.k689.identid.interactor.dashboard.HomeInteractorGetUserNameViaMainPidDocumentPartialState
+import com.k689.identid.ui.dashboard.home.HomeScreenBottomSheetContent.Bluetooth
+import com.k689.identid.R
+import com.k689.identid.provider.resources.ResourceProvider
+import com.k689.identid.ui.component.AppIcons
+import com.k689.identid.ui.component.wrap.ActionCardConfig
+import com.k689.identid.ui.mvi.MviViewModel
+import com.k689.identid.ui.mvi.ViewEvent
+import com.k689.identid.ui.mvi.ViewSideEffect
+import com.k689.identid.ui.mvi.ViewState
+import com.k689.identid.navigation.CommonScreens
+import com.k689.identid.navigation.DashboardScreens
+import com.k689.identid.navigation.ProximityScreens
+import com.k689.identid.navigation.helper.generateComposableArguments
+import com.k689.identid.navigation.helper.generateComposableNavigationLink
+import com.k689.identid.ui.serializer.UiSerializer
 import kotlinx.coroutines.launch
 import org.koin.android.annotation.KoinViewModel
 

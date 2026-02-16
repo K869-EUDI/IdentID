@@ -14,7 +14,7 @@
  * governing permissions and limitations under the Licence.
  */
 
-package com.k869.identid.ui.issuance.code
+package com.k689.identid.ui.issuance.code
 
 import android.content.Context
 import androidx.compose.foundation.layout.Arrangement
@@ -37,19 +37,19 @@ import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
-import com.k869.identid.ui.component.AppIconAndText
-import com.k869.identid.ui.component.AppIconAndTextDataUi
-import com.k869.identid.ui.component.content.ContentScreen
-import com.k869.identid.ui.component.content.ImePaddingConfig
-import com.k869.identid.ui.component.content.ScreenNavigateAction
-import com.k869.identid.ui.component.preview.PreviewTheme
-import com.k869.identid.ui.component.preview.ThemeModePreviews
-import com.k869.identid.ui.component.utils.SPACING_LARGE
-import com.k869.identid.ui.component.utils.SPACING_MEDIUM
-import com.k869.identid.ui.component.utils.SPACING_SMALL
-import com.k869.identid.ui.component.wrap.WrapPinTextField
-import com.k869.identid.extension.ui.paddingFrom
-import com.k869.identid.navigation.IssuanceScreens
+import com.k689.identid.ui.component.AppIconAndText
+import com.k689.identid.ui.component.AppIconAndTextDataUi
+import com.k689.identid.ui.component.content.ContentScreen
+import com.k689.identid.ui.component.content.ImePaddingConfig
+import com.k689.identid.ui.component.content.ScreenNavigateAction
+import com.k689.identid.ui.component.preview.PreviewTheme
+import com.k689.identid.ui.component.preview.ThemeModePreviews
+import com.k689.identid.ui.component.utils.SPACING_LARGE
+import com.k689.identid.ui.component.utils.SPACING_MEDIUM
+import com.k689.identid.ui.component.utils.SPACING_SMALL
+import com.k689.identid.ui.component.wrap.WrapPinTextField
+import com.k689.identid.extension.ui.paddingFrom
+import com.k689.identid.navigation.IssuanceScreens
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.collect

@@ -14,28 +14,28 @@
  * governing permissions and limitations under the Licence.
  */
 
-package com.k869.identid.ui.issuance.code
+package com.k689.identid.ui.issuance.code
 
 import android.content.Context
 import androidx.lifecycle.viewModelScope
-import com.k869.identid.config.IssuanceSuccessUiConfig
-import com.k869.identid.config.OfferCodeUiConfig
-import com.k869.identid.di.common.CREDENTIAL_OFFER_ISSUANCE_SCOPE_ID
+import com.k689.identid.config.IssuanceSuccessUiConfig
+import com.k689.identid.config.OfferCodeUiConfig
+import com.k689.identid.di.common.CREDENTIAL_OFFER_ISSUANCE_SCOPE_ID
 import eu.europa.ec.eudi.wallet.document.DocumentId
-import com.k869.identid.interactor.issuance.DocumentOfferInteractor
-import com.k869.identid.interactor.issuance.IssueDocumentsInteractorPartialState
-import com.k869.identid.R
-import com.k869.identid.provider.resources.ResourceProvider
-import com.k869.identid.ui.component.content.ContentErrorConfig
-import com.k869.identid.config.ConfigNavigation
-import com.k869.identid.ui.mvi.MviViewModel
-import com.k869.identid.ui.mvi.ViewEvent
-import com.k869.identid.ui.mvi.ViewSideEffect
-import com.k869.identid.ui.mvi.ViewState
-import com.k869.identid.navigation.IssuanceScreens
-import com.k869.identid.navigation.helper.generateComposableArguments
-import com.k869.identid.navigation.helper.generateComposableNavigationLink
-import com.k869.identid.ui.serializer.UiSerializer
+import com.k689.identid.interactor.issuance.DocumentOfferInteractor
+import com.k689.identid.interactor.issuance.IssueDocumentsInteractorPartialState
+import com.k689.identid.R
+import com.k689.identid.provider.resources.ResourceProvider
+import com.k689.identid.ui.component.content.ContentErrorConfig
+import com.k689.identid.config.ConfigNavigation
+import com.k689.identid.ui.mvi.MviViewModel
+import com.k689.identid.ui.mvi.ViewEvent
+import com.k689.identid.ui.mvi.ViewSideEffect
+import com.k689.identid.ui.mvi.ViewState
+import com.k689.identid.navigation.IssuanceScreens
+import com.k689.identid.navigation.helper.generateComposableArguments
+import com.k689.identid.navigation.helper.generateComposableNavigationLink
+import com.k689.identid.ui.serializer.UiSerializer
 import kotlinx.coroutines.launch
 import org.koin.android.annotation.KoinViewModel
 import org.koin.core.annotation.InjectedParam

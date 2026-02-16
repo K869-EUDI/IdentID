@@ -1,10 +1,10 @@
 # IdentID
 
-IdentID — Android EUID wallet and identity manager
+IdentID — Android EUDI wallet and identity manager
 
 Overview
 
-- IdentID is an Android app (Kotlin + Jetpack Compose) implementing an EUID wallet core and local storage for identity data. It provides secure wallet features, onboarding, and local DB storage for credentials.
+- IdentID is an Android app (Kotlin + Jetpack Compose) implementing an EUDI wallet core and local storage for identity data. It provides secure wallet features, onboarding, and local DB storage for credentials.
 
 Key technologies
 
@@ -12,7 +12,7 @@ Key technologies
 - **UI:** Jetpack Compose
 - **Architecture:** Android app module (`app/`), modular Gradle build (Kotlin DSL)
 - **Storage:** Local database (Room / generated schemas present under `app/schemas`)
-- **EUID Wallet Core:** integrated wallet/core functionality for EUID operations
+- **EUDI Wallet Core:** integrated wallet/core functionality for EUDI operations
 - **Build system:** Gradle
 
 Getting started
@@ -49,4 +49,4 @@ License
 
 Contact
 
-- Repo: K869-EUID/IdentID
+- Repo: K689-EUDI/IdentID

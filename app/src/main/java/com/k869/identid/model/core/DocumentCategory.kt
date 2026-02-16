@@ -14,10 +14,10 @@
  * governing permissions and limitations under the Licence.
  */
 
-package com.k869.identid.model.core
+package com.k689.identid.model.core
 
 import androidx.annotation.StringRes
-import com.k869.identid.R
+import com.k689.identid.R
 
 /**
  * Represents a collection of document categories and their associated document identifiers.

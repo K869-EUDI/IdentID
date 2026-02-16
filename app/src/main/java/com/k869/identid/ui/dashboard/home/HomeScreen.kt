@@ -14,7 +14,7 @@
  * governing permissions and limitations under the Licence.
  */
 
-package com.k869.identid.ui.dashboard.home
+package com.k689.identid.ui.dashboard.home
 
 import android.Manifest
 import android.content.Context
@@ -47,32 +47,32 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import com.google.accompanist.permissions.rememberMultiplePermissionsState
-import com.k869.identid.R
-import com.k869.identid.ui.component.AppIconAndText
-import com.k869.identid.ui.component.AppIconAndTextDataUi
-import com.k869.identid.ui.component.AppIcons
-import com.k869.identid.ui.component.ModalOptionUi
-import com.k869.identid.ui.component.content.ContentScreen
-import com.k869.identid.ui.component.content.ScreenNavigateAction
-import com.k869.identid.ui.component.preview.PreviewTheme
-import com.k869.identid.ui.component.preview.ThemeModePreviews
-import com.k869.identid.ui.component.utils.HSpacer
-import com.k869.identid.ui.component.utils.OneTimeLaunchedEffect
-import com.k869.identid.ui.component.utils.SPACING_MEDIUM
-import com.k869.identid.ui.component.utils.SPACING_SMALL
-import com.k869.identid.ui.component.wrap.ActionCardConfig
-import com.k869.identid.ui.component.wrap.BottomSheetTextDataUi
-import com.k869.identid.ui.component.wrap.BottomSheetWithTwoBigIcons
-import com.k869.identid.ui.component.wrap.DialogBottomSheet
-import com.k869.identid.ui.component.wrap.GenericBottomSheet
-import com.k869.identid.ui.component.wrap.WrapActionCard
-import com.k869.identid.ui.component.wrap.WrapIcon
-import com.k869.identid.ui.component.wrap.WrapIconButton
-import com.k869.identid.ui.component.wrap.WrapModalBottomSheet
-import com.k869.identid.extension.ui.finish
-import com.k869.identid.extension.ui.openAppSettings
-import com.k869.identid.extension.ui.openBleSettings
-import com.k869.identid.extension.ui.paddingFrom
+import com.k689.identid.R
+import com.k689.identid.ui.component.AppIconAndText
+import com.k689.identid.ui.component.AppIconAndTextDataUi
+import com.k689.identid.ui.component.AppIcons
+import com.k689.identid.ui.component.ModalOptionUi
+import com.k689.identid.ui.component.content.ContentScreen
+import com.k689.identid.ui.component.content.ScreenNavigateAction
+import com.k689.identid.ui.component.preview.PreviewTheme
+import com.k689.identid.ui.component.preview.ThemeModePreviews
+import com.k689.identid.ui.component.utils.HSpacer
+import com.k689.identid.ui.component.utils.OneTimeLaunchedEffect
+import com.k689.identid.ui.component.utils.SPACING_MEDIUM
+import com.k689.identid.ui.component.utils.SPACING_SMALL
+import com.k689.identid.ui.component.wrap.ActionCardConfig
+import com.k689.identid.ui.component.wrap.BottomSheetTextDataUi
+import com.k689.identid.ui.component.wrap.BottomSheetWithTwoBigIcons
+import com.k689.identid.ui.component.wrap.DialogBottomSheet
+import com.k689.identid.ui.component.wrap.GenericBottomSheet
+import com.k689.identid.ui.component.wrap.WrapActionCard
+import com.k689.identid.ui.component.wrap.WrapIcon
+import com.k689.identid.ui.component.wrap.WrapIconButton
+import com.k689.identid.ui.component.wrap.WrapModalBottomSheet
+import com.k689.identid.extension.ui.finish
+import com.k689.identid.extension.ui.openAppSettings
+import com.k689.identid.extension.ui.openBleSettings
+import com.k689.identid.extension.ui.paddingFrom
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.Flow
@@ -81,8 +81,8 @@ import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
 
-typealias DashboardEvent = com.k869.identid.ui.dashboard.dashboard.Event
-typealias OpenSideMenuEvent = com.k869.identid.ui.dashboard.dashboard.Event.SideMenu.Open
+typealias DashboardEvent = com.k689.identid.ui.dashboard.dashboard.Event
+typealias OpenSideMenuEvent = com.k689.identid.ui.dashboard.dashboard.Event.SideMenu.Open
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable

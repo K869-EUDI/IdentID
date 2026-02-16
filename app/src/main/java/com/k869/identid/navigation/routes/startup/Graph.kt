@@ -14,17 +14,17 @@
  * governing permissions and limitations under the Licence.
  */
 
-package com.k869.identid.navigation.routes.startup
+package com.k689.identid.navigation.routes.startup
 
 import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.navigation
 import androidx.navigation.navDeepLink
-import com.k869.identid.BuildConfig
-import com.k869.identid.navigation.ModuleRoute
-import com.k869.identid.navigation.StartupScreens
-import com.k869.identid.ui.startup.splash.SplashScreen
+import com.k689.identid.BuildConfig
+import com.k689.identid.navigation.ModuleRoute
+import com.k689.identid.navigation.StartupScreens
+import com.k689.identid.ui.startup.splash.SplashScreen
 import org.koin.androidx.compose.koinViewModel
 
 fun NavGraphBuilder.featureStartupGraph(navController: NavController) {

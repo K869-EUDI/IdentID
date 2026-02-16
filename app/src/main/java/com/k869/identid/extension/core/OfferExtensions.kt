@@ -14,12 +14,12 @@
  * governing permissions and limitations under the Licence.
  */
 
-package com.k869.identid.extension.core
+package com.k689.identid.extension.core
 
-import com.k869.identid.extension.business.getLocalizedString
-import com.k869.identid.extension.business.getLocalizedValue
-import com.k869.identid.model.core.DocumentIdentifier
-import com.k869.identid.model.core.toDocumentIdentifier
+import com.k689.identid.extension.business.getLocalizedString
+import com.k689.identid.extension.business.getLocalizedValue
+import com.k689.identid.model.core.DocumentIdentifier
+import com.k689.identid.model.core.toDocumentIdentifier
 import eu.europa.ec.eudi.wallet.document.format.MsoMdocFormat
 import eu.europa.ec.eudi.wallet.document.format.SdJwtVcFormat
 import eu.europa.ec.eudi.wallet.issue.openid4vci.Offer

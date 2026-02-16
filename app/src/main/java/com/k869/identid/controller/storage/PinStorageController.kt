@@ -14,9 +14,9 @@
  * governing permissions and limitations under the Licence.
  */
 
-package com.k869.identid.controller.storage
+package com.k689.identid.controller.storage
 
-import com.k869.identid.config.StorageConfig
+import com.k689.identid.config.StorageConfig
 
 interface PinStorageController {
     fun retrievePin(): String

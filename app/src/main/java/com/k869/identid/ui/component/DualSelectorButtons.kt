@@ -14,7 +14,7 @@
  * governing permissions and limitations under the Licence.
  */
 
-package com.k869.identid.ui.component
+package com.k689.identid.ui.component
 
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.background
@@ -34,13 +34,13 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-import com.k869.identid.ui.component.preview.PreviewTheme
-import com.k869.identid.ui.component.preview.ThemeModePreviews
-import com.k869.identid.ui.component.utils.SIZE_LARGE
-import com.k869.identid.ui.component.utils.SIZE_SMALL
-import com.k869.identid.ui.component.utils.SIZE_XX_LARGE
-import com.k869.identid.ui.component.utils.SPACING_SMALL
-import com.k869.identid.ui.component.wrap.WrapIcon
+import com.k689.identid.ui.component.preview.PreviewTheme
+import com.k689.identid.ui.component.preview.ThemeModePreviews
+import com.k689.identid.ui.component.utils.SIZE_LARGE
+import com.k689.identid.ui.component.utils.SIZE_SMALL
+import com.k689.identid.ui.component.utils.SIZE_XX_LARGE
+import com.k689.identid.ui.component.utils.SPACING_SMALL
+import com.k689.identid.ui.component.wrap.WrapIcon
 
 enum class DualSelectorButton {
     FIRST,

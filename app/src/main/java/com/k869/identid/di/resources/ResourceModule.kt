@@ -14,17 +14,17 @@
  * governing permissions and limitations under the Licence.
  */
 
-package com.k869.identid.di.resources
+package com.k689.identid.di.resources
 
 import android.content.Context
-import com.k869.identid.provider.resources.ResourceProvider
-import com.k869.identid.provider.resources.ResourceProviderImpl
+import com.k689.identid.provider.resources.ResourceProvider
+import com.k689.identid.provider.resources.ResourceProviderImpl
 import org.koin.core.annotation.ComponentScan
 import org.koin.core.annotation.Module
 import org.koin.core.annotation.Single
 
 @Module
-@ComponentScan("com.k869.identid.di.resources")
+@ComponentScan("com.k689.identid.di.resources")
 class LogicResourceModule
 
 @Single

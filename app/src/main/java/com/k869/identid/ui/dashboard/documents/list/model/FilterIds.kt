@@ -14,7 +14,7 @@
  * governing permissions and limitations under the Licence.
  */
 
-package com.k869.identid.ui.dashboard.documents.list.model
+package com.k689.identid.ui.dashboard.documents.list.model
 
 object DocumentFilterIds {
     const val FILTER_BY_STATE_GROUP_ID = "state_group_id"

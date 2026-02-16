@@ -14,29 +14,29 @@
  * governing permissions and limitations under the Licence.
  */
 
-package com.k869.identid.di.issuance
+package com.k689.identid.di.issuance
 
-import com.k869.identid.provider.UuidProvider
-import com.k869.identid.interactor.common.DeviceAuthenticationInteractor
-import com.k869.identid.controller.core.WalletCoreDocumentsController
-import com.k869.identid.interactor.issuance.AddDocumentInteractor
-import com.k869.identid.interactor.issuance.AddDocumentInteractorImpl
-import com.k869.identid.interactor.issuance.DocumentIssuanceSuccessInteractor
-import com.k869.identid.interactor.issuance.DocumentIssuanceSuccessInteractorImpl
-import com.k869.identid.interactor.issuance.DocumentOfferInteractor
-import com.k869.identid.interactor.issuance.DocumentOfferInteractorImpl
-import com.k869.identid.provider.resources.ResourceProvider
-import com.k869.identid.ui.serializer.UiSerializer
+import com.k689.identid.provider.UuidProvider
+import com.k689.identid.interactor.common.DeviceAuthenticationInteractor
+import com.k689.identid.controller.core.WalletCoreDocumentsController
+import com.k689.identid.interactor.issuance.AddDocumentInteractor
+import com.k689.identid.interactor.issuance.AddDocumentInteractorImpl
+import com.k689.identid.interactor.issuance.DocumentIssuanceSuccessInteractor
+import com.k689.identid.interactor.issuance.DocumentIssuanceSuccessInteractorImpl
+import com.k689.identid.interactor.issuance.DocumentOfferInteractor
+import com.k689.identid.interactor.issuance.DocumentOfferInteractorImpl
+import com.k689.identid.provider.resources.ResourceProvider
+import com.k689.identid.ui.serializer.UiSerializer
 import org.koin.core.annotation.ComponentScan
 import org.koin.core.annotation.Factory
 import org.koin.core.annotation.Module
 
 @Module(includes = [IssuanceInteractorScanModule::class])
-@ComponentScan("com.k869.identid.ui.issuance", "com.k869.identid.di.issuance")
+@ComponentScan("com.k689.identid.ui.issuance", "com.k689.identid.di.issuance")
 class FeatureIssuanceModule
 
 @Module
-@ComponentScan("com.k869.identid.interactor.issuance")
+@ComponentScan("com.k689.identid.interactor.issuance")
 class IssuanceInteractorScanModule
 
 @Factory

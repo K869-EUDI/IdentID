@@ -14,7 +14,7 @@
  * governing permissions and limitations under the Licence.
  */
 
-package com.k869.identid.ui.component.wrap
+package com.k689.identid.ui.component.wrap
 
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -29,15 +29,15 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
-import com.k869.identid.R
-import com.k869.identid.ui.component.AppIcons
-import com.k869.identid.ui.component.ClickableArea
-import com.k869.identid.ui.component.ListItemDataUi
-import com.k869.identid.ui.component.ListItemMainContentDataUi
-import com.k869.identid.ui.component.ListItemTrailingContentDataUi
-import com.k869.identid.ui.component.preview.PreviewTheme
-import com.k869.identid.ui.component.preview.ThemeModePreviews
-import com.k869.identid.ui.component.utils.SPACING_MEDIUM
+import com.k689.identid.R
+import com.k689.identid.ui.component.AppIcons
+import com.k689.identid.ui.component.ClickableArea
+import com.k689.identid.ui.component.ListItemDataUi
+import com.k689.identid.ui.component.ListItemMainContentDataUi
+import com.k689.identid.ui.component.ListItemTrailingContentDataUi
+import com.k689.identid.ui.component.preview.PreviewTheme
+import com.k689.identid.ui.component.preview.ThemeModePreviews
+import com.k689.identid.ui.component.utils.SPACING_MEDIUM
 
 sealed class ExpandableListItemUi {
     abstract val header: ListItemDataUi

@@ -14,7 +14,7 @@
  * governing permissions and limitations under the Licence.
  */
 
-package com.k869.identid.navigation
+package com.k689.identid.navigation
 
 import android.content.Context
 import androidx.compose.runtime.Composable
@@ -24,9 +24,9 @@ import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.rememberNavController
-import com.k869.identid.extension.business.firstPart
-import com.k869.identid.extension.business.toMapOrEmpty
-import com.k869.identid.config.ConfigUILogic
+import com.k689.identid.extension.business.firstPart
+import com.k689.identid.extension.business.toMapOrEmpty
+import com.k689.identid.config.ConfigUILogic
 
 interface RouterHost {
     fun getNavController(): NavHostController

@@ -14,7 +14,7 @@
  * governing permissions and limitations under the Licence.
  */
 
-package com.k869.identid.ui.component
+package com.k689.identid.ui.component
 
 import android.os.Build
 import androidx.compose.foundation.clickable
@@ -39,26 +39,26 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import com.skydoves.cloudy.cloudy
-import com.k869.identid.ui.component.ClickableArea.ENTIRE_ROW
-import com.k869.identid.ui.component.ClickableArea.TRAILING_CONTENT
-import com.k869.identid.ui.component.preview.PreviewTheme
-import com.k869.identid.ui.component.preview.ThemeModePreviews
-import com.k869.identid.ui.component.utils.DEFAULT_ICON_SIZE
-import com.k869.identid.ui.component.utils.ICON_SIZE_40
-import com.k869.identid.ui.component.utils.SIZE_MEDIUM
-import com.k869.identid.ui.component.utils.SPACING_MEDIUM
-import com.k869.identid.ui.component.utils.SPACING_SMALL
-import com.k869.identid.ui.component.wrap.CheckboxDataUi
-import com.k869.identid.ui.component.wrap.RadioButtonDataUi
-import com.k869.identid.ui.component.wrap.SwitchDataUi
-import com.k869.identid.ui.component.wrap.TextConfig
-import com.k869.identid.ui.component.wrap.WrapAsyncImage
-import com.k869.identid.ui.component.wrap.WrapCheckbox
-import com.k869.identid.ui.component.wrap.WrapIcon
-import com.k869.identid.ui.component.wrap.WrapIconButton
-import com.k869.identid.ui.component.wrap.WrapRadioButton
-import com.k869.identid.ui.component.wrap.WrapSwitch
-import com.k869.identid.ui.component.wrap.WrapText
+import com.k689.identid.ui.component.ClickableArea.ENTIRE_ROW
+import com.k689.identid.ui.component.ClickableArea.TRAILING_CONTENT
+import com.k689.identid.ui.component.preview.PreviewTheme
+import com.k689.identid.ui.component.preview.ThemeModePreviews
+import com.k689.identid.ui.component.utils.DEFAULT_ICON_SIZE
+import com.k689.identid.ui.component.utils.ICON_SIZE_40
+import com.k689.identid.ui.component.utils.SIZE_MEDIUM
+import com.k689.identid.ui.component.utils.SPACING_MEDIUM
+import com.k689.identid.ui.component.utils.SPACING_SMALL
+import com.k689.identid.ui.component.wrap.CheckboxDataUi
+import com.k689.identid.ui.component.wrap.RadioButtonDataUi
+import com.k689.identid.ui.component.wrap.SwitchDataUi
+import com.k689.identid.ui.component.wrap.TextConfig
+import com.k689.identid.ui.component.wrap.WrapAsyncImage
+import com.k689.identid.ui.component.wrap.WrapCheckbox
+import com.k689.identid.ui.component.wrap.WrapIcon
+import com.k689.identid.ui.component.wrap.WrapIconButton
+import com.k689.identid.ui.component.wrap.WrapRadioButton
+import com.k689.identid.ui.component.wrap.WrapSwitch
+import com.k689.identid.ui.component.wrap.WrapText
 
 /**
  * Represents the data displayed within a single item in a list.

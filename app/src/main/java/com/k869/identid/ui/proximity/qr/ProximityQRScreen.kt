@@ -14,7 +14,7 @@
  * governing permissions and limitations under the Licence.
  */
 
-package com.k869.identid.ui.proximity.qr
+package com.k689.identid.ui.proximity.qr
 
 import androidx.activity.ComponentActivity
 import androidx.compose.foundation.layout.Arrangement
@@ -41,22 +41,22 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.compose.LocalLifecycleOwner
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
-import com.k869.identid.ui.proximity.qr.component.rememberQrBitmapPainter
-import com.k869.identid.R
-import com.k869.identid.ui.component.AppIcons
-import com.k869.identid.ui.component.content.ContentScreen
-import com.k869.identid.ui.component.content.ContentTitle
-import com.k869.identid.ui.component.content.ScreenNavigateAction
-import com.k869.identid.ui.component.preview.PreviewTheme
-import com.k869.identid.ui.component.preview.ThemeModePreviews
-import com.k869.identid.ui.component.utils.LifecycleEffect
-import com.k869.identid.ui.component.utils.OneTimeLaunchedEffect
-import com.k869.identid.ui.component.utils.SPACING_MEDIUM
-import com.k869.identid.ui.component.utils.SPACING_SMALL
-import com.k869.identid.ui.component.utils.screenWidthInDp
-import com.k869.identid.ui.component.wrap.WrapImage
-import com.k869.identid.extension.ui.paddingFrom
-import com.k869.identid.navigation.ProximityScreens
+import com.k689.identid.ui.proximity.qr.component.rememberQrBitmapPainter
+import com.k689.identid.R
+import com.k689.identid.ui.component.AppIcons
+import com.k689.identid.ui.component.content.ContentScreen
+import com.k689.identid.ui.component.content.ContentTitle
+import com.k689.identid.ui.component.content.ScreenNavigateAction
+import com.k689.identid.ui.component.preview.PreviewTheme
+import com.k689.identid.ui.component.preview.ThemeModePreviews
+import com.k689.identid.ui.component.utils.LifecycleEffect
+import com.k689.identid.ui.component.utils.OneTimeLaunchedEffect
+import com.k689.identid.ui.component.utils.SPACING_MEDIUM
+import com.k689.identid.ui.component.utils.SPACING_SMALL
+import com.k689.identid.ui.component.utils.screenWidthInDp
+import com.k689.identid.ui.component.wrap.WrapImage
+import com.k689.identid.extension.ui.paddingFrom
+import com.k689.identid.navigation.ProximityScreens
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.collect

@@ -14,10 +14,10 @@
  * governing permissions and limitations under the Licence.
  */
 
-package com.k869.identid.config
+package com.k689.identid.config
 
-import com.k869.identid.provider.authentication.BiometryStorageProvider
-import com.k869.identid.provider.authentication.PinStorageProvider
+import com.k689.identid.provider.authentication.BiometryStorageProvider
+import com.k689.identid.provider.authentication.PinStorageProvider
 
 interface StorageConfig {
     val pinStorageProvider: PinStorageProvider

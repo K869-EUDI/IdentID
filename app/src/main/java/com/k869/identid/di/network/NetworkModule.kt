@@ -14,12 +14,12 @@
  * governing permissions and limitations under the Licence.
  */
 
-package com.k869.identid.di.network
+package com.k689.identid.di.network
 
-import com.k869.identid.config.AppBuildType
-import com.k869.identid.config.ConfigLogic
-import com.k869.identid.network.repository.WalletAttestationRepository
-import com.k869.identid.network.repository.WalletAttestationRepositoryImpl
+import com.k689.identid.config.AppBuildType
+import com.k689.identid.config.ConfigLogic
+import com.k689.identid.network.repository.WalletAttestationRepository
+import com.k689.identid.network.repository.WalletAttestationRepositoryImpl
 import io.ktor.client.HttpClient
 import io.ktor.client.engine.android.Android
 import io.ktor.client.plugins.contentnegotiation.ContentNegotiation
@@ -35,7 +35,7 @@ import org.koin.core.annotation.Module
 import org.koin.core.annotation.Single
 
 @Module
-@ComponentScan("com.k869.identid.di.network")
+@ComponentScan("com.k689.identid.di.network")
 class LogicNetworkModule
 
 @Single

@@ -14,15 +14,15 @@
  * governing permissions and limitations under the Licence.
  */
 
-package com.k869.identid.ui.issuance.success
+package com.k689.identid.ui.issuance.success
 
 import androidx.lifecycle.viewModelScope
-import com.k869.identid.config.IssuanceSuccessUiConfig
-import com.k869.identid.ui.common.document_success.DocumentSuccessViewModel
-import com.k869.identid.interactor.issuance.DocumentIssuanceSuccessInteractor
-import com.k869.identid.interactor.issuance.DocumentIssuanceSuccessInteractorGetUiItemsPartialState
-import com.k869.identid.config.ConfigNavigation
-import com.k869.identid.ui.serializer.UiSerializer
+import com.k689.identid.config.IssuanceSuccessUiConfig
+import com.k689.identid.ui.common.document_success.DocumentSuccessViewModel
+import com.k689.identid.interactor.issuance.DocumentIssuanceSuccessInteractor
+import com.k689.identid.interactor.issuance.DocumentIssuanceSuccessInteractorGetUiItemsPartialState
+import com.k689.identid.config.ConfigNavigation
+import com.k689.identid.ui.serializer.UiSerializer
 import kotlinx.coroutines.launch
 import org.koin.android.annotation.KoinViewModel
 import org.koin.core.annotation.InjectedParam

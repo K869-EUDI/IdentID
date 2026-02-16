@@ -14,25 +14,25 @@
  * governing permissions and limitations under the Licence.
  */
 
-package com.k869.identid.ui.proximity.loading
+package com.k689.identid.ui.proximity.loading
 
 import android.content.Context
 import androidx.lifecycle.viewModelScope
-import com.k869.identid.controller.authentication.DeviceAuthenticationResult
-import com.k869.identid.ui.common.loading.Effect
-import com.k869.identid.ui.common.loading.Event
-import com.k869.identid.ui.common.loading.LoadingViewModel
-import com.k869.identid.model.core.AuthenticationData
-import com.k869.identid.interactor.proximity.ProximityLoadingInteractor
-import com.k869.identid.interactor.proximity.ProximityLoadingObserveResponsePartialState
-import com.k869.identid.interactor.proximity.ProximityLoadingSendRequestedDocumentPartialState
-import com.k869.identid.R
-import com.k869.identid.provider.resources.ResourceProvider
-import com.k869.identid.ui.component.content.ContentErrorConfig
-import com.k869.identid.ui.component.content.ContentHeaderConfig
-import com.k869.identid.config.NavigationType
-import com.k869.identid.navigation.ProximityScreens
-import com.k869.identid.navigation.Screen
+import com.k689.identid.controller.authentication.DeviceAuthenticationResult
+import com.k689.identid.ui.common.loading.Effect
+import com.k689.identid.ui.common.loading.Event
+import com.k689.identid.ui.common.loading.LoadingViewModel
+import com.k689.identid.model.core.AuthenticationData
+import com.k689.identid.interactor.proximity.ProximityLoadingInteractor
+import com.k689.identid.interactor.proximity.ProximityLoadingObserveResponsePartialState
+import com.k689.identid.interactor.proximity.ProximityLoadingSendRequestedDocumentPartialState
+import com.k689.identid.R
+import com.k689.identid.provider.resources.ResourceProvider
+import com.k689.identid.ui.component.content.ContentErrorConfig
+import com.k689.identid.ui.component.content.ContentHeaderConfig
+import com.k689.identid.config.NavigationType
+import com.k689.identid.navigation.ProximityScreens
+import com.k689.identid.navigation.Screen
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import org.koin.android.annotation.KoinViewModel

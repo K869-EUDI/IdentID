@@ -14,11 +14,11 @@
  * governing permissions and limitations under the Licence.
  */
 
-package com.k869.identid.config
+package com.k689.identid.config
 
-import com.k869.identid.navigation.DashboardScreens
-import com.k869.identid.navigation.IssuanceScreens
-import com.k869.identid.navigation.Screen
+import com.k689.identid.navigation.DashboardScreens
+import com.k689.identid.navigation.IssuanceScreens
+import com.k689.identid.navigation.Screen
 
 class ConfigUILogicImpl : ConfigUILogic {
     override val dashboardScreenIdentifier: Screen

@@ -14,20 +14,20 @@
  * governing permissions and limitations under the Licence.
  */
 
-package com.k869.identid.extension.common
+package com.k689.identid.extension.common
 
-import com.k869.identid.ui.common.request.model.DocumentPayloadDomain
-import com.k869.identid.util.common.keyIsPortrait
-import com.k869.identid.util.common.keyIsSignature
-import com.k869.identid.model.core.ClaimDomain
+import com.k689.identid.ui.common.request.model.DocumentPayloadDomain
+import com.k689.identid.util.common.keyIsPortrait
+import com.k689.identid.util.common.keyIsSignature
+import com.k689.identid.model.core.ClaimDomain
 import eu.europa.ec.eudi.wallet.document.ElementIdentifier
-import com.k869.identid.ui.component.AppIcons
-import com.k869.identid.ui.component.ListItemDataUi
-import com.k869.identid.ui.component.ListItemLeadingContentDataUi
-import com.k869.identid.ui.component.ListItemMainContentDataUi
-import com.k869.identid.ui.component.ListItemTrailingContentDataUi
-import com.k869.identid.ui.component.wrap.CheckboxDataUi
-import com.k869.identid.ui.component.wrap.ExpandableListItemUi
+import com.k689.identid.ui.component.AppIcons
+import com.k689.identid.ui.component.ListItemDataUi
+import com.k689.identid.ui.component.ListItemLeadingContentDataUi
+import com.k689.identid.ui.component.ListItemMainContentDataUi
+import com.k689.identid.ui.component.ListItemTrailingContentDataUi
+import com.k689.identid.ui.component.wrap.CheckboxDataUi
+import com.k689.identid.ui.component.wrap.ExpandableListItemUi
 
 fun DocumentPayloadDomain.toSelectiveExpandableListItems(): List<ExpandableListItemUi> {
     return this.docClaimsDomain.map { claim ->

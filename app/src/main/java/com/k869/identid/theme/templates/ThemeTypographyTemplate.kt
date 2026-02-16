@@ -14,7 +14,7 @@
  * governing permissions and limitations under the Licence.
  */
 
-package com.k869.identid.theme.templates
+package com.k689.identid.theme.templates
 
 import androidx.compose.material3.Typography
 import androidx.compose.ui.graphics.Color
@@ -23,17 +23,17 @@ import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.TextUnitType
-import com.k869.identid.theme.templates.ThemeTextStyle.Companion.toTextStyle
-import com.k869.identid.theme.templates.structures.ThemeFont
-import com.k869.identid.theme.templates.structures.ThemeFont.Companion.toFont
-import com.k869.identid.theme.templates.structures.ThemeFontStyle
-import com.k869.identid.theme.templates.structures.ThemeFontStyle.Companion.toFontStyle
-import com.k869.identid.theme.templates.structures.ThemeFontWeight
-import com.k869.identid.theme.templates.structures.ThemeFontWeight.Companion.toFontWeight
-import com.k869.identid.theme.templates.structures.ThemeTextAlign
-import com.k869.identid.theme.templates.structures.ThemeTextAlign.Companion.toTextAlign
-import com.k869.identid.theme.templates.structures.ThemeTextDecoration
-import com.k869.identid.theme.templates.structures.ThemeTextDecoration.Companion.toTextDecoration
+import com.k689.identid.theme.templates.ThemeTextStyle.Companion.toTextStyle
+import com.k689.identid.theme.templates.structures.ThemeFont
+import com.k689.identid.theme.templates.structures.ThemeFont.Companion.toFont
+import com.k689.identid.theme.templates.structures.ThemeFontStyle
+import com.k689.identid.theme.templates.structures.ThemeFontStyle.Companion.toFontStyle
+import com.k689.identid.theme.templates.structures.ThemeFontWeight
+import com.k689.identid.theme.templates.structures.ThemeFontWeight.Companion.toFontWeight
+import com.k689.identid.theme.templates.structures.ThemeTextAlign
+import com.k689.identid.theme.templates.structures.ThemeTextAlign.Companion.toTextAlign
+import com.k689.identid.theme.templates.structures.ThemeTextDecoration
+import com.k689.identid.theme.templates.structures.ThemeTextDecoration.Companion.toTextDecoration
 
 data class ThemeTypographyTemplate(
     val displayLarge: ThemeTextStyle,

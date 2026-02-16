@@ -14,13 +14,13 @@
  * governing permissions and limitations under the Licence.
  */
 
-package com.k869.identid.ui.dashboard.documents.list.model
+package com.k689.identid.ui.dashboard.documents.list.model
 
-import com.k869.identid.model.validator.FilterableItemPayload
-import com.k869.identid.model.core.DocumentCategory
-import com.k869.identid.model.core.DocumentIdentifier
-import com.k869.identid.ui.dashboard.documents.detail.model.DocumentIssuanceStateUi
-import com.k869.identid.ui.component.ListItemDataUi
+import com.k689.identid.model.validator.FilterableItemPayload
+import com.k689.identid.model.core.DocumentCategory
+import com.k689.identid.model.core.DocumentIdentifier
+import com.k689.identid.ui.dashboard.documents.detail.model.DocumentIssuanceStateUi
+import com.k689.identid.ui.component.ListItemDataUi
 
 data class DocumentUi(
     val documentIssuanceState: DocumentIssuanceStateUi,

@@ -14,24 +14,24 @@
  * governing permissions and limitations under the Licence.
  */
 
-package com.k869.identid.ui.common.document_success
+package com.k689.identid.ui.common.document_success
 
 import android.net.Uri
-import com.k869.identid.extension.business.toUri
-import com.k869.identid.ui.component.AppIconAndTextDataUi
-import com.k869.identid.ui.component.AppIcons
-import com.k869.identid.ui.component.ListItemTrailingContentDataUi
-import com.k869.identid.ui.component.content.ContentHeaderConfig
-import com.k869.identid.ui.component.wrap.ExpandableListItemUi
-import com.k869.identid.config.ConfigNavigation
-import com.k869.identid.config.NavigationType
-import com.k869.identid.extension.ui.toggleExpansionState
-import com.k869.identid.ui.mvi.MviViewModel
-import com.k869.identid.ui.mvi.ViewEvent
-import com.k869.identid.ui.mvi.ViewSideEffect
-import com.k869.identid.ui.mvi.ViewState
-import com.k869.identid.navigation.helper.generateComposableArguments
-import com.k869.identid.navigation.helper.generateComposableNavigationLink
+import com.k689.identid.extension.business.toUri
+import com.k689.identid.ui.component.AppIconAndTextDataUi
+import com.k689.identid.ui.component.AppIcons
+import com.k689.identid.ui.component.ListItemTrailingContentDataUi
+import com.k689.identid.ui.component.content.ContentHeaderConfig
+import com.k689.identid.ui.component.wrap.ExpandableListItemUi
+import com.k689.identid.config.ConfigNavigation
+import com.k689.identid.config.NavigationType
+import com.k689.identid.extension.ui.toggleExpansionState
+import com.k689.identid.ui.mvi.MviViewModel
+import com.k689.identid.ui.mvi.ViewEvent
+import com.k689.identid.ui.mvi.ViewSideEffect
+import com.k689.identid.ui.mvi.ViewState
+import com.k689.identid.navigation.helper.generateComposableArguments
+import com.k689.identid.navigation.helper.generateComposableNavigationLink
 
 data class State(
     val isLoading: Boolean = false,

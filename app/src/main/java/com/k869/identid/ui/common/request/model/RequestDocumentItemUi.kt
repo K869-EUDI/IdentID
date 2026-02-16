@@ -14,14 +14,14 @@
  * governing permissions and limitations under the Licence.
  */
 
-package com.k869.identid.ui.common.request.model
+package com.k689.identid.ui.common.request.model
 
-import com.k869.identid.model.core.ClaimDomain
+import com.k689.identid.model.core.ClaimDomain
 import eu.europa.ec.eudi.wallet.document.DocumentId
 import eu.europa.ec.eudi.wallet.document.format.DocumentFormat
 import eu.europa.ec.eudi.wallet.document.format.MsoMdocFormat
 import eu.europa.ec.eudi.wallet.document.format.SdJwtVcFormat
-import com.k869.identid.ui.component.wrap.ExpandableListItemUi
+import com.k689.identid.ui.component.wrap.ExpandableListItemUi
 
 sealed class DomainDocumentFormat {
     data object SdJwtVc : DomainDocumentFormat()

@@ -14,15 +14,15 @@
  * governing permissions and limitations under the Licence.
  */
 
-package com.k869.identid.config
+package com.k689.identid.config
 
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
-import com.k869.identid.config.ConfigNavigation
-import com.k869.identid.config.NavigationType
-import com.k869.identid.ui.serializer.UiSerializable
-import com.k869.identid.ui.serializer.UiSerializableParser
-import com.k869.identid.ui.serializer.adapter.SerializableTypeAdapter
+import com.k689.identid.config.ConfigNavigation
+import com.k689.identid.config.NavigationType
+import com.k689.identid.ui.serializer.UiSerializable
+import com.k689.identid.ui.serializer.UiSerializableParser
+import com.k689.identid.ui.serializer.adapter.SerializableTypeAdapter
 
 data class OfferUiConfig(
     val offerUri: String,

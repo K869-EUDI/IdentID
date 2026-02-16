@@ -14,14 +14,14 @@
  * governing permissions and limitations under the Licence.
  */
 
-package com.k869.identid.controller.crypto
+package com.k689.identid.controller.crypto
 
 import android.os.Build
 import android.security.keystore.KeyGenParameterSpec
 import android.security.keystore.KeyProperties
-import com.k869.identid.controller.log.LogController
-import com.k869.identid.controller.storage.PrefKeys
-import com.k869.identid.provider.UuidProvider
+import com.k689.identid.controller.log.LogController
+import com.k689.identid.controller.storage.PrefKeys
+import com.k689.identid.provider.UuidProvider
 import java.security.KeyStore
 import javax.crypto.KeyGenerator
 import javax.crypto.SecretKey

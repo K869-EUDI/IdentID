@@ -14,12 +14,12 @@
  * governing permissions and limitations under the Licence.
  */
 
-package com.k869.identid.storage.prefs
+package com.k689.identid.storage.prefs
 
 import com.google.gson.Gson
-import com.k869.identid.model.authentication.BiometricAuthentication
-import com.k869.identid.provider.authentication.BiometryStorageProvider
-import com.k869.identid.controller.storage.PrefsController
+import com.k689.identid.model.authentication.BiometricAuthentication
+import com.k689.identid.provider.authentication.BiometryStorageProvider
+import com.k689.identid.controller.storage.PrefsController
 
 class PrefsBiometryStorageProvider(
     private val prefsController: PrefsController

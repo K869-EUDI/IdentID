@@ -14,9 +14,9 @@
  * governing permissions and limitations under the Licence.
  */
 
-package com.k869.identid.model.core
+package com.k689.identid.model.core
 
-import com.k869.identid.model.authentication.BiometricCrypto
+import com.k689.identid.model.authentication.BiometricCrypto
 
 data class AuthenticationData(
     val crypto: BiometricCrypto,

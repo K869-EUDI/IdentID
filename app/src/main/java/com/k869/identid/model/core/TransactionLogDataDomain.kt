@@ -14,12 +14,12 @@
  * governing permissions and limitations under the Licence.
  */
 
-package com.k869.identid.model.core
+package com.k689.identid.model.core
 
-import com.k869.identid.extension.core.getLocalizedDocumentName
+import com.k689.identid.extension.core.getLocalizedDocumentName
 import eu.europa.ec.eudi.wallet.transactionLogging.TransactionLog
 import eu.europa.ec.eudi.wallet.transactionLogging.presentation.PresentedDocument
-import com.k869.identid.provider.resources.ResourceProvider
+import com.k689.identid.provider.resources.ResourceProvider
 import java.time.LocalDate
 import java.time.LocalDateTime
 import java.util.Locale
@@ -61,9 +61,9 @@ sealed interface TransactionLogDataDomain {
     companion object {
         fun TransactionLogDataDomain.getTransactionTypeLabel(resourceProvider: ResourceProvider): String {
             return when (this) {
-                is PresentationLog -> resourceProvider.getString(com.k869.identid.R.string.transactions_screen_filters_filter_by_transaction_type_presentation)
-                is IssuanceLog -> resourceProvider.getString(com.k869.identid.R.string.transactions_screen_filters_filter_by_transaction_type_issuance)
-                is SigningLog -> resourceProvider.getString(com.k869.identid.R.string.transactions_screen_filters_filter_by_transaction_type_signing)
+                is PresentationLog -> resourceProvider.getString(com.k689.identid.R.string.transactions_screen_filters_filter_by_transaction_type_presentation)
+                is IssuanceLog -> resourceProvider.getString(com.k689.identid.R.string.transactions_screen_filters_filter_by_transaction_type_issuance)
+                is SigningLog -> resourceProvider.getString(com.k689.identid.R.string.transactions_screen_filters_filter_by_transaction_type_signing)
             }
         }
 

@@ -14,7 +14,7 @@
  * governing permissions and limitations under the Licence.
  */
 
-package com.k869.identid.ui.component.wrap
+package com.k689.identid.ui.component.wrap
 
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.material3.MaterialTheme
@@ -24,10 +24,10 @@ import androidx.compose.material3.TextFieldColors
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.PreviewParameter
-import com.k869.identid.ui.component.AppIcons
-import com.k869.identid.ui.component.preview.PreviewTheme
-import com.k869.identid.ui.component.preview.TextLengthPreviewProvider
-import com.k869.identid.ui.component.preview.ThemeModePreviews
+import com.k689.identid.ui.component.AppIcons
+import com.k689.identid.ui.component.preview.PreviewTheme
+import com.k689.identid.ui.component.preview.TextLengthPreviewProvider
+import com.k689.identid.ui.component.preview.ThemeModePreviews
 
 @Composable
 fun WrapSearchBar(

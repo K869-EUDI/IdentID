@@ -14,7 +14,7 @@
  * governing permissions and limitations under the Licence.
  */
 
-package com.k869.identid.navigation.routes.issuance
+package com.k689.identid.navigation.routes.issuance
 
 import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
@@ -23,17 +23,17 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.navigation
 import androidx.navigation.navArgument
 import androidx.navigation.navDeepLink
-import com.k869.identid.config.IssuanceSuccessUiConfig
-import com.k869.identid.config.IssuanceUiConfig
-import com.k869.identid.config.OfferCodeUiConfig
-import com.k869.identid.config.OfferUiConfig
-import com.k869.identid.BuildConfig
-import com.k869.identid.ui.issuance.add.AddDocumentScreen
-import com.k869.identid.ui.issuance.code.DocumentOfferCodeScreen
-import com.k869.identid.ui.issuance.offer.DocumentOfferScreen
-import com.k869.identid.ui.issuance.success.DocumentIssuanceSuccessScreen
-import com.k869.identid.navigation.IssuanceScreens
-import com.k869.identid.navigation.ModuleRoute
+import com.k689.identid.config.IssuanceSuccessUiConfig
+import com.k689.identid.config.IssuanceUiConfig
+import com.k689.identid.config.OfferCodeUiConfig
+import com.k689.identid.config.OfferUiConfig
+import com.k689.identid.BuildConfig
+import com.k689.identid.ui.issuance.add.AddDocumentScreen
+import com.k689.identid.ui.issuance.code.DocumentOfferCodeScreen
+import com.k689.identid.ui.issuance.offer.DocumentOfferScreen
+import com.k689.identid.ui.issuance.success.DocumentIssuanceSuccessScreen
+import com.k689.identid.navigation.IssuanceScreens
+import com.k689.identid.navigation.ModuleRoute
 import org.koin.androidx.compose.koinViewModel
 import org.koin.core.parameter.parametersOf
 

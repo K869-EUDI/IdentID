@@ -14,11 +14,11 @@
  * governing permissions and limitations under the Licence.
  */
 
-package com.k869.identid.ui.dashboard.transactions.list.model
+package com.k689.identid.ui.dashboard.transactions.list.model
 
-import com.k869.identid.model.validator.FilterableItemPayload
-import com.k869.identid.ui.dashboard.transactions.model.TransactionStatusUi
-import com.k869.identid.ui.component.wrap.ExpandableListItemUi
+import com.k689.identid.model.validator.FilterableItemPayload
+import com.k689.identid.ui.dashboard.transactions.model.TransactionStatusUi
+import com.k689.identid.ui.component.wrap.ExpandableListItemUi
 
 data class TransactionUi(
     val uiData: ExpandableListItemUi.SingleListItem,

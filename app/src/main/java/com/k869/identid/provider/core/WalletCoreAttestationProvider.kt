@@ -14,12 +14,12 @@
  * governing permissions and limitations under the Licence.
  */
 
-package com.k869.identid.provider.core
+package com.k689.identid.provider.core
 
-import com.k869.identid.config.WalletCoreConfig
+import com.k689.identid.config.WalletCoreConfig
 import eu.europa.ec.eudi.openid4vci.Nonce
 import eu.europa.ec.eudi.wallet.provider.WalletAttestationsProvider
-import com.k869.identid.network.repository.WalletAttestationRepository
+import com.k689.identid.network.repository.WalletAttestationRepository
 import org.multipaz.securearea.KeyInfo
 
 interface WalletCoreAttestationProvider : WalletAttestationsProvider

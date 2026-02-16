@@ -14,21 +14,21 @@
  * governing permissions and limitations under the Licence.
  */
 
-package com.k869.identid.di.ui
+package com.k689.identid.di.ui
 
-import com.k869.identid.config.ConfigUILogic
-import com.k869.identid.config.ConfigUILogicImpl
-import com.k869.identid.navigation.RouterHost
-import com.k869.identid.navigation.RouterHostImpl
-import com.k869.identid.ui.serializer.UiSerializer
-import com.k869.identid.ui.serializer.UiSerializerImpl
+import com.k689.identid.config.ConfigUILogic
+import com.k689.identid.config.ConfigUILogicImpl
+import com.k689.identid.navigation.RouterHost
+import com.k689.identid.navigation.RouterHostImpl
+import com.k689.identid.ui.serializer.UiSerializer
+import com.k689.identid.ui.serializer.UiSerializerImpl
 import org.koin.core.annotation.Factory
 import org.koin.core.annotation.ComponentScan
 import org.koin.core.annotation.Module
 import org.koin.core.annotation.Single
 
 @Module
-@ComponentScan("com.k869.identid.di.ui")
+@ComponentScan("com.k689.identid.di.ui")
 class LogicUiModule
 
 @Single

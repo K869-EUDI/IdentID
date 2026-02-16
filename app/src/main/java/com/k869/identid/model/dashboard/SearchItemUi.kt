@@ -14,6 +14,6 @@
  * governing permissions and limitations under the Licence.
  */
 
-package com.k869.identid.model.dashboard
+package com.k689.identid.model.dashboard
 
 data class SearchItemUi(val searchLabel: String)

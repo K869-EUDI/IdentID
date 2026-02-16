@@ -14,12 +14,12 @@
  * governing permissions and limitations under the Licence.
  */
 
-package com.k869.identid.extension.core
+package com.k689.identid.extension.core
 
-import com.k869.identid.util.business.toLocalDate
-import com.k869.identid.util.business.toLocalDateTime
-import com.k869.identid.model.core.TransactionLogDataDomain
-import com.k869.identid.model.core.TransactionLogDataDomain.PresentationLog
+import com.k689.identid.util.business.toLocalDate
+import com.k689.identid.util.business.toLocalDateTime
+import com.k689.identid.model.core.TransactionLogDataDomain
+import com.k689.identid.model.core.TransactionLogDataDomain.PresentationLog
 import eu.europa.ec.eudi.wallet.transactionLogging.presentation.PresentationTransactionLog
 
 // TODO RETURN PROPER OBJECTS ONCE READY FROM CORE ISSUANCE,SIGNING

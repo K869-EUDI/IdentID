@@ -14,7 +14,7 @@
  * governing permissions and limitations under the Licence.
  */
 
-package com.k869.identid.storage.dao.type
+package com.k689.identid.storage.dao.type
 
 interface StorageDao<T> {
     suspend fun store(value: T)

@@ -14,9 +14,9 @@
  * governing permissions and limitations under the Licence.
  */
 
-package com.k869.identid.extension.core
+package com.k689.identid.extension.core
 
-import com.k869.identid.extension.business.getLocalizedValue
+import com.k689.identid.extension.business.getLocalizedValue
 import eu.europa.ec.eudi.wallet.document.Document
 import eu.europa.ec.eudi.wallet.document.metadata.IssuerMetadata
 import java.util.Locale

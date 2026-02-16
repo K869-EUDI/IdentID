@@ -14,9 +14,9 @@
  * governing permissions and limitations under the Licence.
  */
 
-package com.k869.identid.ui.dashboard.settings.model
+package com.k689.identid.ui.dashboard.settings.model
 
-import com.k869.identid.ui.component.ListItemDataUi
+import com.k689.identid.ui.component.ListItemDataUi
 
 data class SettingsItemUi(
     val type: SettingsMenuItemType,

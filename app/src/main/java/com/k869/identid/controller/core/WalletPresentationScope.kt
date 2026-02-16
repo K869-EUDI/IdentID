@@ -14,7 +14,7 @@
  * governing permissions and limitations under the Licence.
  */
 
-package com.k869.identid.controller.core
+package com.k689.identid.controller.core
 
 import org.koin.core.annotation.Scope
 

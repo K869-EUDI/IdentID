@@ -14,12 +14,12 @@
  * governing permissions and limitations under the Licence.
  */
 
-package com.k869.identid.extension.business
+package com.k689.identid.extension.business
 
-import com.k869.identid.model.validator.FilterAction
-import com.k869.identid.model.validator.FilterElement
-import com.k869.identid.model.validator.FilterableList
-import com.k869.identid.model.validator.Filters
+import com.k689.identid.model.validator.FilterAction
+import com.k689.identid.model.validator.FilterElement
+import com.k689.identid.model.validator.FilterableList
+import com.k689.identid.model.validator.Filters
 
 fun FilterableList.filterByQuery(searchQuery: String): FilterableList {
     return copy(

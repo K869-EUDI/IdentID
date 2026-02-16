@@ -14,14 +14,14 @@
  * governing permissions and limitations under the Licence.
  */
 
-package com.k869.identid.validator
+package com.k689.identid.validator
 
 import android.net.Uri
 import android.util.Patterns
 import androidx.core.net.toUri
 import com.google.i18n.phonenumbers.PhoneNumberUtil
-import com.k869.identid.controller.log.LogController
-import com.k869.identid.util.business.safeLet
+import com.k689.identid.controller.log.LogController
+import com.k689.identid.util.business.safeLet
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext

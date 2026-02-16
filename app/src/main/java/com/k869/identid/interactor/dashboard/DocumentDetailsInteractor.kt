@@ -14,25 +14,25 @@
  * governing permissions and limitations under the Licence.
  */
 
-package com.k869.identid.interactor.dashboard
+package com.k689.identid.interactor.dashboard
 
-import com.k869.identid.extension.business.safeAsync
-import com.k869.identid.provider.UuidProvider
-import com.k869.identid.controller.core.DeleteAllDocumentsPartialState
-import com.k869.identid.controller.core.DeleteDocumentPartialState
-import com.k869.identid.controller.core.WalletCoreDocumentsController
-import com.k869.identid.extension.core.localizedIssuerMetadata
-import com.k869.identid.model.core.DocumentIdentifier
-import com.k869.identid.model.core.toDocumentIdentifier
-import com.k869.identid.ui.dashboard.documents.detail.model.DocumentDetailsDomain
-import com.k869.identid.ui.dashboard.documents.detail.transformer.DocumentDetailsTransformer
-import com.k869.identid.ui.dashboard.documents.detail.transformer.DocumentDetailsTransformer.createDocumentCredentialsInfoUi
-import com.k869.identid.ui.dashboard.documents.model.DocumentCredentialsInfoUi
+import com.k689.identid.extension.business.safeAsync
+import com.k689.identid.provider.UuidProvider
+import com.k689.identid.controller.core.DeleteAllDocumentsPartialState
+import com.k689.identid.controller.core.DeleteDocumentPartialState
+import com.k689.identid.controller.core.WalletCoreDocumentsController
+import com.k689.identid.extension.core.localizedIssuerMetadata
+import com.k689.identid.model.core.DocumentIdentifier
+import com.k689.identid.model.core.toDocumentIdentifier
+import com.k689.identid.ui.dashboard.documents.detail.model.DocumentDetailsDomain
+import com.k689.identid.ui.dashboard.documents.detail.transformer.DocumentDetailsTransformer
+import com.k689.identid.ui.dashboard.documents.detail.transformer.DocumentDetailsTransformer.createDocumentCredentialsInfoUi
+import com.k689.identid.ui.dashboard.documents.model.DocumentCredentialsInfoUi
 import eu.europa.ec.eudi.wallet.document.DocumentId
 import eu.europa.ec.eudi.wallet.document.IssuedDocument
 import eu.europa.ec.eudi.wallet.document.format.MsoMdocFormat
 import eu.europa.ec.eudi.wallet.document.format.SdJwtVcFormat
-import com.k869.identid.provider.resources.ResourceProvider
+import com.k689.identid.provider.resources.ResourceProvider
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.map

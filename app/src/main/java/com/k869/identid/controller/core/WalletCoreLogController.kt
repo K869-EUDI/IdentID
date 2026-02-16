@@ -14,9 +14,9 @@
  * governing permissions and limitations under the Licence.
  */
 
-package com.k869.identid.controller.core
+package com.k689.identid.controller.core
 
-import com.k869.identid.controller.log.LogController
+import com.k689.identid.controller.log.LogController
 import eu.europa.ec.eudi.wallet.logging.Logger
 
 interface WalletCoreLogController : Logger

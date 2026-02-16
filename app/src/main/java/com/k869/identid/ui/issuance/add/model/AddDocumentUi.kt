@@ -14,9 +14,9 @@
  * governing permissions and limitations under the Licence.
  */
 
-package com.k869.identid.ui.issuance.add.model
+package com.k689.identid.ui.issuance.add.model
 
-import com.k869.identid.ui.component.ListItemDataUi
+import com.k689.identid.ui.component.ListItemDataUi
 
 data class AddDocumentUi(
     val credentialIssuerId: String,

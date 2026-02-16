@@ -14,30 +14,30 @@
  * governing permissions and limitations under the Licence.
  */
 
-package com.k869.identid.di.authentication
+package com.k689.identid.di.authentication
 
-import com.k869.identid.config.StorageConfig
-import com.k869.identid.config.StorageConfigImpl
-import com.k869.identid.controller.authentication.BiometricAuthenticationController
-import com.k869.identid.controller.authentication.BiometricAuthenticationControllerImpl
-import com.k869.identid.controller.authentication.DeviceAuthenticationController
-import com.k869.identid.controller.authentication.DeviceAuthenticationControllerImpl
-import com.k869.identid.controller.storage.BiometryStorageController
-import com.k869.identid.controller.storage.BiometryStorageControllerImpl
-import com.k869.identid.controller.storage.PinStorageController
-import com.k869.identid.controller.storage.PinStorageControllerImpl
-import com.k869.identid.storage.prefs.PrefsBiometryStorageProvider
-import com.k869.identid.storage.prefs.PrefsPinStorageProvider
-import com.k869.identid.controller.crypto.CryptoController
-import com.k869.identid.controller.storage.PrefsController
-import com.k869.identid.provider.resources.ResourceProvider
+import com.k689.identid.config.StorageConfig
+import com.k689.identid.config.StorageConfigImpl
+import com.k689.identid.controller.authentication.BiometricAuthenticationController
+import com.k689.identid.controller.authentication.BiometricAuthenticationControllerImpl
+import com.k689.identid.controller.authentication.DeviceAuthenticationController
+import com.k689.identid.controller.authentication.DeviceAuthenticationControllerImpl
+import com.k689.identid.controller.storage.BiometryStorageController
+import com.k689.identid.controller.storage.BiometryStorageControllerImpl
+import com.k689.identid.controller.storage.PinStorageController
+import com.k689.identid.controller.storage.PinStorageControllerImpl
+import com.k689.identid.storage.prefs.PrefsBiometryStorageProvider
+import com.k689.identid.storage.prefs.PrefsPinStorageProvider
+import com.k689.identid.controller.crypto.CryptoController
+import com.k689.identid.controller.storage.PrefsController
+import com.k689.identid.provider.resources.ResourceProvider
 import org.koin.core.annotation.ComponentScan
 import org.koin.core.annotation.Factory
 import org.koin.core.annotation.Module
 import org.koin.core.annotation.Single
 
 @Module
-@ComponentScan("com.k869.identid.di.authentication")
+@ComponentScan("com.k689.identid.di.authentication")
 class LogicAuthenticationModule
 
 @Single

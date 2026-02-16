@@ -14,7 +14,7 @@
  * governing permissions and limitations under the Licence.
  */
 
-package com.k869.identid.ui.dashboard.component
+package com.k689.identid.ui.dashboard.component
 
 import androidx.annotation.StringRes
 import androidx.compose.material3.MaterialTheme
@@ -32,13 +32,13 @@ import androidx.navigation.NavDestination.Companion.hierarchy
 import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
-import com.k869.identid.util.dashboard.TestTag
-import com.k869.identid.R
-import com.k869.identid.ui.component.AppIcons
-import com.k869.identid.ui.component.IconDataUi
-import com.k869.identid.ui.component.preview.PreviewTheme
-import com.k869.identid.ui.component.preview.ThemeModePreviews
-import com.k869.identid.ui.component.wrap.WrapIcon
+import com.k689.identid.util.dashboard.TestTag
+import com.k689.identid.R
+import com.k689.identid.ui.component.AppIcons
+import com.k689.identid.ui.component.IconDataUi
+import com.k689.identid.ui.component.preview.PreviewTheme
+import com.k689.identid.ui.component.preview.ThemeModePreviews
+import com.k689.identid.ui.component.wrap.WrapIcon
 
 sealed class BottomNavigationItem(
     val route: String,

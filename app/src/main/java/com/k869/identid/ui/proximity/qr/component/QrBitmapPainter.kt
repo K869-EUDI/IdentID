@@ -14,7 +14,7 @@
  * governing permissions and limitations under the Licence.
  */
 
-package com.k869.identid.ui.proximity.qr.component
+package com.k689.identid.ui.proximity.qr.component
 
 import android.graphics.Bitmap
 import android.graphics.Color

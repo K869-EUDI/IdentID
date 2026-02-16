@@ -14,7 +14,7 @@
  * governing permissions and limitations under the Licence.
  */
 
-package com.k869.identid.ui.serializer
+package com.k689.identid.ui.serializer
 
 import com.google.gson.Gson
 

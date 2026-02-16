@@ -14,13 +14,13 @@
  * governing permissions and limitations under the Licence.
  */
 
-package com.k869.identid.storage.prefs
+package com.k689.identid.storage.prefs
 
-import com.k869.identid.provider.authentication.PinStorageProvider
-import com.k869.identid.controller.crypto.CryptoController
-import com.k869.identid.controller.storage.PrefsController
-import com.k869.identid.extension.business.decodeFromBase64
-import com.k869.identid.extension.business.encodeToBase64String
+import com.k689.identid.provider.authentication.PinStorageProvider
+import com.k689.identid.controller.crypto.CryptoController
+import com.k689.identid.controller.storage.PrefsController
+import com.k689.identid.extension.business.decodeFromBase64
+import com.k689.identid.extension.business.encodeToBase64String
 
 class PrefsPinStorageProvider(
     private val prefsController: PrefsController,

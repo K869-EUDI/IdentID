@@ -14,7 +14,7 @@
  * governing permissions and limitations under the Licence.
  */
 
-package com.k869.identid.service
+package com.k689.identid.service
 
 import eu.europa.ec.eudi.iso18013.transfer.TransferManager
 import eu.europa.ec.eudi.wallet.EudiWallet

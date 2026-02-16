@@ -13,7 +13,7 @@
  * ANY KIND, either express or implied. See the Licence for the specific language
  * governing permissions and limitations under the Licence.
  */
-package com.k869.identid.theme
+package com.k689.identid.theme
 
 import android.os.Build
 import androidx.annotation.ChecksSdkIntAtLeast
@@ -23,17 +23,17 @@ import androidx.compose.material3.dynamicDarkColorScheme
 import androidx.compose.material3.dynamicLightColorScheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.platform.LocalContext
-import com.k869.identid.theme.sets.ThemeSet
-import com.k869.identid.theme.templates.ThemeColorsTemplate
-import com.k869.identid.theme.templates.ThemeColorsTemplate.Companion.toColorScheme
-import com.k869.identid.theme.templates.ThemeDimensTemplate
-import com.k869.identid.theme.templates.ThemeShapesTemplate
-import com.k869.identid.theme.templates.ThemeShapesTemplate.Companion.toShapes
-import com.k869.identid.theme.templates.ThemeTypographyTemplate
-import com.k869.identid.theme.templates.ThemeTypographyTemplate.Companion.toTypography
-import com.k869.identid.theme.values.ThemeColors
-import com.k869.identid.theme.values.ThemeShapes
-import com.k869.identid.theme.values.ThemeTypography
+import com.k689.identid.theme.sets.ThemeSet
+import com.k689.identid.theme.templates.ThemeColorsTemplate
+import com.k689.identid.theme.templates.ThemeColorsTemplate.Companion.toColorScheme
+import com.k689.identid.theme.templates.ThemeDimensTemplate
+import com.k689.identid.theme.templates.ThemeShapesTemplate
+import com.k689.identid.theme.templates.ThemeShapesTemplate.Companion.toShapes
+import com.k689.identid.theme.templates.ThemeTypographyTemplate
+import com.k689.identid.theme.templates.ThemeTypographyTemplate.Companion.toTypography
+import com.k689.identid.theme.values.ThemeColors
+import com.k689.identid.theme.values.ThemeShapes
+import com.k689.identid.theme.values.ThemeTypography
 
 class ThemeManager {
     /**

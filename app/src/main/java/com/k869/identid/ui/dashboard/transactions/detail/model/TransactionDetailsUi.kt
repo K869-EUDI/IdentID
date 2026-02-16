@@ -14,9 +14,9 @@
  * governing permissions and limitations under the Licence.
  */
 
-package com.k869.identid.ui.dashboard.transactions.detail.model
+package com.k689.identid.ui.dashboard.transactions.detail.model
 
-import com.k869.identid.ui.component.wrap.ExpandableListItemUi
+import com.k689.identid.ui.component.wrap.ExpandableListItemUi
 
 data class TransactionDetailsUi(
     val transactionId: String,

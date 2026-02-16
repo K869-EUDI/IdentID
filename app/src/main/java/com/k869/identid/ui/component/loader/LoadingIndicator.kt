@@ -14,7 +14,7 @@
  * governing permissions and limitations under the Licence.
  */
 
-package com.k869.identid.ui.component.loader
+package com.k689.identid.ui.component.loader
 
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
@@ -24,8 +24,8 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.zIndex
-import com.k869.identid.ui.component.utils.Z_LOADING
-import com.k869.identid.extension.ui.clickableNoRipple
+import com.k689.identid.ui.component.utils.Z_LOADING
+import com.k689.identid.extension.ui.clickableNoRipple
 
 @Composable
 fun LoadingIndicator() {

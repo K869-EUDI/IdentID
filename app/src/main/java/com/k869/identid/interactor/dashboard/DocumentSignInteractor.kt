@@ -14,19 +14,19 @@
  * governing permissions and limitations under the Licence.
  */
 
-package com.k869.identid.interactor.dashboard
+package com.k689.identid.interactor.dashboard
 
 import android.content.Context
 import android.net.Uri
-import com.k869.identid.ui.dashboard.document_sign.model.DocumentSignButtonUi
+import com.k689.identid.ui.dashboard.document_sign.model.DocumentSignButtonUi
 import eu.europa.ec.eudi.rqesui.infrastructure.DocumentUri
 import eu.europa.ec.eudi.rqesui.infrastructure.EudiRQESUi
-import com.k869.identid.R
-import com.k869.identid.provider.resources.ResourceProvider
-import com.k869.identid.ui.component.AppIcons
-import com.k869.identid.ui.component.ListItemDataUi
-import com.k869.identid.ui.component.ListItemMainContentDataUi
-import com.k869.identid.ui.component.ListItemTrailingContentDataUi
+import com.k689.identid.R
+import com.k689.identid.provider.resources.ResourceProvider
+import com.k689.identid.ui.component.AppIcons
+import com.k689.identid.ui.component.ListItemDataUi
+import com.k689.identid.ui.component.ListItemMainContentDataUi
+import com.k689.identid.ui.component.ListItemTrailingContentDataUi
 
 interface DocumentSignInteractor {
     fun launchRqesSdk(context: Context, uri: Uri)

@@ -14,7 +14,7 @@
  * governing permissions and limitations under the Licence.
  */
 
-package com.k869.identid.model.core
+package com.k689.identid.model.core
 
 import eu.europa.ec.eudi.wallet.document.ElementIdentifier
 

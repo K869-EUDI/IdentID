@@ -14,22 +14,22 @@
  * governing permissions and limitations under the Licence.
  */
 
-package com.k869.identid.di
+package com.k689.identid.di
 
 import android.app.Application
-import com.k869.identid.di.authentication.LogicAuthenticationModule
-import com.k869.identid.di.business.LogicBusinessModule
-import com.k869.identid.di.common.FeatureCommonModule
-import com.k869.identid.di.core.LogicCoreModule
-import com.k869.identid.di.dashboard.FeatureDashboardModule
-import com.k869.identid.di.issuance.FeatureIssuanceModule
-import com.k869.identid.di.network.LogicNetworkModule
-import com.k869.identid.di.presentation.FeaturePresentationModule
-import com.k869.identid.di.proximity.FeatureProximityModule
-import com.k869.identid.di.resources.LogicResourceModule
-import com.k869.identid.di.startup.FeatureStartupModule
-import com.k869.identid.di.storage.LogicStorageModule
-import com.k869.identid.di.ui.LogicUiModule
+import com.k689.identid.di.authentication.LogicAuthenticationModule
+import com.k689.identid.di.business.LogicBusinessModule
+import com.k689.identid.di.common.FeatureCommonModule
+import com.k689.identid.di.core.LogicCoreModule
+import com.k689.identid.di.dashboard.FeatureDashboardModule
+import com.k689.identid.di.issuance.FeatureIssuanceModule
+import com.k689.identid.di.network.LogicNetworkModule
+import com.k689.identid.di.presentation.FeaturePresentationModule
+import com.k689.identid.di.proximity.FeatureProximityModule
+import com.k689.identid.di.resources.LogicResourceModule
+import com.k689.identid.di.startup.FeatureStartupModule
+import com.k689.identid.di.storage.LogicStorageModule
+import com.k689.identid.di.ui.LogicUiModule
 import org.koin.android.ext.koin.androidContext
 import org.koin.android.ext.koin.androidLogger
 import org.koin.core.KoinApplication

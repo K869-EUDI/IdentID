@@ -14,7 +14,7 @@
  * governing permissions and limitations under the Licence.
  */
 
-package com.k869.identid.model.storage
+package com.k689.identid.model.storage
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey

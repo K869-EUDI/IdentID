@@ -14,7 +14,7 @@
  * governing permissions and limitations under the Licence.
  */
 
-package com.k869.identid.model.authentication
+package com.k689.identid.model.authentication
 
 import androidx.biometric.BiometricPrompt
 

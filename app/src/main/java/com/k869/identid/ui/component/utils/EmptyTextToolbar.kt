@@ -14,7 +14,7 @@
  * governing permissions and limitations under the Licence.
  */
 
-package com.k869.identid.ui.component.utils
+package com.k689.identid.ui.component.utils
 
 import androidx.compose.ui.geometry.Rect
 import androidx.compose.ui.platform.TextToolbar

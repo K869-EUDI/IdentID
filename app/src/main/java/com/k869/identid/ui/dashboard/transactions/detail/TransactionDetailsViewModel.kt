@@ -14,22 +14,22 @@
  * governing permissions and limitations under the Licence.
  */
 
-package com.k869.identid.ui.dashboard.transactions.detail
+package com.k689.identid.ui.dashboard.transactions.detail
 
 import androidx.lifecycle.viewModelScope
-import com.k869.identid.interactor.dashboard.TransactionDetailsInteractor
-import com.k869.identid.interactor.dashboard.TransactionDetailsInteractorPartialState
-import com.k869.identid.ui.dashboard.transactions.detail.model.TransactionDetailsUi
-import com.k869.identid.R
-import com.k869.identid.provider.resources.ResourceProvider
-import com.k869.identid.ui.component.AppIcons
-import com.k869.identid.ui.component.ListItemTrailingContentDataUi
-import com.k869.identid.ui.component.content.ContentErrorConfig
-import com.k869.identid.extension.ui.toggleExpansionState
-import com.k869.identid.ui.mvi.MviViewModel
-import com.k869.identid.ui.mvi.ViewEvent
-import com.k869.identid.ui.mvi.ViewSideEffect
-import com.k869.identid.ui.mvi.ViewState
+import com.k689.identid.interactor.dashboard.TransactionDetailsInteractor
+import com.k689.identid.interactor.dashboard.TransactionDetailsInteractorPartialState
+import com.k689.identid.ui.dashboard.transactions.detail.model.TransactionDetailsUi
+import com.k689.identid.R
+import com.k689.identid.provider.resources.ResourceProvider
+import com.k689.identid.ui.component.AppIcons
+import com.k689.identid.ui.component.ListItemTrailingContentDataUi
+import com.k689.identid.ui.component.content.ContentErrorConfig
+import com.k689.identid.extension.ui.toggleExpansionState
+import com.k689.identid.ui.mvi.MviViewModel
+import com.k689.identid.ui.mvi.ViewEvent
+import com.k689.identid.ui.mvi.ViewSideEffect
+import com.k689.identid.ui.mvi.ViewState
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 import org.koin.android.annotation.KoinViewModel

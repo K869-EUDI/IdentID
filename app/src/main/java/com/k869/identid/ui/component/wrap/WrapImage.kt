@@ -14,7 +14,7 @@
  * governing permissions and limitations under the Licence.
  */
 
-package com.k869.identid.ui.component.wrap
+package com.k689.identid.ui.component.wrap
 
 import androidx.compose.foundation.Image
 import androidx.compose.runtime.Composable
@@ -25,7 +25,7 @@ import androidx.compose.ui.graphics.painter.BitmapPainter
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
-import com.k869.identid.ui.component.IconDataUi
+import com.k689.identid.ui.component.IconDataUi
 
 @Composable
 fun WrapImage(

@@ -14,13 +14,13 @@
  * governing permissions and limitations under the Licence.
  */
 
-package com.k869.identid.controller.log
+package com.k689.identid.controller.log
 
 import android.content.Context
 import android.net.Uri
 import android.util.Log
 import androidx.core.content.FileProvider
-import com.k869.identid.config.ConfigLogic
+import com.k689.identid.config.ConfigLogic
 import fr.bipi.treessence.file.FileLoggerTree
 import timber.log.Timber
 import java.io.File

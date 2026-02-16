@@ -14,25 +14,25 @@
  * governing permissions and limitations under the Licence.
  */
 
-package com.k869.identid.ui.proximity.qr
+package com.k689.identid.ui.proximity.qr
 
 import androidx.activity.ComponentActivity
 import androidx.lifecycle.viewModelScope
-import com.k869.identid.config.PresentationMode
-import com.k869.identid.config.RequestUriConfig
-import com.k869.identid.di.core.getOrCreatePresentationScope
-import com.k869.identid.interactor.proximity.ProximityQRInteractor
-import com.k869.identid.interactor.proximity.ProximityQRPartialState
-import com.k869.identid.ui.component.content.ContentErrorConfig
-import com.k869.identid.ui.mvi.MviViewModel
-import com.k869.identid.ui.mvi.ViewEvent
-import com.k869.identid.ui.mvi.ViewSideEffect
-import com.k869.identid.ui.mvi.ViewState
-import com.k869.identid.navigation.DashboardScreens
-import com.k869.identid.navigation.ProximityScreens
-import com.k869.identid.navigation.helper.generateComposableArguments
-import com.k869.identid.navigation.helper.generateComposableNavigationLink
-import com.k869.identid.ui.serializer.UiSerializer
+import com.k689.identid.config.PresentationMode
+import com.k689.identid.config.RequestUriConfig
+import com.k689.identid.di.core.getOrCreatePresentationScope
+import com.k689.identid.interactor.proximity.ProximityQRInteractor
+import com.k689.identid.interactor.proximity.ProximityQRPartialState
+import com.k689.identid.ui.component.content.ContentErrorConfig
+import com.k689.identid.ui.mvi.MviViewModel
+import com.k689.identid.ui.mvi.ViewEvent
+import com.k689.identid.ui.mvi.ViewSideEffect
+import com.k689.identid.ui.mvi.ViewState
+import com.k689.identid.navigation.DashboardScreens
+import com.k689.identid.navigation.ProximityScreens
+import com.k689.identid.navigation.helper.generateComposableArguments
+import com.k689.identid.navigation.helper.generateComposableNavigationLink
+import com.k689.identid.ui.serializer.UiSerializer
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 import org.koin.android.annotation.KoinViewModel

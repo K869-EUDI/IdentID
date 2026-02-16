@@ -2,6 +2,7 @@
   <dictionary name="project">
     <words>
       <w>Ident</w>
+      <w>navigatable</w>
     </words>
   </dictionary>
 </component>

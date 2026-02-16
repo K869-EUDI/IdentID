@@ -14,7 +14,7 @@
  * governing permissions and limitations under the Licence.
  */
 
-package com.k869.identid.theme.templates
+package com.k689.identid.theme.templates
 
 /**
  * Class that contains all dimension values that should be used.

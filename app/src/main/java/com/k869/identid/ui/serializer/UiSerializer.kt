@@ -14,10 +14,10 @@
  * governing permissions and limitations under the Licence.
  */
 
-package com.k869.identid.ui.serializer
+package com.k689.identid.ui.serializer
 
-import com.k869.identid.extension.business.decodeFromBase64
-import com.k869.identid.extension.business.encodeToBase64
+import com.k689.identid.extension.business.decodeFromBase64
+import com.k689.identid.extension.business.encodeToBase64
 
 interface UiSerializer {
     fun <M : UiSerializable> toBase64(

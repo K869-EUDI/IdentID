@@ -14,7 +14,7 @@
  * governing permissions and limitations under the Licence.
  */
 
-package com.k869.identid.ui.component.wrap
+package com.k689.identid.ui.component.wrap
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -29,17 +29,17 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
-import com.k869.identid.ui.component.AppIcons
-import com.k869.identid.ui.component.ClickableArea
-import com.k869.identid.ui.component.ListItem
-import com.k869.identid.ui.component.ListItemDataUi
-import com.k869.identid.ui.component.ListItemLeadingContentDataUi
-import com.k869.identid.ui.component.ListItemMainContentDataUi
-import com.k869.identid.ui.component.ListItemTrailingContentDataUi
-import com.k869.identid.ui.component.preview.PreviewTheme
-import com.k869.identid.ui.component.preview.TextLengthPreviewProvider
-import com.k869.identid.ui.component.preview.ThemeModePreviews
-import com.k869.identid.ui.component.utils.SPACING_MEDIUM
+import com.k689.identid.ui.component.AppIcons
+import com.k689.identid.ui.component.ClickableArea
+import com.k689.identid.ui.component.ListItem
+import com.k689.identid.ui.component.ListItemDataUi
+import com.k689.identid.ui.component.ListItemLeadingContentDataUi
+import com.k689.identid.ui.component.ListItemMainContentDataUi
+import com.k689.identid.ui.component.ListItemTrailingContentDataUi
+import com.k689.identid.ui.component.preview.PreviewTheme
+import com.k689.identid.ui.component.preview.TextLengthPreviewProvider
+import com.k689.identid.ui.component.preview.ThemeModePreviews
+import com.k689.identid.ui.component.utils.SPACING_MEDIUM
 
 @Composable
 fun WrapListItem(

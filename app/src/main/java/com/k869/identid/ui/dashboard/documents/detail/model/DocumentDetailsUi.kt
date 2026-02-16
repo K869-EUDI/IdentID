@@ -14,11 +14,11 @@
  * governing permissions and limitations under the Licence.
  */
 
-package com.k869.identid.ui.dashboard.documents.detail.model
+package com.k689.identid.ui.dashboard.documents.detail.model
 
-import com.k869.identid.model.core.DocumentIdentifier
+import com.k689.identid.model.core.DocumentIdentifier
 import eu.europa.ec.eudi.wallet.document.DocumentId
-import com.k869.identid.ui.component.wrap.ExpandableListItemUi
+import com.k689.identid.ui.component.wrap.ExpandableListItemUi
 
 enum class DocumentIssuanceStateUi {
     Issued, Pending, Failed, Expired, Revoked

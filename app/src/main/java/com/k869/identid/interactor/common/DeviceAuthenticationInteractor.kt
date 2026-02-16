@@ -14,13 +14,13 @@
  * governing permissions and limitations under the Licence.
  */
 
-package com.k869.identid.interactor.common
+package com.k689.identid.interactor.common
 
 import android.content.Context
-import com.k869.identid.controller.authentication.BiometricsAvailability
-import com.k869.identid.controller.authentication.DeviceAuthenticationController
-import com.k869.identid.controller.authentication.DeviceAuthenticationResult
-import com.k869.identid.model.authentication.BiometricCrypto
+import com.k689.identid.controller.authentication.BiometricsAvailability
+import com.k689.identid.controller.authentication.DeviceAuthenticationController
+import com.k689.identid.controller.authentication.DeviceAuthenticationResult
+import com.k689.identid.model.authentication.BiometricCrypto
 
 interface DeviceAuthenticationInteractor {
     fun getBiometricsAvailability(listener: (BiometricsAvailability) -> Unit)
