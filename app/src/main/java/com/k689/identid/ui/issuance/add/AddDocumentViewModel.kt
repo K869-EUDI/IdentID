@@ -76,6 +76,7 @@ data class State(
     val options: List<Pair<String, List<AddDocumentUi>>> = emptyList(),
     val noOptions: Boolean = false,
     val showFooterScanner: Boolean,
+    val searchQuery: String = "",
 ) : ViewState
 
 sealed class Event : ViewEvent {
@@ -87,6 +88,7 @@ sealed class Event : ViewEvent {
     data class OnDynamicPresentation(val uri: String) : Event()
     data object Finish : Event()
     data object DismissError : Event()
+    data class OnSearchQueryChanged(val query: String) : Event()
     data class IssueDocument(
         val issuanceMethod: IssuanceMethod,
         val issuerId: String,
@@ -198,6 +200,9 @@ class AddDocumentViewModel(
 
             is Event.GoToQrScan -> {
                 navigateToQrScanScreen()
+            }
+            is Event.OnSearchQueryChanged -> {
+                setState { copy(searchQuery = event.query) }
             }
         }
     }

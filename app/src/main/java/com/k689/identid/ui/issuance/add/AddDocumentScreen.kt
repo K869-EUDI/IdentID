@@ -21,21 +21,24 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.calculateEndPadding
 import androidx.compose.foundation.layout.calculateStartPadding
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.itemsIndexed
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.ElevatedCard
+import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextField
+import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -43,23 +46,28 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.platform.testTag
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.compose.LocalLifecycleOwner
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
+import com.k689.identid.R
 import com.k689.identid.config.IssuanceFlowType
 import com.k689.identid.config.IssuanceUiConfig
 import com.k689.identid.controller.core.IssuanceMethod
-import com.k689.identid.util.core.CoreActions
-import com.k689.identid.ui.issuance.add.model.AddDocumentUi
-import com.k689.identid.util.issuance.TestTag
-import com.k689.identid.R
+import com.k689.identid.extension.ui.finish
+import com.k689.identid.extension.ui.getPendingDeepLink
+import com.k689.identid.extension.ui.paddingFrom
+import com.k689.identid.navigation.IssuanceScreens
+import com.k689.identid.navigation.helper.handleDeepLinkAction
 import com.k689.identid.ui.component.AppIcons
 import com.k689.identid.ui.component.ErrorInfo
 import com.k689.identid.ui.component.ListItemDataUi
@@ -80,14 +88,11 @@ import com.k689.identid.ui.component.wrap.ButtonConfig
 import com.k689.identid.ui.component.wrap.ButtonType
 import com.k689.identid.ui.component.wrap.TextConfig
 import com.k689.identid.ui.component.wrap.WrapButton
-import com.k689.identid.ui.component.wrap.WrapImage
 import com.k689.identid.ui.component.wrap.WrapListItem
 import com.k689.identid.ui.component.wrap.WrapText
-import com.k689.identid.extension.ui.finish
-import com.k689.identid.extension.ui.getPendingDeepLink
-import com.k689.identid.extension.ui.paddingFrom
-import com.k689.identid.navigation.IssuanceScreens
-import com.k689.identid.navigation.helper.handleDeepLinkAction
+import com.k689.identid.ui.issuance.add.model.AddDocumentUi
+import com.k689.identid.util.core.CoreActions
+import com.k689.identid.util.issuance.TestTag
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.collect
@@ -97,7 +102,7 @@ import kotlinx.coroutines.flow.receiveAsFlow
 @Composable
 fun AddDocumentScreen(
     navController: NavController,
-    viewModel: AddDocumentViewModel
+    viewModel: AddDocumentViewModel,
 ) {
     val state: State by viewModel.viewState.collectAsStateWithLifecycle()
     val context = LocalContext.current
@@ -107,24 +112,31 @@ fun AddDocumentScreen(
         navigatableAction = state.navigatableAction,
         onBack = state.onBackAction,
         contentErrorConfig = state.error,
-        broadcastAction = BroadcastAction(
-            intentFilters = listOf(
-                CoreActions.VCI_RESUME_ACTION,
-                CoreActions.VCI_DYNAMIC_PRESENTATION
-            ),
-            callback = {
-                when (it?.action) {
-                    CoreActions.VCI_RESUME_ACTION -> it.extras?.getString("uri")?.let { link ->
-                        viewModel.setEvent(Event.OnResumeIssuance(link))
-                    }
-
-                    CoreActions.VCI_DYNAMIC_PRESENTATION -> it.extras?.getString("uri")
-                        ?.let { link ->
-                            viewModel.setEvent(Event.OnDynamicPresentation(link))
+        broadcastAction =
+            BroadcastAction(
+                intentFilters =
+                    listOf(
+                        CoreActions.VCI_RESUME_ACTION,
+                        CoreActions.VCI_DYNAMIC_PRESENTATION,
+                    ),
+                callback = {
+                    when (it?.action) {
+                        CoreActions.VCI_RESUME_ACTION -> {
+                            it.extras?.getString("uri")?.let { link ->
+                                viewModel.setEvent(Event.OnResumeIssuance(link))
+                            }
                         }
-                }
-            }
-        )
+
+                        CoreActions.VCI_DYNAMIC_PRESENTATION -> {
+                            it.extras
+                                ?.getString("uri")
+                                ?.let { link ->
+                                    viewModel.setEvent(Event.OnDynamicPresentation(link))
+                                }
+                        }
+                    }
+                },
+            ),
     ) { paddingValues ->
         Content(
             state = state,
@@ -132,7 +144,10 @@ fun AddDocumentScreen(
             onEventSend = { viewModel.setEvent(it) },
             onNavigationRequested = { navigationEffect ->
                 when (navigationEffect) {
-                    is Effect.Navigation.Pop -> navController.popBackStack()
+                    is Effect.Navigation.Pop -> {
+                        navController.popBackStack()
+                    }
+
                     is Effect.Navigation.SwitchScreen -> {
                         navController.navigate(navigationEffect.screenRoute) {
                             popUpTo(IssuanceScreens.AddDocument.screenRoute) {
@@ -141,12 +156,17 @@ fun AddDocumentScreen(
                         }
                     }
 
-                    is Effect.Navigation.Finish -> context.finish()
-                    is Effect.Navigation.OpenDeepLinkAction -> handleDeepLinkAction(
-                        navController,
-                        navigationEffect.deepLinkUri,
-                        navigationEffect.arguments
-                    )
+                    is Effect.Navigation.Finish -> {
+                        context.finish()
+                    }
+
+                    is Effect.Navigation.OpenDeepLinkAction -> {
+                        handleDeepLinkAction(
+                            navController,
+                            navigationEffect.deepLinkUri,
+                            navigationEffect.arguments,
+                        )
+                    }
                 }
             },
             paddingValues = paddingValues,
@@ -156,14 +176,14 @@ fun AddDocumentScreen(
 
     LifecycleEffect(
         lifecycleOwner = LocalLifecycleOwner.current,
-        lifecycleEvent = Lifecycle.Event.ON_PAUSE
+        lifecycleEvent = Lifecycle.Event.ON_PAUSE,
     ) {
         viewModel.setEvent(Event.OnPause)
     }
 
     LifecycleEffect(
         lifecycleOwner = LocalLifecycleOwner.current,
-        lifecycleEvent = Lifecycle.Event.ON_RESUME
+        lifecycleEvent = Lifecycle.Event.ON_RESUME,
     ) {
         viewModel.setEvent(Event.Init(context.getPendingDeepLink()))
     }
@@ -176,18 +196,19 @@ private fun Content(
     onEventSend: (Event) -> Unit,
     onNavigationRequested: (Effect.Navigation) -> Unit,
     paddingValues: PaddingValues,
-    context: Context
+    context: Context,
 ) {
     val layoutDirection = LocalLayoutDirection.current
 
     Column(
-        modifier = Modifier.fillMaxSize()
+        modifier = Modifier.fillMaxSize(),
     ) {
         MainContent(
-            modifier = Modifier
-                .fillMaxWidth()
-                .weight(1f)
-                .paddingFrom(paddingValues, bottom = false),
+            modifier =
+                Modifier
+                    .fillMaxWidth()
+                    .weight(1f)
+                    .paddingFrom(paddingValues, bottom = false),
             state = state,
             onEventSend = onEventSend,
             context = context,
@@ -195,28 +216,29 @@ private fun Content(
 
         if (state.showFooterScanner) {
             VSpacer.ExtraSmall()
-            Footer(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .clip(RoundedCornerShape(topStart = SIZE_LARGE.dp, topEnd = SIZE_LARGE.dp))
-                    .background(MaterialTheme.colorScheme.surfaceContainer)
-                    .padding(
-                        top = SPACING_MEDIUM.dp,
-                        start = paddingValues.calculateStartPadding(layoutDirection),
-                        end = paddingValues.calculateEndPadding(layoutDirection),
-                        bottom = paddingValues.calculateBottomPadding()
-                    ),
+            FloatingFooter(
+                modifier =
+                    Modifier
+                        .fillMaxWidth()
+                        .clip(RoundedCornerShape(topStart = SIZE_LARGE.dp, topEnd = SIZE_LARGE.dp))
+                        .padding(
+                            top = SPACING_MEDIUM.dp,
+                            start = paddingValues.calculateStartPadding(layoutDirection),
+                            end = paddingValues.calculateEndPadding(layoutDirection),
+                            bottom = paddingValues.calculateBottomPadding(),
+                        ),
                 onEventSend = onEventSend,
             )
         }
     }
 
     LaunchedEffect(Unit) {
-        effectFlow.onEach { effect ->
-            when (effect) {
-                is Effect.Navigation -> onNavigationRequested(effect)
-            }
-        }.collect()
+        effectFlow
+            .onEach { effect ->
+                when (effect) {
+                    is Effect.Navigation -> onNavigationRequested(effect)
+                }
+            }.collect()
     }
 }
 
@@ -228,38 +250,78 @@ private fun MainContent(
     context: Context,
 ) {
     Column(
-        modifier = modifier
+        modifier = modifier,
     ) {
         ContentTitle(
             modifier = Modifier.fillMaxWidth(),
             title = state.title,
             subtitle = state.subtitle,
+            titleStyle =
+                MaterialTheme.typography.headlineMedium.copy(
+                    fontWeight = FontWeight.Bold,
+                    color = MaterialTheme.colorScheme.onSurface,
+                ),
             subtitleTestTag = TestTag.AddDocumentScreen.SUBTITLE,
+        )
+
+        VSpacer.Medium()
+
+        TextField(
+            modifier =
+                Modifier
+                    .fillMaxWidth()
+                    .clip(CircleShape),
+            value = state.searchQuery,
+            onValueChange = { onEventSend(Event.OnSearchQueryChanged(it)) },
+            placeholder = { Text(stringResource(R.string.issuance_add_document_search_hint)) },
+            leadingIcon = {
+                AppIcons.Search.imageVector?.let {
+                    Icon(imageVector = it, contentDescription = null)
+                } ?: AppIcons.Search.resourceId?.let {
+                    Icon(painter = painterResource(id = it), contentDescription = null)
+                }
+            },
+            singleLine = true,
+            colors =
+                TextFieldDefaults.colors(
+                    focusedIndicatorColor = Color.Transparent,
+                    unfocusedIndicatorColor = Color.Transparent,
+                    disabledIndicatorColor = Color.Transparent,
+                    focusedContainerColor = MaterialTheme.colorScheme.surfaceContainerHigh,
+                    unfocusedContainerColor = MaterialTheme.colorScheme.surfaceContainerHigh,
+                ),
         )
 
         if (state.noOptions) {
             ErrorInfo(
                 modifier = Modifier.fillMaxSize(),
-                informativeText = stringResource(R.string.issuance_add_document_no_options)
+                informativeText = stringResource(R.string.issuance_add_document_no_options),
             )
         } else {
-
             VSpacer.Medium()
 
+            val filteredOptions =
+                state.options
+                    .map {
+                        it.first to
+                            it.second.filter { item ->
+                                (item.itemData.mainContentData as? ListItemMainContentDataUi.Text)?.text?.contains(state.searchQuery, ignoreCase = true) == true
+                            }
+                    }.filter { it.second.isNotEmpty() }
+
             Options(
-                options = state.options,
+                options = filteredOptions,
                 modifier = Modifier.fillMaxSize(),
-                footerIsShown = state.showFooterScanner,
                 onOptionClicked = { itemId, issuerId ->
                     onEventSend(
                         Event.IssueDocument(
                             issuanceMethod = IssuanceMethod.OPENID4VCI,
                             issuerId = issuerId,
                             configId = itemId,
-                            context = context
-                        )
+                            context = context,
+                        ),
                     )
-                }
+                },
             )
         }
     }
@@ -268,108 +330,123 @@ private fun MainContent(
 @Composable
 private fun Options(
     options: List<Pair<String, List<AddDocumentUi>>>,
-    footerIsShown: Boolean,
     modifier: Modifier = Modifier,
     onOptionClicked: (itemId: String, issuerId: String) -> Unit,
 ) {
-
     val listState = remember(options) { LazyListState() }
 
     LazyColumn(
         state = listState,
-        modifier = modifier
+        modifier = modifier,
+        verticalArrangement = Arrangement.spacedBy(SPACING_MEDIUM.dp),
+        contentPadding = PaddingValues(bottom = SPACING_LARGE.dp),
     ) {
-        options.forEachIndexed { sectionIndex, (issuerId, items) ->
+        options.forEachIndexed { _, (issuerId, items) ->
 
             stickyHeader(key = "hdr-$issuerId") {
                 WrapText(
-                    modifier = modifier
-                        .background(MaterialTheme.colorScheme.background)
-                        .padding(bottom = SPACING_MEDIUM.dp),
+                    modifier =
+                        Modifier
+                            .fillMaxWidth()
+                            .background(MaterialTheme.colorScheme.background),
                     text = issuerId,
-                    textConfig = TextConfig(
-                        style = MaterialTheme.typography.labelSmall,
-                        color = MaterialTheme.colorScheme.onSurfaceVariant,
-                    )
+                    textConfig =
+                        TextConfig(
+                            style =
+                                MaterialTheme.typography.titleMedium.copy(
+                                    fontWeight = FontWeight.Bold,
+                                    color = MaterialTheme.colorScheme.primary,
+                                ),
+                        ),
                 )
             }
 
             itemsIndexed(
                 items = items,
-                key = { _, item -> "$issuerId-${item.configurationId}" }
-            ) { index, item ->
-                val testTag = TestTag.AddDocumentScreen.optionItem(
-                    issuerId = issuerId,
-                    configId = item.configurationId
-                )
-                WrapListItem(
-                    modifier = Modifier
-                        .testTag(testTag)
-                        .fillMaxWidth(),
-                    item = item.itemData,
-                    mainContentVerticalPadding = SPACING_LARGE.dp,
-                    mainContentTextStyle = MaterialTheme.typography.titleMedium,
-                    onItemClick = { clicked ->
-                        onOptionClicked(clicked.itemId, issuerId)
-                    }
-                )
-                if (index < items.lastIndex) {
-                    Spacer(Modifier.height(SPACING_MEDIUM.dp))
+                key = { _, item -> "$issuerId-${item.configurationId}" },
+            ) { _, item ->
+                val testTag =
+                    TestTag.AddDocumentScreen.optionItem(
+                        issuerId = issuerId,
+                        configId = item.configurationId,
+                    )
+
+                ElevatedCard(
+                    modifier =
+                        Modifier
+                            .testTag(testTag)
+                            .fillMaxWidth(),
+                    shape = RoundedCornerShape(SIZE_LARGE.dp),
+                    colors =
+                        CardDefaults.elevatedCardColors(
+                            containerColor = MaterialTheme.colorScheme.surfaceContainer,
+                        ),
+                    onClick = {
+                        onOptionClicked(item.configurationId, issuerId)
+                    },
+                ) {
+                    WrapListItem(
+                        modifier = Modifier.fillMaxWidth(),
+                        item = item.itemData,
+                        mainContentVerticalPadding = SPACING_LARGE.dp,
+                        mainContentTextStyle = MaterialTheme.typography.titleMedium,
+                        onItemClick = {
+                            onOptionClicked(item.configurationId, issuerId)
+                        },
+                    )
                 }
             }
-
-            if (sectionIndex != options.lastIndex) {
-                item(key = "sep-$issuerId") { Spacer(Modifier.height(SPACING_MEDIUM.dp)) }
-            }
-        }
-
-        item(key = "footer-spacer") {
-            Spacer(
-                modifier = Modifier
-                    .padding(bottom = SPACING_MEDIUM.dp)
-                    .then(if (!footerIsShown) Modifier.navigationBarsPadding() else Modifier)
-            )
         }
     }
 }
 
-
 @Composable
-private fun Footer(
+private fun FloatingFooter(
     modifier: Modifier = Modifier,
     onEventSend: (Event) -> Unit,
 ) {
-    Column(
-        modifier = modifier,
-        verticalArrangement = Arrangement.spacedBy(SPACING_MEDIUM.dp),
-        horizontalAlignment = Alignment.CenterHorizontally
-    ) {
-        Text(
-            modifier = Modifier.fillMaxWidth(),
-            text = stringResource(R.string.issuance_add_document_scan_qr_footer_text),
-            style = MaterialTheme.typography.bodyMedium.copy(
-                color = MaterialTheme.colorScheme.onSurfaceVariant
+    ElevatedCard(
+        modifier = modifier.fillMaxWidth(),
+        shape = RoundedCornerShape(24.dp), // Pill-like shape
+        colors =
+            CardDefaults.elevatedCardColors(
+                containerColor = MaterialTheme.colorScheme.primaryContainer,
+                contentColor = MaterialTheme.colorScheme.onPrimaryContainer,
             ),
-            textAlign = TextAlign.Center
-        )
-
-        WrapImage(
-            iconData = AppIcons.AddDocumentFromQr
-        )
-
-        WrapButton(
-            modifier = Modifier.fillMaxWidth(),
-            buttonConfig = ButtonConfig(
-                type = ButtonType.SECONDARY,
-                buttonColors = ButtonDefaults.outlinedButtonColors(
-                    containerColor = MaterialTheme.colorScheme.surfaceContainerLowest
-                ),
-                onClick = {
-                    onEventSend(Event.GoToQrScan)
-                }
-            )
+        elevation = CardDefaults.elevatedCardElevation(defaultElevation = 6.dp),
+    ) {
+        Column(
+            modifier = Modifier.padding(16.dp),
+            verticalArrangement = Arrangement.spacedBy(12.dp),
+            horizontalAlignment = Alignment.CenterHorizontally,
         ) {
-            Text(text = stringResource(R.string.issuance_add_document_scan_qr_footer_button_text))
+            Text(
+                text = stringResource(R.string.issuance_add_document_scan_qr_footer_text),
+                style = MaterialTheme.typography.bodyLarge,
+                textAlign = TextAlign.Center,
+                fontWeight = FontWeight.Bold
+            )
+
+            WrapButton(
+                modifier = Modifier.fillMaxWidth(),
+                buttonConfig =
+                    ButtonConfig(
+                        type = ButtonType.PRIMARY, // Use Primary for action
+                        onClick = {
+                            onEventSend(Event.GoToQrScan)
+                        },
+                    ),
+            ) {
+                // We can add an icon here
+                AppIcons.QrScanner.resourceId?.let {
+                    Icon(
+                        painter = painterResource(id = it),
+                        contentDescription = null,
+                        modifier = Modifier.size(35.dp).padding(end = 8.dp),
+                    )
+                }
+                Text(text = stringResource(R.string.issuance_add_document_scan_qr_footer_button_text))
+            }
         }
     }
 }
@@ -379,54 +456,61 @@ private fun Footer(
 private fun IssuanceAddDocumentScreenPreview() {
     PreviewTheme {
         Content(
-            state = State(
-                issuanceConfig = IssuanceUiConfig(
-                    flowType = IssuanceFlowType.NoDocument
+            state =
+                State(
+                    issuanceConfig =
+                        IssuanceUiConfig(
+                            flowType = IssuanceFlowType.NoDocument,
+                        ),
+                    showFooterScanner = true,
+                    navigatableAction = ScreenNavigateAction.NONE,
+                    title = stringResource(R.string.issuance_add_document_title),
+                    subtitle = stringResource(R.string.issuance_add_document_subtitle),
+                    options =
+                        listOf(
+                            Pair(
+                                "issuer1",
+                                listOf(
+                                    AddDocumentUi(
+                                        credentialIssuerId = "issuer1",
+                                        configurationId = "configId1",
+                                        itemData =
+                                            ListItemDataUi(
+                                                itemId = "configId1",
+                                                mainContentData = ListItemMainContentDataUi.Text(text = "National ID"),
+                                                trailingContentData =
+                                                    ListItemTrailingContentDataUi.Icon(
+                                                        iconData = AppIcons.Add,
+                                                    ),
+                                            ),
+                                    ),
+                                ),
+                            ),
+                            Pair(
+                                "issuer2",
+                                listOf(
+                                    AddDocumentUi(
+                                        credentialIssuerId = "issuer2",
+                                        configurationId = "configId2",
+                                        itemData =
+                                            ListItemDataUi(
+                                                itemId = "configId2",
+                                                mainContentData = ListItemMainContentDataUi.Text(text = "Driving Licence"),
+                                                trailingContentData =
+                                                    ListItemTrailingContentDataUi.Icon(
+                                                        iconData = AppIcons.Add,
+                                                    ),
+                                            ),
+                                    ),
+                                ),
+                            ),
+                        ),
                 ),
-                showFooterScanner = true,
-                navigatableAction = ScreenNavigateAction.NONE,
-                title = stringResource(R.string.issuance_add_document_title),
-                subtitle = stringResource(R.string.issuance_add_document_subtitle),
-                options = listOf(
-                    Pair(
-                        "issuer1",
-                        listOf(
-                            AddDocumentUi(
-                                credentialIssuerId = "issuer1",
-                                configurationId = "configId1",
-                                itemData = ListItemDataUi(
-                                    itemId = "configId1",
-                                    mainContentData = ListItemMainContentDataUi.Text(text = "National ID"),
-                                    trailingContentData = ListItemTrailingContentDataUi.Icon(
-                                        iconData = AppIcons.Add
-                                    )
-                                )
-                            )
-                        )
-                    ),
-                    Pair(
-                        "issuer2",
-                        listOf(
-                            AddDocumentUi(
-                                credentialIssuerId = "issuer2",
-                                configurationId = "configId2",
-                                itemData = ListItemDataUi(
-                                    itemId = "configId2",
-                                    mainContentData = ListItemMainContentDataUi.Text(text = "Driving Licence"),
-                                    trailingContentData = ListItemTrailingContentDataUi.Icon(
-                                        iconData = AppIcons.Add
-                                    )
-                                )
-                            )
-                        )
-                    )
-                )
-            ),
             effectFlow = Channel<Effect>().receiveAsFlow(),
             onEventSend = {},
             onNavigationRequested = {},
             paddingValues = PaddingValues(all = SPACING_LARGE.dp),
-            context = LocalContext.current
+            context = LocalContext.current,
         )
     }
 }
@@ -436,56 +520,64 @@ private fun IssuanceAddDocumentScreenPreview() {
 private fun DashboardAddDocumentScreenPreview() {
     PreviewTheme {
         Content(
-            state = State(
-                issuanceConfig = IssuanceUiConfig(
-                    flowType = IssuanceFlowType.ExtraDocument(
-                        formatType = null
-                    )
+            state =
+                State(
+                    issuanceConfig =
+                        IssuanceUiConfig(
+                            flowType =
+                                IssuanceFlowType.ExtraDocument(
+                                    formatType = null,
+                                ),
+                        ),
+                    showFooterScanner = false,
+                    navigatableAction = ScreenNavigateAction.BACKABLE,
+                    title = stringResource(R.string.issuance_add_document_title),
+                    subtitle = stringResource(R.string.issuance_add_document_subtitle),
+                    options =
+                        listOf(
+                            Pair(
+                                "issuer1",
+                                listOf(
+                                    AddDocumentUi(
+                                        credentialIssuerId = "issuer1",
+                                        configurationId = "configId1",
+                                        itemData =
+                                            ListItemDataUi(
+                                                itemId = "configId1",
+                                                mainContentData = ListItemMainContentDataUi.Text(text = "National ID"),
+                                                trailingContentData =
+                                                    ListItemTrailingContentDataUi.Icon(
+                                                        iconData = AppIcons.Add,
+                                                    ),
+                                            ),
+                                    ),
+                                ),
+                            ),
+                            Pair(
+                                "issuer2",
+                                listOf(
+                                    AddDocumentUi(
+                                        credentialIssuerId = "issuer2",
+                                        configurationId = "configId2",
+                                        itemData =
+                                            ListItemDataUi(
+                                                itemId = "configId2",
+                                                mainContentData = ListItemMainContentDataUi.Text(text = "Driving Licence"),
+                                                trailingContentData =
+                                                    ListItemTrailingContentDataUi.Icon(
+                                                        iconData = AppIcons.Add,
+                                                    ),
+                                            ),
+                                    ),
+                                ),
+                            ),
+                        ),
                 ),
-                showFooterScanner = false,
-                navigatableAction = ScreenNavigateAction.BACKABLE,
-                title = stringResource(R.string.issuance_add_document_title),
-                subtitle = stringResource(R.string.issuance_add_document_subtitle),
-                options = listOf(
-                    Pair(
-                        "issuer1",
-                        listOf(
-                            AddDocumentUi(
-                                credentialIssuerId = "issuer1",
-                                configurationId = "configId1",
-                                itemData = ListItemDataUi(
-                                    itemId = "configId1",
-                                    mainContentData = ListItemMainContentDataUi.Text(text = "National ID"),
-                                    trailingContentData = ListItemTrailingContentDataUi.Icon(
-                                        iconData = AppIcons.Add
-                                    )
-                                )
-                            )
-                        )
-                    ),
-                    Pair(
-                        "issuer2",
-                        listOf(
-                            AddDocumentUi(
-                                credentialIssuerId = "issuer2",
-                                configurationId = "configId2",
-                                itemData = ListItemDataUi(
-                                    itemId = "configId2",
-                                    mainContentData = ListItemMainContentDataUi.Text(text = "Driving Licence"),
-                                    trailingContentData = ListItemTrailingContentDataUi.Icon(
-                                        iconData = AppIcons.Add
-                                    )
-                                )
-                            )
-                        )
-                    )
-                )
-            ),
             effectFlow = Channel<Effect>().receiveAsFlow(),
             onEventSend = {},
             onNavigationRequested = {},
             paddingValues = PaddingValues(all = SPACING_LARGE.dp),
-            context = LocalContext.current
+            context = LocalContext.current,
         )
     }
 }
