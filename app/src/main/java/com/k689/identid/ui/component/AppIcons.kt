@@ -177,6 +177,20 @@ object AppIcons {
             imageVector = null,
         )
 
+    val CardLogo: IconDataUi =
+        IconDataUi(
+            resourceId = R.drawable.ic_app_icon,
+            contentDescriptionId = R.string.content_description_card_logo_icon,
+            imageVector = null,
+        )
+
+    val CardLogoText: IconDataUi =
+        IconDataUi(
+            resourceId = R.drawable.ic_identid_text,
+            contentDescriptionId = R.string.content_description_card_logo_text_icon,
+            imageVector = null,
+        )
+
     val LogoPlain: IconDataUi =
         IconDataUi(
             resourceId = R.drawable.ic_logo_plain,
