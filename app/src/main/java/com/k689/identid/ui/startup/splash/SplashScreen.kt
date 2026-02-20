@@ -105,12 +105,6 @@ private fun Content(
         redCardVisibility.targetState = true
     }
 
-/*    val visibilityState =
-        remember {
-            MutableTransitionState(false).apply {
-                targetState = true
-            }
-        }*/
     Scaffold { paddingValues ->
         Box(
             Modifier
