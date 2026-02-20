@@ -50,11 +50,11 @@ fun AppIconAndText(
         verticalAlignment = Alignment.Top,
     ) {
         WrapImage(
-            modifier = Modifier.width(44.dp).height(32.dp),
+            modifier = Modifier.size(width = 44.dp, height = 32.dp),
             iconData = appIconAndTextData.appIcon,
         )
         WrapImage(
-            modifier = Modifier.width(73.dp).height(38.dp),
+            modifier = Modifier.size(width = 73.dp, height = 38.dp),
             iconData = appIconAndTextData.appText,
         )
     }
