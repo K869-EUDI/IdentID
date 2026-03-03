@@ -19,6 +19,7 @@ package com.k689.identid.ui.common.biometric
 import android.content.Context
 import android.net.Uri
 import androidx.lifecycle.viewModelScope
+import com.k689.identid.R
 import com.k689.identid.config.BiometricUiConfig
 import com.k689.identid.config.ConfigNavigation
 import com.k689.identid.config.FlowCompletion
@@ -31,6 +32,7 @@ import com.k689.identid.interactor.common.QuickPinInteractorPinValidPartialState
 import com.k689.identid.navigation.CommonScreens
 import com.k689.identid.navigation.helper.generateComposableArguments
 import com.k689.identid.navigation.helper.generateComposableNavigationLink
+import com.k689.identid.provider.resources.ResourceProvider
 import com.k689.identid.ui.component.content.ContentErrorConfig
 import com.k689.identid.ui.mvi.MviViewModel
 import com.k689.identid.ui.mvi.ViewEvent
@@ -57,6 +59,8 @@ sealed class Event : ViewEvent {
     data class OnQuickPinEntered(
         val quickPin: String,
     ) : Event()
+
+    data object OnMaxAttemptsReached : Event()
 }
 
 data class State(
@@ -69,6 +73,7 @@ data class State(
     val isBackable: Boolean = false,
     val notifyOnAuthenticationFailure: Boolean = true,
     val quickPinSize: Int = 6,
+    val authAttempts: Int = 0,
 ) : ViewState
 
 sealed class Effect : ViewSideEffect {
@@ -105,7 +110,12 @@ class BiometricViewModel(
     private val biometricInteractor: BiometricInteractor,
     private val uiSerializer: UiSerializer,
     private val biometricConfig: String,
+    private val resourceProvider: ResourceProvider,
 ) : MviViewModel<Event, State, Effect>() {
+    companion object {
+        const val MAX_AUTH_ATTEMPTS = 5
+    }
+
     private val biometricUiConfig
         get() = viewState.value.config
 
@@ -206,9 +216,18 @@ class BiometricViewModel(
 
             is Event.OnQuickPinEntered -> {
                 setState {
-                    copy(quickPin = event.quickPin, quickPinError = null)
+                    copy(quickPin = event.quickPin)
                 }
                 authorizeWithPin(event.quickPin)
+            }
+
+            is Event.OnMaxAttemptsReached -> {
+                setState {
+                    copy(
+                        quickPin = "",
+                        quickPinError = resourceProvider.getString(R.string.login_max_attempts_exceeded_error_message, "60"),
+                    )
+                }
             }
         }
     }
@@ -224,15 +243,22 @@ class BiometricViewModel(
                 .collect {
                     when (it) {
                         is QuickPinInteractorPinValidPartialState.Failed -> {
-                            setState {
-                                copy(
-                                    quickPinError = it.errorMessage,
-                                )
+                            val attemptCount = viewState.value.authAttempts + 1
+                            if (attemptCount >= MAX_AUTH_ATTEMPTS) {
+                                setEvent(Event.OnMaxAttemptsReached)
+                            } else {
+                                setState {
+                                    copy(
+                                        quickPinError = it.errorMessage,
+                                    )
+                                }
                             }
                         }
 
                         is QuickPinInteractorPinValidPartialState.Success -> {
-                            authenticationSuccess()
+                            if (viewState.value.authAttempts < MAX_AUTH_ATTEMPTS) {
+                                authenticationSuccess()
+                            }
                         }
                     }
                 }
@@ -247,6 +273,10 @@ class BiometricViewModel(
             when (it) {
                 is BiometricsAuthenticate.Success -> {
                     authenticationSuccess()
+                }
+
+                is BiometricsAuthenticate.Failed -> {
+                    // TODO: Add to add to max login attempts later
                 }
 
                 else -> {}

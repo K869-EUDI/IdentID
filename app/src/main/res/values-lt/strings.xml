@@ -125,6 +125,10 @@
     <string name="content_description_settings_icon">Nustatymai</string>
     <!--endregion-->
 
+    <!-- region Login Authentication -->
+    <string name="login_max_attempts_exceeded_error_message">Per daug kartų suvedėte neteisinga PIN kodą. Bandykite vėl už %1$d sekundžių.</string>
+    <!--endregion-->
+
     <!-- region Biometric prompt -->
     <string name="biometric_prompt_title">Biometrinis autentifikavimas</string>
     <string name="biometric_prompt_subtitle">Autentifikuokitės naudodami biometrinius duomenis</string>

@@ -133,6 +133,10 @@
     <string name="biometric_login_biometrics_not_enabled_subtitle">To access the EUDI Wallet you need to provide your PIN.</string>
     <!--endregion-->
 
+    <!-- region Login Authentication -->
+    <string name="login_max_attempts_exceeded_error_message">Maximum number of attempts exceeded. Please try again in %1$d seconds.</string>
+    <!--endregion-->
+
     <!-- region Biometrics -->
     <string name="biometric_no_hardware">Your device does not support biometric authentication</string>
     <string name="biometric_unknown_error">Something went wrong initializing biometric authentication. Please try again</string>
