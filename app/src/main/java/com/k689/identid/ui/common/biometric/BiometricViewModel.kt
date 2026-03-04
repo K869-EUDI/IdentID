@@ -216,7 +216,7 @@ class BiometricViewModel(
 
             is Event.OnQuickPinEntered -> {
                 setState {
-                    copy(quickPin = event.quickPin)
+                    copy(quickPin = event.quickPin, error = error)
                 }
                 authorizeWithPin(event.quickPin)
             }
@@ -236,6 +236,9 @@ class BiometricViewModel(
         if (pin.length != viewState.value.quickPinSize) {
             return
         }
+        if (viewState.value.authAttempts >= MAX_AUTH_ATTEMPTS) {
+            return
+        }
 
         viewModelScope.launch {
             biometricInteractor
@@ -243,13 +246,14 @@ class BiometricViewModel(
                 .collect {
                     when (it) {
                         is QuickPinInteractorPinValidPartialState.Failed -> {
-                            val attemptCount = viewState.value.authAttempts + 1
-                            if (attemptCount >= MAX_AUTH_ATTEMPTS) {
+                            val authAttempts = viewState.value.authAttempts + 1
+                            if (authAttempts >= MAX_AUTH_ATTEMPTS) {
                                 setEvent(Event.OnMaxAttemptsReached)
                             } else {
                                 setState {
                                     copy(
-                                        quickPinError = it.errorMessage,
+                                        quickPinError = resourceProvider.getString(R.string.login_pin_invalid_error, MAX_AUTH_ATTEMPTS - authAttempts),
+                                        authAttempts = authAttempts + 1,
                                     )
                                 }
                             }

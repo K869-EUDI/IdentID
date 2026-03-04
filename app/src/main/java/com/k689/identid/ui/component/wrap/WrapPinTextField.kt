@@ -88,6 +88,7 @@ fun WrapPinTextField(
             focusedBorderColor = MaterialTheme.colorScheme.primary,
             unfocusedBorderColor = MaterialTheme.colorScheme.outlineVariant,
         ),
+    enabled: Boolean = true,
 ) {
     fun List<FocusRequester>.requestFocus(index: Int) {
         this.elementAtOrNull(index)?.requestFocus()
@@ -148,6 +149,7 @@ fun WrapPinTextField(
                 for (currentTextField in fieldsRange) {
                     DisableSelection {
                         OutlinedTextField(
+                            enabled = enabled,
                             modifier =
                                 Modifier
                                     .testTag(TestTag.pinTextField(currentTextField))
@@ -162,6 +164,7 @@ fun WrapPinTextField(
                                             .wrapContentSize(),
                                     ).then(
                                         Modifier.onKeyEvent { keyEvent ->
+                                            if (!enabled) return@onKeyEvent true
                                             if (keyEvent.key == Key.Backspace) {
                                                 if (textFieldStateList[currentTextField].value.isNotEmpty()) {
                                                     textFieldStateList[currentTextField].value = ""
@@ -198,6 +201,7 @@ fun WrapPinTextField(
                             isError = hasError,
                             singleLine = true,
                             onValueChange = { newText: String ->
+                                if (!enabled) return@OutlinedTextField
 
                                 if (
                                     !newText.isDigitsOnly() ||

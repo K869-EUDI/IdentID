@@ -152,7 +152,8 @@
     <!--endregion-->
 
     <!-- region Pin -->
-    <string name="quick_pin_invalid_error">Neteisingas PIN kodas</string>
+    <string name="login_pin_invalid_error">Neteisingas PIN kodas. Liko %1$d bandymų.</string>
+    <string name="quick_pin_invalid_error">Netinkamas PIN kodas.</string>
     <string name="quick_pin_numerical_rule_invalid_error_message">Leidžiamos tik skaitinės reikšmės</string>
     <string name="quick_pin_non_match">PIN kodai nesutampa</string>
 

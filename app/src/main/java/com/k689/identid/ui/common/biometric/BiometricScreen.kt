@@ -368,6 +368,7 @@ private fun PinFieldLayout(
         visualTransformation = PasswordVisualTransformation(),
         pinWidth = 42.dp,
         focusOnCreate = !state.userBiometricsAreEnabled,
+        enabled = state.authAttempts < BiometricViewModel.MAX_AUTH_ATTEMPTS,
     )
 }
 

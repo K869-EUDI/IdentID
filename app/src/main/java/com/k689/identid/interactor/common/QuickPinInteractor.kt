@@ -148,6 +148,6 @@ sealed class QuickPinInteractorPinValidPartialState {
     data object Success : QuickPinInteractorPinValidPartialState()
 
     data class Failed(
-        val errorMessage: String,
+        val errorMessage: String?,
     ) : QuickPinInteractorPinValidPartialState()
 }

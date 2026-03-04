@@ -152,7 +152,8 @@
     <!--endregion-->
 
     <!-- region Pin -->
-    <string name="quick_pin_invalid_error">Invalid pin</string>
+    <string name="login_pin_invalid_error">Invalid pin. You have %1$d attempts left.</string>
+    <string name="quick_pin_invalid_error">Invalid pin.</string>
     <string name="quick_pin_numerical_rule_invalid_error_message">Only numerical values are allowed</string>
     <string name="quick_pin_non_match">Pins do not match</string>
 

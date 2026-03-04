@@ -238,7 +238,7 @@ class PinViewModel(
                         is QuickPinInteractorPinValidPartialState.Failed -> {
                             setState {
                                 copy(
-                                    quickPinError = it.errorMessage,
+                                    quickPinError = resourceProvider.getString(R.string.quick_pin_invalid_error),
                                 )
                             }
                         }
