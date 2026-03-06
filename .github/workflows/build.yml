@@ -12,6 +12,8 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
+    permissions:
+      contents: write
 
     steps:
       - uses: actions/checkout@v6
@@ -50,3 +52,15 @@ jobs:
         with:
           name: apk-release
           path: app/build/outputs/apk/release/app-release-unsigned.apk
+
+      # Create pre-release on push to main
+      - name: Create Pre-Release
+        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: build-${{ env.date_today }}-${{ github.run_number }}
+          name: Build ${{ env.date_today }} (#${{ github.run_number }})
+          prerelease: true
+          generate_release_notes: true
+          files: |
+            app/build/outputs/apk/debug/app-debug.apk
