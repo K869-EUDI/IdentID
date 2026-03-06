@@ -116,6 +116,20 @@ sealed class IssuanceScreens {
     )
 }
 
+sealed class TransferScreens {
+    data object MoveWallet : Screen(name = "TRANSFER_MOVE_WALLET")
+
+    data object MoveWalletApproval : Screen(name = "TRANSFER_MOVE_WALLET_APPROVAL")
+
+    data object ReceiveWallet : Screen(name = "TRANSFER_RECEIVE_WALLET")
+
+    data object ReceiveWalletNfc : Screen(name = "TRANSFER_RECEIVE_WALLET_NFC")
+
+    data object ReceiveWalletQr : Screen(name = "TRANSFER_RECEIVE_WALLET_QR")
+
+    data object ReceiveWalletDocumentList : Screen(name = "TRANSFER_RECEIVE_WALLET_DOCUMENT_LIST")
+}
+
 sealed class ModuleRoute(
     val route: String,
 ) : NavigatableItem {
@@ -130,4 +144,6 @@ sealed class ModuleRoute(
     data object ProximityModule : ModuleRoute("PROXIMITY_MODULE")
 
     data object IssuanceModule : ModuleRoute("ISSUANCE_MODULE")
+
+    data object TransferModule : ModuleRoute("TRANSFER_MODULE")
 }

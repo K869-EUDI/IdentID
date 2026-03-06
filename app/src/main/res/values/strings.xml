@@ -231,6 +231,10 @@
     <string name="dashboard_side_menu_option_change_pin_id">changePinId</string>
     <string name="dashboard_side_menu_option_settings">Settings</string>
     <string name="dashboard_side_menu_option_settings_id">settingsId</string>
+    <string name="dashboard_side_menu_option_move_wallet">Move wallet to new device</string>
+    <string name="dashboard_side_menu_option_move_wallet_id">moveWalletId</string>
+    <string name="dashboard_side_menu_option_receive_wallet">Receive wallet from device</string>
+    <string name="dashboard_side_menu_option_receive_wallet_id">receiveWalletId</string>
     <!--endregion-->
 
     <!-- region Settings Screen -->
@@ -484,6 +488,45 @@
     <string name="transaction_category_today">TODAY</string>
     <string name="transaction_category_this_week">THIS WEEK</string>
     <string name="transaction_category_month_year">MONTH</string>
+    <!--endregion-->
+
+    <!-- region Wallet Transfer -->
+    <string name="transfer_side_menu_move_wallet">Move wallet to new device</string>
+    <string name="transfer_side_menu_receive_wallet">Receive wallet from device</string>
+
+    <string name="transfer_move_wallet_title">Move Wallet</string>
+    <string name="transfer_move_wallet_subtitle">Show this QR code on the new device to start the transfer</string>
+    <string name="transfer_move_wallet_use_nfc">Or use NFC</string>
+    <string name="transfer_move_wallet_hold_near_device">Hold devices near each other</string>
+
+    <string name="transfer_approval_title">Confirm Transfer</string>
+    <string name="transfer_approval_subtitle">Review the documents that will be transferred to the new device and enter your PIN to confirm</string>
+    <string name="transfer_approval_pin_label">Enter PIN</string>
+    <string name="transfer_approval_pin_error">Invalid PIN</string>
+    <string name="transfer_approval_confirm_button" tools:ignore="ButtonCase">CONFIRM TRANSFER</string>
+    <string name="transfer_approval_pid_label">Personal ID</string>
+
+    <string name="transfer_receive_title">Receive Wallet</string>
+    <string name="transfer_receive_subtitle">Choose how to connect to the other device</string>
+    <string name="transfer_receive_scan_qr">Scan QR Code</string>
+    <string name="transfer_receive_use_nfc">Use NFC</string>
+
+    <string name="transfer_receive_qr_title">Scan QR Code</string>
+    <string name="transfer_receive_qr_subtitle">Point your camera at the QR code on the other device</string>
+    <string name="transfer_receive_qr_permission_needed">Camera permission is needed to scan QR codes</string>
+
+    <string name="transfer_receive_nfc_title">NFC Transfer</string>
+    <string name="transfer_receive_nfc_subtitle">Hold the devices near each other to start the transfer</string>
+    <string name="transfer_receive_nfc_hold_devices">Hold devices close together</string>
+
+    <string name="transfer_document_list_title">Documents Found</string>
+    <string name="transfer_document_list_subtitle">The following documents will be re-issued on this device</string>
+    <string name="transfer_document_list_import_button" tools:ignore="ButtonCase">IMPORT DOCUMENTS</string>
+
+    <string name="transfer_import_complete_title">Transfer Complete</string>
+    <string name="transfer_import_complete_subtitle">Your documents have been processed</string>
+    <string name="transfer_import_status_success">Successfully imported</string>
+    <string name="transfer_import_done_button" tools:ignore="ButtonCase">DONE</string>
     <!--endregion-->
 
 </resources>

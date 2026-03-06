@@ -26,4 +26,6 @@ data class SideMenuItemUi(
 enum class SideMenuTypeUi {
     CHANGE_PIN,
     SETTINGS,
+    MOVE_WALLET,
+    RECEIVE_WALLET,
 }

@@ -19,6 +19,36 @@
 
     <uses-permission android:name="android.permission.NFC" />
     <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.CAMERA" />
+    <uses-permission android:name="android.permission.HIDE_OVERLAY_WINDOWS" />
+
+    <!-- Nearby Connections: legacy Bluetooth (API ≤ 30) -->
+    <uses-permission
+        android:name="android.permission.BLUETOOTH"
+        android:maxSdkVersion="30" />
+    <uses-permission
+        android:name="android.permission.BLUETOOTH_ADMIN"
+        android:maxSdkVersion="30" />
+
+    <!-- Nearby Connections: Bluetooth (API 31+) -->
+    <uses-permission android:name="android.permission.BLUETOOTH_SCAN" />
+    <uses-permission android:name="android.permission.BLUETOOTH_ADVERTISE" />
+    <uses-permission android:name="android.permission.BLUETOOTH_CONNECT" />
+
+    <!-- Nearby Connections: Wi-Fi -->
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
+    <uses-permission android:name="android.permission.CHANGE_WIFI_STATE" />
+
+    <!-- Nearby Connections: Wi-Fi (API 32+) -->
+    <uses-permission android:name="android.permission.NEARBY_WIFI_DEVICES" />
+
+    <!-- Nearby Connections: Location — play-services-nearby checks internally -->
+    <uses-permission
+        android:name="android.permission.ACCESS_COARSE_LOCATION"
+        tools:remove="android:maxSdkVersion" />
+    <uses-permission
+        android:name="android.permission.ACCESS_FINE_LOCATION"
+        tools:remove="android:maxSdkVersion" />
 
     <uses-feature
         android:name="android.hardware.nfc"
@@ -36,21 +66,9 @@
         android:name="android.hardware.bluetooth_le"
         android:required="true" />
 
-    <uses-permission
-        android:name="android.permission.BLUETOOTH"
-        android:maxSdkVersion="30" />
-
-    <uses-permission
-        android:name="android.permission.BLUETOOTH_ADMIN"
-        android:maxSdkVersion="30" />
-
-    <uses-permission android:name="android.permission.BLUETOOTH_SCAN" />
-    <uses-permission android:name="android.permission.BLUETOOTH_ADVERTISE" />
-    <uses-permission android:name="android.permission.BLUETOOTH_CONNECT" />
-    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
-    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
-    <uses-permission android:name="android.permission.CAMERA" />
-    <uses-permission android:name="android.permission.HIDE_OVERLAY_WINDOWS" />
+    <uses-feature
+        android:name="android.hardware.wifi.aware"
+        android:required="false" />
 
     <application
         android:name="com.k689.identid.app.Application"

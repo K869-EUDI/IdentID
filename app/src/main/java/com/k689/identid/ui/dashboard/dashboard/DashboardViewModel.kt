@@ -31,6 +31,7 @@ import com.k689.identid.model.common.PinFlow
 import com.k689.identid.model.core.RevokedDocumentDataDomain
 import com.k689.identid.navigation.CommonScreens
 import com.k689.identid.navigation.DashboardScreens
+import com.k689.identid.navigation.TransferScreens
 import com.k689.identid.navigation.helper.DeepLinkType
 import com.k689.identid.navigation.helper.generateComposableArguments
 import com.k689.identid.navigation.helper.generateComposableNavigationLink
@@ -282,6 +283,16 @@ class DashboardViewModel(
             SideMenuTypeUi.SETTINGS -> {
                 hideSideMenu()
                 setEffect { Effect.Navigation.SwitchScreen(screenRoute = DashboardScreens.Settings.screenRoute) }
+            }
+
+            SideMenuTypeUi.MOVE_WALLET -> {
+                hideSideMenu()
+                setEffect { Effect.Navigation.SwitchScreen(screenRoute = TransferScreens.MoveWallet.screenRoute) }
+            }
+
+            SideMenuTypeUi.RECEIVE_WALLET -> {
+                hideSideMenu()
+                setEffect { Effect.Navigation.SwitchScreen(screenRoute = TransferScreens.ReceiveWallet.screenRoute) }
             }
         }
     }

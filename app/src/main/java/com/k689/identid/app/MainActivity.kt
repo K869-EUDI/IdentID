@@ -25,6 +25,7 @@ import com.k689.identid.navigation.routes.issuance.featureIssuanceGraph
 import com.k689.identid.navigation.routes.presentation.presentationGraph
 import com.k689.identid.navigation.routes.proximity.featureProximityGraph
 import com.k689.identid.navigation.routes.startup.featureStartupGraph
+import com.k689.identid.navigation.routes.transfer.featureTransferGraph
 import com.k689.identid.ui.container.EudiComponentActivity
 
 class MainActivity : EudiComponentActivity() {
@@ -39,6 +40,7 @@ class MainActivity : EudiComponentActivity() {
                 presentationGraph(it)
                 featureProximityGraph(it)
                 featureIssuanceGraph(it)
+                featureTransferGraph(it)
             }
         }
     }
