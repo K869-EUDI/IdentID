@@ -28,6 +28,6 @@ class ConfigLogicImpl(
     override val rqesConfig: EudiRQESUiConfig
         get() = RQESConfigImpl(context)
 
-    override val changelogUrl: String?
+    override val changelogUrl: String
         get() = "https://github.com/Skaitmenines-tapatybes-dekle/IdentID"
 }

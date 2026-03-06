@@ -78,5 +78,49 @@ class DashboardInteractorImpl(
                         ),
                 ),
             )
+
+            add(
+                SideMenuItemUi(
+                    type = SideMenuTypeUi.MOVE_WALLET,
+                    data =
+                        ListItemDataUi(
+                            itemId = resourceProvider.getString(R.string.dashboard_side_menu_option_move_wallet_id),
+                            mainContentData =
+                                ListItemMainContentDataUi.Text(
+                                    text = resourceProvider.getString(R.string.dashboard_side_menu_option_move_wallet),
+                                ),
+                            leadingContentData =
+                                ListItemLeadingContentDataUi.Icon(
+                                    iconData = AppIcons.OpenNew,
+                                ),
+                            trailingContentData =
+                                ListItemTrailingContentDataUi.Icon(
+                                    iconData = AppIcons.KeyboardArrowRight,
+                                ),
+                        ),
+                ),
+            )
+
+            add(
+                SideMenuItemUi(
+                    type = SideMenuTypeUi.RECEIVE_WALLET,
+                    data =
+                        ListItemDataUi(
+                            itemId = resourceProvider.getString(R.string.dashboard_side_menu_option_receive_wallet_id),
+                            mainContentData =
+                                ListItemMainContentDataUi.Text(
+                                    text = resourceProvider.getString(R.string.dashboard_side_menu_option_receive_wallet),
+                                ),
+                            leadingContentData =
+                                ListItemLeadingContentDataUi.Icon(
+                                    iconData = AppIcons.Download,
+                                ),
+                            trailingContentData =
+                                ListItemTrailingContentDataUi.Icon(
+                                    iconData = AppIcons.KeyboardArrowRight,
+                                ),
+                        ),
+                ),
+            )
         }
 }

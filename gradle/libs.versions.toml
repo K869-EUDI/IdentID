@@ -32,6 +32,7 @@ gson = "2.13.2"
 googlePhoneNumber = "9.0.25"
 zxing = "3.5.4"
 eudiWalletCore = "0.24.0"
+gmsNearby = "19.3.0"
 cameraCore = "1.5.3"
 material3 = "1.4.0"
 material3-icons="1.7.8"
@@ -91,6 +92,7 @@ gson = { group = "com.google.code.gson", name = "gson", version.ref = "gson" }
 google-phonenumber = { group = "com.googlecode.libphonenumber", name = "libphonenumber", version.ref = "googlePhoneNumber" }
 zxing = { group = "com.google.zxing", name = "core", version.ref = "zxing" }
 eudi-wallet-core = { group = "eu.europa.ec.eudi", name = "eudi-lib-android-wallet-core", version.ref = "eudiWalletCore" }
+gms-nearby = { group = "com.google.android.gms", name = "play-services-nearby", version.ref = "gmsNearby" }
 timber = { group = "com.jakewharton.timber", name = "timber", version.ref = "timber" }
 treessence = { group = "com.github.bastienpaulfr", name = "Treessence", version.ref = "treessence" }
 rqes-ui-sdk = { group = "eu.europa.ec.eudi", name = "eudi-lib-android-rqes-ui", version.ref = "rqesUiSDK" }

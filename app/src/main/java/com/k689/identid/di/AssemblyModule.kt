@@ -29,6 +29,7 @@ import com.k689.identid.di.proximity.FeatureProximityModule
 import com.k689.identid.di.resources.LogicResourceModule
 import com.k689.identid.di.startup.FeatureStartupModule
 import com.k689.identid.di.storage.LogicStorageModule
+import com.k689.identid.di.transfer.FeatureTransferModule
 import com.k689.identid.di.ui.LogicUiModule
 import org.koin.android.ext.koin.androidContext
 import org.koin.android.ext.koin.androidLogger
@@ -53,6 +54,7 @@ private val assembledModules =
         FeaturePresentationModule().module,
         FeatureProximityModule().module,
         FeatureIssuanceModule().module,
+        FeatureTransferModule().module,
     )
 
 internal fun Application.setupKoin(): KoinApplication =

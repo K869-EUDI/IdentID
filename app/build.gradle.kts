@@ -236,6 +236,9 @@ dependencies {
     // EUDI Wallet Core
     implementation(libs.eudi.wallet.core)
 
+    // Google Nearby Connections (device-to-device transfer)
+    implementation(libs.gms.nearby)
+
     // RQES UI SDK
     implementation(libs.rqes.ui.sdk)
 
