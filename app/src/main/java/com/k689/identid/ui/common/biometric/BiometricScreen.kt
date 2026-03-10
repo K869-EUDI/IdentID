@@ -55,6 +55,7 @@ import com.k689.identid.extension.ui.setBackStackFlowCancelled
 import com.k689.identid.extension.ui.setBackStackFlowSuccess
 import com.k689.identid.navigation.CommonScreens
 import com.k689.identid.navigation.helper.handleDeepLinkAction
+import com.k689.identid.storage.prefs.PrefsPinStorageProvider.Companion.MAX_INCORRECT_ATTEMPTS
 import com.k689.identid.ui.component.AppIconAndText
 import com.k689.identid.ui.component.AppIconAndTextDataUi
 import com.k689.identid.ui.component.AppIcons
@@ -368,7 +369,7 @@ private fun PinFieldLayout(
         visualTransformation = PasswordVisualTransformation(),
         pinWidth = 42.dp,
         focusOnCreate = !state.userBiometricsAreEnabled,
-        enabled = state.authAttempts < BiometricViewModel.MAX_AUTH_ATTEMPTS,
+        enabled = 0 < MAX_INCORRECT_ATTEMPTS,
     )
 }
 

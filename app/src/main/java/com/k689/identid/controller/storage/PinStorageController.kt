@@ -17,13 +17,20 @@
 package com.k689.identid.controller.storage
 
 import com.k689.identid.config.StorageConfig
+import com.k689.identid.storage.prefs.PrefsPinStorageProvider.Companion.MAX_INCORRECT_ATTEMPTS
 
 interface PinStorageController {
     fun retrievePin(): String
 
     fun setPin(pin: String)
 
-    fun isPinValid(pin: String): Boolean
+    fun validatePin(pin: String): Boolean
+
+    fun retrieveIncorrectPinEntryTime(): Long
+
+    fun retrieveIncorrectAttempts(): Int
+
+    fun canValidatePin(): Boolean
 }
 
 class PinStorageControllerImpl(
@@ -35,5 +42,21 @@ class PinStorageControllerImpl(
         storageConfig.pinStorageProvider.setPin(pin)
     }
 
-    override fun isPinValid(pin: String): Boolean = storageConfig.pinStorageProvider.isPinValid(pin)
+    override fun canValidatePin(): Boolean = storageConfig.pinStorageProvider.incorrectPinAttempts() < MAX_INCORRECT_ATTEMPTS
+
+    override fun validatePin(pin: String): Boolean {
+        // this code should already not be reached if the user is locked out, but we place a guard inside just in case
+        if (!canValidatePin()) {
+            return false
+        }
+        val isValid = storageConfig.pinStorageProvider.isPinValid(pin)
+        if (!isValid) {
+            storageConfig.pinStorageProvider.setIncorrectPinAttempts()
+        }
+        return isValid
+    }
+
+    override fun retrieveIncorrectPinEntryTime(): Long = storageConfig.pinStorageProvider.lastIncorrectPinEntryTime()
+
+    override fun retrieveIncorrectAttempts(): Int = storageConfig.pinStorageProvider.incorrectPinAttempts()
 }

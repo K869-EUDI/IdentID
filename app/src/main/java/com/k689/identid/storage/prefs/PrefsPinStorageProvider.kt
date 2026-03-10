@@ -21,11 +21,17 @@ import com.k689.identid.controller.storage.PrefsController
 import com.k689.identid.extension.business.decodeFromBase64
 import com.k689.identid.extension.business.encodeToBase64String
 import com.k689.identid.provider.authentication.PinStorageProvider
+import org.koin.core.annotation.Single
 
 class PrefsPinStorageProvider(
     private val prefsController: PrefsController,
     private val cryptoController: CryptoController,
 ) : PinStorageProvider {
+    companion object {
+        const val MAX_INCORRECT_ATTEMPTS = 5
+        const val LOCKOUT_DURATION_MS = 60 * 1000L // 60 seconds lockout duration
+    }
+
     /**
      * Retrieves the stored PIN after decrypting it.
      *
@@ -52,6 +58,27 @@ class PrefsPinStorageProvider(
      * @return True if the provided PIN matches the stored PIN, false otherwise.
      */
     override fun isPinValid(pin: String): Boolean = retrievePin() == pin
+
+    override fun lastIncorrectPinEntryTime(): Long = prefsController.getLong("LastPinAttemptTime", 0L)
+
+    override fun incorrectPinAttempts(): Int = if (System.currentTimeMillis() - LOCKOUT_DURATION_MS <= lastIncorrectPinEntryTime()) prefsController.getInt("PinAttempts", 0) else 0
+
+    private fun setIncorrectPinAttempts(count: Int) {
+        prefsController.setInt("PinAttempts", count)
+    }
+
+    override fun setIncorrectPinAttempts(): Int {
+        val attemptTime = System.currentTimeMillis()
+        var attempts = 0
+        if (attemptTime - LOCKOUT_DURATION_MS >= lastIncorrectPinEntryTime()) {
+            attempts = 1
+        } else {
+            attempts = prefsController.getInt("PinAttempts", 0) + 1
+        }
+        setIncorrectPinAttempts(attempts)
+        prefsController.setLong("LastPinAttemptTime", attemptTime)
+        return attempts
+    }
 
     private fun encryptAndStore(pin: String) {
         val cipher =

@@ -96,7 +96,7 @@ class QuickPinInteractorImpl(
 
     override fun isCurrentPinValid(pin: String): Flow<QuickPinInteractorPinValidPartialState> =
         flow {
-            if (pinStorageController.isPinValid(pin)) {
+            if (pinStorageController.validatePin(pin)) {
                 emit(QuickPinInteractorPinValidPartialState.Success)
             } else {
                 emit(
