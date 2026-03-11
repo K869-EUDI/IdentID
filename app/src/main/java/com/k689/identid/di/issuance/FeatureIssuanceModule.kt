@@ -22,6 +22,7 @@ import com.k689.identid.interactor.issuance.AddDocumentInteractor
 import com.k689.identid.interactor.issuance.AddDocumentInteractorImpl
 import com.k689.identid.interactor.issuance.DocumentIssuanceSuccessInteractor
 import com.k689.identid.interactor.issuance.DocumentIssuanceSuccessInteractorImpl
+import com.k689.identid.config.ConfigLogic
 import com.k689.identid.interactor.issuance.DocumentOfferInteractor
 import com.k689.identid.interactor.issuance.DocumentOfferInteractorImpl
 import com.k689.identid.provider.UuidProvider
@@ -71,10 +72,12 @@ fun provideDocumentOfferInteractor(
     resourceProvider: ResourceProvider,
     deviceAuthenticationInteractor: DeviceAuthenticationInteractor,
     uiSerializer: UiSerializer,
+    configLogic: ConfigLogic,
 ): DocumentOfferInteractor =
     DocumentOfferInteractorImpl(
         walletCoreDocumentsController,
         deviceAuthenticationInteractor,
         resourceProvider,
         uiSerializer,
+        configLogic,
     )

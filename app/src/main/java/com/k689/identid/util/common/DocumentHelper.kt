@@ -31,12 +31,9 @@ import com.k689.identid.provider.resources.ResourceProvider
 import com.k689.identid.util.business.safeLet
 import com.k689.identid.util.business.toDateFormatted
 import eu.europa.ec.eudi.wallet.document.IssuedDocument
-import eu.europa.ec.eudi.wallet.document.NameSpace
 import eu.europa.ec.eudi.wallet.document.format.DocumentClaim
 import eu.europa.ec.eudi.wallet.document.format.MsoMdocClaim
-import eu.europa.ec.eudi.wallet.document.format.MsoMdocData
 import eu.europa.ec.eudi.wallet.document.format.SdJwtVcClaim
-import eu.europa.ec.eudi.wallet.document.format.SdJwtVcData
 import eu.europa.ec.eudi.wallet.document.metadata.IssuerMetadata
 import java.time.Instant
 import java.time.LocalDate
@@ -329,13 +326,6 @@ fun documentHasExpired(
         // Default to false in case of any exception
         false
     }
-
-val IssuedDocument.docNamespace: NameSpace?
-    get() =
-        when (val data = this.data) {
-            is MsoMdocData -> data.nameSpaces.keys.first()
-            is SdJwtVcData -> null
-        }
 
 private fun insertPath(
     tree: List<ClaimDomain>,

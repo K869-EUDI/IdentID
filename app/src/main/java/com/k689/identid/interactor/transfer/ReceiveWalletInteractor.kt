@@ -19,7 +19,7 @@ package com.k689.identid.interactor.transfer
 import android.content.Context
 import android.util.Base64
 import com.k689.identid.controller.core.IssuanceMethod
-import com.k689.identid.controller.core.IssueDocumentPartialState
+import com.k689.identid.controller.core.IssueDocumentsPartialState
 import com.k689.identid.controller.core.WalletCoreDocumentsController
 import com.k689.identid.controller.transfer.NearbyTransferManager
 import com.k689.identid.controller.transfer.NearbyTransferState
@@ -217,28 +217,28 @@ class ReceiveWalletInteractorImpl(
                 // would block forever. .first{} cancels the flow once a terminal state
                 // is received, allowing the loop to proceed to the next document.
                 walletCoreDocumentsController
-                    .issueDocument(
+                    .issueDocuments(
                         issuanceMethod = IssuanceMethod.OPENID4VCI,
-                        configId = doc.configurationId,
+                        configIds = listOf(doc.configurationId),
                         issuerId = doc.credentialIssuerId,
                     ).onEach { state ->
-                        if (state is IssueDocumentPartialState.UserAuthRequired) {
+                        if (state is IssueDocumentsPartialState.UserAuthRequired) {
                             // Auto-complete device authentication for import flow
                             state.resultHandler.onAuthenticationSuccess()
                         }
                     }.first { state ->
                         when (state) {
-                            is IssueDocumentPartialState.Success -> {
+                            is IssueDocumentsPartialState.Success -> {
                                 results.add(
                                     DocumentImportResult.Success(
-                                        documentId = state.documentId,
+                                        documentId = state.documentIds.firstOrNull() ?: doc.configurationId,
                                         documentName = doc.name,
                                     ),
                                 )
                                 true
                             }
 
-                            is IssueDocumentPartialState.Failure -> {
+                            is IssueDocumentsPartialState.Failure -> {
                                 results.add(
                                     DocumentImportResult.Failed(
                                         documentName = doc.name,
@@ -248,10 +248,20 @@ class ReceiveWalletInteractorImpl(
                                 true
                             }
 
-                            is IssueDocumentPartialState.DeferredSuccess -> {
+                            is IssueDocumentsPartialState.DeferredSuccess -> {
                                 results.add(
                                     DocumentImportResult.Success(
-                                        documentId = doc.configurationId,
+                                        documentId = state.deferredDocuments.keys.firstOrNull() ?: doc.configurationId,
+                                        documentName = doc.name,
+                                    ),
+                                )
+                                true
+                            }
+
+                            is IssueDocumentsPartialState.PartialSuccess -> {
+                                results.add(
+                                    DocumentImportResult.Success(
+                                        documentId = state.documentIds.firstOrNull() ?: doc.configurationId,
                                         documentName = doc.name,
                                     ),
                                 )

@@ -48,7 +48,6 @@
     <string name="generic_filters_ascending">Didėjančia tvarka</string>
     <string name="generic_filters_descending">Mažėjančia tvarka</string>
     <!--endregion-->
-
     <!-- region Content Description -->
     <string name="content_description_image_or_placeholder_icon">Vaizdas arba vietos ženklo piktograma</string>
     <string name="content_description_user_signature_icon">Naudotojo parašas</string>
@@ -97,7 +96,6 @@
     <string name="content_description_authenticate_online_icon">Autentifikuotis internetu</string>
     <string name="content_description_sign_document_from_device_icon">Pasirašyti dokumentą iš įrenginio</string>
     <string name="content_description_sign_document_from_qr_icon">Pasirašyti dokumentą iš QR kodo</string>
-
     <string name="content_description_bookmark_icon">Žymė</string>
     <string name="content_description_bookmark_filled_icon">Užpildyta žymė</string>
     <string name="content_description_certified_icon">Sertifikuota</string>
@@ -122,7 +120,6 @@
     <string name="content_description_date_range_icon">Pasirinkti datų intervalą filtrui</string>
     <string name="content_description_settings_icon">Nustatymai</string>
     <!--endregion-->
-
     <!-- region Biometric prompt -->
     <string name="biometric_prompt_title">Biometrinis autentifikavimas</string>
     <string name="biometric_prompt_subtitle">Autentifikuokitės naudodami biometrinius duomenis</string>
@@ -130,13 +127,11 @@
     <string name="biometric_login_biometrics_enabled_subtitle">Naudokite biometrinius duomenis, kad pasiektumėte EUDI piniginę.</string>
     <string name="biometric_login_biometrics_not_enabled_subtitle">Norėdami pasiekti EUDI piniginę, turite įvesti PIN kodą.</string>
     <!--endregion-->
-
     <!-- region Biometrics -->
     <string name="biometric_no_hardware">Jūsų įrenginys nepalaiko biometrinio autentifikavimo</string>
     <string name="biometric_unknown_error">Inicijuojant biometrinį autentifikavimą įvyko klaida. Bandykite dar kartą</string>
     <string name="biometric_default_mode_text_above_pin_field">PIN kodas</string>
     <!--endregion-->
-
     <!-- region Document Success -->
     <string name="document_success_header_description">Sėkmingai pasidalinote šia informacija su</string>
     <string name="document_success_header_description_when_error">Sėkmingai pasidalinote informacija su</string>
@@ -144,7 +139,6 @@
     <string name="document_success_collapsed_supporting_text">@string/generic_view_details</string>
     <string name="document_success_sticky_button_text">@string/generic_close</string>
     <!--endregion-->
-
     <!-- region Pin -->
     <string name="quick_pin_invalid_error">Neteisingas PIN kodas</string>
     <string name="quick_pin_numerical_rule_invalid_error_message">Leidžiamos tik skaitinės reikšmės</string>
@@ -152,12 +146,10 @@
     <string name="quick_pin_create_title">Sveiki atvykę į savo piniginę</string>
     <string name="quick_pin_create_enter_subtitle">Apsaugokite savo piniginę PIN kodu ir prisijunkite prie nacionalinės sistemos.</string>
     <string name="quick_pin_create_reenter_subtitle">Pakartokite PIN kodą</string>
-
     <string name="quick_pin_change_title">Keisti PIN kodą</string>
     <string name="quick_pin_change_validate_current_subtitle">Įveskite dabartinį PIN kodą</string>
     <string name="quick_pin_change_enter_new_subtitle">Pasirinkite PIN kodą būsimiems prisijungimams</string>
     <string name="quick_pin_change_reenter_new_subtitle">Pakartokite naują PIN kodą</string>
-
     <string name="quick_pin_create_success_text">Jūsų piniginė apsaugota!</string>
     <string name="quick_pin_create_success_description">Norėdami aktyvuoti piniginę, prisijunkite prie nacionalinės sistemos ir pridėkite skaitmeninį tapatybės dokumentą.</string>
     <string name="quick_pin_create_success_no_activation_description">Jūsų piniginė paruošta naudojimui.</string>
@@ -166,13 +158,11 @@
     <string name="quick_pin_change_success_text">@string/generic_success</string>
     <string name="quick_pin_change_success_description">PIN kodas sėkmingai pakeistas</string>
     <string name="quick_pin_change_success_btn">GRĮŽTI Į PRADŽIĄ</string>
-
     <string name="quick_pin_bottom_sheet_cancel_title">Atšaukti PIN kodo keitimą?</string>
     <string name="quick_pin_bottom_sheet_cancel_subtitle">Atšaukus būsite nukreipti į pradžią nekeičiant PIN kodo</string>
     <string name="quick_pin_bottom_sheet_cancel_primary_button_text">@string/generic_continue_capitalized</string>
     <string name="quick_pin_bottom_sheet_cancel_secondary_button_text">@string/generic_cancel_capitalized</string>
     <!--endregion-->
-
     <!-- region Request Screen -->
     <string name="request_header_description">Šiai operacijai reikalingas jūsų leidimas ir autentifikavimas.</string>
     <string name="request_header_main_text">DUOMENŲ DALIJIMOSI UŽKLAUSA</string>
@@ -190,13 +180,11 @@
     <string name="request_gender_not_known">Nežinoma</string>
     <string name="request_gender_not_applicable">Netaikoma</string>
     <!--endregion-->
-
     <!-- region Loading Screen -->
     <string name="loading_header_description">Palaukite…</string>
     <string name="loading_biometry_biometrics_enabled_description">Naudokite biometrinius duomenis operacijai patvirtinti.</string>
     <string name="loading_biometry_biometrics_not_enabled_description">Norėdami patvirtinti operaciją, turite patvirtinti savo tapatybę.</string>
     <!--endregion-->
-
     <!-- region Dashboard -->
     <string name="dashboard_document_has_not_expired">Galioja iki:\ %1$s</string>
     <string name="dashboard_document_has_expired">Nebegalioja</string>
@@ -204,24 +192,19 @@
     <string name="dashboard_document_deferred_failed">Išdavimas nepavyko</string>
     <string name="dashboard_document_revoked">Atšauktas</string>
     <string name="dashboard_document_credentials_info_text">%d/%d</string>
-
     <string name="dashboard_bottom_sheet_bluetooth_title">Įjungti „Bluetooth"?</string>
     <string name="dashboard_bottom_sheet_bluetooth_subtitle">Įjunkite „Bluetooth", kad galėtumėte dalintis informacija naudodami autentifikavimą asmeniškai arba internetu</string>
     <string name="dashboard_bottom_sheet_bluetooth_primary_button_text">@string/generic_enable_capitalized</string>
     <string name="dashboard_bottom_sheet_bluetooth_secondary_button_text">@string/generic_cancel_capitalized</string>
-
     <string name="dashboard_bottom_sheet_deferred_document_pressed_title">@string/generic_bottom_sheet_delete_title</string>
     <string name="dashboard_bottom_sheet_deferred_document_pressed_subtitle">@string/generic_bottom_sheet_delete_subtitle</string>
     <string name="dashboard_bottom_sheet_deferred_document_pressed_primary_button_text">@string/generic_bottom_sheet_delete_primary_button_text</string>
     <string name="dashboard_bottom_sheet_deferred_document_pressed_secondary_button_text">@string/generic_bottom_sheet_delete_secondary_button_text</string>
-
     <string name="dashboard_bottom_sheet_deferred_documents_ready_title">Dokumentai išduoti</string>
     <string name="dashboard_bottom_sheet_deferred_documents_ready_subtitle">Nauji dokumentai buvo pridėti į jūsų piniginę.</string>
-
     <string name="dashboard_bottom_sheet_revoked_document_dialog_title">Atšaukti dokumentai</string>
     <string name="dashboard_bottom_sheet_revoked_document_dialog_subtitle">Šie dokumentai buvo atšaukti.</string>
     <!--endregion-->
-
     <!-- region Dashboard Side Menu -->
     <string name="dashboard_side_menu_title">Mano ES piniginė</string>
     <string name="dashboard_side_menu_option_change_pin">Keisti PIN kodą</string>
@@ -233,7 +216,6 @@
     <string name="dashboard_side_menu_option_receive_wallet">Gauti piniginę iš įrenginio</string>
     <string name="dashboard_side_menu_option_receive_wallet_id">receiveWalletId</string>
     <!--endregion-->
-
     <!-- region Settings Screen -->
     <string name="settings_screen_title">Nustatymai</string>
     <string name="settings_screen_option_preferences">Nuostatos</string>
@@ -246,14 +228,11 @@
     <string name="settings_preferences_option_preferences">Nuostatos</string>
     <string name="settings_preferences_option_preferences_id">preferencesId</string>
     <!--endregion-->
-
     <!-- region Preferences Screen -->
     <string name="preferences_screen_title">Nuostatos</string>
     <string name="preferences_theme_label">Tema</string>
     <string name="preferences_language_label">Kalba</string>
     <!--endregion-->
-
-
     <!-- region Home Screen -->
     <string name="home_screen_title">Pradžia</string>
     <string name="home_screen_welcome">Sveiki sugrįžę</string>
@@ -266,20 +245,17 @@
     <string name="home_screen_learn_more">Sužinoti daugiau</string>
     <string name="home_screen_authenticate_option_in_person">Asmeniškai</string>
     <string name="home_screen_add_document_option_online">Internetu</string>
-
     <string name="home_screen_sign_document">Pasirašyti dokumentą</string>
     <string name="home_screen_sign_document_description">Pasirašykite dokumentą skaitmeniniu būdu – pasirinkite failą iš savo įrenginio arba nuskaitykite QR kodą.</string>
     <string name="home_screen_sign_document_option_from_device">Iš įrenginio</string>
     <string name="home_screen_sign_document_option_scan_qr">Nuskaityti QR kodą</string>
     <!--endregion-->
-
     <!-- region Home Screen Learn More Popups content -->
     <string name="home_screen_authenticate_learn_more_inner_title">Saugiai pasirašykite dokumentus</string>
     <string name="home_screen_authenticate_learn_more_description">Pasirašykite dokumentus tik naudodami savo piniginę. Teisiškai privalomas elektroninis parašas bus greitesnis ir paprastesnis nei bet kada anksčiau, suteikdamas galimybę vykdyti veiklą bet kur ir bet kada.</string>
     <string name="home_screen_sign_learn_more_inner_title">Pasiekite internetines paslaugas</string>
     <string name="home_screen_sign_learn_more_description">Identifikuokite save įvairioms viešosioms ir privačioms internetinėms paslaugoms, saugodami savo privatumą. Patvirtinkite savo tapatybę vos keliais bakstelėjimais – nebereikia tvarkyti nesuskaičiuojamų slaptažodžių.</string>
     <!--endregion-->
-
     <!-- region Documents Screen -->
     <string name="documents_screen_title">Dokumentai</string>
     <string name="documents_screen_search_label">Ieškoti dokumentų</string>
@@ -313,7 +289,6 @@
     <string name="documents_screen_filters_reset">@string/generic_filters_reset</string>
     <string name="documents_screen_filters_unknown_issuer">Nežinomas</string>
     <!--endregion-->
-
     <!-- region Transactions Screen -->
     <string name="transactions_screen_title">Operacijos</string>
     <string name="transactions_screen_search_label">Ieškoti operacijų</string>
@@ -328,7 +303,6 @@
     </plurals>
     <string name="transactions_screen_text_field_date_pattern">yyyy-mm-dd</string>
     <!--endregion-->
-
     <!-- region Transactions Screen, Filter labels-->
     <string name="transactions_screen_filters_title">@string/generic_filters_title</string>
     <string name="transactions_screen_filters_sort_by">@string/generic_filters_sort_by</string>
@@ -350,31 +324,26 @@
     <string name="transactions_screen_filters_apply">@string/generic_filters_apply</string>
     <string name="transactions_screen_filters_reset">@string/generic_filters_reset</string>
     <!--endregion-->
-
     <!-- region Document Sign -->
     <string name="document_sign_title">Pasirašyti dokumentą</string>
     <string name="document_sign_subtitle">Pasirinkite dokumentą iš savo įrenginio, kad galėtumėte jį elektroniniu būdu pasirašyti.</string>
     <string name="document_sign_select_document">Pasirinkti dokumentą</string>
     <string name="document_sign_select_document_button_id">documentSignButtonId</string>
     <!--endregion-->
-
     <!-- region Qr Scan -->
     <string name="qr_scan_permission_not_granted">Nepateiktas kameros leidimas\nAtidarykite programėlės nustatymus</string>
     <string name="qr_scan_informative_text_presentation_flow">Nepavyksta nuskaityti QR kodo?\nIšbandykite alternatyvų būdą</string>
     <string name="qr_scan_informative_text_issuance_flow">Nepavyksta nuskaityti QR kodo?\nIšbandykite alternatyvų būdą</string>
     <string name="qr_scan_informative_text_signature_flow">Nepavyksta nuskaityti QR kodo?\nIšbandykite alternatyvų būdą</string>
     <!--endregion-->
-
     <!-- region Document Details -->
     <string name="document_details_revoked_document_message">Šį dokumentą atšaukė išdavėjas. Daugiau informacijos teiraukitės išdavimo tarnyboje.</string>
     <string name="document_details_boolean_item_true_readable_value">taip</string>
     <string name="document_details_boolean_item_false_readable_value">ne</string>
-
     <string name="document_details_bottom_sheet_delete_title">@string/generic_bottom_sheet_delete_title</string>
     <string name="document_details_bottom_sheet_delete_subtitle">@string/generic_bottom_sheet_delete_subtitle</string>
     <string name="document_details_bottom_sheet_delete_primary_button_text">@string/generic_bottom_sheet_delete_primary_button_text</string>
     <string name="document_details_bottom_sheet_delete_secondary_button_text">@string/generic_bottom_sheet_delete_secondary_button_text</string>
-
     <string name="document_details_document_credentials_info_text">Liko %d/%d egzempliorių</string>
     <string name="document_details_document_credentials_info_more_info_text">Daugiau informacijos</string>
     <string name="document_details_document_credentials_info_expanded_text_subtitle">Saugumo sumetimais šis dokumentas gali būti pateiktas ribotą skaičių kartų, po to jį reikia iš naujo gauti iš išdavimo institucijos.</string>
@@ -383,17 +352,14 @@
     <string name="document_details_main_section_text">DOKUMENTO INFORMACIJA</string>
     <string name="document_details_issuer_section_text">IŠDAVĖJAS</string>
     <string name="document_details_secondary_button_text">Ištrinti dokumentą</string>
-
     <string name="document_details_bottom_sheet_bookmark_info_title">Išsaugota mėgstamuosiuose</string>
     <string name="document_details_bottom_sheet_bookmark_info_message">Dokumentas sėkmingai pridėtas į mėgstamųjų sąrašą.</string>
     <string name="document_details_bottom_sheet_bookmark_removed_info_title">Pašalinta iš mėgstamųjų</string>
     <string name="document_details_bottom_sheet_bookmark_removed_info_message">Dokumentas sėkmingai pašalintas iš mėgstamųjų sąrašo.</string>
-
     <string name="document_details_bottom_sheet_badge_title">Patikima pasikliaujančioji šalis</string>
     <string name="document_details_bottom_sheet_badge_subtitle">Pasikliaujančioji šalis laikoma patikima, kai atitinka
         iš anksto nustatytus saugumo, duomenų apsaugos, atitikties ir atsakingo duomenų tvarkymo kriterijus.</string>
     <!--endregion-->
-
     <!-- region Transaction Details -->
     <string name="transaction_details_screen_title">Operacijos informacija</string>
     <string name="transaction_details_screen_card_date_label">Data</string>
@@ -407,14 +373,12 @@
     <string name="transaction_details_data_signed_prefix_id">transactionDetailsDataSignedId</string>
     <string name="transaction_details_collapsed_supporting_text">@string/generic_view_details</string>
     <!--endregion-->
-
     <!-- region Proximity QR -->
     <string name="proximity_qr_title">Pateikti dokumentą asmeniškai</string>
     <string name="proximity_qr_subtitle">Parodykite šį QR kodą pasikliaujančiajai šaliai, kad pateiktumėte skaitmeninį dokumentą.</string>
     <string name="proximity_qr_use_nfc">Arba dalinkitės per NFC</string>
     <string name="proximity_qr_hold_near_reader">Pridėkite telefoną prie skaitytuvo, kad jis būtų nuskaitytas.</string>
     <!--endregion-->
-
     <!-- region Wallet Transfer -->
     <string name="transfer_side_menu_move_wallet">Perkelti piniginę į naują įrenginį</string>
     <string name="transfer_side_menu_receive_wallet">Gauti piniginę iš įrenginio</string>
@@ -454,17 +418,14 @@
     <string name="transfer_error_no_connection">Nėra aktyvaus ryšio. Bandykite dar kartą.</string>
     <string name="transfer_error_transfer_failed">Perkėlimas nepavyko. Bandykite dar kartą.</string>
     <!--endregion-->
-
     <!-- region Presentation Qr Scan -->
     <string name="presentation_qr_scan_title">Pateikti dokumentą internetu</string>
     <string name="presentation_qr_scan_subtitle">Nuskaitykite pasikliaujančiosios šalies pateiktą QR kodą, kad pateiktumėte skaitmeninį dokumentą.</string>
     <!--endregion-->
-
     <!-- region Signature Qr Scan -->
     <string name="signature_qr_scan_title">Pasirašyti dokumentą</string>
     <string name="signature_qr_scan_subtitle">Nuskaitykite QR kodą, kad elektroniniu būdu pasirašytumėte dokumentą.</string>
     <!--endregion-->
-
     <!-- region Issuance Add Document Screen -->
     <string name="issuance_add_document_title">Pridėti dokumentą iš įgalioto šaltinio</string>
     <string name="issuance_add_document_subtitle">Pasirinkite skaitmeninį dokumentą iš toliau pateikto sąrašo ir pridėkite jį į savo piniginę.</string>
@@ -475,19 +436,17 @@
     <string name="issuance_add_document_deferred_success_description">Jūsų dokumentas buvo užsakytas. Kai jis bus išduotas į jūsų piniginę, gausite pranešimą.</string>
     <string name="issuance_add_document_deferred_success_primary_button_text">@string/generic_ok</string>
     <string name="issuance_add_document_search_hint">Ieškoti dokumento</string>
+    <string name="issuance_add_document_pid_combined">Kombinuotas PID</string>
     <!--endregion-->
-
     <!-- region Issuance Success Screen -->
     <string name="issuance_success_header_description">Sėkmingai pridėjote šiuos dokumentus į savo piniginę</string>
     <string name="issuance_success_header_description_when_error">Sėkmingai pridėjote dokumentą (-us) į savo piniginę</string>
     <string name="issuance_success_header_issuer_default_name">@string/generic_default_issuer_name</string>
     <!--endregion-->
-
     <!-- region Issuance Qr Scan -->
     <string name="issuance_qr_scan_title">Pridėti dokumentą per QR kodą</string>
     <string name="issuance_qr_scan_subtitle">Nuskaitykite išdavėjo pateiktą QR kodą, kad pridėtumėte skaitmeninį dokumentą į savo piniginę.</string>
     <!--endregion-->
-
     <!-- region Issuance Document Offer -->
     <string name="issuance_document_offer_primary_button_text_add">Pridėti</string>
     <string name="issuance_document_offer_deferred_success_text">@string/generic_deferred_success_text</string>
@@ -496,22 +455,18 @@
     <string name="issuance_document_offer_error_missing_pid_text">Pirmiausia reikia aktyvuoti piniginę naudojant nacionalinį tapatybės dokumentą</string>
     <string name="issuance_document_offer_error_invalid_txcode_format">Neteisingas operacijos kodo formatas. Ilgis turi būti nuo %1$d iki %2$d skaitmenų, leidžiami tik skaitiniai simboliai.</string>
     <string name="issuance_document_offer_error_no_document">Nepavyko gauti ir apdoroti kredencialų pasiūlymo</string>
-
     <string name="issuance_document_offer_description">Šiai operacijai reikalingas jūsų leidimas ir autentifikavimas.</string>
     <string name="issuance_document_offer_header_main_text">IŠDAVIMO UŽKLAUSA</string>
     <string name="issuance_document_offer_relying_party_default_name">@string/generic_default_issuer_name</string>
     <string name="issuance_document_offer_relying_party_description">nori pridėti šiuos dokumentus</string>
     <!--endregion-->
-
     <!-- region Issuance Document Offer Code -->
     <string name="issuance_code_title">%1$s reikalauja patvirtinimo</string>
     <string name="issuance_code_caption">Įveskite %1$d skaitmenų operacijos kodą, kurį gavote.</string>
     <!--endregion-->
-
     <!-- region Issuance Document Errors -->
     <string name="issuance_generic_error">Išduodant dokumentą (-us) įvyko klaida</string>
     <!--endregion-->
-
     <!-- region Document Categories -->
     <string name="document_category_government">VALDŽIOS INSTITUCIJOS</string>
     <string name="document_category_travel">KELIONĖS</string>
@@ -522,7 +477,6 @@
     <string name="document_category_retail">PREKYBA</string>
     <string name="document_category_other">KITA</string>
     <!--endregion-->
-
     <!-- region Transaction Categories -->
     <string name="transaction_category_today">ŠIANDIEN</string>
     <string name="transaction_category_this_week">ŠIĄ SAVAITĘ</string>

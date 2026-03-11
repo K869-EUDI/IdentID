@@ -14,12 +14,21 @@
  * governing permissions and limitations under the Licence.
  */
 
-package com.k689.identid.ui.issuance.add.model
+package com.k689.identid.config
 
-import com.k689.identid.ui.component.ListItemDataUi
+import eu.europa.ec.eudi.wallet.issue.openid4vci.OpenId4VciManager
 
-data class AddDocumentUi(
-    val credentialIssuerId: String,
-    val configurationIds: List<String>,
-    val itemData: ListItemDataUi,
+/**
+ * Configuration class that associates an [OpenId4VciManager.Config] with a specific order.
+ *
+ * This class facilitates the management of multiple Verifiable Credential Issuance (VCI)
+ * configurations by assigning a sequence, ensuring they are processed or displayed
+ * in a predetermined priority.
+ *
+ * @property config The [OpenId4VciManager.Config] instance containing issuance settings.
+ * @property order An integer defining the priority or sequence of this configuration.
+ */
+data class VciConfig(
+    val config: OpenId4VciManager.Config,
+    val order: Int,
 )

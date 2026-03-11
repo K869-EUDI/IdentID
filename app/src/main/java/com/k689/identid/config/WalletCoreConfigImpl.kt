@@ -22,6 +22,7 @@ import com.k689.identid.R
 import com.k689.identid.service.NfcEngagementService
 import eu.europa.ec.eudi.wallet.EudiWalletConfig
 import eu.europa.ec.eudi.wallet.issue.openid4vci.OpenId4VciManager
+import eu.europa.ec.eudi.wallet.issue.openid4vci.dpop.DPopConfig
 import eu.europa.ec.eudi.wallet.transfer.openId4vp.ClientIdScheme
 import eu.europa.ec.eudi.wallet.transfer.openId4vp.Format
 import kotlin.time.Duration.Companion.seconds
@@ -82,25 +83,31 @@ internal class WalletCoreConfigImpl(
             return _config!!
         }
 
-    override val vciConfig: List<OpenId4VciManager.Config>
+    override val issuersConfig: List<VciConfig>
         get() =
             listOf(
-                OpenId4VciManager.Config
-                    .Builder()
-                    .withIssuerUrl(issuerUrl = "https://issuer.eudiw.dev")
-                    .withClientAuthenticationType(OpenId4VciManager.ClientAuthenticationType.AttestationBased)
-                    .withAuthFlowRedirectionURI(BuildConfig.ISSUE_AUTHORIZATION_DEEPLINK)
-                    .withParUsage(OpenId4VciManager.Config.ParUsage.IF_SUPPORTED)
-                    .withDPoPUsage(OpenId4VciManager.Config.DPoPUsage.IfSupported())
-                    .build(),
-                OpenId4VciManager.Config
-                    .Builder()
-                    .withIssuerUrl(issuerUrl = "https://issuer-backend.eudiw.dev")
-                    .withClientAuthenticationType(OpenId4VciManager.ClientAuthenticationType.AttestationBased)
-                    .withAuthFlowRedirectionURI(BuildConfig.ISSUE_AUTHORIZATION_DEEPLINK)
-                    .withParUsage(OpenId4VciManager.Config.ParUsage.IF_SUPPORTED)
-                    .withDPoPUsage(OpenId4VciManager.Config.DPoPUsage.IfSupported())
-                    .build(),
+                VciConfig(
+                    config = OpenId4VciManager.Config
+                        .Builder()
+                        .withIssuerUrl(issuerUrl = "https://issuer.eudiw.dev")
+                        .withClientAuthenticationType(OpenId4VciManager.ClientAuthenticationType.AttestationBased)
+                        .withAuthFlowRedirectionURI(BuildConfig.ISSUE_AUTHORIZATION_DEEPLINK)
+                        .withParUsage(OpenId4VciManager.Config.ParUsage.IF_SUPPORTED)
+                        .withDPopConfig(DPopConfig.Default)
+                        .build(),
+                    order = 0,
+                ),
+                VciConfig(
+                    config = OpenId4VciManager.Config
+                        .Builder()
+                        .withIssuerUrl(issuerUrl = "https://issuer-backend.eudiw.dev")
+                        .withClientAuthenticationType(OpenId4VciManager.ClientAuthenticationType.AttestationBased)
+                        .withAuthFlowRedirectionURI(BuildConfig.ISSUE_AUTHORIZATION_DEEPLINK)
+                        .withParUsage(OpenId4VciManager.Config.ParUsage.IF_SUPPORTED)
+                        .withDPopConfig(DPopConfig.Default)
+                        .build(),
+                    order = 1,
+                ),
             )
 
     override val walletProviderHost: String

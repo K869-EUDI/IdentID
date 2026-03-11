@@ -32,11 +32,11 @@ import com.k689.identid.config.QrScanUiConfig
 import com.k689.identid.config.RequestUriConfig
 import com.k689.identid.controller.authentication.DeviceAuthenticationResult
 import com.k689.identid.controller.core.IssuanceMethod
-import com.k689.identid.controller.core.IssueDocumentPartialState
 import com.k689.identid.di.common.getOrCreateCredentialOfferScope
 import com.k689.identid.di.core.getOrCreatePresentationScope
 import com.k689.identid.interactor.issuance.AddDocumentInteractor
-import com.k689.identid.interactor.issuance.AddDocumentInteractorPartialState
+import com.k689.identid.interactor.issuance.AddDocumentInteractorIssueDocumentsPartialState
+import com.k689.identid.interactor.issuance.AddDocumentInteractorScopedPartialState
 import com.k689.identid.navigation.CommonScreens
 import com.k689.identid.navigation.DashboardScreens
 import com.k689.identid.navigation.IssuanceScreens
@@ -108,7 +108,7 @@ sealed class Event : ViewEvent {
     data class IssueDocument(
         val issuanceMethod: IssuanceMethod,
         val issuerId: String,
-        val configId: String,
+        val configIds: List<String>,
         val context: Context,
     ) : Event()
 }
@@ -179,7 +179,7 @@ class AddDocumentViewModel(
             is Event.IssueDocument -> {
                 issueDocument(
                     issuanceMethod = event.issuanceMethod,
-                    configId = event.configId,
+                    configIds = event.configIds,
                     issuerId = event.issuerId,
                     context = event.context,
                 )
@@ -255,7 +255,7 @@ class AddDocumentViewModel(
                     flowType = viewState.value.issuanceConfig.flowType,
                 ).collect { response ->
                     when (response) {
-                        is AddDocumentInteractorPartialState.Success -> {
+                        is AddDocumentInteractorScopedPartialState.Success -> {
                             setState {
                                 copy(
                                     error = null,
@@ -273,7 +273,7 @@ class AddDocumentViewModel(
                             handleDeepLink(deepLinkUri)
                         }
 
-                        is AddDocumentInteractorPartialState.Failure -> {
+                        is AddDocumentInteractorScopedPartialState.Failure -> {
                             val deepLinkAction = getDeepLinkAction(deepLinkUri)
 
                             setState {
@@ -300,7 +300,7 @@ class AddDocumentViewModel(
                             }
                         }
 
-                        is AddDocumentInteractorPartialState.NoOptions -> {
+                        is AddDocumentInteractorScopedPartialState.NoOptions -> {
                             setState {
                                 copy(
                                     error = null,
@@ -320,7 +320,7 @@ class AddDocumentViewModel(
     private fun issueDocument(
         issuanceMethod: IssuanceMethod,
         issuerId: String,
-        configId: String,
+        configIds: List<String>,
         context: Context,
     ) {
         issuanceJob?.cancel()
@@ -334,13 +334,13 @@ class AddDocumentViewModel(
                 }
 
                 addDocumentInteractor
-                    .issueDocument(
+                    .issueDocuments(
                         issuanceMethod = issuanceMethod,
                         issuerId = issuerId,
-                        configId = configId,
+                        configIds = configIds,
                     ).collect { response ->
                         when (response) {
-                            is IssueDocumentPartialState.Failure -> {
+                            is AddDocumentInteractorIssueDocumentsPartialState.Failure -> {
                                 setState {
                                     copy(
                                         error =
@@ -354,7 +354,7 @@ class AddDocumentViewModel(
                                 }
                             }
 
-                            is IssueDocumentPartialState.Success -> {
+                            is AddDocumentInteractorIssueDocumentsPartialState.Success -> {
                                 setState {
                                     copy(
                                         error = null,
@@ -362,11 +362,11 @@ class AddDocumentViewModel(
                                     )
                                 }
                                 navigateToDocumentIssuanceSuccessScreen(
-                                    documentId = response.documentId,
+                                    documentIds = response.documentIds,
                                 )
                             }
 
-                            is IssueDocumentPartialState.DeferredSuccess -> {
+                            is AddDocumentInteractorIssueDocumentsPartialState.DeferredSuccess -> {
                                 setState {
                                     copy(
                                         error = null,
@@ -381,7 +381,7 @@ class AddDocumentViewModel(
                                 )
                             }
 
-                            is IssueDocumentPartialState.UserAuthRequired -> {
+                            is AddDocumentInteractorIssueDocumentsPartialState.UserAuthRequired -> {
                                 addDocumentInteractor.handleUserAuth(
                                     context = context,
                                     crypto = response.crypto,
@@ -401,8 +401,7 @@ class AddDocumentViewModel(
                     }
             }
     }
-
-    private fun navigateToDocumentIssuanceSuccessScreen(documentId: String) {
+    private fun navigateToDocumentIssuanceSuccessScreen(documentIds: List<String>) {
         val onSuccessNavigation =
             when (viewState.value.issuanceConfig.flowType) {
                 is IssuanceFlowType.NoDocument -> {
@@ -438,7 +437,7 @@ class AddDocumentViewModel(
                                             .toBase64(
                                                 model =
                                                     IssuanceSuccessUiConfig(
-                                                        documentIds = listOf(documentId),
+                                                        documentIds = documentIds,
                                                         onSuccessNavigation = onSuccessNavigation,
                                                     ),
                                                 parser = IssuanceSuccessUiConfig.Parser,

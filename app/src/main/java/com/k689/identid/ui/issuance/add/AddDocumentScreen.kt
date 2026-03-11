@@ -297,12 +297,12 @@ private fun MainContent(
             Options(
                 options = state.filteredOptions,
                 modifier = Modifier.fillMaxSize(),
-                onOptionClicked = { itemId, issuerId ->
+                onOptionClicked = { itemIds, issuerId ->
                     onEventSend(
                         Event.IssueDocument(
                             issuanceMethod = IssuanceMethod.OPENID4VCI,
                             issuerId = issuerId,
-                            configId = itemId,
+                            configIds = itemIds,
                             context = context,
                         ),
                     )
@@ -316,7 +316,7 @@ private fun MainContent(
 private fun Options(
     options: List<Pair<String, List<AddDocumentUi>>>,
     modifier: Modifier = Modifier,
-    onOptionClicked: (itemId: String, issuerId: String) -> Unit,
+    onOptionClicked: (itemIds: List<String>, issuerId: String) -> Unit,
 ) {
     val listState = remember(options) { LazyListState() }
 
@@ -348,12 +348,12 @@ private fun Options(
 
             itemsIndexed(
                 items = items,
-                key = { _, item -> "$issuerId-${item.configurationId}" },
+                key = { _, item -> "$issuerId-${item.configurationIds.joinToString(",")}" },
             ) { _, item ->
                 val testTag =
                     TestTag.AddDocumentScreen.optionItem(
                         issuerId = issuerId,
-                        configId = item.configurationId,
+                        configIds = item.configurationIds,
                     )
 
                 ElevatedCard(
@@ -367,7 +367,7 @@ private fun Options(
                             containerColor = MaterialTheme.colorScheme.surfaceContainer,
                         ),
                     onClick = {
-                        onOptionClicked(item.configurationId, issuerId)
+                        onOptionClicked(item.configurationIds, issuerId)
                     },
                 ) {
                     WrapListItem(
@@ -376,7 +376,7 @@ private fun Options(
                         mainContentVerticalPadding = SPACING_LARGE.dp,
                         mainContentTextStyle = MaterialTheme.typography.titleMedium,
                         onItemClick = {
-                            onOptionClicked(item.configurationId, issuerId)
+                            onOptionClicked(item.configurationIds, issuerId)
                         },
                     )
                 }
@@ -442,7 +442,7 @@ private fun IssuanceAddDocumentScreenPreview() {
                 listOf(
                     AddDocumentUi(
                         credentialIssuerId = "issuer1",
-                        configurationId = "configId1",
+                        configurationIds = listOf("configId1"),
                         itemData =
                             ListItemDataUi(
                                 itemId = "configId1",
@@ -458,7 +458,7 @@ private fun IssuanceAddDocumentScreenPreview() {
                 listOf(
                     AddDocumentUi(
                         credentialIssuerId = "issuer2",
-                        configurationId = "configId2",
+                        configurationIds = listOf("configId2"),
                         itemData =
                             ListItemDataUi(
                                 itemId = "configId2",
@@ -501,7 +501,7 @@ private fun DashboardAddDocumentScreenPreview() {
                 listOf(
                     AddDocumentUi(
                         credentialIssuerId = "issuer1",
-                        configurationId = "configId1",
+                        configurationIds = listOf("configId1"),
                         itemData =
                             ListItemDataUi(
                                 itemId = "configId1",
@@ -517,7 +517,7 @@ private fun DashboardAddDocumentScreenPreview() {
                 listOf(
                     AddDocumentUi(
                         credentialIssuerId = "issuer2",
-                        configurationId = "configId2",
+                        configurationIds = listOf("configId2"),
                         itemData =
                             ListItemDataUi(
                                 itemId = "configId2",

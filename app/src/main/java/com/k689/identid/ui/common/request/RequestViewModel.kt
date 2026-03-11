@@ -18,8 +18,11 @@ package com.k689.identid.ui.common.request
 
 import com.k689.identid.config.NavigationType
 import com.k689.identid.di.core.getOrCreatePresentationScope
+import com.k689.identid.extension.ui.collectAllNestedIds
 import com.k689.identid.extension.ui.toggleCheckboxState
 import com.k689.identid.extension.ui.toggleExpansionState
+import com.k689.identid.model.core.ClaimPathDomain
+import com.k689.identid.ui.common.request.model.DomainDocumentFormat
 import com.k689.identid.ui.common.request.model.RequestDocumentItemUi
 import com.k689.identid.ui.component.AppIcons
 import com.k689.identid.ui.component.ListItemTrailingContentDataUi
@@ -158,7 +161,14 @@ abstract class RequestViewModel : MviViewModel<Event, State, Effect>() {
 
             is Event.UserIdentificationClicked -> {
                 if (viewState.value.hasWarnedUser) {
-                    updateUserIdentificationItem(id = event.itemId)
+                    val clickedId = event.itemId
+
+                    val siblingIds = getIdsInSameTopLevelRootGroup(
+                        documents = viewState.value.items,
+                        clickedItemId = clickedId
+                    )
+
+                    updateUserIdentificationItem(id = clickedId, siblingIds = siblingIds)
                 } else {
                     setState {
                         copy(hasWarnedUser = true)
@@ -176,6 +186,40 @@ abstract class RequestViewModel : MviViewModel<Event, State, Effect>() {
                     copy(isBottomSheetOpen = event.isOpen)
                 }
             }
+        }
+    }
+
+    private fun getIdsInSameTopLevelRootGroup(
+        documents: List<RequestDocumentItemUi>,
+        clickedItemId: String
+    ): List<String> {
+        runCatching {
+            val idComponents: List<String> = clickedItemId.split(ClaimPathDomain.PATH_SEPARATOR)
+
+            val clickedDocId = idComponents[0]
+            val clickedClaimFirstPathSegment = idComponents[1]
+
+            val groupItemIds = mutableListOf<String>()
+
+            documents.find { document ->
+                document.domainPayload.domainDocFormat is DomainDocumentFormat.SdJwtVc &&
+                    document.domainPayload.docId == clickedDocId
+            }?.let { clickedDocument ->
+                clickedDocument.headerUi.nestedItems.forEach { childItemUi ->
+                    val childItemFirstPathSegment = childItemUi.header.itemId
+                        .split(ClaimPathDomain.PATH_SEPARATOR)[1]
+
+                    if (childItemFirstPathSegment == clickedClaimFirstPathSegment) {
+                        groupItemIds.addAll(childItemUi.collectAllNestedIds())
+                    }
+                }
+            }
+
+            return groupItemIds
+                .distinct()
+                .minus(clickedItemId)
+        }.getOrElse {
+            return emptyList()
         }
     }
 
@@ -243,7 +287,7 @@ abstract class RequestViewModel : MviViewModel<Event, State, Effect>() {
         updateData(updatedItems, viewState.value.allowShare)
     }
 
-    private fun updateUserIdentificationItem(id: String) {
+    private fun updateUserIdentificationItem(id: String, siblingIds: List<String>) {
         val currentItems = viewState.value.items
 
         val updatedItems: List<RequestDocumentItemUi> =
@@ -253,7 +297,7 @@ abstract class RequestViewModel : MviViewModel<Event, State, Effect>() {
                         requestDocument.headerUi.copy(
                             nestedItems =
                                 requestDocument.headerUi.nestedItems.map {
-                                    it.toggleCheckboxState(id)
+                                    it.toggleCheckboxState(id = id, coToggleIds = siblingIds)
                                 },
                         ),
                 )

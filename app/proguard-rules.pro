@@ -99,6 +99,10 @@
 # API Models
 -keep class eu.europa.ec.network.model.** { *; }
 
+# Core Configuration
+-keep interface com.k689.identid.config.WalletCoreConfig
+-keepclassmembers class * implements com.k689.identid.config.WalletCoreConfig { *; }
+
 # Enum
 -keep enum * { *; }
 
