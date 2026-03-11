@@ -31,6 +31,8 @@ interface PinStorageController {
     fun retrieveIncorrectAttempts(): Int
 
     fun canValidatePin(): Boolean
+
+    fun isPinValid(pin: String): Boolean
 }
 
 class PinStorageControllerImpl(
@@ -54,6 +56,8 @@ class PinStorageControllerImpl(
         }
         return isValid
     }
+
+    override fun isPinValid(pin: String): Boolean = storageConfig.pinStorageProvider.isPinValid(pin)
 
     override fun retrieveIncorrectPinEntryTime(): Long = storageConfig.pinStorageProvider.lastIncorrectPinEntryTime()
 
