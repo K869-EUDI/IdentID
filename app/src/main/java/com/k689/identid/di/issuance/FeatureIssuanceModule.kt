@@ -16,13 +16,13 @@
 
 package com.k689.identid.di.issuance
 
+import com.k689.identid.config.ConfigLogic
 import com.k689.identid.controller.core.WalletCoreDocumentsController
 import com.k689.identid.interactor.common.DeviceAuthenticationInteractor
 import com.k689.identid.interactor.issuance.AddDocumentInteractor
 import com.k689.identid.interactor.issuance.AddDocumentInteractorImpl
 import com.k689.identid.interactor.issuance.DocumentIssuanceSuccessInteractor
 import com.k689.identid.interactor.issuance.DocumentIssuanceSuccessInteractorImpl
-import com.k689.identid.config.ConfigLogic
 import com.k689.identid.interactor.issuance.DocumentOfferInteractor
 import com.k689.identid.interactor.issuance.DocumentOfferInteractorImpl
 import com.k689.identid.provider.UuidProvider

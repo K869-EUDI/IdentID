@@ -152,7 +152,10 @@ class MoveWalletViewModel(
                                         ContentErrorConfig(
                                             onRetry = { setEvent(MoveWalletEvent.Init(context)) },
                                             errorSubTitle = state.message,
-                                            onCancel = { cleanUp(context); setEffect { MoveWalletEffect.Navigation.Pop } },
+                                            onCancel = {
+                                                cleanUp(context)
+                                                setEffect { MoveWalletEffect.Navigation.Pop }
+                                            },
                                         ),
                                 )
                             }

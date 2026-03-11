@@ -138,8 +138,7 @@ class AddDocumentInteractorImpl(
                             .filter { doc ->
                                 (customFormatType == null || doc.formatType == customFormatType) &&
                                     (flowType !is IssuanceFlowType.NoDocument || doc.isPid)
-                            }
-                            .sortedBy { it.credentialIssuerOrder }
+                            }.sortedBy { it.credentialIssuerOrder }
                             .groupBy { it.credentialIssuerId }
                             .map { (issuer, docs) ->
 
@@ -228,57 +227,58 @@ class AddDocumentInteractorImpl(
         issuerId: String,
     ): Flow<AddDocumentInteractorIssueDocumentsPartialState> =
         flow {
-            walletCoreDocumentsController.issueDocuments(
-                issuanceMethod = issuanceMethod,
-                configIds = configIds,
-                issuerId = issuerId,
-            ).collect { state ->
+            walletCoreDocumentsController
+                .issueDocuments(
+                    issuanceMethod = issuanceMethod,
+                    configIds = configIds,
+                    issuerId = issuerId,
+                ).collect { state ->
 
-                val successIds: MutableList<String> = mutableListOf()
-                var isDeferred = false
-                var error: String? = null
-                var authenticationData: Pair<BiometricCrypto, DeviceAuthenticationResult>? = null
+                    val successIds: MutableList<String> = mutableListOf()
+                    var isDeferred = false
+                    var error: String? = null
+                    var authenticationData: Pair<BiometricCrypto, DeviceAuthenticationResult>? = null
 
-                when (state) {
-                    is IssueDocumentsPartialState.DeferredSuccess -> {
-                        isDeferred = true
+                    when (state) {
+                        is IssueDocumentsPartialState.DeferredSuccess -> {
+                            isDeferred = true
+                        }
+
+                        is IssueDocumentsPartialState.Failure -> {
+                            error = state.errorMessage
+                        }
+
+                        is IssueDocumentsPartialState.PartialSuccess -> {
+                            successIds.addAll(state.documentIds)
+                        }
+
+                        is IssueDocumentsPartialState.Success -> {
+                            successIds.addAll(state.documentIds)
+                        }
+
+                        is IssueDocumentsPartialState.UserAuthRequired -> {
+                            authenticationData = state.crypto to state.resultHandler
+                        }
                     }
 
-                    is IssueDocumentsPartialState.Failure -> {
-                        error = state.errorMessage
-                    }
+                    val result =
+                        if (isDeferred) {
+                            AddDocumentInteractorIssueDocumentsPartialState.DeferredSuccess
+                        } else if (successIds.isNotEmpty()) {
+                            AddDocumentInteractorIssueDocumentsPartialState.Success(successIds)
+                        } else if (error != null) {
+                            AddDocumentInteractorIssueDocumentsPartialState.Failure(error)
+                        } else if (authenticationData != null) {
+                            AddDocumentInteractorIssueDocumentsPartialState.UserAuthRequired(
+                                authenticationData.first,
+                                authenticationData.second,
+                            )
+                        } else {
+                            AddDocumentInteractorIssueDocumentsPartialState.Failure(genericErrorMsg)
+                        }
 
-                    is IssueDocumentsPartialState.PartialSuccess -> {
-                        successIds.addAll(state.documentIds)
-                    }
-
-                    is IssueDocumentsPartialState.Success -> {
-                        successIds.addAll(state.documentIds)
-                    }
-
-                    is IssueDocumentsPartialState.UserAuthRequired -> {
-                        authenticationData = state.crypto to state.resultHandler
-                    }
+                    emit(result)
                 }
-
-                val result =
-                    if (isDeferred) {
-                        AddDocumentInteractorIssueDocumentsPartialState.DeferredSuccess
-                    } else if (successIds.isNotEmpty()) {
-                        AddDocumentInteractorIssueDocumentsPartialState.Success(successIds)
-                    } else if (error != null) {
-                        AddDocumentInteractorIssueDocumentsPartialState.Failure(error)
-                    } else if (authenticationData != null) {
-                        AddDocumentInteractorIssueDocumentsPartialState.UserAuthRequired(
-                            authenticationData.first,
-                            authenticationData.second,
-                        )
-                    } else {
-                        AddDocumentInteractorIssueDocumentsPartialState.Failure(genericErrorMsg)
-                    }
-
-                emit(result)
-            }
         }.safeAsync {
             AddDocumentInteractorIssueDocumentsPartialState.Failure(
                 errorMessage = it.localizedMessage ?: genericErrorMsg,

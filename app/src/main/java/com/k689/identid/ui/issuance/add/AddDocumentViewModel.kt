@@ -401,6 +401,7 @@ class AddDocumentViewModel(
                     }
             }
     }
+
     private fun navigateToDocumentIssuanceSuccessScreen(documentIds: List<String>) {
         val onSuccessNavigation =
             when (viewState.value.issuanceConfig.flowType) {

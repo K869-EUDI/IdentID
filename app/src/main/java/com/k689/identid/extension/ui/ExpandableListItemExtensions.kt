@@ -35,9 +35,9 @@ import com.k689.identid.ui.component.wrap.ExpandableListItemUi
  */
 fun ExpandableListItemUi.toggleCheckboxState(
     id: String,
-    coToggleIds: List<String>
-): ExpandableListItemUi {
-    return when (this) {
+    coToggleIds: List<String>,
+): ExpandableListItemUi =
+    when (this) {
         is ExpandableListItemUi.NestedListItem -> {
             this.copy(
                 nestedItems =
@@ -73,7 +73,6 @@ fun ExpandableListItemUi.toggleCheckboxState(
             }
         }
     }
-}
 
 /**
  * Recursively traverses the [ExpandableListItemUi] and its children to collect all item IDs.

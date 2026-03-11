@@ -163,10 +163,11 @@ abstract class RequestViewModel : MviViewModel<Event, State, Effect>() {
                 if (viewState.value.hasWarnedUser) {
                     val clickedId = event.itemId
 
-                    val siblingIds = getIdsInSameTopLevelRootGroup(
-                        documents = viewState.value.items,
-                        clickedItemId = clickedId
-                    )
+                    val siblingIds =
+                        getIdsInSameTopLevelRootGroup(
+                            documents = viewState.value.items,
+                            clickedItemId = clickedId,
+                        )
 
                     updateUserIdentificationItem(id = clickedId, siblingIds = siblingIds)
                 } else {
@@ -191,7 +192,7 @@ abstract class RequestViewModel : MviViewModel<Event, State, Effect>() {
 
     private fun getIdsInSameTopLevelRootGroup(
         documents: List<RequestDocumentItemUi>,
-        clickedItemId: String
+        clickedItemId: String,
     ): List<String> {
         runCatching {
             val idComponents: List<String> = clickedItemId.split(ClaimPathDomain.PATH_SEPARATOR)
@@ -201,19 +202,21 @@ abstract class RequestViewModel : MviViewModel<Event, State, Effect>() {
 
             val groupItemIds = mutableListOf<String>()
 
-            documents.find { document ->
-                document.domainPayload.domainDocFormat is DomainDocumentFormat.SdJwtVc &&
-                    document.domainPayload.docId == clickedDocId
-            }?.let { clickedDocument ->
-                clickedDocument.headerUi.nestedItems.forEach { childItemUi ->
-                    val childItemFirstPathSegment = childItemUi.header.itemId
-                        .split(ClaimPathDomain.PATH_SEPARATOR)[1]
+            documents
+                .find { document ->
+                    document.domainPayload.domainDocFormat is DomainDocumentFormat.SdJwtVc &&
+                        document.domainPayload.docId == clickedDocId
+                }?.let { clickedDocument ->
+                    clickedDocument.headerUi.nestedItems.forEach { childItemUi ->
+                        val childItemFirstPathSegment =
+                            childItemUi.header.itemId
+                                .split(ClaimPathDomain.PATH_SEPARATOR)[1]
 
-                    if (childItemFirstPathSegment == clickedClaimFirstPathSegment) {
-                        groupItemIds.addAll(childItemUi.collectAllNestedIds())
+                        if (childItemFirstPathSegment == clickedClaimFirstPathSegment) {
+                            groupItemIds.addAll(childItemUi.collectAllNestedIds())
+                        }
                     }
                 }
-            }
 
             return groupItemIds
                 .distinct()
@@ -287,7 +290,10 @@ abstract class RequestViewModel : MviViewModel<Event, State, Effect>() {
         updateData(updatedItems, viewState.value.allowShare)
     }
 
-    private fun updateUserIdentificationItem(id: String, siblingIds: List<String>) {
+    private fun updateUserIdentificationItem(
+        id: String,
+        siblingIds: List<String>,
+    ) {
         val currentItems = viewState.value.items
 
         val updatedItems: List<RequestDocumentItemUi> =
