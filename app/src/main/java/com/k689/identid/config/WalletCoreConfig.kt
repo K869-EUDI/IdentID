@@ -21,7 +21,6 @@ import com.k689.identid.model.core.DocumentCategory
 import com.k689.identid.model.core.DocumentIdentifier
 import eu.europa.ec.eudi.wallet.EudiWalletConfig
 import eu.europa.ec.eudi.wallet.document.CreateDocumentSettings.CredentialPolicy
-import eu.europa.ec.eudi.wallet.issue.openid4vci.OpenId4VciManager
 import java.time.Duration
 
 interface WalletCoreConfig {
@@ -33,9 +32,13 @@ interface WalletCoreConfig {
     val config: EudiWalletConfig
 
     /**
-     * List of Configurations for Verifiable Credentials Issuance (VCI).
+     * A list of configurations for Verifiable Credentials Issuance (VCI) using OpenID4VCI.
+     *
+     * Each element in the list is a [VciConfig] object, which contains:
+     * - The [eu.europa.ec.eudi.wallet.issue.openid4vci.OpenId4VciManager.Config] required to communicate with a specific issuer.
+     * - An `order` property to determine the display order of the issuer.
      */
-    val vciConfig: List<OpenId4VciManager.Config>
+    val issuersConfig: List<VciConfig>
 
     /**
      * Returns a predefined set of document categories and their associated identifiers.

@@ -16,6 +16,7 @@
 
 package com.k689.identid.di.issuance
 
+import com.k689.identid.config.ConfigLogic
 import com.k689.identid.controller.core.WalletCoreDocumentsController
 import com.k689.identid.interactor.common.DeviceAuthenticationInteractor
 import com.k689.identid.interactor.issuance.AddDocumentInteractor
@@ -71,10 +72,12 @@ fun provideDocumentOfferInteractor(
     resourceProvider: ResourceProvider,
     deviceAuthenticationInteractor: DeviceAuthenticationInteractor,
     uiSerializer: UiSerializer,
+    configLogic: ConfigLogic,
 ): DocumentOfferInteractor =
     DocumentOfferInteractorImpl(
         walletCoreDocumentsController,
         deviceAuthenticationInteractor,
         resourceProvider,
         uiSerializer,
+        configLogic,
     )

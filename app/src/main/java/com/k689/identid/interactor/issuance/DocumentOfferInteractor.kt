@@ -18,6 +18,7 @@ package com.k689.identid.interactor.issuance
 
 import android.content.Context
 import com.k689.identid.R
+import com.k689.identid.config.ConfigLogic
 import com.k689.identid.config.ConfigNavigation
 import com.k689.identid.config.SuccessUIConfig
 import com.k689.identid.controller.authentication.BiometricsAvailability
@@ -120,6 +121,7 @@ class DocumentOfferInteractorImpl(
     private val deviceAuthenticationInteractor: DeviceAuthenticationInteractor,
     private val resourceProvider: ResourceProvider,
     private val uiSerializer: UiSerializer,
+    private val configLogic: ConfigLogic,
 ) : DocumentOfferInteractor {
     private val genericErrorMsg
         get() = resourceProvider.genericErrorMessage()
@@ -177,7 +179,7 @@ class DocumentOfferInteractorImpl(
                                         id == DocumentIdentifier.MdocPid || id == DocumentIdentifier.SdJwtPid
                                     }
 
-                                if (hasMainPid || hasPidInOffer) {
+                                if (hasMainPid || hasPidInOffer || !configLogic.forcePidActivation) {
                                     ResolveDocumentOfferInteractorPartialState.Success(
                                         documents =
                                             response.offer.offeredDocuments.map { offeredDocument ->

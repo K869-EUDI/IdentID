@@ -22,8 +22,8 @@ object TestTag {
 
         fun optionItem(
             issuerId: String,
-            configId: String,
-        ) = "add_document_screen_attestation_${issuerId}_$configId"
+            configIds: List<String>,
+        ) = "add_document_screen_attestation_${issuerId}_${configIds.joinToString(",")}"
     }
 
     object DocumentOfferScreen {
