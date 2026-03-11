@@ -55,7 +55,6 @@ import com.k689.identid.extension.ui.setBackStackFlowCancelled
 import com.k689.identid.extension.ui.setBackStackFlowSuccess
 import com.k689.identid.navigation.CommonScreens
 import com.k689.identid.navigation.helper.handleDeepLinkAction
-import com.k689.identid.storage.prefs.PrefsPinStorageProvider.Companion.MAX_INCORRECT_ATTEMPTS
 import com.k689.identid.ui.component.AppIconAndText
 import com.k689.identid.ui.component.AppIconAndTextDataUi
 import com.k689.identid.ui.component.AppIcons
@@ -74,6 +73,7 @@ import com.k689.identid.ui.component.wrap.WrapIconButton
 import com.k689.identid.ui.component.wrap.WrapPinTextField
 import com.k689.identid.util.common.TestTag
 import kotlinx.coroutines.channels.Channel
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.onEach
@@ -176,6 +176,15 @@ fun BiometricScreen(
 
     OneTimeLaunchedEffect {
         viewModel.setEvent(Event.Init)
+    }
+
+    LaunchedEffect(state.isPinInputEnabled) {
+        if (!state.isPinInputEnabled) {
+            while (true) {
+                delay(1000)
+                viewModel.setEvent(Event.OnTimerTick)
+            }
+        }
     }
 }
 
@@ -369,7 +378,7 @@ private fun PinFieldLayout(
         visualTransformation = PasswordVisualTransformation(),
         pinWidth = 42.dp,
         focusOnCreate = !state.userBiometricsAreEnabled,
-        enabled = 0 < MAX_INCORRECT_ATTEMPTS,
+        enabled = state.isPinInputEnabled,
     )
 }
 
