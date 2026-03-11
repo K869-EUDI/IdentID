@@ -13,9 +13,7 @@
   ~ ANY KIND, either express or implied. See the Licence for the specific language
   ~ governing permissions and limitations under the Licence.
   -->
-
 <resources xmlns:tools="http://schemas.android.com/tools">
-
     <!-- region Generic -->
     <string name="generic_error_message">Oi! Kažkas nutiko ne taip</string>
     <string name="generic_error_description">Jei problema kartojasi, susisiekite su klientų aptarnavimo tarnyba</string>
@@ -151,7 +149,6 @@
     <string name="quick_pin_invalid_error">Neteisingas PIN kodas</string>
     <string name="quick_pin_numerical_rule_invalid_error_message">Leidžiamos tik skaitinės reikšmės</string>
     <string name="quick_pin_non_match">PIN kodai nesutampa</string>
-
     <string name="quick_pin_create_title">Sveiki atvykę į savo piniginę</string>
     <string name="quick_pin_create_enter_subtitle">Apsaugokite savo piniginę PIN kodu ir prisijunkite prie nacionalinės sistemos.</string>
     <string name="quick_pin_create_reenter_subtitle">Pakartokite PIN kodą</string>
@@ -231,6 +228,10 @@
     <string name="dashboard_side_menu_option_change_pin_id">changePinId</string>
     <string name="dashboard_side_menu_option_settings">Nustatymai</string>
     <string name="dashboard_side_menu_option_settings_id">settingsId</string>
+    <string name="dashboard_side_menu_option_move_wallet">Perkelti piniginę į naują įrenginį</string>
+    <string name="dashboard_side_menu_option_move_wallet_id">moveWalletId</string>
+    <string name="dashboard_side_menu_option_receive_wallet">Gauti piniginę iš įrenginio</string>
+    <string name="dashboard_side_menu_option_receive_wallet_id">receiveWalletId</string>
     <!--endregion-->
 
     <!-- region Settings Screen -->
@@ -251,6 +252,7 @@
     <string name="preferences_theme_label">Tema</string>
     <string name="preferences_language_label">Kalba</string>
     <!--endregion-->
+
 
     <!-- region Home Screen -->
     <string name="home_screen_title">Pradžia</string>
@@ -413,6 +415,39 @@
     <string name="proximity_qr_hold_near_reader">Pridėkite telefoną prie skaitytuvo, kad jis būtų nuskaitytas.</string>
     <!--endregion-->
 
+    <!-- region Wallet Transfer -->
+    <string name="transfer_side_menu_move_wallet">Perkelti piniginę į naują įrenginį</string>
+    <string name="transfer_side_menu_receive_wallet">Gauti piniginę iš įrenginio</string>
+    <string name="transfer_move_wallet_title">Perkelti piniginę</string>
+    <string name="transfer_move_wallet_subtitle">Parodykite šį QR kodą naujame įrenginyje, kad pradėtumėte perkėlimą</string>
+    <string name="transfer_move_wallet_use_nfc">Arba naudokite NFC</string>
+    <string name="transfer_move_wallet_hold_near_device">Pridėkite įrenginius vienas prie kito</string>
+    <string name="transfer_approval_title">Patvirtinti perkėlimą</string>
+    <string name="transfer_approval_subtitle">Peržiūrėkite dokumentus, kurie bus perkelti į naują įrenginį, ir įveskite PIN kodą, kad patvirtintumėte</string>
+    <string name="transfer_approval_pin_label">Įveskite PIN kodą</string>
+    <string name="transfer_approval_pin_error">Neteisingas PIN kodas</string>
+    <string name="transfer_approval_confirm_button" tools:ignore="ButtonCase">PATVIRTINTI PERKĖLIMĄ</string>
+    <string name="transfer_approval_pid_label">Asmens ID</string>
+    <string name="transfer_receive_title">Gauti piniginę</string>
+    <string name="transfer_receive_subtitle">Pasirinkite, kaip prisijungti prie kito įrenginio</string>
+    <string name="transfer_receive_scan_qr">Nuskaityti QR kodą</string>
+    <string name="transfer_receive_use_nfc">Naudoti NFC</string>
+    <string name="transfer_receive_qr_title">Nuskaityti QR kodą</string>
+    <string name="transfer_receive_qr_subtitle">Nukreipkite kamerą į QR kodą kitame įrenginyje</string>
+    <string name="transfer_receive_qr_permission_needed">QR kodo nuskaitymui reikalingas fotoaparato leidimas</string>
+    <string name="transfer_receive_connecting_status">Jungiamasi prie kito įrenginio, laikykite abu įrenginius arti</string>
+    <string name="transfer_receive_nfc_title">NFC perkėlimas</string>
+    <string name="transfer_receive_nfc_subtitle">Pridėkite įrenginius vienas prie kito, kad pradėtumėte perkėlimą</string>
+    <string name="transfer_receive_nfc_hold_devices">Laikykite įrenginius arti vienas kito</string>
+    <string name="transfer_document_list_title">Rasti dokumentai</string>
+    <string name="transfer_document_list_subtitle">Šie dokumentai bus iš naujo išduoti šiame įrenginyje</string>
+    <string name="transfer_document_list_import_button" tools:ignore="ButtonCase">IMPORTUOTI DOKUMENTUS</string>
+    <string name="transfer_import_complete_title">Perkėlimas baigtas</string>
+    <string name="transfer_import_complete_subtitle">Jūsų dokumentai buvo apdoroti</string>
+    <string name="transfer_import_status_success">Sėkmingai importuota</string>
+    <string name="transfer_import_done_button" tools:ignore="ButtonCase">BAIGTA</string>
+    <!--endregion-->
+
     <!-- region Presentation Qr Scan -->
     <string name="presentation_qr_scan_title">Pateikti dokumentą internetu</string>
     <string name="presentation_qr_scan_subtitle">Nuskaitykite pasikliaujančiosios šalies pateiktą QR kodą, kad pateiktumėte skaitmeninį dokumentą.</string>
@@ -486,5 +521,4 @@
     <string name="transaction_category_this_week">ŠIĄ SAVAITĘ</string>
     <string name="transaction_category_month_year">MĖNUO</string>
     <!--endregion-->
-
 </resources>

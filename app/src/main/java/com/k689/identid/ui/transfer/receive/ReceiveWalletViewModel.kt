@@ -48,19 +48,38 @@ data class ReceiveWalletState(
 
 sealed class ReceiveWalletEvent : ViewEvent {
     data object GoBack : ReceiveWalletEvent()
+
     data object ChooseQr : ReceiveWalletEvent()
+
     data object ChooseNfc : ReceiveWalletEvent()
-    data class SessionScanned(val context: Context, val encoded: String) : ReceiveWalletEvent()
-    data class ImportDocuments(val context: Context) : ReceiveWalletEvent()
-    data class OnResumeIssuance(val uri: String) : ReceiveWalletEvent()
+
+    data class SessionScanned(
+        val context: Context,
+        val encoded: String,
+    ) : ReceiveWalletEvent()
+
+    data class ImportDocuments(
+        val context: Context,
+    ) : ReceiveWalletEvent()
+
+    data class OnResumeIssuance(
+        val uri: String,
+    ) : ReceiveWalletEvent()
+
     data object NavigateToDashboard : ReceiveWalletEvent()
 }
 
 sealed class ReceiveWalletEffect : ViewSideEffect {
     sealed class Navigation : ReceiveWalletEffect() {
         data object Pop : Navigation()
-        data class SwitchScreen(val screenRoute: String) : Navigation()
-        data class NavigateToDashboard(val screenRoute: String) : Navigation()
+
+        data class SwitchScreen(
+            val screenRoute: String,
+        ) : Navigation()
+
+        data class NavigateToDashboard(
+            val screenRoute: String,
+        ) : Navigation()
     }
 }
 
@@ -68,7 +87,6 @@ sealed class ReceiveWalletEffect : ViewSideEffect {
 class ReceiveWalletViewModel(
     private val interactor: ReceiveWalletInteractor,
 ) : MviViewModel<ReceiveWalletEvent, ReceiveWalletState, ReceiveWalletEffect>() {
-
     private var connectionJob: Job? = null
 
     override fun setInitialState(): ReceiveWalletState = ReceiveWalletState()
@@ -118,23 +136,28 @@ class ReceiveWalletViewModel(
         }
     }
 
-    private fun handleSessionScanned(context: Context, encoded: String) {
+    private fun handleSessionScanned(
+        context: Context,
+        encoded: String,
+    ) {
+        if (connectionJob?.isActive == true) return
         val sessionInfo = interactor.parseSessionInfo(encoded)
         if (sessionInfo == null) {
             setState {
                 copy(
-                    error = ContentErrorConfig(
-                        errorSubTitle = "Invalid QR code. Please try again.",
-                        onRetry = {
-                            setState { copy(error = null) }
-                            setEffect {
-                                ReceiveWalletEffect.Navigation.SwitchScreen(
-                                    TransferScreens.ReceiveWalletQr.screenRoute,
-                                )
-                            }
-                        },
-                        onCancel = { setEvent(ReceiveWalletEvent.GoBack) },
-                    ),
+                    error =
+                        ContentErrorConfig(
+                            errorSubTitle = "Invalid QR code. Please try again.",
+                            onRetry = {
+                                setState { copy(error = null) }
+                                setEffect {
+                                    ReceiveWalletEffect.Navigation.SwitchScreen(
+                                        TransferScreens.ReceiveWalletQr.screenRoute,
+                                    )
+                                }
+                            },
+                            onCancel = { setEvent(ReceiveWalletEvent.GoBack) },
+                        ),
                 )
             }
             return
@@ -142,64 +165,71 @@ class ReceiveWalletViewModel(
 
         setState { copy(isLoading = true, sessionInfo = sessionInfo) }
 
-        connectionJob = viewModelScope.launch {
-            interactor.connectToSender(context, sessionInfo).collect { state ->
-                when (state) {
-                    is ReceiveWalletPartialState.Discovering -> {
-                        // Still searching
-                    }
+        connectionJob?.cancel()
 
-                    is ReceiveWalletPartialState.Connected -> {
-                        setState { copy(isConnected = true) }
-                    }
-
-                    is ReceiveWalletPartialState.DataReceived -> {
-                        setState {
-                            copy(
-                                isLoading = false,
-                                receivedData = state.data,
-                            )
+        connectionJob =
+            viewModelScope.launch {
+                interactor.connectToSender(context, sessionInfo).collect { state ->
+                    when (state) {
+                        is ReceiveWalletPartialState.Discovering -> {
+                            // Still searching
                         }
-                        // Navigate to document list
-                        setEffect {
-                            ReceiveWalletEffect.Navigation.SwitchScreen(
-                                TransferScreens.ReceiveWalletDocumentList.screenRoute,
-                            )
-                        }
-                    }
 
-                    is ReceiveWalletPartialState.Error -> {
-                        setState {
-                            copy(
-                                isLoading = false,
-                                error = ContentErrorConfig(
-                                    errorSubTitle = state.message,
-                                    onRetry = { setEvent(ReceiveWalletEvent.GoBack) },
-                                    onCancel = { setEvent(ReceiveWalletEvent.GoBack) },
-                                ),
-                            )
+                        is ReceiveWalletPartialState.Connected -> {
+                            setState { copy(isConnected = true) }
                         }
-                    }
 
-                    is ReceiveWalletPartialState.Disconnected -> {
-                        if (viewState.value.receivedData == null) {
+                        is ReceiveWalletPartialState.DataReceived -> {
                             setState {
                                 copy(
                                     isLoading = false,
-                                    error = ContentErrorConfig(
-                                        errorSubTitle = "Connection lost. Please try again.",
-                                        onRetry = { setEvent(ReceiveWalletEvent.GoBack) },
-                                        onCancel = { setEvent(ReceiveWalletEvent.GoBack) },
-                                    ),
+                                    receivedData = state.data,
+                                )
+                            }
+                            // Navigate to document list
+                            setEffect {
+                                ReceiveWalletEffect.Navigation.SwitchScreen(
+                                    TransferScreens.ReceiveWalletDocumentList.screenRoute,
                                 )
                             }
                         }
-                    }
 
-                    else -> {}
+                        is ReceiveWalletPartialState.Error -> {
+                            setState {
+                                copy(
+                                    isLoading = false,
+                                    error =
+                                        ContentErrorConfig(
+                                            errorSubTitle = state.message,
+                                            onRetry = { setEvent(ReceiveWalletEvent.GoBack) },
+                                            onCancel = { setEvent(ReceiveWalletEvent.GoBack) },
+                                        ),
+                                )
+                            }
+                            connectionJob?.cancel()
+                        }
+
+                        is ReceiveWalletPartialState.Disconnected -> {
+                            if (viewState.value.receivedData == null) {
+                                setState {
+                                    copy(
+                                        isLoading = false,
+                                        error =
+                                            ContentErrorConfig(
+                                                errorSubTitle = "Connection lost. Please try again.",
+                                                onRetry = { setEvent(ReceiveWalletEvent.GoBack) },
+                                                onCancel = { setEvent(ReceiveWalletEvent.GoBack) },
+                                            ),
+                                    )
+                                }
+                                connectionJob?.cancel()
+                            }
+                        }
+
+                        else -> {}
+                    }
                 }
             }
-        }
     }
 
     private fun importReceivedDocuments(context: Context) {
@@ -227,11 +257,12 @@ class ReceiveWalletViewModel(
                 setState {
                     copy(
                         isImporting = false,
-                        error = ContentErrorConfig(
-                            errorSubTitle = e.localizedMessage ?: "Import failed",
-                            onRetry = { setEvent(ReceiveWalletEvent.ImportDocuments(context)) },
-                            onCancel = { setEvent(ReceiveWalletEvent.GoBack) },
-                        ),
+                        error =
+                            ContentErrorConfig(
+                                errorSubTitle = e.localizedMessage ?: "Import failed",
+                                onRetry = { setEvent(ReceiveWalletEvent.ImportDocuments(context)) },
+                                onCancel = { setEvent(ReceiveWalletEvent.GoBack) },
+                            ),
                     )
                 }
             }

@@ -35,9 +35,15 @@ interface WalletTransferController {
 
     fun generateSessionKey(): ByteArray
 
-    fun encryptData(data: WalletTransferData, sessionKey: ByteArray): ByteArray
+    fun encryptData(
+        data: WalletTransferData,
+        sessionKey: ByteArray,
+    ): ByteArray
 
-    fun decryptData(encryptedBytes: ByteArray, sessionKey: ByteArray): WalletTransferData
+    fun decryptData(
+        encryptedBytes: ByteArray,
+        sessionKey: ByteArray,
+    ): WalletTransferData
 }
 
 class WalletTransferControllerImpl(
@@ -46,7 +52,6 @@ class WalletTransferControllerImpl(
     private val transactionLogDao: TransactionLogDao,
     private val revokedDocumentDao: RevokedDocumentDao,
 ) : WalletTransferController {
-
     companion object {
         private const val AES_TRANSFORMATION = "AES/GCM/NoPadding"
         private const val GCM_TAG_LENGTH = 128
@@ -59,39 +64,60 @@ class WalletTransferControllerImpl(
     override suspend fun collectTransferData(): WalletTransferData {
         val locale = java.util.Locale.getDefault()
 
-        // Only transfer documents that the user actually has issued
-        val issuedFormats = walletCoreDocumentsController.getAllIssuedDocuments().mapNotNull { doc ->
-            when (doc.format) {
-                is eu.europa.ec.eudi.wallet.document.format.MsoMdocFormat ->
-                    (doc.format as eu.europa.ec.eudi.wallet.document.format.MsoMdocFormat).docType
-                is eu.europa.ec.eudi.wallet.document.format.SdJwtVcFormat ->
-                    (doc.format as eu.europa.ec.eudi.wallet.document.format.SdJwtVcFormat).vct
-                else -> null
-            }
-        }.toSet()
+        // Only transfer documents that the user actually has issued, are not revoked, and are not expired
+        val revokedIds = revokedDocumentDao.retrieveAll().map { it.identifier }.toSet()
 
-        val scopedDocs = when (val result = walletCoreDocumentsController.getScopedDocuments(locale)) {
-            is com.k689.identid.controller.core.FetchScopedDocumentsPartialState.Success ->
-                result.documents
-                    .filter { doc -> doc.formatType in issuedFormats }
-                    .map { doc ->
-                        TransferableDocument(
-                            name = doc.name,
-                            configurationId = doc.configurationId,
-                            credentialIssuerId = doc.credentialIssuerId,
-                            formatType = doc.formatType,
-                            isPid = doc.isPid,
-                        )
+        val now = java.time.Instant.now()
+        val allIssuedDocs = walletCoreDocumentsController.getAllIssuedDocuments()
+
+        val issuedFormats =
+            allIssuedDocs
+                .filter { doc ->
+                    doc.id !in revokedIds &&
+                        (doc.getValidUntil().getOrNull()?.isAfter(now) != false)
+                }.mapNotNull { doc ->
+                    when (doc.format) {
+                        is eu.europa.ec.eudi.wallet.document.format.MsoMdocFormat -> {
+                            (doc.format as eu.europa.ec.eudi.wallet.document.format.MsoMdocFormat).docType
+                        }
+
+                        is eu.europa.ec.eudi.wallet.document.format.SdJwtVcFormat -> {
+                            (doc.format as eu.europa.ec.eudi.wallet.document.format.SdJwtVcFormat).vct
+                        }
                     }
-            else -> emptyList()
-        }
+                }.toSet()
 
-        val transactionLogs = transactionLogDao.retrieveAll().map { log ->
-            TransferableTransactionLog(
-                identifier = log.identifier,
-                value = log.value,
-            )
-        }
+        val scopedDocs =
+            when (val result = walletCoreDocumentsController.getScopedDocuments(locale)) {
+                is com.k689.identid.controller.core.FetchScopedDocumentsPartialState.Success -> {
+                    result.documents
+                        .filter { doc -> doc.formatType in issuedFormats }
+                        // Prefer non-deferred configurations, then deduplicate by formatType
+                        .sortedBy { doc -> if (doc.configurationId.contains("deferred")) 1 else 0 }
+                        .distinctBy { doc -> doc.formatType }
+                        .map { doc ->
+                            TransferableDocument(
+                                name = doc.name,
+                                configurationId = doc.configurationId,
+                                credentialIssuerId = doc.credentialIssuerId,
+                                formatType = doc.formatType,
+                                isPid = doc.isPid,
+                            )
+                        }
+                }
+
+                else -> {
+                    emptyList()
+                }
+            }
+
+        val transactionLogs =
+            transactionLogDao.retrieveAll().map { log ->
+                TransferableTransactionLog(
+                    identifier = log.identifier,
+                    value = log.value,
+                )
+            }
 
         val bookmarks = bookmarkDao.retrieveAll().map { it.identifier }
         val revokedDocs = revokedDocumentDao.retrieveAll().map { it.identifier }
@@ -110,7 +136,10 @@ class WalletTransferControllerImpl(
         return key
     }
 
-    override fun encryptData(data: WalletTransferData, sessionKey: ByteArray): ByteArray {
+    override fun encryptData(
+        data: WalletTransferData,
+        sessionKey: ByteArray,
+    ): ByteArray {
         val plaintext = json.encodeToString(WalletTransferData.serializer(), data).toByteArray(Charsets.UTF_8)
         val iv = ByteArray(GCM_IV_LENGTH)
         SecureRandom().nextBytes(iv)
@@ -125,7 +154,10 @@ class WalletTransferControllerImpl(
         return iv + ciphertext
     }
 
-    override fun decryptData(encryptedBytes: ByteArray, sessionKey: ByteArray): WalletTransferData {
+    override fun decryptData(
+        encryptedBytes: ByteArray,
+        sessionKey: ByteArray,
+    ): WalletTransferData {
         val iv = encryptedBytes.copyOfRange(0, GCM_IV_LENGTH)
         val ciphertext = encryptedBytes.copyOfRange(GCM_IV_LENGTH, encryptedBytes.size)
 
@@ -138,9 +170,7 @@ class WalletTransferControllerImpl(
         return json.decodeFromString(WalletTransferData.serializer(), plaintext.toString(Charsets.UTF_8))
     }
 
-    fun encodeSessionKeyToBase64(key: ByteArray): String =
-        Base64.encodeToString(key, Base64.URL_SAFE or Base64.NO_WRAP or Base64.NO_PADDING)
+    fun encodeSessionKeyToBase64(key: ByteArray): String = Base64.encodeToString(key, Base64.URL_SAFE or Base64.NO_WRAP or Base64.NO_PADDING)
 
-    fun decodeSessionKeyFromBase64(encoded: String): ByteArray =
-        Base64.decode(encoded, Base64.URL_SAFE or Base64.NO_WRAP or Base64.NO_PADDING)
+    fun decodeSessionKeyFromBase64(encoded: String): ByteArray = Base64.decode(encoded, Base64.URL_SAFE or Base64.NO_WRAP or Base64.NO_PADDING)
 }

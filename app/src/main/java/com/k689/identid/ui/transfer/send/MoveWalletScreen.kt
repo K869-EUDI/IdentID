@@ -17,17 +17,16 @@
 package com.k689.identid.ui.transfer.send
 
 import android.Manifest
-import android.content.pm.PackageManager
+import android.app.Activity
 import android.os.Build
-import android.util.Log
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -40,7 +39,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
-import androidx.core.content.ContextCompat
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.compose.LocalLifecycleOwner
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
@@ -48,10 +48,12 @@ import com.google.accompanist.permissions.rememberMultiplePermissionsState
 import com.k689.identid.R
 import com.k689.identid.extension.ui.paddingFrom
 import com.k689.identid.navigation.TransferScreens
+import com.k689.identid.service.NfcServiceModeController
 import com.k689.identid.ui.component.AppIcons
 import com.k689.identid.ui.component.content.ContentScreen
 import com.k689.identid.ui.component.content.ContentTitle
 import com.k689.identid.ui.component.content.ScreenNavigateAction
+import com.k689.identid.ui.component.utils.LifecycleEffect
 import com.k689.identid.ui.component.utils.SPACING_MEDIUM
 import com.k689.identid.ui.component.utils.SPACING_SMALL
 import com.k689.identid.ui.component.utils.screenWidthInDp
@@ -68,27 +70,30 @@ fun MoveWalletScreen(
 ) {
     val state: MoveWalletState by viewModel.viewState.collectAsStateWithLifecycle()
     val context = LocalContext.current
+    val activity = context as? Activity
 
     // Split into two groups: Android won't show location + nearby in same dialog
-    val nearbyPermissions = remember {
-        buildList {
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
-                add(Manifest.permission.BLUETOOTH_ADVERTISE)
-                add(Manifest.permission.BLUETOOTH_SCAN)
-                add(Manifest.permission.BLUETOOTH_CONNECT)
-            }
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S_V2) {
-                add(Manifest.permission.NEARBY_WIFI_DEVICES)
+    val nearbyPermissions =
+        remember {
+            buildList {
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+                    add(Manifest.permission.BLUETOOTH_ADVERTISE)
+                    add(Manifest.permission.BLUETOOTH_SCAN)
+                    add(Manifest.permission.BLUETOOTH_CONNECT)
+                }
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S_V2) {
+                    add(Manifest.permission.NEARBY_WIFI_DEVICES)
+                }
             }
         }
-    }
 
-    val locationPermissions = remember {
-        listOf(
-            Manifest.permission.ACCESS_FINE_LOCATION,
-            Manifest.permission.ACCESS_COARSE_LOCATION,
-        )
-    }
+    val locationPermissions =
+        remember {
+            listOf(
+                Manifest.permission.ACCESS_FINE_LOCATION,
+                Manifest.permission.ACCESS_COARSE_LOCATION,
+            )
+        }
 
     val nearbyPermissionsState = rememberMultiplePermissionsState(nearbyPermissions)
     val locationPermissionsState = rememberMultiplePermissionsState(locationPermissions)
@@ -97,13 +102,7 @@ fun MoveWalletScreen(
 
     // Phase 1: Request nearby permissions
     LaunchedEffect(Unit) {
-        (nearbyPermissions + locationPermissions).forEach { perm ->
-            val status = ContextCompat.checkSelfPermission(context, perm)
-            Log.d("MoveWalletScreen", "Permission $perm = ${if (status == PackageManager.PERMISSION_GRANTED) "GRANTED" else "DENIED"}")
-        }
-
         if (!nearbyPermissionsState.allPermissionsGranted) {
-            Log.d("MoveWalletScreen", "Requesting nearby permissions")
             nearbyPermissionsState.launchMultiplePermissionRequest()
         }
     }
@@ -111,7 +110,6 @@ fun MoveWalletScreen(
     // Phase 2: After nearby permissions granted, request location
     LaunchedEffect(nearbyPermissionsState.allPermissionsGranted) {
         if (nearbyPermissionsState.allPermissionsGranted && !locationPermissionsState.allPermissionsGranted) {
-            Log.d("MoveWalletScreen", "Nearby granted, requesting location")
             locationPermissionsState.launchMultiplePermissionRequest()
         }
     }
@@ -119,7 +117,6 @@ fun MoveWalletScreen(
     // Init when all permissions are granted
     LaunchedEffect(allGranted) {
         if (allGranted) {
-            Log.d("MoveWalletScreen", "All permissions granted, sending Init")
             viewModel.setEvent(MoveWalletEvent.Init(context))
         }
     }
@@ -154,6 +151,20 @@ fun MoveWalletScreen(
                 }
             }.collect()
     }
+
+    LifecycleEffect(
+        lifecycleOwner = LocalLifecycleOwner.current,
+        lifecycleEvent = Lifecycle.Event.ON_RESUME,
+    ) {
+        activity?.let { NfcServiceModeController.activateTransferMode(it) }
+    }
+
+    LifecycleEffect(
+        lifecycleOwner = LocalLifecycleOwner.current,
+        lifecycleEvent = Lifecycle.Event.ON_PAUSE,
+    ) {
+        activity?.let { NfcServiceModeController.activateCredentialSharingMode(it) }
+    }
 }
 
 @Composable
@@ -165,10 +176,11 @@ private fun Content(
 
     Column(modifier = Modifier.fillMaxSize()) {
         Column(
-            modifier = Modifier
-                .fillMaxWidth()
-                .weight(1f)
-                .paddingFrom(paddingValues, bottom = false),
+            modifier =
+                Modifier
+                    .fillMaxWidth()
+                    .weight(1f)
+                    .paddingFrom(paddingValues, bottom = false),
         ) {
             ContentTitle(
                 modifier = Modifier.fillMaxWidth(),
@@ -182,10 +194,11 @@ private fun Content(
             ) {
                 if (state.qrCode.isNotEmpty()) {
                     WrapImage(
-                        painter = rememberQrBitmapPainter(
-                            content = state.qrCode,
-                            size = qrSize,
-                        ),
+                        painter =
+                            rememberQrBitmapPainter(
+                                content = state.qrCode,
+                                size = qrSize,
+                            ),
                         contentDescription = stringResource(id = R.string.content_description_qr_code_icon),
                     )
                 }
@@ -202,15 +215,16 @@ private fun Content(
 @Composable
 private fun NFCSection(paddingValues: PaddingValues) {
     Column(
-        modifier = Modifier
-            .fillMaxWidth()
-            .wrapContentHeight()
-            .padding(
-                start = SPACING_MEDIUM.dp,
-                end = SPACING_MEDIUM.dp,
-                top = SPACING_MEDIUM.dp,
-                bottom = paddingValues.calculateBottomPadding(),
-            ),
+        modifier =
+            Modifier
+                .fillMaxWidth()
+                .wrapContentHeight()
+                .padding(
+                    start = SPACING_MEDIUM.dp,
+                    end = SPACING_MEDIUM.dp,
+                    top = SPACING_MEDIUM.dp,
+                    bottom = paddingValues.calculateBottomPadding(),
+                ),
         verticalArrangement = Arrangement.spacedBy(SPACING_SMALL.dp),
         horizontalAlignment = Alignment.CenterHorizontally,
     ) {

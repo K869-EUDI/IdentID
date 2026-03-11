@@ -107,9 +107,10 @@ private fun Content(
     paddingValues: PaddingValues,
 ) {
     Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .paddingFrom(paddingValues),
+        modifier =
+            Modifier
+                .fillMaxSize()
+                .paddingFrom(paddingValues),
     ) {
         ContentTitle(
             modifier = Modifier.fillMaxWidth(),
@@ -120,9 +121,10 @@ private fun Content(
         Spacer(modifier = Modifier.height(SPACING_MEDIUM.dp))
 
         LazyColumn(
-            modifier = Modifier
-                .fillMaxWidth()
-                .weight(1f),
+            modifier =
+                Modifier
+                    .fillMaxWidth()
+                    .weight(1f),
             verticalArrangement = Arrangement.spacedBy(8.dp),
         ) {
             items(state.documents) { doc ->
@@ -138,11 +140,12 @@ private fun Content(
             modifier = Modifier.fillMaxWidth(),
             label = { Text(stringResource(id = R.string.transfer_approval_pin_label)) },
             isError = state.pinError,
-            supportingText = if (state.pinError) {
-                { Text(stringResource(id = R.string.transfer_approval_pin_error)) }
-            } else {
-                null
-            },
+            supportingText =
+                if (state.pinError) {
+                    { Text(stringResource(id = R.string.transfer_approval_pin_error)) }
+                } else {
+                    null
+                },
             visualTransformation = PasswordVisualTransformation(),
             keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.NumberPassword),
             singleLine = true,
@@ -152,11 +155,12 @@ private fun Content(
 
         WrapButton(
             modifier = Modifier.fillMaxWidth(),
-            buttonConfig = ButtonConfig(
-                type = ButtonType.PRIMARY,
-                enabled = state.pinInput.isNotEmpty() && !state.isSending,
-                onClick = onConfirm,
-            ),
+            buttonConfig =
+                ButtonConfig(
+                    type = ButtonType.PRIMARY,
+                    enabled = state.pinInput.isNotEmpty() && !state.isSending,
+                    onClick = onConfirm,
+                ),
         ) {
             Text(stringResource(id = R.string.transfer_approval_confirm_button))
         }
@@ -169,9 +173,10 @@ private fun DocumentItem(
     isPid: Boolean,
 ) {
     Column(
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(horizontal = SPACING_MEDIUM.dp, vertical = 4.dp),
+        modifier =
+            Modifier
+                .fillMaxWidth()
+                .padding(horizontal = SPACING_MEDIUM.dp, vertical = 4.dp),
     ) {
         Text(
             text = name,

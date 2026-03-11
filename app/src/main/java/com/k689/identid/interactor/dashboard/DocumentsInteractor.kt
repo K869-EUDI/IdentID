@@ -650,8 +650,8 @@ class DocumentsInteractorImpl(
                     }
 
                     is DeleteDocumentPartialState.Success -> {
-                        if (configLogic.forcePidActivation
-                            && walletCoreDocumentsController.getAllDocuments().isEmpty()
+                        if (configLogic.forcePidActivation &&
+                            walletCoreDocumentsController.getAllDocuments().isEmpty()
                         ) {
                             emit(DocumentInteractorDeleteDocumentPartialState.AllDocumentsDeleted)
                         } else {

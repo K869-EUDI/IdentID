@@ -16,6 +16,7 @@
 
 package com.k689.identid.navigation.routes.transfer
 
+import androidx.compose.runtime.remember
 import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
@@ -59,8 +60,8 @@ fun NavGraphBuilder.featureTransferGraph(navController: NavController) {
         // Receive Wallet (receiver - method chooser)
         composable(
             route = TransferScreens.ReceiveWallet.screenRoute,
-        ) {
-            val parentEntry = navController.getBackStackEntry(ModuleRoute.TransferModule.route)
+        ) { entry ->
+            val parentEntry = remember(entry) { navController.getBackStackEntry(ModuleRoute.TransferModule.route) }
             ReceiveWalletScreen(
                 navController,
                 koinViewModel<ReceiveWalletViewModel>(viewModelStoreOwner = parentEntry),
@@ -70,8 +71,8 @@ fun NavGraphBuilder.featureTransferGraph(navController: NavController) {
         // Receive Wallet NFC (receiver - NFC listener)
         composable(
             route = TransferScreens.ReceiveWalletNfc.screenRoute,
-        ) {
-            val parentEntry = navController.getBackStackEntry(ModuleRoute.TransferModule.route)
+        ) { entry ->
+            val parentEntry = remember(entry) { navController.getBackStackEntry(ModuleRoute.TransferModule.route) }
             ReceiveWalletNfcScreen(
                 navController,
                 koinViewModel<ReceiveWalletViewModel>(viewModelStoreOwner = parentEntry),
@@ -81,8 +82,8 @@ fun NavGraphBuilder.featureTransferGraph(navController: NavController) {
         // Receive Wallet QR (receiver - QR scanner)
         composable(
             route = TransferScreens.ReceiveWalletQr.screenRoute,
-        ) {
-            val parentEntry = navController.getBackStackEntry(ModuleRoute.TransferModule.route)
+        ) { entry ->
+            val parentEntry = remember(entry) { navController.getBackStackEntry(ModuleRoute.TransferModule.route) }
             ReceiveWalletQrScreen(
                 navController,
                 koinViewModel<ReceiveWalletViewModel>(viewModelStoreOwner = parentEntry),
@@ -92,8 +93,8 @@ fun NavGraphBuilder.featureTransferGraph(navController: NavController) {
         // Receive Wallet Document List (receiver - select & import)
         composable(
             route = TransferScreens.ReceiveWalletDocumentList.screenRoute,
-        ) {
-            val parentEntry = navController.getBackStackEntry(ModuleRoute.TransferModule.route)
+        ) { entry ->
+            val parentEntry = remember(entry) { navController.getBackStackEntry(ModuleRoute.TransferModule.route) }
             ReceiveWalletDocumentListScreen(
                 navController,
                 koinViewModel<ReceiveWalletViewModel>(viewModelStoreOwner = parentEntry),

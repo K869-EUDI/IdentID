@@ -66,14 +66,15 @@ fun ReceiveWalletDocumentListScreen(
         navigatableAction = ScreenNavigateAction.BACKABLE,
         onBack = { viewModel.setEvent(ReceiveWalletEvent.GoBack) },
         contentErrorConfig = state.error,
-        broadcastAction = BroadcastAction(
-            intentFilters = listOf(CoreActions.VCI_RESUME_ACTION),
-            callback = { intent ->
-                intent?.extras?.getString("uri")?.let { uri ->
-                    viewModel.setEvent(ReceiveWalletEvent.OnResumeIssuance(uri))
-                }
-            },
-        ),
+        broadcastAction =
+            BroadcastAction(
+                intentFilters = listOf(CoreActions.VCI_RESUME_ACTION),
+                callback = { intent ->
+                    intent?.extras?.getString("uri")?.let { uri ->
+                        viewModel.setEvent(ReceiveWalletEvent.OnResumeIssuance(uri))
+                    }
+                },
+            ),
     ) { paddingValues ->
         if (state.isImportComplete) {
             ImportResultsContent(
@@ -119,9 +120,10 @@ private fun DocumentListContent(
     paddingValues: PaddingValues,
 ) {
     Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .paddingFrom(paddingValues),
+        modifier =
+            Modifier
+                .fillMaxSize()
+                .paddingFrom(paddingValues),
     ) {
         ContentTitle(
             modifier = Modifier.fillMaxWidth(),
@@ -132,9 +134,10 @@ private fun DocumentListContent(
         Spacer(modifier = Modifier.height(SPACING_MEDIUM.dp))
 
         LazyColumn(
-            modifier = Modifier
-                .fillMaxWidth()
-                .weight(1f),
+            modifier =
+                Modifier
+                    .fillMaxWidth()
+                    .weight(1f),
             verticalArrangement = Arrangement.spacedBy(8.dp),
         ) {
             items(documents) { doc ->
@@ -146,11 +149,12 @@ private fun DocumentListContent(
 
         WrapButton(
             modifier = Modifier.fillMaxWidth(),
-            buttonConfig = ButtonConfig(
-                type = ButtonType.PRIMARY,
-                enabled = documents.isNotEmpty(),
-                onClick = onImport,
-            ),
+            buttonConfig =
+                ButtonConfig(
+                    type = ButtonType.PRIMARY,
+                    enabled = documents.isNotEmpty(),
+                    onClick = onImport,
+                ),
         ) {
             Text(stringResource(id = R.string.transfer_document_list_import_button))
         }
@@ -164,9 +168,10 @@ private fun ImportResultsContent(
     paddingValues: PaddingValues,
 ) {
     Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .paddingFrom(paddingValues),
+        modifier =
+            Modifier
+                .fillMaxSize()
+                .paddingFrom(paddingValues),
     ) {
         ContentTitle(
             modifier = Modifier.fillMaxWidth(),
@@ -177,9 +182,10 @@ private fun ImportResultsContent(
         Spacer(modifier = Modifier.height(SPACING_MEDIUM.dp))
 
         LazyColumn(
-            modifier = Modifier
-                .fillMaxWidth()
-                .weight(1f),
+            modifier =
+                Modifier
+                    .fillMaxWidth()
+                    .weight(1f),
             verticalArrangement = Arrangement.spacedBy(8.dp),
         ) {
             items(importResults) { result ->
@@ -191,10 +197,11 @@ private fun ImportResultsContent(
 
         WrapButton(
             modifier = Modifier.fillMaxWidth(),
-            buttonConfig = ButtonConfig(
-                type = ButtonType.PRIMARY,
-                onClick = onDone,
-            ),
+            buttonConfig =
+                ButtonConfig(
+                    type = ButtonType.PRIMARY,
+                    onClick = onDone,
+                ),
         ) {
             Text(stringResource(id = R.string.transfer_import_done_button))
         }
@@ -204,9 +211,10 @@ private fun ImportResultsContent(
 @Composable
 private fun DocumentItem(doc: TransferableDocument) {
     Column(
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(horizontal = SPACING_MEDIUM.dp, vertical = 4.dp),
+        modifier =
+            Modifier
+                .fillMaxWidth()
+                .padding(horizontal = SPACING_MEDIUM.dp, vertical = 4.dp),
     ) {
         Text(
             text = doc.name,
@@ -226,9 +234,10 @@ private fun DocumentItem(doc: TransferableDocument) {
 @Composable
 private fun ImportResultItem(result: DocumentImportResult) {
     Column(
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(horizontal = SPACING_MEDIUM.dp, vertical = 4.dp),
+        modifier =
+            Modifier
+                .fillMaxWidth()
+                .padding(horizontal = SPACING_MEDIUM.dp, vertical = 4.dp),
     ) {
         when (result) {
             is DocumentImportResult.Success -> {

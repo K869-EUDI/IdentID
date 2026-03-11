@@ -169,8 +169,8 @@ class DocumentDetailsInteractorImpl(
             val docIdentifier = docType?.toDocumentIdentifier()
 
             val shouldDeleteAllDocuments: Boolean =
-                if (configLogic.forcePidActivation
-                    && (docIdentifier == DocumentIdentifier.MdocPid || docIdentifier == DocumentIdentifier.SdJwtPid)
+                if (configLogic.forcePidActivation &&
+                    (docIdentifier == DocumentIdentifier.MdocPid || docIdentifier == DocumentIdentifier.SdJwtPid)
                 ) {
                     val allPidDocuments =
                         walletCoreDocumentsController.getAllDocumentsByType(

@@ -33,7 +33,6 @@ interface TransferSessionManager {
 }
 
 class TransferSessionManagerImpl : TransferSessionManager {
-
     private val json = Json { ignoreUnknownKeys = true }
 
     override fun createSession(): TransferSessionInfo {
@@ -61,6 +60,5 @@ class TransferSessionManagerImpl : TransferSessionManager {
         return json.decodeFromString(TransferSessionInfo.serializer(), jsonBytes.toString(Charsets.UTF_8))
     }
 
-    override fun getSessionKey(info: TransferSessionInfo): ByteArray =
-        Base64.decode(info.sessionKey, Base64.URL_SAFE or Base64.NO_WRAP or Base64.NO_PADDING)
+    override fun getSessionKey(info: TransferSessionInfo): ByteArray = Base64.decode(info.sessionKey, Base64.URL_SAFE or Base64.NO_WRAP or Base64.NO_PADDING)
 }

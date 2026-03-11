@@ -514,6 +514,7 @@
     <string name="transfer_receive_qr_title">Scan QR Code</string>
     <string name="transfer_receive_qr_subtitle">Point your camera at the QR code on the other device</string>
     <string name="transfer_receive_qr_permission_needed">Camera permission is needed to scan QR codes</string>
+    <string name="transfer_receive_connecting_status">Connecting to the other device, keep both devices close</string>
 
     <string name="transfer_receive_nfc_title">NFC Transfer</string>
     <string name="transfer_receive_nfc_subtitle">Hold the devices near each other to start the transfer</string>

@@ -53,12 +53,13 @@ fun provideWalletTransferController(
     bookmarkDao: BookmarkDao,
     transactionLogDao: TransactionLogDao,
     revokedDocumentDao: RevokedDocumentDao,
-): WalletTransferController = WalletTransferControllerImpl(
-    walletCoreDocumentsController,
-    bookmarkDao,
-    transactionLogDao,
-    revokedDocumentDao,
-)
+): WalletTransferController =
+    WalletTransferControllerImpl(
+        walletCoreDocumentsController,
+        bookmarkDao,
+        transactionLogDao,
+        revokedDocumentDao,
+    )
 
 @Single
 fun provideMoveWalletInteractor(
@@ -66,12 +67,13 @@ fun provideMoveWalletInteractor(
     walletTransferController: WalletTransferController,
     nearbyTransferManager: NearbyTransferManager,
     transferSessionManager: TransferSessionManager,
-): MoveWalletInteractor = MoveWalletInteractorImpl(
-    resourceProvider,
-    walletTransferController,
-    nearbyTransferManager,
-    transferSessionManager,
-)
+): MoveWalletInteractor =
+    MoveWalletInteractorImpl(
+        resourceProvider,
+        walletTransferController,
+        nearbyTransferManager,
+        transferSessionManager,
+    )
 
 @Factory
 fun provideReceiveWalletInteractor(
@@ -83,13 +85,14 @@ fun provideReceiveWalletInteractor(
     bookmarkDao: BookmarkDao,
     transactionLogDao: TransactionLogDao,
     revokedDocumentDao: RevokedDocumentDao,
-): ReceiveWalletInteractor = ReceiveWalletInteractorImpl(
-    resourceProvider,
-    walletCoreDocumentsController,
-    walletTransferController,
-    nearbyTransferManager,
-    transferSessionManager,
-    bookmarkDao,
-    transactionLogDao,
-    revokedDocumentDao,
-)
+): ReceiveWalletInteractor =
+    ReceiveWalletInteractorImpl(
+        resourceProvider,
+        walletCoreDocumentsController,
+        walletTransferController,
+        nearbyTransferManager,
+        transferSessionManager,
+        bookmarkDao,
+        transactionLogDao,
+        revokedDocumentDao,
+    )

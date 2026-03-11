@@ -21,7 +21,6 @@ import android.content.Intent
 import android.net.Uri
 import android.os.Build
 import android.provider.Settings
-import android.util.Log
 import androidx.camera.core.CameraSelector
 import androidx.camera.core.ImageAnalysis
 import androidx.camera.core.Preview
@@ -75,49 +74,47 @@ fun ReceiveWalletQrScreen(
 ) {
     val state: ReceiveWalletState by viewModel.viewState.collectAsStateWithLifecycle()
     val context = LocalContext.current
+    var hasScanned by remember { mutableStateOf(false) }
 
     // Split permissions into two groups because Android won't show
     // location and nearby-devices prompts in the same dialog
-    val nearbyPermissions = remember {
-        buildList {
-            add(Manifest.permission.CAMERA)
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
-                add(Manifest.permission.BLUETOOTH_ADVERTISE)
-                add(Manifest.permission.BLUETOOTH_SCAN)
-                add(Manifest.permission.BLUETOOTH_CONNECT)
-            }
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S_V2) {
-                add(Manifest.permission.NEARBY_WIFI_DEVICES)
+    val nearbyPermissions =
+        remember {
+            buildList {
+                add(Manifest.permission.CAMERA)
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+                    add(Manifest.permission.BLUETOOTH_ADVERTISE)
+                    add(Manifest.permission.BLUETOOTH_SCAN)
+                    add(Manifest.permission.BLUETOOTH_CONNECT)
+                }
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S_V2) {
+                    add(Manifest.permission.NEARBY_WIFI_DEVICES)
+                }
             }
         }
-    }
 
-    val locationPermissions = remember {
-        listOf(
-            Manifest.permission.ACCESS_FINE_LOCATION,
-            Manifest.permission.ACCESS_COARSE_LOCATION,
-        )
-    }
+    val locationPermissions =
+        remember {
+            listOf(
+                Manifest.permission.ACCESS_FINE_LOCATION,
+                Manifest.permission.ACCESS_COARSE_LOCATION,
+            )
+        }
 
     val nearbyPermissionsState = rememberMultiplePermissionsState(nearbyPermissions)
     val locationPermissionsState = rememberMultiplePermissionsState(locationPermissions)
     var permissionRequested by remember { mutableStateOf(false) }
 
-    val cameraGranted = nearbyPermissionsState.permissions
-        .firstOrNull { it.permission == Manifest.permission.CAMERA }
-        ?.status?.isGranted == true
+    val cameraGranted =
+        nearbyPermissionsState.permissions
+            .firstOrNull { it.permission == Manifest.permission.CAMERA }
+            ?.status
+            ?.isGranted == true
 
     val allGranted = nearbyPermissionsState.allPermissionsGranted && locationPermissionsState.allPermissionsGranted
 
     // Phase 1: Request nearby + camera permissions
     LaunchedEffect(Unit) {
-        nearbyPermissionsState.permissions.forEach { perm ->
-            Log.d("ReceiveQrScreen", "Permission ${perm.permission}: granted=${perm.status.isGranted}")
-        }
-        locationPermissionsState.permissions.forEach { perm ->
-            Log.d("ReceiveQrScreen", "Permission ${perm.permission}: granted=${perm.status.isGranted}")
-        }
-
         if (!nearbyPermissionsState.allPermissionsGranted) {
             nearbyPermissionsState.launchMultiplePermissionRequest()
         }
@@ -126,11 +123,9 @@ fun ReceiveWalletQrScreen(
     // Phase 2: After nearby permissions are granted, request location
     LaunchedEffect(nearbyPermissionsState.allPermissionsGranted) {
         if (nearbyPermissionsState.allPermissionsGranted && !locationPermissionsState.allPermissionsGranted) {
-            Log.d("ReceiveQrScreen", "Nearby permissions granted, now requesting location")
             locationPermissionsState.launchMultiplePermissionRequest()
             permissionRequested = true
         } else if (nearbyPermissionsState.allPermissionsGranted && locationPermissionsState.allPermissionsGranted) {
-            Log.d("ReceiveQrScreen", "All permissions already granted")
             permissionRequested = true
         }
     }
@@ -142,38 +137,55 @@ fun ReceiveWalletQrScreen(
         }
     }
 
+    LaunchedEffect(state.error) {
+        if (state.error != null) {
+            hasScanned = false
+        }
+    }
+
     ContentScreen(
-        isLoading = state.isLoading,
+        isLoading = false,
         navigatableAction = ScreenNavigateAction.BACKABLE,
         onBack = { viewModel.setEvent(ReceiveWalletEvent.GoBack) },
         contentErrorConfig = state.error,
     ) { paddingValues ->
         when {
+            allGranted && cameraGranted && (hasScanned || state.isLoading) -> {
+                ConnectingContent(
+                    paddingValues = paddingValues,
+                    title = stringResource(id = R.string.transfer_receive_qr_title),
+                )
+            }
+
             // All permissions granted → show camera
             allGranted && cameraGranted -> {
                 CameraContent(
                     onQrScanned = { code ->
+                        hasScanned = true
                         viewModel.setEvent(ReceiveWalletEvent.SessionScanned(context, code))
                     },
                     paddingValues = paddingValues,
                 )
             }
+
             // Location denied after request → show settings prompt
             permissionRequested && !locationPermissionsState.allPermissionsGranted -> {
-                val deniedPermissions = locationPermissionsState.permissions
-                    .filter { !it.status.isGranted }
-                    .map { it.permission }
-                Log.d("ReceiveQrScreen", "Permissions still denied: $deniedPermissions")
+                val deniedPermissions =
+                    locationPermissionsState.permissions
+                        .filter { !it.status.isGranted }
+                        .map { it.permission }
                 PermissionDeniedContent(
                     paddingValues = paddingValues,
                     onOpenSettings = {
-                        val intent = Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS).apply {
-                            data = Uri.fromParts("package", context.packageName, null)
-                        }
+                        val intent =
+                            Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS).apply {
+                                data = Uri.fromParts("package", context.packageName, null)
+                            }
                         context.startActivity(intent)
                     },
                 )
             }
+
             // Waiting for permission response
             else -> {
                 PermissionContent(paddingValues = paddingValues)
@@ -204,6 +216,37 @@ fun ReceiveWalletQrScreen(
 }
 
 @Composable
+private fun ConnectingContent(
+    paddingValues: PaddingValues,
+    title: String,
+) {
+    Column(
+        modifier =
+            Modifier
+                .fillMaxSize()
+                .paddingFrom(paddingValues),
+        horizontalAlignment = Alignment.CenterHorizontally,
+    ) {
+        ContentTitle(
+            modifier = Modifier.fillMaxWidth(),
+            title = title,
+        )
+
+        Box(
+            modifier = Modifier.weight(1f),
+            contentAlignment = Alignment.Center,
+        ) {
+            Text(
+                text = stringResource(id = R.string.transfer_receive_connecting_status),
+                style = MaterialTheme.typography.bodySmall,
+                color = MaterialTheme.colorScheme.onSurface,
+                textAlign = TextAlign.Center,
+            )
+        }
+    }
+}
+
+@Composable
 private fun CameraContent(
     onQrScanned: (String) -> Unit,
     paddingValues: PaddingValues,
@@ -213,9 +256,10 @@ private fun CameraContent(
     var hasScanned by remember { mutableStateOf(false) }
 
     Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .paddingFrom(paddingValues),
+        modifier =
+            Modifier
+                .fillMaxSize()
+                .paddingFrom(paddingValues),
     ) {
         ContentTitle(
             modifier = Modifier.fillMaxWidth(),
@@ -224,9 +268,10 @@ private fun CameraContent(
         )
 
         Box(
-            modifier = Modifier
-                .fillMaxWidth()
-                .weight(1f),
+            modifier =
+                Modifier
+                    .fillMaxWidth()
+                    .weight(1f),
             contentAlignment = Alignment.Center,
         ) {
             AndroidView(
@@ -237,24 +282,27 @@ private fun CameraContent(
 
                     cameraProviderFuture.addListener({
                         val cameraProvider = cameraProviderFuture.get()
-                        val preview = Preview.Builder().build().also {
-                            it.surfaceProvider = previewView.surfaceProvider
-                        }
-
-                        val imageAnalysis = ImageAnalysis.Builder()
-                            .setBackpressureStrategy(ImageAnalysis.STRATEGY_KEEP_ONLY_LATEST)
-                            .build()
-                            .also {
-                                it.setAnalyzer(
-                                    ContextCompat.getMainExecutor(ctx),
-                                    QrCodeAnalyzer { result ->
-                                        if (!hasScanned) {
-                                            hasScanned = true
-                                            onQrScanned(result)
-                                        }
-                                    },
-                                )
+                        val preview =
+                            Preview.Builder().build().also {
+                                it.surfaceProvider = previewView.surfaceProvider
                             }
+
+                        val imageAnalysis =
+                            ImageAnalysis
+                                .Builder()
+                                .setBackpressureStrategy(ImageAnalysis.STRATEGY_KEEP_ONLY_LATEST)
+                                .build()
+                                .also {
+                                    it.setAnalyzer(
+                                        ContextCompat.getMainExecutor(ctx),
+                                        QrCodeAnalyzer { result ->
+                                            if (!hasScanned) {
+                                                hasScanned = true
+                                                onQrScanned(result)
+                                            }
+                                        },
+                                    )
+                                }
 
                         try {
                             cameraProvider.unbindAll()
@@ -281,9 +329,10 @@ private fun PermissionContent(
     paddingValues: PaddingValues,
 ) {
     Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .paddingFrom(paddingValues),
+        modifier =
+            Modifier
+                .fillMaxSize()
+                .paddingFrom(paddingValues),
         horizontalAlignment = Alignment.CenterHorizontally,
     ) {
         ContentTitle(
@@ -311,9 +360,10 @@ private fun PermissionDeniedContent(
     onOpenSettings: () -> Unit,
 ) {
     Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .paddingFrom(paddingValues),
+        modifier =
+            Modifier
+                .fillMaxSize()
+                .paddingFrom(paddingValues),
         horizontalAlignment = Alignment.CenterHorizontally,
     ) {
         ContentTitle(

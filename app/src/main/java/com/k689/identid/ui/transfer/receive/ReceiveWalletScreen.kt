@@ -94,9 +94,10 @@ private fun Content(
     paddingValues: PaddingValues,
 ) {
     Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .paddingFrom(paddingValues),
+        modifier =
+            Modifier
+                .fillMaxSize()
+                .paddingFrom(paddingValues),
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.spacedBy(SPACING_MEDIUM.dp),
     ) {
@@ -110,10 +111,11 @@ private fun Content(
 
         WrapButton(
             modifier = Modifier.fillMaxWidth(),
-            buttonConfig = ButtonConfig(
-                type = ButtonType.PRIMARY,
-                onClick = onChooseQr,
-            ),
+            buttonConfig =
+                ButtonConfig(
+                    type = ButtonType.PRIMARY,
+                    onClick = onChooseQr,
+                ),
         ) {
             Text(stringResource(id = R.string.transfer_receive_scan_qr))
         }
@@ -122,10 +124,11 @@ private fun Content(
 
         WrapButton(
             modifier = Modifier.fillMaxWidth(),
-            buttonConfig = ButtonConfig(
-                type = ButtonType.SECONDARY,
-                onClick = onChooseNfc,
-            ),
+            buttonConfig =
+                ButtonConfig(
+                    type = ButtonType.SECONDARY,
+                    onClick = onChooseNfc,
+                ),
         ) {
             Text(stringResource(id = R.string.transfer_receive_use_nfc))
         }

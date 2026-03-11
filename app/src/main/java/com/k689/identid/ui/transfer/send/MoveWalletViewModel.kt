@@ -17,11 +17,11 @@
 package com.k689.identid.ui.transfer.send
 
 import android.content.Context
-import android.util.Log
 import androidx.lifecycle.viewModelScope
 import com.k689.identid.interactor.transfer.MoveWalletInteractor
 import com.k689.identid.interactor.transfer.MoveWalletPartialState
 import com.k689.identid.navigation.TransferScreens
+import com.k689.identid.service.TransferNfcPayloadStore
 import com.k689.identid.ui.component.content.ContentErrorConfig
 import com.k689.identid.ui.mvi.MviViewModel
 import com.k689.identid.ui.mvi.ViewEvent
@@ -40,16 +40,31 @@ data class MoveWalletState(
 ) : ViewState
 
 sealed class MoveWalletEvent : ViewEvent {
-    data class Init(val context: Context) : MoveWalletEvent()
-    data class GoBack(val context: Context) : MoveWalletEvent()
-    data class AcceptConnection(val context: Context, val endpointId: String) : MoveWalletEvent()
-    data class SendData(val context: Context) : MoveWalletEvent()
+    data class Init(
+        val context: Context,
+    ) : MoveWalletEvent()
+
+    data class GoBack(
+        val context: Context,
+    ) : MoveWalletEvent()
+
+    data class AcceptConnection(
+        val context: Context,
+        val endpointId: String,
+    ) : MoveWalletEvent()
+
+    data class SendData(
+        val context: Context,
+    ) : MoveWalletEvent()
 }
 
 sealed class MoveWalletEffect : ViewSideEffect {
     sealed class Navigation : MoveWalletEffect() {
         data object Pop : Navigation()
-        data class SwitchScreen(val screenRoute: String) : Navigation()
+
+        data class SwitchScreen(
+            val screenRoute: String,
+        ) : Navigation()
     }
 }
 
@@ -57,7 +72,6 @@ sealed class MoveWalletEffect : ViewSideEffect {
 class MoveWalletViewModel(
     private val interactor: MoveWalletInteractor,
 ) : MviViewModel<MoveWalletEvent, MoveWalletState, MoveWalletEffect>() {
-
     private var interactorJob: Job? = null
 
     override fun setInitialState(): MoveWalletState = MoveWalletState()
@@ -66,10 +80,7 @@ class MoveWalletViewModel(
         when (event) {
             is MoveWalletEvent.Init -> {
                 if (interactorJob?.isActive != true) {
-                    Log.d("MoveWalletVM", "Init event received, starting session")
                     startSession(event.context)
-                } else {
-                    Log.d("MoveWalletVM", "Init event received but session already active, ignoring")
                 }
             }
 
@@ -92,72 +103,74 @@ class MoveWalletViewModel(
     }
 
     private fun startSession(context: Context) {
-        Log.d("MoveWalletVM", "startSession called")
         setState { copy(isLoading = true, error = null) }
 
-        interactorJob = viewModelScope.launch {
-            Log.d("MoveWalletVM", "Collecting createSessionAndAdvertise flow")
-            interactor.createSessionAndAdvertise(context).collect { state ->
-                Log.d("MoveWalletVM", "Received state: $state")
-                when (state) {
-                    is MoveWalletPartialState.SessionReady -> {
-                        setState {
-                            copy(
-                                isLoading = false,
-                                error = null,
-                                qrCode = state.qrContent,
-                            )
+        interactorJob =
+            viewModelScope.launch {
+                interactor.createSessionAndAdvertise(context).collect { state ->
+                    when (state) {
+                        is MoveWalletPartialState.SessionReady -> {
+                            TransferNfcPayloadStore.setPayload(state.qrContent)
+                            setState {
+                                copy(
+                                    isLoading = false,
+                                    error = null,
+                                    qrCode = state.qrContent,
+                                )
+                            }
                         }
-                    }
 
-                    is MoveWalletPartialState.ConnectionInitiated -> {
-                        // Auto-accept connection for simplicity
-                        interactor.acceptConnection(context, state.endpointId)
-                    }
-
-                    is MoveWalletPartialState.Connected -> {
-                        setState {
-                            copy(connectedEndpointId = state.endpointId)
+                        is MoveWalletPartialState.ConnectionInitiated -> {
+                            // Auto-accept connection for simplicity
+                            interactor.acceptConnection(context, state.endpointId)
                         }
-                        // Navigate to approval screen
-                        setEffect {
-                            MoveWalletEffect.Navigation.SwitchScreen(
-                                TransferScreens.MoveWalletApproval.screenRoute,
-                            )
+
+                        is MoveWalletPartialState.Connected -> {
+                            setState {
+                                copy(connectedEndpointId = state.endpointId)
+                            }
+                            // Navigate to approval screen
+                            setEffect {
+                                MoveWalletEffect.Navigation.SwitchScreen(
+                                    TransferScreens.MoveWalletApproval.screenRoute,
+                                )
+                            }
                         }
-                    }
 
-                    is MoveWalletPartialState.DataSent -> {
-                        setState { copy(isDataSent = true) }
-                    }
-
-                    is MoveWalletPartialState.Error -> {
-                        setState {
-                            copy(
-                                isLoading = false,
-                                error = ContentErrorConfig(
-                                    onRetry = { setEvent(MoveWalletEvent.Init(context)) },
-                                    errorSubTitle = state.message,
-                                    onCancel = { setEffect { MoveWalletEffect.Navigation.Pop } },
-                                ),
-                            )
+                        is MoveWalletPartialState.DataSent -> {
+                            setState { copy(isDataSent = true) }
                         }
-                    }
 
-                    is MoveWalletPartialState.Disconnected -> {
-                        setState { copy(connectedEndpointId = null) }
-                    }
+                        is MoveWalletPartialState.Error -> {
+                            setState {
+                                copy(
+                                    isLoading = false,
+                                    error =
+                                        ContentErrorConfig(
+                                            onRetry = { setEvent(MoveWalletEvent.Init(context)) },
+                                            errorSubTitle = state.message,
+                                            onCancel = { setEffect { MoveWalletEffect.Navigation.Pop } },
+                                        ),
+                                )
+                            }
+                        }
 
-                    is MoveWalletPartialState.WaitingForConnection -> {
-                        // No-op, waiting
+                        is MoveWalletPartialState.Disconnected -> {
+                            setState { copy(connectedEndpointId = null) }
+                        }
+
+                        is MoveWalletPartialState.WaitingForConnection -> {
+                            // No-op, waiting
+                        }
                     }
                 }
             }
-        }
     }
 
     private fun cleanUp(context: Context) {
         interactorJob?.cancel()
+        interactorJob = null
+        TransferNfcPayloadStore.clear()
         interactor.stopTransfer(context)
     }
 }

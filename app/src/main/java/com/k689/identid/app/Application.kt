@@ -17,12 +17,16 @@
 package com.k689.identid.app
 
 import android.app.Application
+import android.content.ComponentName
+import android.content.pm.PackageManager
 import androidx.work.ExistingPeriodicWorkPolicy
 import androidx.work.PeriodicWorkRequest
 import androidx.work.WorkManager
 import com.k689.identid.config.ConfigLogic
 import com.k689.identid.config.WalletCoreConfig
 import com.k689.identid.di.setupKoin
+import com.k689.identid.service.NfcEngagementService
+import com.k689.identid.service.TransferNfcEngagementService
 import com.k689.identid.worker.RevocationWorkManager
 import eu.europa.ec.eudi.rqesui.infrastructure.EudiRQESUi
 import org.koin.android.ext.android.inject
@@ -34,8 +38,19 @@ class Application : Application() {
 
     override fun onCreate() {
         super.onCreate()
+        ensureNfcServicesEnabled()
         initializeKoin().initializeRqes()
         initializeRevocationWorkManager()
+    }
+
+    private fun ensureNfcServicesEnabled() {
+        listOf(NfcEngagementService::class.java, TransferNfcEngagementService::class.java).forEach {
+            packageManager.setComponentEnabledSetting(
+                ComponentName(this, it),
+                PackageManager.COMPONENT_ENABLED_STATE_ENABLED,
+                PackageManager.DONT_KILL_APP,
+            )
+        }
     }
 
     private fun KoinApplication.initializeRqes() {

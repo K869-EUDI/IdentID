@@ -17,6 +17,7 @@
 package com.k689.identid.interactor.transfer
 
 import android.content.Context
+import android.util.Base64
 import com.k689.identid.controller.core.IssuanceMethod
 import com.k689.identid.controller.core.IssueDocumentPartialState
 import com.k689.identid.controller.core.WalletCoreDocumentsController
@@ -30,12 +31,16 @@ import com.k689.identid.model.storage.TransactionLog
 import com.k689.identid.model.transfer.TransferSessionInfo
 import com.k689.identid.model.transfer.TransferableDocument
 import com.k689.identid.model.transfer.WalletTransferData
+import com.k689.identid.model.transfer.WalletTransferEnvelope
 import com.k689.identid.provider.resources.ResourceProvider
 import com.k689.identid.storage.dao.BookmarkDao
 import com.k689.identid.storage.dao.RevokedDocumentDao
 import com.k689.identid.storage.dao.TransactionLogDao
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.onEach
+import kotlinx.serialization.json.Json
 
 sealed class ReceiveWalletPartialState {
     data object Discovering : ReceiveWalletPartialState()
@@ -45,26 +50,47 @@ sealed class ReceiveWalletPartialState {
         val endpointName: String,
     ) : ReceiveWalletPartialState()
 
-    data class Connected(val endpointId: String) : ReceiveWalletPartialState()
+    data class Connected(
+        val endpointId: String,
+    ) : ReceiveWalletPartialState()
 
-    data class DataReceived(val data: WalletTransferData) : ReceiveWalletPartialState()
+    data class DataReceived(
+        val data: WalletTransferData,
+    ) : ReceiveWalletPartialState()
 
-    data class Error(val message: String) : ReceiveWalletPartialState()
+    data class Error(
+        val message: String,
+    ) : ReceiveWalletPartialState()
 
-    data class Disconnected(val endpointId: String) : ReceiveWalletPartialState()
+    data class Disconnected(
+        val endpointId: String,
+    ) : ReceiveWalletPartialState()
 }
 
 sealed class DocumentImportResult {
-    data class Success(val documentId: String, val documentName: String) : DocumentImportResult()
-    data class Failed(val documentName: String, val error: String) : DocumentImportResult()
+    data class Success(
+        val documentId: String,
+        val documentName: String,
+    ) : DocumentImportResult()
+
+    data class Failed(
+        val documentName: String,
+        val error: String,
+    ) : DocumentImportResult()
 }
 
 interface ReceiveWalletInteractor {
     fun parseSessionInfo(encoded: String): TransferSessionInfo?
 
-    fun connectToSender(context: Context, sessionInfo: TransferSessionInfo): Flow<ReceiveWalletPartialState>
+    fun connectToSender(
+        context: Context,
+        sessionInfo: TransferSessionInfo,
+    ): Flow<ReceiveWalletPartialState>
 
-    fun decryptReceivedData(encryptedBytes: ByteArray, sessionInfo: TransferSessionInfo): WalletTransferData?
+    fun decryptReceivedData(
+        encryptedBytes: ByteArray,
+        sessionInfo: TransferSessionInfo,
+    ): WalletTransferData?
 
     suspend fun importDocuments(
         documents: List<TransferableDocument>,
@@ -87,6 +113,7 @@ class ReceiveWalletInteractorImpl(
     private val transactionLogDao: TransactionLogDao,
     private val revokedDocumentDao: RevokedDocumentDao,
 ) : ReceiveWalletInteractor {
+    private val json = Json { ignoreUnknownKeys = true }
 
     override fun parseSessionInfo(encoded: String): TransferSessionInfo? =
         try {
@@ -99,7 +126,7 @@ class ReceiveWalletInteractorImpl(
         context: Context,
         sessionInfo: TransferSessionInfo,
     ): Flow<ReceiveWalletPartialState> {
-        nearbyTransferManager.startDiscovery(context)
+        nearbyTransferManager.startDiscovery(context, expectedSessionId = sessionInfo.sessionId)
 
         return nearbyTransferManager.state.map { state ->
             when (state) {
@@ -108,12 +135,16 @@ class ReceiveWalletInteractorImpl(
                 }
 
                 is NearbyTransferState.ConnectionInitiated -> {
-                    // Auto-accept connection
-                    nearbyTransferManager.acceptConnection(context, state.endpointId)
-                    ReceiveWalletPartialState.ConnectionInitiated(
-                        endpointId = state.endpointId,
-                        endpointName = state.endpointName,
-                    )
+                    if (state.endpointName != sessionInfo.sessionId) {
+                        nearbyTransferManager.rejectConnection(context, state.endpointId)
+                        ReceiveWalletPartialState.Discovering
+                    } else {
+                        nearbyTransferManager.acceptConnection(context, state.endpointId)
+                        ReceiveWalletPartialState.ConnectionInitiated(
+                            endpointId = state.endpointId,
+                            endpointName = state.endpointName,
+                        )
+                    }
                 }
 
                 is NearbyTransferState.Connected -> {
@@ -125,7 +156,7 @@ class ReceiveWalletInteractorImpl(
                     if (data != null) {
                         ReceiveWalletPartialState.DataReceived(data)
                     } else {
-                        ReceiveWalletPartialState.Error("Failed to decrypt transfer data")
+                        ReceiveWalletPartialState.Error("Failed to decrypt transfer data. Please retry transfer.")
                     }
                 }
 
@@ -149,8 +180,27 @@ class ReceiveWalletInteractorImpl(
         sessionInfo: TransferSessionInfo,
     ): WalletTransferData? =
         try {
+            val envelope =
+                runCatching {
+                    json.decodeFromString(
+                        WalletTransferEnvelope.serializer(),
+                        encryptedBytes.toString(Charsets.UTF_8),
+                    )
+                }.getOrNull()
+
+            val payloadBytes =
+                if (envelope != null) {
+                    val payload = Base64.decode(envelope.encryptedPayloadBase64, Base64.NO_WRAP)
+                    if (envelope.sessionId != null && envelope.sessionId != sessionInfo.sessionId) {
+                        return null
+                    }
+                    payload
+                } else {
+                    encryptedBytes
+                }
+
             val sessionKey = transferSessionManager.getSessionKey(sessionInfo)
-            walletTransferController.decryptData(encryptedBytes, sessionKey)
+            walletTransferController.decryptData(payloadBytes, sessionKey)
         } catch (_: Exception) {
             null
         }
@@ -161,45 +211,59 @@ class ReceiveWalletInteractorImpl(
         val results = mutableListOf<DocumentImportResult>()
         for (doc in documents) {
             try {
-                walletCoreDocumentsController.issueDocument(
-                    issuanceMethod = IssuanceMethod.OPENID4VCI,
-                    configId = doc.configurationId,
-                    issuerId = doc.credentialIssuerId,
-                ).collect { state ->
-                    when (state) {
-                        is IssueDocumentPartialState.Success -> {
-                            results.add(
-                                DocumentImportResult.Success(
-                                    documentId = state.documentId,
-                                    documentName = doc.name,
-                                ),
-                            )
-                        }
-
-                        is IssueDocumentPartialState.Failure -> {
-                            results.add(
-                                DocumentImportResult.Failed(
-                                    documentName = doc.name,
-                                    error = state.errorMessage,
-                                ),
-                            )
-                        }
-
-                        is IssueDocumentPartialState.UserAuthRequired -> {
+                // Use onEach + first to handle intermediate states (UserAuthRequired)
+                // while stopping collection after a terminal state.
+                // The underlying callbackFlow never closes its channel, so .collect{}
+                // would block forever. .first{} cancels the flow once a terminal state
+                // is received, allowing the loop to proceed to the next document.
+                walletCoreDocumentsController
+                    .issueDocument(
+                        issuanceMethod = IssuanceMethod.OPENID4VCI,
+                        configId = doc.configurationId,
+                        issuerId = doc.credentialIssuerId,
+                    ).onEach { state ->
+                        if (state is IssueDocumentPartialState.UserAuthRequired) {
                             // Auto-complete device authentication for import flow
                             state.resultHandler.onAuthenticationSuccess()
                         }
+                    }.first { state ->
+                        when (state) {
+                            is IssueDocumentPartialState.Success -> {
+                                results.add(
+                                    DocumentImportResult.Success(
+                                        documentId = state.documentId,
+                                        documentName = doc.name,
+                                    ),
+                                )
+                                true
+                            }
 
-                        is IssueDocumentPartialState.DeferredSuccess -> {
-                            results.add(
-                                DocumentImportResult.Success(
-                                    documentId = doc.configurationId,
-                                    documentName = doc.name,
-                                ),
-                            )
+                            is IssueDocumentPartialState.Failure -> {
+                                results.add(
+                                    DocumentImportResult.Failed(
+                                        documentName = doc.name,
+                                        error = state.errorMessage,
+                                    ),
+                                )
+                                true
+                            }
+
+                            is IssueDocumentPartialState.DeferredSuccess -> {
+                                results.add(
+                                    DocumentImportResult.Success(
+                                        documentId = doc.configurationId,
+                                        documentName = doc.name,
+                                    ),
+                                )
+                                true
+                            }
+
+                            // UserAuthRequired is handled in onEach above; skip it here
+                            else -> {
+                                false
+                            }
                         }
                     }
-                }
             } catch (e: Exception) {
                 results.add(
                     DocumentImportResult.Failed(

@@ -417,17 +417,27 @@ class PinViewModel(
                                             SuccessUIConfig.TextElementsConfig(
                                                 text =
                                                     when (pinFlow) {
-                                                        PinFlow.CREATE_WITH_ACTIVATION, PinFlow.CREATE_WITHOUT_ACTIVATION ->
+                                                        PinFlow.CREATE_WITH_ACTIVATION, PinFlow.CREATE_WITHOUT_ACTIVATION -> {
                                                             resourceProvider.getString(R.string.quick_pin_create_success_text)
-                                                        PinFlow.UPDATE -> resourceProvider.getString(R.string.quick_pin_change_success_text)
+                                                        }
+
+                                                        PinFlow.UPDATE -> {
+                                                            resourceProvider.getString(R.string.quick_pin_change_success_text)
+                                                        }
                                                     },
                                                 description =
                                                     when (pinFlow) {
-                                                        PinFlow.CREATE_WITH_ACTIVATION ->
+                                                        PinFlow.CREATE_WITH_ACTIVATION -> {
                                                             resourceProvider.getString(R.string.quick_pin_create_success_description)
-                                                        PinFlow.CREATE_WITHOUT_ACTIVATION ->
+                                                        }
+
+                                                        PinFlow.CREATE_WITHOUT_ACTIVATION -> {
                                                             resourceProvider.getString(R.string.quick_pin_create_success_no_activation_description)
-                                                        PinFlow.UPDATE -> resourceProvider.getString(R.string.quick_pin_change_success_description)
+                                                        }
+
+                                                        PinFlow.UPDATE -> {
+                                                            resourceProvider.getString(R.string.quick_pin_change_success_description)
+                                                        }
                                                     },
                                             ),
                                         imageConfig =
@@ -451,11 +461,17 @@ class PinViewModel(
                                                 SuccessUIConfig.ButtonConfig(
                                                     text =
                                                         when (pinFlow) {
-                                                            PinFlow.CREATE_WITH_ACTIVATION ->
+                                                            PinFlow.CREATE_WITH_ACTIVATION -> {
                                                                 resourceProvider.getString(R.string.quick_pin_create_success_btn)
-                                                            PinFlow.CREATE_WITHOUT_ACTIVATION ->
+                                                            }
+
+                                                            PinFlow.CREATE_WITHOUT_ACTIVATION -> {
                                                                 resourceProvider.getString(R.string.quick_pin_create_success_no_activation_btn)
-                                                            PinFlow.UPDATE -> resourceProvider.getString(R.string.quick_pin_change_success_btn)
+                                                            }
+
+                                                            PinFlow.UPDATE -> {
+                                                                resourceProvider.getString(R.string.quick_pin_change_success_btn)
+                                                            }
                                                         },
                                                     style = SuccessUIConfig.ButtonConfig.Style.PRIMARY,
                                                     navigation =

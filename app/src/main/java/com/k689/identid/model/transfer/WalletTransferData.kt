@@ -47,3 +47,10 @@ data class TransferSessionInfo(
     val sessionId: String,
     val sessionKey: String,
 )
+
+@Serializable
+data class WalletTransferEnvelope(
+    val protocolVersion: Int = 1,
+    val sessionId: String? = null,
+    val encryptedPayloadBase64: String,
+)

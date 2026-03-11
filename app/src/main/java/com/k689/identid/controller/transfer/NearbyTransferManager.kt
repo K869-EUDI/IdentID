@@ -17,7 +17,6 @@
 package com.k689.identid.controller.transfer
 
 import android.content.Context
-import android.util.Log
 import com.google.android.gms.nearby.Nearby
 import com.google.android.gms.nearby.connection.AdvertisingOptions
 import com.google.android.gms.nearby.connection.ConnectionInfo
@@ -37,34 +36,68 @@ import kotlinx.coroutines.flow.asSharedFlow
 
 sealed class NearbyTransferState {
     data object Idle : NearbyTransferState()
+
     data object Advertising : NearbyTransferState()
+
     data object Discovering : NearbyTransferState()
-    data class ConnectionInitiated(val endpointId: String, val endpointName: String) : NearbyTransferState()
-    data class Connected(val endpointId: String) : NearbyTransferState()
-    data class PayloadReceived(val bytes: ByteArray) : NearbyTransferState()
+
+    data class ConnectionInitiated(
+        val endpointId: String,
+        val endpointName: String,
+    ) : NearbyTransferState()
+
+    data class Connected(
+        val endpointId: String,
+    ) : NearbyTransferState()
+
+    data class PayloadReceived(
+        val bytes: ByteArray,
+    ) : NearbyTransferState()
+
     data object PayloadSent : NearbyTransferState()
-    data class Disconnected(val endpointId: String) : NearbyTransferState()
-    data class Error(val message: String) : NearbyTransferState()
+
+    data class Disconnected(
+        val endpointId: String,
+    ) : NearbyTransferState()
+
+    data class Error(
+        val message: String,
+    ) : NearbyTransferState()
 }
 
 interface NearbyTransferManager {
     val state: SharedFlow<NearbyTransferState>
 
-    fun startAdvertising(context: Context, sessionId: String)
+    fun startAdvertising(
+        context: Context,
+        sessionId: String,
+    )
 
-    fun startDiscovery(context: Context)
+    fun startDiscovery(
+        context: Context,
+        expectedSessionId: String,
+    )
 
-    fun acceptConnection(context: Context, endpointId: String)
+    fun acceptConnection(
+        context: Context,
+        endpointId: String,
+    )
 
-    fun rejectConnection(context: Context, endpointId: String)
+    fun rejectConnection(
+        context: Context,
+        endpointId: String,
+    )
 
-    fun sendPayload(context: Context, endpointId: String, data: ByteArray)
+    fun sendPayload(
+        context: Context,
+        endpointId: String,
+        data: ByteArray,
+    )
 
     fun stopAllEndpoints(context: Context)
 }
 
 class NearbyTransferManagerImpl : NearbyTransferManager {
-
     companion object {
         private const val SERVICE_ID = "com.k689.identid.transfer"
     }
@@ -72,82 +105,120 @@ class NearbyTransferManagerImpl : NearbyTransferManager {
     private val _state = MutableSharedFlow<NearbyTransferState>(replay = 1, extraBufferCapacity = 10)
     override val state: SharedFlow<NearbyTransferState> = _state.asSharedFlow()
 
-    private val payloadCallback = object : PayloadCallback() {
-        override fun onPayloadReceived(endpointId: String, payload: Payload) {
-            payload.asBytes()?.let { bytes ->
-                _state.tryEmit(NearbyTransferState.PayloadReceived(bytes))
-            }
-        }
-
-        override fun onPayloadTransferUpdate(endpointId: String, update: PayloadTransferUpdate) {
-            if (update.status == PayloadTransferUpdate.Status.SUCCESS &&
-                update.totalBytes == update.bytesTransferred
+    private val payloadCallback =
+        object : PayloadCallback() {
+            override fun onPayloadReceived(
+                endpointId: String,
+                payload: Payload,
             ) {
-                // Only emit PayloadSent for outgoing transfers
+                val bytes = payload.asBytes()
+                if (bytes != null) {
+                    _state.tryEmit(NearbyTransferState.PayloadReceived(bytes))
+                }
             }
-        }
-    }
 
-    private fun createConnectionLifecycleCallback(context: Context) = object : ConnectionLifecycleCallback() {
-        override fun onConnectionInitiated(endpointId: String, info: ConnectionInfo) {
-            _state.tryEmit(NearbyTransferState.ConnectionInitiated(endpointId, info.endpointName))
-        }
-
-        override fun onConnectionResult(endpointId: String, result: ConnectionResolution) {
-            when (result.status.statusCode) {
-                ConnectionsStatusCodes.STATUS_OK -> {
-                    _state.tryEmit(NearbyTransferState.Connected(endpointId))
-                }
-                else -> {
-                    _state.tryEmit(NearbyTransferState.Error("Connection failed: ${result.status.statusMessage}"))
-                }
+            override fun onPayloadTransferUpdate(
+                endpointId: String,
+                update: PayloadTransferUpdate,
+            ) {
             }
         }
 
-        override fun onDisconnected(endpointId: String) {
-            _state.tryEmit(NearbyTransferState.Disconnected(endpointId))
+    private fun createConnectionLifecycleCallback(context: Context) =
+        object : ConnectionLifecycleCallback() {
+            override fun onConnectionInitiated(
+                endpointId: String,
+                info: ConnectionInfo,
+            ) {
+                _state.tryEmit(NearbyTransferState.ConnectionInitiated(endpointId, info.endpointName))
+            }
+
+            override fun onConnectionResult(
+                endpointId: String,
+                result: ConnectionResolution,
+            ) {
+                when (result.status.statusCode) {
+                    ConnectionsStatusCodes.STATUS_OK -> {
+                        _state.tryEmit(NearbyTransferState.Connected(endpointId))
+                    }
+
+                    else -> {
+                        _state.tryEmit(NearbyTransferState.Error("Connection failed: ${result.status.statusMessage}"))
+                    }
+                }
+            }
+
+            override fun onDisconnected(endpointId: String) {
+                _state.tryEmit(NearbyTransferState.Disconnected(endpointId))
+            }
         }
-    }
 
-    override fun startAdvertising(context: Context, sessionId: String) {
-        Log.d("NearbyTransfer", "startAdvertising called with sessionId=$sessionId")
-        val advertisingOptions = AdvertisingOptions.Builder()
-            .setStrategy(Strategy.P2P_POINT_TO_POINT)
-            .build()
+    override fun startAdvertising(
+        context: Context,
+        sessionId: String,
+    ) {
+        val client = Nearby.getConnectionsClient(context)
+        // Stop any existing advertising/discovery/connections before starting fresh
+        client.stopAdvertising()
+        client.stopDiscovery()
+        client.stopAllEndpoints()
+        _state.resetReplayCache()
 
-        Nearby.getConnectionsClient(context)
+        val advertisingOptions =
+            AdvertisingOptions
+                .Builder()
+                .setStrategy(Strategy.P2P_POINT_TO_POINT)
+                .build()
+
+        client
             .startAdvertising(
                 sessionId,
                 SERVICE_ID,
                 createConnectionLifecycleCallback(context),
                 advertisingOptions,
-            )
-            .addOnSuccessListener {
-                Log.d("NearbyTransfer", "Advertising started successfully")
+            ).addOnSuccessListener {
                 _state.tryEmit(NearbyTransferState.Advertising)
-            }
-            .addOnFailureListener { e ->
-                Log.e("NearbyTransfer", "Advertising failed", e)
+            }.addOnFailureListener { e ->
                 _state.tryEmit(NearbyTransferState.Error("Advertising failed: ${e.localizedMessage}"))
             }
     }
 
-    override fun startDiscovery(context: Context) {
-        val discoveryOptions = DiscoveryOptions.Builder()
-            .setStrategy(Strategy.P2P_POINT_TO_POINT)
-            .build()
+    override fun startDiscovery(
+        context: Context,
+        expectedSessionId: String,
+    ) {
+        val client = Nearby.getConnectionsClient(context)
+        // Stop any existing advertising/discovery/connections before starting fresh
+        client.stopAdvertising()
+        client.stopDiscovery()
+        client.stopAllEndpoints()
+        _state.resetReplayCache()
 
-        Nearby.getConnectionsClient(context)
+        val discoveryOptions =
+            DiscoveryOptions
+                .Builder()
+                .setStrategy(Strategy.P2P_POINT_TO_POINT)
+                .build()
+
+        client
             .startDiscovery(
                 SERVICE_ID,
                 object : EndpointDiscoveryCallback() {
-                    override fun onEndpointFound(endpointId: String, info: DiscoveredEndpointInfo) {
-                        Nearby.getConnectionsClient(context)
+                    override fun onEndpointFound(
+                        endpointId: String,
+                        info: DiscoveredEndpointInfo,
+                    ) {
+                        if (info.endpointName != expectedSessionId) return
+
+                        Nearby
+                            .getConnectionsClient(context)
                             .requestConnection(
                                 "receiver",
                                 endpointId,
                                 createConnectionLifecycleCallback(context),
-                            )
+                            ).addOnFailureListener { e ->
+                                _state.tryEmit(NearbyTransferState.Error("Connection request failed: ${e.localizedMessage}"))
+                            }
                     }
 
                     override fun onEndpointLost(endpointId: String) {
@@ -155,39 +226,51 @@ class NearbyTransferManagerImpl : NearbyTransferManager {
                     }
                 },
                 discoveryOptions,
-            )
-            .addOnSuccessListener {
+            ).addOnSuccessListener {
                 _state.tryEmit(NearbyTransferState.Discovering)
-            }
-            .addOnFailureListener { e ->
+            }.addOnFailureListener { e ->
                 _state.tryEmit(NearbyTransferState.Error("Discovery failed: ${e.localizedMessage}"))
             }
     }
 
-    override fun acceptConnection(context: Context, endpointId: String) {
-        Nearby.getConnectionsClient(context)
+    override fun acceptConnection(
+        context: Context,
+        endpointId: String,
+    ) {
+        Nearby
+            .getConnectionsClient(context)
             .acceptConnection(endpointId, payloadCallback)
     }
 
-    override fun rejectConnection(context: Context, endpointId: String) {
-        Nearby.getConnectionsClient(context)
-            .rejectConnection(endpointId)
+    override fun rejectConnection(
+        context: Context,
+        endpointId: String,
+    ) {
+        Nearby.getConnectionsClient(context).rejectConnection(endpointId)
     }
 
-    override fun sendPayload(context: Context, endpointId: String, data: ByteArray) {
+    override fun sendPayload(
+        context: Context,
+        endpointId: String,
+        data: ByteArray,
+    ) {
         val payload = Payload.fromBytes(data)
-        Nearby.getConnectionsClient(context)
+        Nearby
+            .getConnectionsClient(context)
             .sendPayload(endpointId, payload)
             .addOnSuccessListener {
                 _state.tryEmit(NearbyTransferState.PayloadSent)
-            }
-            .addOnFailureListener { e ->
+            }.addOnFailureListener { e ->
                 _state.tryEmit(NearbyTransferState.Error("Send failed: ${e.localizedMessage}"))
             }
     }
 
     override fun stopAllEndpoints(context: Context) {
-        Nearby.getConnectionsClient(context).stopAllEndpoints()
+        val client = Nearby.getConnectionsClient(context)
+        client.stopAdvertising()
+        client.stopDiscovery()
+        client.stopAllEndpoints()
+        _state.resetReplayCache()
         _state.tryEmit(NearbyTransferState.Idle)
     }
 }

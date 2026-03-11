@@ -17,15 +17,17 @@
 package com.k689.identid.interactor.transfer
 
 import android.content.Context
-import android.util.Log
+import android.util.Base64
 import com.k689.identid.controller.transfer.NearbyTransferManager
 import com.k689.identid.controller.transfer.NearbyTransferState
 import com.k689.identid.controller.transfer.TransferSessionManager
 import com.k689.identid.controller.transfer.WalletTransferController
 import com.k689.identid.model.transfer.TransferSessionInfo
+import com.k689.identid.model.transfer.WalletTransferEnvelope
 import com.k689.identid.provider.resources.ResourceProvider
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
+import kotlinx.serialization.json.Json
 
 sealed class MoveWalletPartialState {
     data class SessionReady(
@@ -40,13 +42,19 @@ sealed class MoveWalletPartialState {
         val endpointName: String,
     ) : MoveWalletPartialState()
 
-    data class Connected(val endpointId: String) : MoveWalletPartialState()
+    data class Connected(
+        val endpointId: String,
+    ) : MoveWalletPartialState()
 
     data object DataSent : MoveWalletPartialState()
 
-    data class Error(val message: String) : MoveWalletPartialState()
+    data class Error(
+        val message: String,
+    ) : MoveWalletPartialState()
 
-    data class Disconnected(val endpointId: String) : MoveWalletPartialState()
+    data class Disconnected(
+        val endpointId: String,
+    ) : MoveWalletPartialState()
 }
 
 interface MoveWalletInteractor {
@@ -56,11 +64,20 @@ interface MoveWalletInteractor {
 
     fun getConnectedEndpointId(): String?
 
-    fun acceptConnection(context: Context, endpointId: String)
+    fun acceptConnection(
+        context: Context,
+        endpointId: String,
+    )
 
-    fun rejectConnection(context: Context, endpointId: String)
+    fun rejectConnection(
+        context: Context,
+        endpointId: String,
+    )
 
-    suspend fun encryptAndSendData(context: Context, endpointId: String)
+    suspend fun encryptAndSendData(
+        context: Context,
+        endpointId: String,
+    )
 
     fun stopTransfer(context: Context)
 }
@@ -71,23 +88,19 @@ class MoveWalletInteractorImpl(
     private val nearbyTransferManager: NearbyTransferManager,
     private val transferSessionManager: TransferSessionManager,
 ) : MoveWalletInteractor {
-
     private var currentSession: TransferSessionInfo? = null
     private var connectedEndpointId: String? = null
+    private val json = Json { ignoreUnknownKeys = true }
 
     override fun createSessionAndAdvertise(context: Context): Flow<MoveWalletPartialState> {
-        Log.d("MoveWalletInteractor", "createSessionAndAdvertise called")
         val session = transferSessionManager.createSession()
         currentSession = session
 
-        Log.d("MoveWalletInteractor", "Session created: ${session.sessionId}")
         nearbyTransferManager.startAdvertising(context, session.sessionId)
 
         val qrContent = transferSessionManager.encodeSessionInfo(session)
-        Log.d("MoveWalletInteractor", "QR content: $qrContent")
 
         return nearbyTransferManager.state.map { state ->
-            Log.d("MoveWalletInteractor", "NearbyTransferState: $state")
             when (state) {
                 is NearbyTransferState.Advertising -> {
                     MoveWalletPartialState.SessionReady(
@@ -131,20 +144,39 @@ class MoveWalletInteractorImpl(
 
     override fun getConnectedEndpointId(): String? = connectedEndpointId
 
-    override fun acceptConnection(context: Context, endpointId: String) {
+    override fun acceptConnection(
+        context: Context,
+        endpointId: String,
+    ) {
         nearbyTransferManager.acceptConnection(context, endpointId)
     }
 
-    override fun rejectConnection(context: Context, endpointId: String) {
+    override fun rejectConnection(
+        context: Context,
+        endpointId: String,
+    ) {
         nearbyTransferManager.rejectConnection(context, endpointId)
     }
 
-    override suspend fun encryptAndSendData(context: Context, endpointId: String) {
+    override suspend fun encryptAndSendData(
+        context: Context,
+        endpointId: String,
+    ) {
         val session = currentSession ?: return
+
         val transferData = walletTransferController.collectTransferData()
         val sessionKey = transferSessionManager.getSessionKey(session)
         val encrypted = walletTransferController.encryptData(transferData, sessionKey)
-        nearbyTransferManager.sendPayload(context, endpointId, encrypted)
+        val envelope =
+            WalletTransferEnvelope(
+                sessionId = session.sessionId,
+                encryptedPayloadBase64 = Base64.encodeToString(encrypted, Base64.NO_WRAP),
+            )
+        val envelopeBytes =
+            json
+                .encodeToString(WalletTransferEnvelope.serializer(), envelope)
+                .toByteArray(Charsets.UTF_8)
+        nearbyTransferManager.sendPayload(context, endpointId, envelopeBytes)
     }
 
     override fun stopTransfer(context: Context) {

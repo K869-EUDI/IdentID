@@ -19,6 +19,7 @@ package com.k689.identid.config
 import android.content.Context
 import com.k689.identid.BuildConfig
 import com.k689.identid.R
+import com.k689.identid.service.NfcEngagementService
 import eu.europa.ec.eudi.wallet.EudiWalletConfig
 import eu.europa.ec.eudi.wallet.issue.openid4vci.OpenId4VciManager
 import eu.europa.ec.eudi.wallet.transfer.openId4vp.ClientIdScheme
@@ -35,6 +36,9 @@ internal class WalletCoreConfigImpl(
             if (_config == null) {
                 _config =
                     EudiWalletConfig {
+                        configureProximityPresentation(
+                            nfcEngagementServiceClass = NfcEngagementService::class.java,
+                        )
                         configureDocumentKeyCreation(
                             userAuthenticationRequired = false,
                             userAuthenticationTimeout = 30.seconds,
