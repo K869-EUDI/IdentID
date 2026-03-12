@@ -5,7 +5,7 @@ import com.k689.identid.R
 import com.k689.identid.provider.resources.ResourceProvider
 
 enum class AppTheme(
-    @StringRes val labelRes: Int,
+    @param:StringRes val labelRes: Int,
 ) {
     SYSTEM(labelRes = R.string.preferences_theme_option_system_default),
     LIGHT(labelRes = R.string.preferences_theme_option_light),
