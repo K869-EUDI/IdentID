@@ -51,7 +51,7 @@ class ThemeManager {
     @Composable
     fun Theme(
         darkTheme: Boolean = isSystemInDarkTheme(),
-        disableDynamicTheming: Boolean = true,
+        disableDynamicTheming: Boolean = false,
         content: @Composable () -> Unit,
     ) {
         val lightColorScheme = set.lightColors
