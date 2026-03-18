@@ -157,7 +157,8 @@ private fun TopBar(
             Modifier
                 .fillMaxWidth()
                 .padding(
-                    all = SPACING_SMALL.dp,
+                    horizontal = SPACING_MEDIUM.dp,
+                    vertical = SPACING_SMALL.dp,
                 ),
     ) {
         // home menu icon
@@ -169,10 +170,10 @@ private fun TopBar(
             onEventSent(OpenSideMenuEvent)
         }
 
-        // wallet logo
-        AppIconAndText(
+        Text(
             modifier = Modifier.align(Alignment.Center),
-            appIconAndTextData = AppIconAndTextDataUi(),
+            text = stringResource(R.string.app_title),
+            style = MaterialTheme.typography.titleLarge,
         )
     }
 }
@@ -206,7 +207,7 @@ private fun Content(
                 ),
         )
 
-        WrapActionCard(
+/*        WrapActionCard(
             config = state.authenticateCardConfig,
             onActionClick = {
                 onEventSent(
@@ -232,7 +233,7 @@ private fun Content(
                     Event.SignDocumentCard.LearnMorePressed,
                 )
             },
-        )
+        )*/
     }
 
     if (state.bleAvailability == BleAvailability.NO_PERMISSION) {
