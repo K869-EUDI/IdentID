@@ -19,11 +19,14 @@ package com.k689.identid.ui.dashboard.home
 import android.Manifest
 import android.content.Context
 import android.os.Build
+import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -31,18 +34,23 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.statusBarsPadding
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowForward
 import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.filled.Cancel
 import androidx.compose.material.icons.filled.Check
+import androidx.compose.material.icons.filled.CheckCircle
 import androidx.compose.material.icons.filled.MobileFriendly
+import androidx.compose.material.icons.filled.Person
 import androidx.compose.material3.BottomSheetDefaults
 import androidx.compose.material3.BottomSheetScaffold
 import androidx.compose.material3.Card
@@ -60,19 +68,22 @@ import androidx.compose.material3.rememberBottomSheetScaffoldState
 import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.material3.rememberStandardBottomSheetState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.graphicsLayer
-import androidx.compose.ui.graphics.vector.rememberVectorPainter
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.platform.LocalLifecycleOwner
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.util.lerp
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.LifecycleEventObserver
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
@@ -82,13 +93,11 @@ import com.k689.identid.extension.ui.finish
 import com.k689.identid.extension.ui.openAppSettings
 import com.k689.identid.extension.ui.openBleSettings
 import com.k689.identid.ui.component.AppIcons
-import com.k689.identid.ui.component.ListItemLeadingContentDataUi
 import com.k689.identid.ui.component.ListItemMainContentDataUi
 import com.k689.identid.ui.component.content.ContentScreen
 import com.k689.identid.ui.component.content.ScreenNavigateAction
 import com.k689.identid.ui.component.preview.PreviewTheme
 import com.k689.identid.ui.component.preview.ThemeModePreviews
-import com.k689.identid.ui.component.utils.OneTimeLaunchedEffect
 import com.k689.identid.ui.component.utils.SPACING_EXTRA_LARGE
 import com.k689.identid.ui.component.utils.SPACING_LARGE
 import com.k689.identid.ui.component.utils.SPACING_MEDIUM
@@ -97,11 +106,9 @@ import com.k689.identid.ui.component.wrap.ActionCardConfig
 import com.k689.identid.ui.component.wrap.BottomSheetTextDataUi
 import com.k689.identid.ui.component.wrap.DialogBottomSheet
 import com.k689.identid.ui.component.wrap.WrapIconButton
-import com.k689.identid.ui.component.wrap.WrapListItem
 import com.k689.identid.ui.component.wrap.WrapModalBottomSheet
 import com.k689.identid.ui.dashboard.component.BottomNavigationItem
-import com.k689.identid.ui.dashboard.documents.list.model.DocumentUi
-import com.k689.identid.ui.dashboard.transactions.list.model.TransactionUi
+import com.k689.identid.ui.dashboard.transactions.model.TransactionStatusUi
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.Flow
@@ -140,21 +147,13 @@ fun HomeScreen(
         isLoading = state.isLoading,
         navigatableAction = ScreenNavigateAction.NONE,
         onBack = { context.finish() },
-        topBar = {
-            TopBar(
-                onDashboardEventSent = onDashboardEventSent,
-            )
-        },
     ) { paddingValues ->
         Box(modifier = Modifier.fillMaxSize()) {
             BottomSheetScaffold(
-                modifier =
-                    Modifier.padding(
-                        top = paddingValues.calculateTopPadding(),
-                    ),
+                modifier = Modifier.fillMaxSize().statusBarsPadding(),
                 scaffoldState = scaffoldState,
                 sheetShadowElevation = 16.dp,
-                sheetPeekHeight = 320.dp + paddingValues.calculateBottomPadding(),
+                sheetPeekHeight = 410.dp,
                 sheetContainerColor = MaterialTheme.colorScheme.surfaceContainerLow,
                 sheetDragHandle = { BottomSheetDefaults.DragHandle() },
                 sheetContent = {
@@ -176,14 +175,29 @@ fun HomeScreen(
                                     .fillMaxWidth()
                                     .padding(
                                         horizontal = SPACING_LARGE.dp,
-                                        vertical = SPACING_MEDIUM.dp,
+                                        vertical = SPACING_SMALL.dp,
                                     ),
                         )
 
-                        RecentTransactionsList(
-                            transactions = state.allTransactions,
-                            onTransactionClicked = { viewModel.setEvent(Event.TransactionClicked(it)) },
-                        )
+                        val recentTransactions = state.allTransactions.filter { !it.isPending }
+
+                        if (recentTransactions.isEmpty()) {
+                            Box(modifier = Modifier.weight(1f).fillMaxWidth()) {
+                                Text(
+                                    text = "No recent transactions",
+                                    style = MaterialTheme.typography.bodyLarge,
+                                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                                    modifier =
+                                        Modifier.align(Alignment.Center),
+                                )
+                            }
+                        } else {
+                            RecentTransactionsList(
+                                transactions = recentTransactions,
+                                onTransactionClicked = { viewModel.setEvent(Event.TransactionClicked(it)) },
+                                modifier = Modifier.fillMaxWidth().weight(1f),
+                            )
+                        }
 
                         HomeScreenSheetContent(
                             sheetContent = state.sheetContent,
@@ -192,20 +206,23 @@ fun HomeScreen(
                     }
                 },
             ) { scaffoldPadding ->
-                Content(
-                    state = state,
-                    effectFlow = viewModel.effect,
-                    onEventSent = { viewModel.setEvent(it) },
-                    onNavigationRequested = { handleNavigationEffect(it, navHostController, context, onDashboardEventSent) },
-                    coroutineScope = scope,
-                    modalBottomSheetState = scaffoldState.bottomSheetState,
-                    paddingValues =
-                        PaddingValues(
-                            top = scaffoldPadding.calculateTopPadding(),
-                            bottom = scaffoldPadding.calculateBottomPadding(),
-                        ),
-                    onDashboardEventSent = onDashboardEventSent,
-                )
+                Column(modifier = Modifier.fillMaxSize()) {
+                    TopBar(onDashboardEventSent = onDashboardEventSent)
+                    Content(
+                        state = state,
+                        effectFlow = viewModel.effect,
+                        onEventSent = { viewModel.setEvent(it) },
+                        onNavigationRequested = { handleNavigationEffect(it, navHostController, context, onDashboardEventSent) },
+                        coroutineScope = scope,
+                        modalBottomSheetState = scaffoldState.bottomSheetState,
+                        paddingValues =
+                            PaddingValues(
+                                top = scaffoldPadding.calculateTopPadding(),
+                                bottom = scaffoldPadding.calculateBottomPadding(),
+                            ),
+                        onDashboardEventSent = onDashboardEventSent,
+                    )
+                }
             }
 
             Surface(
@@ -280,8 +297,19 @@ fun HomeScreen(
         }
     }
 
-    OneTimeLaunchedEffect {
-        viewModel.setEvent(Event.Init)
+    // Refresh transactions and state when the screen comes back into focus
+    val lifecycleOwner = LocalLifecycleOwner.current
+    DisposableEffect(lifecycleOwner) {
+        val observer =
+            LifecycleEventObserver { _, event ->
+                if (event == Lifecycle.Event.ON_RESUME) {
+                    viewModel.setEvent(Event.Init)
+                }
+            }
+        lifecycleOwner.lifecycle.addObserver(observer)
+        onDispose {
+            lifecycleOwner.lifecycle.removeObserver(observer)
+        }
     }
 }
 
@@ -293,7 +321,6 @@ private fun TopBar(
         modifier =
             Modifier
                 .fillMaxWidth()
-                .statusBarsPadding()
                 .padding(
                     horizontal = SPACING_LARGE.dp,
                     vertical = SPACING_SMALL.dp,
@@ -329,7 +356,9 @@ private fun Content(
     onDashboardEventSent: (DashboardEvent) -> Unit,
 ) {
     val scrollState = rememberScrollState()
-    val recentDocs = state.allDocuments.take(3)
+
+    val recentDocs = state.allDocuments.filter { !it.isPending }.take(3)
+
     val pageCount = if (recentDocs.isEmpty()) 1 else recentDocs.size + 1
     val pagerState = rememberPagerState(pageCount = { pageCount })
 
@@ -362,15 +391,17 @@ private fun Content(
             modifier =
                 Modifier
                     .fillMaxWidth()
-                    .height(240.dp),
-            contentPadding = PaddingValues(horizontal = 32.dp),
+                    // Increased height to give room for shadows and elevation
+                    .height(220.dp),
+            contentPadding = PaddingValues(horizontal = 32.dp, vertical = 8.dp),
             pageSpacing = 16.dp,
             verticalAlignment = Alignment.CenterVertically,
+            beyondViewportPageCount = 1,
         ) { page ->
             if (page < recentDocs.size) {
                 DocumentCard(
                     document = recentDocs[page],
-                    onClicked = { onEventSent(Event.DocumentClicked(recentDocs[page].uiData.itemId)) },
+                    onClicked = { onEventSent(Event.DocumentClicked(recentDocs[page].documentUi.uiData.itemId)) },
                     modifier =
                         Modifier
                             .graphicsLayer {
@@ -391,15 +422,21 @@ private fun Content(
                                         stop = 1f,
                                         fraction = 1f - pageOffset.coerceIn(0f, 1f),
                                     )
+                                clip = false
                             },
                 )
             } else {
                 SeeAllDocumentsCard(
+                    recentDocsCount = recentDocs.size,
                     onClicked = {
-                        onDashboardEventSent(
-                            com.k689.identid.ui.dashboard.dashboard.Event
-                                .SwitchTab(BottomNavigationItem.Documents),
-                        )
+                        if (recentDocs.isEmpty()) {
+                            onEventSent(Event.AddDocumentsClicked)
+                        } else {
+                            onDashboardEventSent(
+                                com.k689.identid.ui.dashboard.dashboard.Event
+                                    .SwitchTab(BottomNavigationItem.Documents),
+                            )
+                        }
                     },
                     modifier =
                         Modifier
@@ -421,6 +458,7 @@ private fun Content(
                                         stop = 1f,
                                         fraction = 1f - pageOffset.coerceIn(0f, 1f),
                                     )
+                                clip = false
                             },
                 )
             }
@@ -466,7 +504,7 @@ private fun Content(
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun DocumentCard(
-    document: DocumentUi,
+    document: DashboardDocument,
     onClicked: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
@@ -475,67 +513,68 @@ private fun DocumentCard(
         modifier =
             modifier
                 .fillMaxSize(),
-        shape = RoundedCornerShape(24.dp),
-        elevation = CardDefaults.cardElevation(defaultElevation = 4.dp),
+        shape = RoundedCornerShape(16.dp), // Snappier corners closer to real card shapes
+        elevation = CardDefaults.cardElevation(defaultElevation = 6.dp),
         colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surfaceContainerHigh),
     ) {
-        Column(
+        Row(
             modifier =
                 Modifier
                     .fillMaxSize()
-                    .padding(SPACING_LARGE.dp),
-            verticalArrangement = Arrangement.SpaceBetween,
+                    .padding(horizontal = SPACING_LARGE.dp, vertical = SPACING_MEDIUM.dp),
+            verticalAlignment = Alignment.CenterVertically, // Keeping everything neatly centered vertically
         ) {
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.SpaceBetween,
-                verticalAlignment = Alignment.CenterVertically,
+            // Placeholder area for the future user avatar/icon
+            Box(
+                modifier =
+                    Modifier
+                        .size(72.dp) // Adjusted sizing due to taller card space
+                        .background(MaterialTheme.colorScheme.surfaceVariant, CircleShape),
+                contentAlignment = Alignment.Center,
             ) {
-                Text(
-                    text = document.uiData.overlineText ?: "",
-                    style = MaterialTheme.typography.labelLarge,
-                    color = MaterialTheme.colorScheme.primary,
+                Icon(
+                    imageVector = Icons.Default.Person,
+                    contentDescription = "Avatar Placeholder",
+                    tint = MaterialTheme.colorScheme.onSurfaceVariant,
+                    modifier = Modifier.size(36.dp),
                 )
-                when (val leading = document.uiData.leadingContentData) {
-                    is ListItemLeadingContentDataUi.Icon -> {
-                        Icon(
-                            painter =
-                                leading.iconData.imageVector?.let { vector -> rememberVectorPainter(vector) }
-                                    ?: painterResource(leading.iconData.resourceId!!),
-                            contentDescription = null,
-                            modifier = Modifier.size(32.dp),
-                            tint = MaterialTheme.colorScheme.primary,
-                        )
-                    }
-
-                    is ListItemLeadingContentDataUi.AsyncImage -> {
-                        com.k689.identid.ui.component.wrap.WrapAsyncImage(
-                            modifier = Modifier.size(32.dp),
-                            source = leading.imageUrl,
-                            contentDescription = leading.contentDescription,
-                            error = leading.errorImage,
-                            placeholder = leading.placeholderImage,
-                        )
-                    }
-
-                    else -> {}
-                }
             }
 
-            Column {
+            Spacer(modifier = Modifier.width(SPACING_LARGE.dp))
+
+            Column(
+                modifier = Modifier.fillMaxWidth(),
+                verticalArrangement = Arrangement.Center,
+            ) {
+                val docName = (document.documentUi.uiData.mainContentData as? ListItemMainContentDataUi.Text)?.text ?: ""
                 Text(
-                    text = (document.uiData.mainContentData as? ListItemMainContentDataUi.Text)?.text ?: "",
-                    style = MaterialTheme.typography.headlineSmall,
+                    text = docName,
+                    style = MaterialTheme.typography.titleLarge,
                     fontWeight = FontWeight.Bold,
                     color = MaterialTheme.colorScheme.onSurface,
+                    maxLines = 1,
+                    overflow = TextOverflow.Ellipsis,
                 )
-                document.uiData.supportingText?.let {
-                    Text(
-                        text = it,
-                        style = MaterialTheme.typography.bodyMedium,
-                        color = MaterialTheme.colorScheme.onSurfaceVariant,
-                    )
-                }
+
+                Spacer(modifier = Modifier.height(8.dp))
+
+                Text(
+                    text = "Usages left: ${document.usagesLeft}",
+                    style = MaterialTheme.typography.bodyMedium,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                    maxLines = 1,
+                    overflow = TextOverflow.Ellipsis,
+                )
+
+                Spacer(modifier = Modifier.height(4.dp))
+
+                Text(
+                    text = "Expires: ${document.expiresAt}",
+                    style = MaterialTheme.typography.bodyMedium,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                    maxLines = 1,
+                    overflow = TextOverflow.Ellipsis,
+                )
             }
         }
     }
@@ -544,34 +583,56 @@ private fun DocumentCard(
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun SeeAllDocumentsCard(
+    recentDocsCount: Int,
     onClicked: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
-    Card(
-        onClick = onClicked,
-        modifier =
-            modifier
-                .fillMaxSize(),
-        shape = RoundedCornerShape(24.dp),
-        elevation = CardDefaults.cardElevation(defaultElevation = 2.dp),
-        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.primaryContainer),
-    ) {
+    if (recentDocsCount == 0) {
         Box(
-            modifier = Modifier.fillMaxSize(),
+            modifier = modifier.fillMaxSize().clickable { onClicked() },
             contentAlignment = Alignment.Center,
         ) {
             Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                Icon(
-                    imageVector = Icons.AutoMirrored.Filled.ArrowForward,
-                    contentDescription = null,
-                    modifier = Modifier.size(48.dp),
-                    tint = MaterialTheme.colorScheme.onPrimaryContainer,
+                Text(
+                    text = "No documents",
+                    style = MaterialTheme.typography.titleMedium,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
                 )
                 Text(
-                    text = stringResource(R.string.generic_view_details),
-                    style = MaterialTheme.typography.titleMedium,
-                    color = MaterialTheme.colorScheme.onPrimaryContainer,
+                    text = "Add one now",
+                    style = MaterialTheme.typography.bodyMedium,
+                    color = MaterialTheme.colorScheme.primary,
+                    fontWeight = FontWeight.Bold,
                 )
+            }
+        }
+    } else {
+        Card(
+            onClick = onClicked,
+            modifier =
+                modifier
+                    .fillMaxSize(),
+            shape = RoundedCornerShape(16.dp),
+            elevation = CardDefaults.cardElevation(defaultElevation = 4.dp),
+            colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.primaryContainer),
+        ) {
+            Box(
+                modifier = Modifier.fillMaxSize(),
+                contentAlignment = Alignment.Center,
+            ) {
+                Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                    Icon(
+                        imageVector = Icons.AutoMirrored.Filled.ArrowForward,
+                        contentDescription = null,
+                        modifier = Modifier.size(48.dp),
+                        tint = MaterialTheme.colorScheme.onPrimaryContainer,
+                    )
+                    Text(
+                        text = stringResource(R.string.generic_view_details),
+                        style = MaterialTheme.typography.titleMedium,
+                        color = MaterialTheme.colorScheme.onPrimaryContainer,
+                    )
+                }
             }
         }
     }
@@ -579,20 +640,68 @@ private fun SeeAllDocumentsCard(
 
 @Composable
 private fun RecentTransactionsList(
-    transactions: List<TransactionUi>,
+    transactions: List<DashboardTransaction>,
     onTransactionClicked: (String) -> Unit,
+    modifier: Modifier = Modifier,
 ) {
     LazyColumn(
-        modifier = Modifier.fillMaxSize(),
-        contentPadding = PaddingValues(horizontal = SPACING_LARGE.dp),
+        modifier = modifier,
     ) {
-        items(transactions) { transaction ->
-            WrapListItem(
-                item = transaction.uiData.header,
-                onItemClick = { onTransactionClicked(transaction.uiData.header.itemId) },
-                modifier = Modifier.fillMaxWidth(),
+        items(
+            items = transactions,
+            key = { it.transactionUi.uiData.header.itemId },
+        ) { transaction ->
+            RecentTransactionItem(
+                transaction = transaction,
+                onTransactionClicked = onTransactionClicked,
             )
         }
+    }
+}
+
+@Composable
+private fun RecentTransactionItem(
+    transaction: DashboardTransaction,
+    onTransactionClicked: (String) -> Unit,
+) {
+    val itemId = transaction.transactionUi.uiData.header.itemId
+    val header = transaction.transactionUi.uiData.header
+    val status = transaction.transactionUi.uiStatus
+    val isFailed = status == TransactionStatusUi.Failed
+
+    Row(
+        modifier =
+            Modifier
+                .fillMaxWidth()
+                .clickable { onTransactionClicked(itemId) }
+                .padding(horizontal = SPACING_LARGE.dp, vertical = SPACING_MEDIUM.dp),
+        verticalAlignment = Alignment.CenterVertically,
+        horizontalArrangement = Arrangement.spacedBy(SPACING_MEDIUM.dp),
+    ) {
+        Column(modifier = Modifier.weight(1f)) {
+            Text(
+                text = (header.mainContentData as? ListItemMainContentDataUi.Text)?.text ?: "",
+                style = MaterialTheme.typography.titleMedium,
+                fontWeight = FontWeight.Bold,
+                color = MaterialTheme.colorScheme.onSurface,
+                maxLines = 1,
+                overflow = TextOverflow.Ellipsis,
+            )
+            Text(
+                text = header.supportingText ?: "",
+                style = MaterialTheme.typography.bodySmall,
+                color = MaterialTheme.colorScheme.onSurfaceVariant,
+                maxLines = 1,
+                overflow = TextOverflow.Ellipsis,
+            )
+        }
+
+        Icon(
+            imageVector = if (isFailed) Icons.Default.Cancel else Icons.Default.CheckCircle,
+            contentDescription = status.name,
+            tint = if (isFailed) MaterialTheme.colorScheme.error else MaterialTheme.colorScheme.primary,
+            modifier = Modifier.size(24.dp),
+        )
     }
 }
 
@@ -710,17 +819,9 @@ private fun HomeScreenContentPreview() {
             isLoading = false,
             navigatableAction = ScreenNavigateAction.NONE,
             onBack = { },
-            topBar = {
-                TopBar(
-                    onDashboardEventSent = {},
-                )
-            },
         ) { paddingValues ->
             BottomSheetScaffold(
-                modifier =
-                    Modifier.padding(
-                        top = paddingValues.calculateTopPadding(),
-                    ),
+                modifier = Modifier.fillMaxSize(),
                 scaffoldState = scaffoldState,
                 sheetPeekHeight = 400.dp + paddingValues.calculateBottomPadding(),
                 sheetContent = {
@@ -732,38 +833,41 @@ private fun HomeScreenContentPreview() {
                     ) {}
                 },
             ) { scaffoldPadding ->
-                Content(
-                    state =
-                        State(
-                            isBottomSheetOpen = false,
-                            welcomeUserMessage = "Welcome back, Alex",
-                            authenticateCardConfig =
-                                ActionCardConfig(
-                                    title = stringResource(R.string.home_screen_authentication_card_title),
-                                    icon = AppIcons.WalletActivated,
-                                    primaryButtonText = stringResource(R.string.home_screen_authenticate),
-                                    secondaryButtonText = stringResource(R.string.home_screen_learn_more),
-                                ),
-                            signCardConfig =
-                                ActionCardConfig(
-                                    title = stringResource(R.string.home_screen_sign_card_title),
-                                    icon = AppIcons.Contract,
-                                    primaryButtonText = stringResource(R.string.home_screen_sign),
-                                    secondaryButtonText = stringResource(R.string.home_screen_learn_more),
-                                ),
-                        ),
-                    effectFlow = Channel<Effect>().receiveAsFlow(),
-                    onNavigationRequested = {},
-                    coroutineScope = rememberCoroutineScope(),
-                    modalBottomSheetState = rememberModalBottomSheetState(),
-                    onEventSent = {},
-                    paddingValues =
-                        PaddingValues(
-                            top = scaffoldPadding.calculateTopPadding(),
-                            bottom = scaffoldPadding.calculateBottomPadding(),
-                        ),
-                    onDashboardEventSent = {},
-                )
+                Column(modifier = Modifier.fillMaxSize()) {
+                    TopBar(onDashboardEventSent = {})
+                    Content(
+                        state =
+                            State(
+                                isBottomSheetOpen = false,
+                                welcomeUserMessage = "Welcome back, Alex",
+                                authenticateCardConfig =
+                                    ActionCardConfig(
+                                        title = stringResource(R.string.home_screen_authentication_card_title),
+                                        icon = AppIcons.WalletActivated,
+                                        primaryButtonText = stringResource(R.string.home_screen_authenticate),
+                                        secondaryButtonText = stringResource(R.string.home_screen_learn_more),
+                                    ),
+                                signCardConfig =
+                                    ActionCardConfig(
+                                        title = stringResource(R.string.home_screen_sign_card_title),
+                                        icon = AppIcons.Contract,
+                                        primaryButtonText = stringResource(R.string.home_screen_sign),
+                                        secondaryButtonText = stringResource(R.string.home_screen_learn_more),
+                                    ),
+                            ),
+                        effectFlow = Channel<Effect>().receiveAsFlow(),
+                        onNavigationRequested = {},
+                        coroutineScope = rememberCoroutineScope(),
+                        modalBottomSheetState = rememberModalBottomSheetState(),
+                        onEventSent = {},
+                        paddingValues =
+                            PaddingValues(
+                                top = scaffoldPadding.calculateTopPadding(),
+                                bottom = scaffoldPadding.calculateBottomPadding(),
+                            ),
+                        onDashboardEventSent = {},
+                    )
+                }
             }
         }
     }

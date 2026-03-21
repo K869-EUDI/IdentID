@@ -39,8 +39,10 @@ import com.k689.identid.navigation.helper.generateComposableArguments
 import com.k689.identid.navigation.helper.generateComposableNavigationLink
 import com.k689.identid.provider.resources.ResourceProvider
 import com.k689.identid.ui.component.AppIcons
+import com.k689.identid.ui.component.ListItemTrailingContentDataUi
 import com.k689.identid.ui.component.wrap.ActionCardConfig
 import com.k689.identid.ui.dashboard.component.BottomNavigationItem
+import com.k689.identid.ui.dashboard.documents.detail.model.DocumentIssuanceStateUi
 import com.k689.identid.ui.dashboard.documents.list.model.DocumentUi
 import com.k689.identid.ui.dashboard.documents.list.model.DocumentsFilterableAttributes
 import com.k689.identid.ui.dashboard.home.HomeScreenBottomSheetContent.Bluetooth
@@ -62,6 +64,18 @@ enum class BleAvailability {
     UNKNOWN,
 }
 
+data class DashboardDocument(
+    val documentUi: DocumentUi,
+    val usagesLeft: String = "-",
+    val expiresAt: String = "-",
+    val isPending: Boolean = false,
+)
+
+data class DashboardTransaction(
+    val transactionUi: TransactionUi,
+    val isPending: Boolean = false,
+)
+
 data class State(
     val isLoading: Boolean = false,
     val isBottomSheetOpen: Boolean = false,
@@ -71,8 +85,8 @@ data class State(
     val signCardConfig: ActionCardConfig,
     val bleAvailability: BleAvailability = BleAvailability.UNKNOWN,
     val isBleCentralClientModeEnabled: Boolean = false,
-    val allDocuments: List<DocumentUi> = emptyList(),
-    val allTransactions: List<TransactionUi> = emptyList(),
+    val allDocuments: List<DashboardDocument> = emptyList(),
+    val allTransactions: List<DashboardTransaction> = emptyList(),
 ) : ViewState
 
 sealed class Event : ViewEvent {
@@ -528,7 +542,22 @@ class HomeViewModel(
                     if (docsResponse is DocumentInteractorGetDocumentsPartialState.Success) {
                         docsResponse.allDocuments.items
                             .sortedByDescending { (it.attributes as? DocumentsFilterableAttributes)?.issuedDate ?: Instant.MIN }
-                            .mapNotNull { it.payload as? DocumentUi }
+                            .mapNotNull { item ->
+                                (item.payload as? DocumentUi)?.let { docUi ->
+                                    if (docUi.documentIssuanceState == DocumentIssuanceStateUi.Pending) return@let null
+                                    val attributes = item.attributes as? DocumentsFilterableAttributes
+                                    val usagesLeft = when (val trailing = docUi.uiData.trailingContentData) {
+                                        is ListItemTrailingContentDataUi.TextWithIcon -> trailing.text
+                                        else -> "-"
+                                    }
+                                    DashboardDocument(
+                                        documentUi = docUi,
+                                        usagesLeft = usagesLeft,
+                                        expiresAt = attributes?.expiryDate?.toString()?.substringBefore("T") ?: "-",
+                                        isPending = false,
+                                    )
+                                }
+                            }
                     } else {
                         emptyList()
                     }
@@ -536,7 +565,14 @@ class HomeViewModel(
                 val allTrans =
                     if (transResponse is TransactionInteractorGetTransactionsPartialState.Success) {
                         transResponse.allTransactions.items
-                            .mapNotNull { it.payload as? TransactionUi }
+                            .mapNotNull { item ->
+                                (item.payload as? TransactionUi)?.let { transUi ->
+                                    DashboardTransaction(
+                                        transactionUi = transUi,
+                                        isPending = false,
+                                    )
+                                }
+                            }
                     } else {
                         emptyList()
                     }
