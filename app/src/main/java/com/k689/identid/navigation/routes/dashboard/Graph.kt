@@ -26,6 +26,7 @@ import androidx.navigation.navDeepLink
 import com.k689.identid.BuildConfig
 import com.k689.identid.navigation.DashboardScreens
 import com.k689.identid.navigation.ModuleRoute
+import com.k689.identid.ui.dashboard.authenticate.AuthenticateScreen
 import com.k689.identid.ui.dashboard.dashboard.DashboardScreen
 import com.k689.identid.ui.dashboard.documents.detail.DocumentDetailsScreen
 import com.k689.identid.ui.dashboard.preferences.PreferencesScreen
@@ -85,6 +86,15 @@ fun NavGraphBuilder.featureDashboardGraph(navController: NavController) {
             route = DashboardScreens.DocumentSign.screenRoute,
         ) {
             DocumentSignScreen(navController, koinViewModel())
+        }
+
+        composable(
+            route = DashboardScreens.Authenticate.screenRoute,
+        ) {
+            AuthenticateScreen(
+                navController = navController,
+                viewModel = koinViewModel(),
+            )
         }
 
         composable(

@@ -174,6 +174,7 @@ secrets {
 }
 
 dependencies {
+    implementation(libs.androidx.foundation.layout)
     // Desugaring
     coreLibraryDesugaring(libs.android.desugarJdkLibs)
 

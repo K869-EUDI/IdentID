@@ -56,6 +56,8 @@ sealed class DashboardScreens {
 
     data object DocumentSign : Screen(name = "DOCUMENT_SIGN")
 
+    data object Authenticate : Screen(name = "AUTHENTICATE")
+
     data object DocumentDetails : Screen(
         name = "DOCUMENT_DETAILS",
         parameters = "?documentId={documentId}",

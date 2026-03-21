@@ -39,6 +39,7 @@ import com.k689.identid.navigation.helper.hasDeepLink
 import com.k689.identid.provider.resources.ResourceProvider
 import com.k689.identid.ui.component.AppIcons
 import com.k689.identid.ui.component.ModalOptionUi
+import com.k689.identid.ui.dashboard.component.BottomNavigationItem
 import com.k689.identid.ui.dashboard.dashboard.model.SideMenuItemUi
 import com.k689.identid.ui.dashboard.dashboard.model.SideMenuTypeUi
 import com.k689.identid.ui.mvi.MviViewModel
@@ -96,6 +97,8 @@ sealed class Event : ViewEvent {
             ) : DocumentRevocation()
         }
     }
+
+    data class SwitchTab(val tab: BottomNavigationItem) : Event()
 }
 
 sealed class Effect : ViewSideEffect {
@@ -130,6 +133,8 @@ sealed class Effect : ViewSideEffect {
     data object ShowBottomSheet : Effect()
 
     data object CloseBottomSheet : Effect()
+
+    data class SwitchTab(val route: String) : Effect()
 }
 
 sealed class DashboardBottomSheetContent {
@@ -205,6 +210,10 @@ class DashboardViewModel(
             is Event.BottomSheet.DocumentRevocation.OptionListItemForRevokedDocumentSelected -> {
                 hideBottomSheet()
                 goToDocumentDetails(docId = event.documentId)
+            }
+
+            is Event.SwitchTab -> {
+                setEffect { Effect.SwitchTab(event.tab.route) }
             }
         }
     }

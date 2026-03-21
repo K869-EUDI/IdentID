@@ -141,7 +141,7 @@
     <!-- region Biometric prompt -->
     <string name="biometric_prompt_title">Biometrinis autentifikavimas</string>
     <string name="biometric_prompt_subtitle">Autentifikuokitės naudodami biometrinius duomenis</string>
-    <string name="biometric_login_title">Sveiki sugrįžę</string>
+    <string name="biometric_login_title">Sveiki</string>
     <string name="biometric_login_biometrics_enabled_subtitle">Naudokite biometrinius duomenis, kad pasiektumėte EUDI piniginę.</string>
     <string name="biometric_login_biometrics_not_enabled_subtitle">Norėdami pasiekti EUDI piniginę, turite įvesti PIN kodą.</string>
     <!--endregion-->
@@ -256,8 +256,8 @@
     <!--endregion-->
     <!-- region Home Screen -->
     <string name="home_screen_title">Pradžia</string>
-    <string name="home_screen_welcome">Sveiki sugrįžę</string>
-    <string name="home_screen_welcome_user_message">Sveiki sugrįžę, %1$s</string>
+    <string name="home_screen_welcome">Sveiki</string>
+    <string name="home_screen_welcome_user_message">Sveiki, %1$s</string>
     <string name="home_screen_authentication_card_title">Autentifikuokitės, tvirtinkite operacijas ir dalinkitės skaitmeniniais dokumentais asmeniškai arba internetu.</string>
     <string name="home_screen_sign_card_title">Elektroniniu būdu pasirašykite skaitmeninius dokumentus naudodami piniginę – pasirinkite failą iš savo įrenginio.</string>
     <string name="home_screen_authenticate">Autentifikavimas</string>

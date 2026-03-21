@@ -14,20 +14,20 @@
  * governing permissions and limitations under the Licence.
  */
 
-package com.k689.identid.ui.dashboard.sign
+package com.k689.identid.ui.dashboard.authenticate
 
-import android.content.Context
-import android.net.Uri
 import com.k689.identid.R
+import com.k689.identid.config.PresentationMode
 import com.k689.identid.config.QrScanFlow
 import com.k689.identid.config.QrScanUiConfig
-import com.k689.identid.interactor.dashboard.DocumentSignInteractor
+import com.k689.identid.config.RequestUriConfig
+import com.k689.identid.di.core.getOrCreatePresentationScope
 import com.k689.identid.navigation.CommonScreens
 import com.k689.identid.navigation.DashboardScreens
+import com.k689.identid.navigation.ProximityScreens
 import com.k689.identid.navigation.helper.generateComposableArguments
 import com.k689.identid.navigation.helper.generateComposableNavigationLink
 import com.k689.identid.provider.resources.ResourceProvider
-import com.k689.identid.ui.component.content.ContentErrorConfig
 import com.k689.identid.ui.mvi.MviViewModel
 import com.k689.identid.ui.mvi.ViewEvent
 import com.k689.identid.ui.mvi.ViewSideEffect
@@ -37,72 +37,58 @@ import org.koin.android.annotation.KoinViewModel
 
 data class State(
     val isLoading: Boolean = false,
-    val error: ContentErrorConfig? = null,
-    val title: String,
-    val subtitle: String,
 ) : ViewState
 
 sealed class Event : ViewEvent {
-    data object Pop : Event()
-
-    data object OnFromDeviceClick : Event()
-
-    data object OnScanQrClick : Event()
-
-    data class DocumentUriRetrieved(
-        val context: Context,
-        val uri: Uri,
-    ) : Event()
+    data object OnInPersonClick : Event()
+    data object OnOnlineClick : Event()
 }
 
 sealed class Effect : ViewSideEffect {
     sealed class Navigation : Effect() {
-        data object Pop : Navigation()
         data class SwitchScreen(val screenRoute: String) : Navigation()
     }
-
-    data class OpenDocumentSelection(
-        val selection: List<String>,
-    ) : Effect()
 }
 
 @KoinViewModel
-class DocumentSignViewModel(
-    private val documentSignInteractor: DocumentSignInteractor,
-    private val resourceProvider: ResourceProvider,
+class AuthenticateViewModel(
     private val uiSerializer: UiSerializer,
+    private val resourceProvider: ResourceProvider,
 ) : MviViewModel<Event, State, Effect>() {
-    override fun setInitialState(): State =
-        State(
-            title = resourceProvider.getString(R.string.document_sign_title),
-            subtitle = resourceProvider.getString(R.string.document_sign_subtitle),
-        )
+    override fun setInitialState(): State = State()
 
     override fun handleEvents(event: Event) {
         when (event) {
-            is Event.OnFromDeviceClick -> {
-                setEffect { Effect.OpenDocumentSelection(listOf("application/pdf")) }
-            }
-
-            is Event.OnScanQrClick -> {
-                navigateToQrSignatureScan()
-            }
-
-            is Event.Pop -> {
-                setEffect { Effect.Navigation.Pop }
-            }
-
-            is Event.DocumentUriRetrieved -> {
-                documentSignInteractor.launchRqesSdk(
-                    event.context,
-                    event.uri,
-                )
-            }
+            Event.OnInPersonClick -> navigateToInPerson()
+            Event.OnOnlineClick -> navigateToOnline()
         }
     }
 
-    private fun navigateToQrSignatureScan() {
-        val navigationEffect =
+    private fun navigateToInPerson() {
+        // Create Koin scope for presentation
+        getOrCreatePresentationScope()
+        setEffect {
+            Effect.Navigation.SwitchScreen(
+                screenRoute =
+                    generateComposableNavigationLink(
+                        screen = ProximityScreens.QR,
+                        arguments =
+                            generateComposableArguments(
+                                mapOf(
+                                    RequestUriConfig.serializedKeyName to
+                                        uiSerializer.toBase64(
+                                            RequestUriConfig(PresentationMode.Ble(DashboardScreens.Dashboard.screenRoute)),
+                                            RequestUriConfig.Parser,
+                                        ),
+                                ),
+                            ),
+                    ),
+            )
+        }
+    }
+
+    private fun navigateToOnline() {
+        setEffect {
             Effect.Navigation.SwitchScreen(
                 screenRoute =
                     generateComposableNavigationLink(
@@ -113,9 +99,9 @@ class DocumentSignViewModel(
                                     QrScanUiConfig.serializedKeyName to
                                         uiSerializer.toBase64(
                                             QrScanUiConfig(
-                                                title = resourceProvider.getString(R.string.signature_qr_scan_title),
-                                                subTitle = resourceProvider.getString(R.string.signature_qr_scan_subtitle),
-                                                qrScanFlow = QrScanFlow.Signature,
+                                                title = resourceProvider.getString(R.string.presentation_qr_scan_title),
+                                                subTitle = resourceProvider.getString(R.string.presentation_qr_scan_subtitle),
+                                                qrScanFlow = QrScanFlow.Presentation,
                                             ),
                                             QrScanUiConfig.Parser,
                                         ),
@@ -123,8 +109,6 @@ class DocumentSignViewModel(
                             ),
                     ),
             )
-        setEffect {
-            navigationEffect
         }
     }
 }

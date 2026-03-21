@@ -18,29 +18,42 @@ package com.k689.identid.ui.dashboard.home
 
 import androidx.lifecycle.viewModelScope
 import com.k689.identid.R
+import com.k689.identid.config.IssuanceFlowType
+import com.k689.identid.config.IssuanceUiConfig
 import com.k689.identid.config.PresentationMode
 import com.k689.identid.config.QrScanFlow
 import com.k689.identid.config.QrScanUiConfig
 import com.k689.identid.config.RequestUriConfig
 import com.k689.identid.di.core.getOrCreatePresentationScope
+import com.k689.identid.interactor.dashboard.DocumentInteractorGetDocumentsPartialState
+import com.k689.identid.interactor.dashboard.DocumentsInteractor
 import com.k689.identid.interactor.dashboard.HomeInteractor
 import com.k689.identid.interactor.dashboard.HomeInteractorGetUserNameViaMainPidDocumentPartialState
+import com.k689.identid.interactor.dashboard.TransactionInteractorGetTransactionsPartialState
+import com.k689.identid.interactor.dashboard.TransactionsInteractor
 import com.k689.identid.navigation.CommonScreens
 import com.k689.identid.navigation.DashboardScreens
+import com.k689.identid.navigation.IssuanceScreens
 import com.k689.identid.navigation.ProximityScreens
 import com.k689.identid.navigation.helper.generateComposableArguments
 import com.k689.identid.navigation.helper.generateComposableNavigationLink
 import com.k689.identid.provider.resources.ResourceProvider
 import com.k689.identid.ui.component.AppIcons
 import com.k689.identid.ui.component.wrap.ActionCardConfig
+import com.k689.identid.ui.dashboard.component.BottomNavigationItem
+import com.k689.identid.ui.dashboard.documents.list.model.DocumentUi
+import com.k689.identid.ui.dashboard.documents.list.model.DocumentsFilterableAttributes
 import com.k689.identid.ui.dashboard.home.HomeScreenBottomSheetContent.Bluetooth
+import com.k689.identid.ui.dashboard.transactions.list.model.TransactionUi
 import com.k689.identid.ui.mvi.MviViewModel
 import com.k689.identid.ui.mvi.ViewEvent
 import com.k689.identid.ui.mvi.ViewSideEffect
 import com.k689.identid.ui.mvi.ViewState
 import com.k689.identid.ui.serializer.UiSerializer
+import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.launch
 import org.koin.android.annotation.KoinViewModel
+import java.time.Instant
 
 enum class BleAvailability {
     AVAILABLE,
@@ -52,18 +65,22 @@ enum class BleAvailability {
 data class State(
     val isLoading: Boolean = false,
     val isBottomSheetOpen: Boolean = false,
-    val sheetContent: HomeScreenBottomSheetContent = HomeScreenBottomSheetContent.Authenticate,
+    val sheetContent: HomeScreenBottomSheetContent = HomeScreenBottomSheetContent.None,
     val welcomeUserMessage: String,
     val authenticateCardConfig: ActionCardConfig,
     val signCardConfig: ActionCardConfig,
     val bleAvailability: BleAvailability = BleAvailability.UNKNOWN,
     val isBleCentralClientModeEnabled: Boolean = false,
+    val allDocuments: List<DocumentUi> = emptyList(),
+    val allTransactions: List<TransactionUi> = emptyList(),
 ) : ViewState
 
 sealed class Event : ViewEvent {
     data object Init : Event()
 
     data object StartProximityFlow : Event()
+
+    data object AddDocumentsClicked : Event()
 
     sealed class AuthenticateCard : Event() {
         data object AuthenticatePressed : Event()
@@ -110,6 +127,10 @@ sealed class Event : ViewEvent {
     data class OnPermissionStateChanged(
         val availability: BleAvailability,
     ) : Event()
+
+    data class DocumentClicked(val documentId: String) : Event()
+    data class TransactionClicked(val transactionId: String) : Event()
+    data object SeeAllDocumentsClicked : Event()
 }
 
 sealed class Effect : ViewSideEffect {
@@ -130,9 +151,13 @@ sealed class Effect : ViewSideEffect {
     data class CloseBottomSheet(
         val hasNextBottomSheet: Boolean,
     ) : Effect()
+
+    data class SwitchTab(val tab: BottomNavigationItem) : Effect()
 }
 
 sealed class HomeScreenBottomSheetContent {
+    data object None : HomeScreenBottomSheetContent()
+
     data object Authenticate : HomeScreenBottomSheetContent()
 
     data object LearnMoreAboutAuthenticate : HomeScreenBottomSheetContent()
@@ -149,6 +174,8 @@ sealed class HomeScreenBottomSheetContent {
 @KoinViewModel
 class HomeViewModel(
     private val homeInteractor: HomeInteractor,
+    private val documentsInteractor: DocumentsInteractor,
+    private val transactionsInteractor: TransactionsInteractor,
     private val uiSerializer: UiSerializer,
     private val resourceProvider: ResourceProvider,
 ) : MviViewModel<Event, State, Effect>() {
@@ -176,12 +203,37 @@ class HomeViewModel(
         when (event) {
             is Event.Init -> {
                 getUserNameViaMainPidDocument()
+                getRecentData()
             }
 
             is Event.AuthenticateCard.AuthenticatePressed -> {
-                showBottomSheet(
-                    sheetContent = HomeScreenBottomSheetContent.Authenticate,
-                )
+                navigateToAuthenticate()
+            }
+
+            is Event.AddDocumentsClicked -> {
+                setEffect {
+                    Effect.Navigation.SwitchScreen(
+                        screenRoute =
+                            generateComposableNavigationLink(
+                                screen = IssuanceScreens.AddDocument,
+                                arguments =
+                                    generateComposableArguments(
+                                        mapOf(
+                                            IssuanceUiConfig.serializedKeyName to
+                                                uiSerializer.toBase64(
+                                                    IssuanceUiConfig(
+                                                        flowType =
+                                                            IssuanceFlowType.ExtraDocument(
+                                                                formatType = null,
+                                                            ),
+                                                    ),
+                                                    IssuanceUiConfig.Parser,
+                                                ),
+                                        ),
+                                    ),
+                            ),
+                    )
+                }
             }
 
             is Event.AuthenticateCard.LearnMorePressed -> {
@@ -191,9 +243,7 @@ class HomeViewModel(
             }
 
             is Event.SignDocumentCard.SignDocumentPressed -> {
-                showBottomSheet(
-                    sheetContent = HomeScreenBottomSheetContent.Sign,
-                )
+                navigateToDocumentSign()
             }
 
             is Event.SignDocumentCard.LearnMorePressed -> {
@@ -258,6 +308,18 @@ class HomeViewModel(
             is Event.BottomSheet.Bluetooth.SecondaryButtonPressed -> {
                 hideBottomSheet()
             }
+
+            is Event.DocumentClicked -> {
+                navigateToDocumentDetails(event.documentId)
+            }
+
+            is Event.TransactionClicked -> {
+                navigateToTransactionDetails(event.transactionId)
+            }
+
+            is Event.SeeAllDocumentsClicked -> {
+                setEffect { Effect.SwitchTab(BottomNavigationItem.Documents) }
+            }
         }
     }
 
@@ -310,10 +372,42 @@ class HomeViewModel(
         }
     }
 
+    private fun navigateToAuthenticate() {
+        setEffect {
+            Effect.Navigation.SwitchScreen(
+                screenRoute = DashboardScreens.Authenticate.screenRoute,
+            )
+        }
+    }
+
     private fun navigateToDocumentSign() {
         setEffect {
             Effect.Navigation.SwitchScreen(
                 screenRoute = DashboardScreens.DocumentSign.screenRoute,
+            )
+        }
+    }
+
+    private fun navigateToDocumentDetails(documentId: String) {
+        setEffect {
+            Effect.Navigation.SwitchScreen(
+                screenRoute =
+                    generateComposableNavigationLink(
+                        screen = DashboardScreens.DocumentDetails,
+                        arguments = generateComposableArguments(mapOf("documentId" to documentId)),
+                    ),
+            )
+        }
+    }
+
+    private fun navigateToTransactionDetails(transactionId: String) {
+        setEffect {
+            Effect.Navigation.SwitchScreen(
+                screenRoute =
+                    generateComposableNavigationLink(
+                        screen = DashboardScreens.TransactionDetails,
+                        arguments = generateComposableArguments(mapOf("transactionId" to transactionId)),
+                    ),
             )
         }
     }
@@ -397,26 +491,16 @@ class HomeViewModel(
     }
 
     private fun getUserNameViaMainPidDocument() {
-        setState {
-            copy(
-                isLoading = true,
-            )
-        }
         viewModelScope.launch {
             homeInteractor.getUserNameViaMainPidDocument().collect { response ->
                 when (response) {
                     is HomeInteractorGetUserNameViaMainPidDocumentPartialState.Failure -> {
-                        setState {
-                            copy(
-                                isLoading = false,
-                            )
-                        }
+                        // ignore
                     }
 
                     is HomeInteractorGetUserNameViaMainPidDocumentPartialState.Success -> {
                         setState {
                             copy(
-                                isLoading = false,
                                 welcomeUserMessage =
                                     if (response.userFirstName.isNotBlank()) {
                                         resourceProvider.getString(
@@ -429,6 +513,41 @@ class HomeViewModel(
                             )
                         }
                     }
+                }
+            }
+        }
+    }
+
+    private fun getRecentData() {
+        viewModelScope.launch {
+            combine(
+                documentsInteractor.getDocuments(),
+                transactionsInteractor.getTransactions(),
+            ) { docsResponse, transResponse ->
+                val allDocs =
+                    if (docsResponse is DocumentInteractorGetDocumentsPartialState.Success) {
+                        docsResponse.allDocuments.items
+                            .sortedByDescending { (it.attributes as? DocumentsFilterableAttributes)?.issuedDate ?: Instant.MIN }
+                            .mapNotNull { it.payload as? DocumentUi }
+                    } else {
+                        emptyList()
+                    }
+
+                val allTrans =
+                    if (transResponse is TransactionInteractorGetTransactionsPartialState.Success) {
+                        transResponse.allTransactions.items
+                            .mapNotNull { it.payload as? TransactionUi }
+                    } else {
+                        emptyList()
+                    }
+
+                allDocs to allTrans
+            }.collect { (docs, trans) ->
+                setState {
+                    copy(
+                        allDocuments = docs,
+                        allTransactions = trans,
+                    )
                 }
             }
         }

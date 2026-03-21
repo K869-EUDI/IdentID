@@ -21,10 +21,9 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.foundation.layout.calculateEndPadding
-import androidx.compose.foundation.layout.calculateStartPadding
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
@@ -47,7 +46,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
@@ -197,17 +195,21 @@ private fun Content(
     paddingValues: PaddingValues,
     context: Context,
 ) {
-    val layoutDirection = LocalLayoutDirection.current
-
     Column(
-        modifier = Modifier.fillMaxSize(),
+        modifier =
+            Modifier
+                .fillMaxSize()
+                // 1. Apply the safe padding bounds globally to the parent Column layout
+                .padding(paddingValues)
+                // 2. Adjust for keyboard appearance dynamically
+                .imePadding(),
     ) {
         MainContent(
             modifier =
                 Modifier
                     .fillMaxWidth()
-                    .weight(1f)
-                    .paddingFrom(paddingValues, bottom = false),
+                    // 3. Occupy all remaining height *after* the footer takes its space below
+                    .weight(1f),
             state = state,
             onEventSend = onEventSend,
             context = context,
@@ -219,11 +221,10 @@ private fun Content(
                 modifier =
                     Modifier
                         .fillMaxWidth()
+                        // Add standard margin layout spacing to the footer
                         .padding(
                             top = SPACING_MEDIUM.dp,
-                            start = paddingValues.calculateStartPadding(layoutDirection),
-                            end = paddingValues.calculateEndPadding(layoutDirection),
-                            bottom = paddingValues.calculateBottomPadding(),
+                            bottom = SPACING_MEDIUM.dp,
                         ),
                 onEventSend = onEventSend,
             )
@@ -477,68 +478,6 @@ private fun IssuanceAddDocumentScreenPreview() {
                     issuanceConfig = IssuanceUiConfig(flowType = IssuanceFlowType.NoDocument),
                     showFooterScanner = true,
                     navigatableAction = ScreenNavigateAction.NONE,
-                    title = stringResource(R.string.issuance_add_document_title),
-                    subtitle = stringResource(R.string.issuance_add_document_subtitle),
-                    options = previewOptions,
-                    filteredOptions = previewOptions,
-                ),
-            effectFlow = Channel<Effect>().receiveAsFlow(),
-            onEventSend = {},
-            onNavigationRequested = {},
-            paddingValues = PaddingValues(all = SPACING_LARGE.dp),
-            context = LocalContext.current,
-        )
-    }
-}
-
-@ThemeModePreviews
-@Composable
-private fun DashboardAddDocumentScreenPreview() {
-    val previewOptions =
-        listOf(
-            Pair(
-                "issuer1",
-                listOf(
-                    AddDocumentUi(
-                        credentialIssuerId = "issuer1",
-                        configurationIds = listOf("configId1"),
-                        itemData =
-                            ListItemDataUi(
-                                itemId = "configId1",
-                                mainContentData = ListItemMainContentDataUi.Text(text = "National ID"),
-                                trailingContentData =
-                                    ListItemTrailingContentDataUi.Icon(iconData = AppIcons.Add),
-                            ),
-                    ),
-                ),
-            ),
-            Pair(
-                "issuer2",
-                listOf(
-                    AddDocumentUi(
-                        credentialIssuerId = "issuer2",
-                        configurationIds = listOf("configId2"),
-                        itemData =
-                            ListItemDataUi(
-                                itemId = "configId2",
-                                mainContentData = ListItemMainContentDataUi.Text(text = "Driving Licence"),
-                                trailingContentData =
-                                    ListItemTrailingContentDataUi.Icon(iconData = AppIcons.Add),
-                            ),
-                    ),
-                ),
-            ),
-        )
-    PreviewTheme {
-        Content(
-            state =
-                State(
-                    issuanceConfig =
-                        IssuanceUiConfig(
-                            flowType = IssuanceFlowType.ExtraDocument(formatType = null),
-                        ),
-                    showFooterScanner = false,
-                    navigatableAction = ScreenNavigateAction.BACKABLE,
                     title = stringResource(R.string.issuance_add_document_title),
                     subtitle = stringResource(R.string.issuance_add_document_subtitle),
                     options = previewOptions,

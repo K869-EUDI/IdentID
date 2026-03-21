@@ -36,6 +36,7 @@ import androidx.navigation.NavController
 import com.k689.identid.R
 import com.k689.identid.ui.component.AppIcons
 import com.k689.identid.ui.component.ListItemDataUi
+import com.k689.identid.ui.component.ListItemLeadingContentDataUi
 import com.k689.identid.ui.component.ListItemMainContentDataUi
 import com.k689.identid.ui.component.ListItemTrailingContentDataUi
 import com.k689.identid.ui.component.content.ContentScreen
@@ -47,7 +48,6 @@ import com.k689.identid.ui.component.utils.SPACING_LARGE
 import com.k689.identid.ui.component.utils.SPACING_MEDIUM
 import com.k689.identid.ui.component.utils.VSpacer
 import com.k689.identid.ui.component.wrap.WrapListItem
-import com.k689.identid.ui.dashboard.sign.model.DocumentSignButtonUi
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.collect
@@ -74,6 +74,7 @@ internal fun DocumentSignScreen(
             onNavigationRequested = { navigationEffect ->
                 when (navigationEffect) {
                     Effect.Navigation.Pop -> navController.popBackStack()
+                    is Effect.Navigation.SwitchScreen -> navController.navigate(navigationEffect.screenRoute)
                 }
             },
             paddingValues = contentPadding,
@@ -104,10 +105,40 @@ private fun Content(
 
         VSpacer.Medium()
 
-        SignButton(
+        WrapListItem(
             modifier = Modifier.fillMaxWidth(),
-            buttonUi = state.buttonUi,
-            onEventSend = onEventSend,
+            item =
+                ListItemDataUi(
+                    itemId = "from_device",
+                    leadingContentData = ListItemLeadingContentDataUi.Icon(iconData = AppIcons.SignDocumentFromDevice),
+                    mainContentData =
+                        ListItemMainContentDataUi.Text(
+                            text = stringResource(R.string.home_screen_sign_document_option_from_device),
+                        ),
+                    trailingContentData = ListItemTrailingContentDataUi.Icon(iconData = AppIcons.KeyboardArrowRight),
+                ),
+            onItemClick = { onEventSend(Event.OnFromDeviceClick) },
+            mainContentVerticalPadding = SPACING_LARGE.dp,
+            mainContentTextStyle = MaterialTheme.typography.titleMedium,
+        )
+
+        VSpacer.Small()
+
+        WrapListItem(
+            modifier = Modifier.fillMaxWidth(),
+            item =
+                ListItemDataUi(
+                    itemId = "scan_qr",
+                    leadingContentData = ListItemLeadingContentDataUi.Icon(iconData = AppIcons.SignDocumentFromQr),
+                    mainContentData =
+                        ListItemMainContentDataUi.Text(
+                            text = stringResource(R.string.home_screen_sign_document_option_scan_qr),
+                        ),
+                    trailingContentData = ListItemTrailingContentDataUi.Icon(iconData = AppIcons.KeyboardArrowRight),
+                ),
+            onItemClick = { onEventSend(Event.OnScanQrClick) },
+            mainContentVerticalPadding = SPACING_LARGE.dp,
+            mainContentTextStyle = MaterialTheme.typography.titleMedium,
         )
     }
 
@@ -124,7 +155,7 @@ private fun Content(
         effectFlow
             .onEach { effect ->
                 when (effect) {
-                    is Effect.Navigation.Pop -> {
+                    is Effect.Navigation -> {
                         onNavigationRequested(effect)
                     }
 
@@ -138,23 +169,6 @@ private fun Content(
     }
 }
 
-@Composable
-private fun SignButton(
-    modifier: Modifier = Modifier,
-    buttonUi: DocumentSignButtonUi,
-    onEventSend: (Event) -> Unit,
-) {
-    WrapListItem(
-        modifier = modifier,
-        item = buttonUi.data,
-        onItemClick = {
-            onEventSend(Event.OnSelectDocument)
-        },
-        mainContentVerticalPadding = SPACING_LARGE.dp,
-        mainContentTextStyle = MaterialTheme.typography.titleMedium,
-    )
-}
-
 @ThemeModePreviews
 @Composable
 private fun DocumentSignScreenPreview() {
@@ -164,21 +178,6 @@ private fun DocumentSignScreenPreview() {
                 State(
                     title = stringResource(R.string.document_sign_title),
                     subtitle = stringResource(R.string.document_sign_subtitle),
-                    buttonUi =
-                        DocumentSignButtonUi(
-                            data =
-                                ListItemDataUi(
-                                    itemId = "0",
-                                    mainContentData =
-                                        ListItemMainContentDataUi.Text(
-                                            text = stringResource(R.string.document_sign_select_document),
-                                        ),
-                                    trailingContentData =
-                                        ListItemTrailingContentDataUi.Icon(
-                                            iconData = AppIcons.Add,
-                                        ),
-                                ),
-                        ),
                 ),
             effectFlow = Channel<Effect>().receiveAsFlow(),
             onEventSend = {},
