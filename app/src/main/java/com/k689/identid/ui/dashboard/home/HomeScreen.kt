@@ -698,7 +698,7 @@ private fun RecentTransactionItem(
 
         Icon(
             imageVector = if (isFailed) Icons.Default.Cancel else Icons.Default.CheckCircle,
-            contentDescription = status.name,
+            contentDescription = header.supportingText ?: "",
             tint = if (isFailed) MaterialTheme.colorScheme.error else MaterialTheme.colorScheme.primary,
             modifier = Modifier.size(24.dp),
         )
