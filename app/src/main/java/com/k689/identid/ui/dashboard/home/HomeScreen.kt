@@ -60,6 +60,7 @@ import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.SheetState
 import androidx.compose.material3.SheetValue
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
@@ -70,11 +71,11 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.platform.LocalLifecycleOwner
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
@@ -82,6 +83,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.util.lerp
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleEventObserver
+import androidx.lifecycle.compose.LocalLifecycleOwner
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
@@ -107,11 +109,13 @@ import com.k689.identid.ui.component.wrap.WrapIconButton
 import com.k689.identid.ui.component.wrap.WrapModalBottomSheet
 import com.k689.identid.ui.dashboard.component.BottomNavigationItem
 import com.k689.identid.ui.dashboard.transactions.model.TransactionStatusUi
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.receiveAsFlow
+import kotlinx.coroutines.launch
 import kotlin.math.absoluteValue
 
 typealias DashboardEvent = com.k689.identid.ui.dashboard.dashboard.Event
@@ -127,6 +131,7 @@ fun HomeScreen(
     val context = LocalContext.current
     val state: State by viewModel.viewState.collectAsStateWithLifecycle()
     val isBottomSheetOpen = state.isBottomSheetOpen
+    val scope = rememberCoroutineScope()
 
     val bottomSheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
 
@@ -179,7 +184,7 @@ fun HomeScreen(
                         if (recentTransactions.isEmpty()) {
                             Box(modifier = Modifier.weight(1f).fillMaxWidth()) {
                                 Text(
-                                    text = stringResource(R.string.home_screen_no_recent_transactions),
+                                    text = "No recent transactions",
                                     style = MaterialTheme.typography.bodyLarge,
                                     color = MaterialTheme.colorScheme.onSurfaceVariant,
                                     modifier =
@@ -194,12 +199,10 @@ fun HomeScreen(
                             )
                         }
 
-                        if (!isBottomSheetOpen) {
-                            HomeScreenSheetContent(
-                                sheetContent = state.sheetContent,
-                                onEventSent = { event -> viewModel.setEvent(event) },
-                            )
-                        }
+                        HomeScreenSheetContent(
+                            sheetContent = state.sheetContent,
+                            onEventSent = { event -> viewModel.setEvent(event) },
+                        )
                     }
                 },
             ) { scaffoldPadding ->
@@ -210,6 +213,8 @@ fun HomeScreen(
                         effectFlow = viewModel.effect,
                         onEventSent = { viewModel.setEvent(it) },
                         onNavigationRequested = { handleNavigationEffect(it, navHostController, context, onDashboardEventSent) },
+                        coroutineScope = scope,
+                        bottomSheetState = scaffoldState.bottomSheetState,
                         paddingValues =
                             PaddingValues(
                                 top = scaffoldPadding.calculateTopPadding(),
@@ -239,14 +244,14 @@ fun HomeScreen(
                     IconButton(onClick = { viewModel.setEvent(Event.AuthenticateCard.AuthenticatePressed) }) {
                         Icon(
                             imageVector = Icons.Default.MobileFriendly,
-                            contentDescription = stringResource(R.string.home_screen_content_description_authenticate),
+                            contentDescription = "Authenticate",
                             tint = MaterialTheme.colorScheme.onPrimaryContainer,
                         )
                     }
                     IconButton(onClick = { viewModel.setEvent(Event.SignDocumentCard.SignDocumentPressed) }) {
                         Icon(
                             imageVector = Icons.Default.Check,
-                            contentDescription = stringResource(R.string.home_screen_content_description_sign_document),
+                            contentDescription = "Sign document",
                             tint = MaterialTheme.colorScheme.onPrimaryContainer,
                         )
                     }
@@ -268,7 +273,7 @@ fun HomeScreen(
             ) {
                 Icon(
                     imageVector = Icons.Filled.Add,
-                    contentDescription = stringResource(R.string.home_screen_content_description_add_document),
+                    contentDescription = "Add document",
                 )
             }
         }
@@ -290,11 +295,6 @@ fun HomeScreen(
                 onEventSent = { event -> viewModel.setEvent(event) },
             )
         }
-    }
-
-    // Initialize on first composition to handle the case when lifecycle is already RESUMED
-    LaunchedEffect(viewModel) {
-        viewModel.setEvent(Event.Init)
     }
 
     // Refresh transactions and state when the screen comes back into focus
@@ -350,6 +350,8 @@ private fun Content(
     effectFlow: Flow<Effect>,
     onEventSent: ((event: Event) -> Unit),
     onNavigationRequested: (navigationEffect: Effect.Navigation) -> Unit,
+    coroutineScope: CoroutineScope,
+    bottomSheetState: SheetState,
     paddingValues: PaddingValues,
     onDashboardEventSent: (DashboardEvent) -> Unit,
 ) {
@@ -476,6 +478,9 @@ private fun Content(
                     }
 
                     is Effect.CloseBottomSheet -> {
+                        coroutineScope.launch {
+                            bottomSheetState.partialExpand()
+                        }
                         onEventSent(Event.BottomSheet.UpdateBottomSheetState(isOpen = false))
                     }
 
@@ -552,7 +557,7 @@ private fun DocumentCard(
                 Spacer(modifier = Modifier.height(8.dp))
 
                 Text(
-                    text = stringResource(R.string.home_screen_document_usages_left, document.usagesLeft),
+                    text = "Usages left: ${document.usagesLeft}",
                     style = MaterialTheme.typography.bodyMedium,
                     color = MaterialTheme.colorScheme.onSurfaceVariant,
                     maxLines = 1,
@@ -562,7 +567,7 @@ private fun DocumentCard(
                 Spacer(modifier = Modifier.height(4.dp))
 
                 Text(
-                    text = stringResource(R.string.home_screen_document_expires, document.expiresAt),
+                    text = "Expires: ${document.expiresAt}",
                     style = MaterialTheme.typography.bodyMedium,
                     color = MaterialTheme.colorScheme.onSurfaceVariant,
                     maxLines = 1,
@@ -587,12 +592,12 @@ private fun SeeAllDocumentsCard(
         ) {
             Column(horizontalAlignment = Alignment.CenterHorizontally) {
                 Text(
-                    text = stringResource(R.string.home_screen_no_documents),
+                    text = "No documents",
                     style = MaterialTheme.typography.titleMedium,
                     color = MaterialTheme.colorScheme.onSurfaceVariant,
                 )
                 Text(
-                    text = stringResource(R.string.home_screen_add_one_now),
+                    text = "Add one now",
                     style = MaterialTheme.typography.bodyMedium,
                     color = MaterialTheme.colorScheme.primary,
                     fontWeight = FontWeight.Bold,
@@ -691,7 +696,7 @@ private fun RecentTransactionItem(
 
         Icon(
             imageVector = if (isFailed) Icons.Default.Cancel else Icons.Default.CheckCircle,
-            contentDescription = header.supportingText ?: "",
+            contentDescription = status.name,
             tint = if (isFailed) MaterialTheme.colorScheme.error else MaterialTheme.colorScheme.primary,
             modifier = Modifier.size(24.dp),
         )
@@ -851,7 +856,7 @@ private fun HomeScreenContentPreview() {
                         effectFlow = Channel<Effect>().receiveAsFlow(),
                         onNavigationRequested = {},
                         coroutineScope = rememberCoroutineScope(),
-                        modalBottomSheetState = rememberModalBottomSheetState(),
+                        bottomSheetState = scaffoldState.bottomSheetState,
                         onEventSent = {},
                         paddingValues =
                             PaddingValues(

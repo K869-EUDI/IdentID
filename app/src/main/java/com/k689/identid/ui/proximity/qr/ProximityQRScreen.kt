@@ -233,7 +233,6 @@ private fun ContentPreview() {
                 ),
             effectFlow = Channel<Effect>().receiveAsFlow(),
             onNavigationRequested = {},
-            onEventSent = {},
             paddingValues = PaddingValues(SPACING_MEDIUM.dp),
         )
     }
