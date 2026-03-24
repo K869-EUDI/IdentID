@@ -20,8 +20,10 @@ import com.k689.identid.R
 import com.k689.identid.theme.templates.ThemeTextStyle
 import com.k689.identid.theme.templates.ThemeTypographyTemplate
 import com.k689.identid.theme.templates.structures.ThemeFont
+import com.k689.identid.theme.templates.structures.ThemeFontRoundness
 import com.k689.identid.theme.templates.structures.ThemeFontStyle
 import com.k689.identid.theme.templates.structures.ThemeFontWeight
+import com.k689.identid.theme.templates.structures.ThemeFontWidth
 import com.k689.identid.theme.templates.structures.ThemeTextAlign
 
 internal class ThemeTypography {
@@ -31,105 +33,105 @@ internal class ThemeTypography {
                 return ThemeTypographyTemplate(
                     displayLarge =
                         ThemeTextStyle(
-                            fontFamily = listOf(RobotoRegular),
+                            fontFamily = listOf(GoogleSansFlexRegular),
                             fontSize = 57,
                             letterSpacing = -0.25f,
                             textAlign = ThemeTextAlign.Start,
                         ),
                     displayMedium =
                         ThemeTextStyle(
-                            fontFamily = listOf(RobotoRegular),
+                            fontFamily = listOf(GoogleSansFlexRegular),
                             fontSize = 45,
                             letterSpacing = 0f,
                             textAlign = ThemeTextAlign.Start,
                         ),
                     displaySmall =
                         ThemeTextStyle(
-                            fontFamily = listOf(RobotoRegular),
+                            fontFamily = listOf(GoogleSansFlexRegular),
                             fontSize = 36,
                             letterSpacing = 0f,
                             textAlign = ThemeTextAlign.Start,
                         ),
                     headlineLarge =
                         ThemeTextStyle(
-                            fontFamily = listOf(RobotoRegular),
+                            fontFamily = listOf(GoogleSansFlexHeading1),
                             fontSize = 32,
                             letterSpacing = 0f,
                             textAlign = ThemeTextAlign.Start,
                         ),
                     headlineMedium =
                         ThemeTextStyle(
-                            fontFamily = listOf(RobotoRegular),
+                            fontFamily = listOf(GoogleSansFlexHeading1),
                             fontSize = 28,
                             letterSpacing = 0f,
                             textAlign = ThemeTextAlign.Start,
                         ),
                     headlineSmall =
                         ThemeTextStyle(
-                            fontFamily = listOf(RobotoRegular),
+                            fontFamily = listOf(GoogleSansFlexHeading2),
                             fontSize = 24,
                             letterSpacing = 0f,
                             textAlign = ThemeTextAlign.Start,
                         ),
                     titleLarge =
                         ThemeTextStyle(
-                            fontFamily = listOf(RobotoRegular),
+                            fontFamily = listOf(GoogleSansFlexTitle),
                             fontSize = 22,
                             letterSpacing = 0f,
                             textAlign = ThemeTextAlign.Start,
                         ),
                     titleMedium =
                         ThemeTextStyle(
-                            fontFamily = listOf(RobotoMedium),
+                            fontFamily = listOf(GoogleSansFlexTitle),
                             fontSize = 16,
                             letterSpacing = 0.15f,
                             textAlign = ThemeTextAlign.Start,
                         ),
                     titleSmall =
                         ThemeTextStyle(
-                            fontFamily = listOf(RobotoMedium),
+                            fontFamily = listOf(GoogleSansFlexTitle),
                             fontSize = 14,
                             letterSpacing = 0.1f,
                             textAlign = ThemeTextAlign.Start,
                         ),
                     labelLarge =
                         ThemeTextStyle(
-                            fontFamily = listOf(RobotoMedium),
+                            fontFamily = listOf(GoogleSansFlexMedium),
                             fontSize = 14,
                             letterSpacing = 0.1f,
                             textAlign = ThemeTextAlign.Start,
                         ),
                     labelMedium =
                         ThemeTextStyle(
-                            fontFamily = listOf(RobotoMedium),
+                            fontFamily = listOf(GoogleSansFlexMedium),
                             fontSize = 12,
                             letterSpacing = 0.5f,
                             textAlign = ThemeTextAlign.Start,
                         ),
                     labelSmall =
                         ThemeTextStyle(
-                            fontFamily = listOf(RobotoMedium),
+                            fontFamily = listOf(GoogleSansFlexMedium),
                             fontSize = 11,
                             letterSpacing = 0.5f,
                             textAlign = ThemeTextAlign.Start,
                         ),
                     bodyLarge =
                         ThemeTextStyle(
-                            fontFamily = listOf(RobotoRegular),
+                            fontFamily = listOf(GoogleSansFlexRegular),
                             fontSize = 16,
                             letterSpacing = 0.5f,
                             textAlign = ThemeTextAlign.Start,
                         ),
                     bodyMedium =
                         ThemeTextStyle(
-                            fontFamily = listOf(RobotoRegular),
+                            fontFamily = listOf(GoogleSansFlexRegular),
                             fontSize = 14,
                             letterSpacing = 0.25f,
                             textAlign = ThemeTextAlign.Start,
                         ),
                     bodySmall =
                         ThemeTextStyle(
-                            fontFamily = listOf(RobotoRegular),
+                            fontFamily = listOf(GoogleSansFlexRegular),
                             fontSize = 12,
                             letterSpacing = 0.4f,
                             textAlign = ThemeTextAlign.Start,
@@ -139,15 +141,47 @@ internal class ThemeTypography {
     }
 }
 
-internal val RobotoRegular =
+internal val GoogleSansFlexTitle =
     ThemeFont(
-        res = R.font.roboto_regular,
-        weight = ThemeFontWeight.W400,
+        res = R.font.google_sans_flex,
+        weight = ThemeFontWeight.W700,
+        width = ThemeFontWidth.W105,
+        roundness = ThemeFontRoundness.Sharp,
         style = ThemeFontStyle.Normal,
     )
-internal val RobotoMedium =
+
+internal val GoogleSansFlexHeading1 =
     ThemeFont(
-        res = R.font.roboto_medium,
+        res = R.font.google_sans_flex,
+        weight = ThemeFontWeight.W750,
+        width = ThemeFontWidth.W130,
+        roundness = ThemeFontRoundness.Full,
+        style = ThemeFontStyle.Normal,
+    )
+
+internal val GoogleSansFlexHeading2 =
+    ThemeFont(
+        res = R.font.google_sans_flex,
+        weight = ThemeFontWeight.W600,
+        width = ThemeFontWidth.W130,
+        roundness = ThemeFontRoundness.Full,
+        style = ThemeFontStyle.Normal,
+    )
+
+internal val GoogleSansFlexRegular =
+    ThemeFont(
+        res = R.font.google_sans_flex,
+        weight = ThemeFontWeight.W400,
+        width = ThemeFontWidth.W100, // Standard width
+        roundness = ThemeFontRoundness.Normal,
+        style = ThemeFontStyle.Normal,
+    )
+
+internal val GoogleSansFlexMedium =
+    ThemeFont(
+        res = R.font.google_sans_flex,
         weight = ThemeFontWeight.W500,
+        width = ThemeFontWidth.W100,
+        roundness = ThemeFontRoundness.Normal,
         style = ThemeFontStyle.Normal,
     )

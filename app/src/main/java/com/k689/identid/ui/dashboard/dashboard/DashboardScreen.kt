@@ -22,10 +22,10 @@ import androidx.compose.animation.core.tween
 import androidx.compose.animation.fadeOut
 import androidx.compose.animation.slideInHorizontally
 import androidx.compose.animation.slideOutHorizontally
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.Scaffold
 import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -34,6 +34,7 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.unit.dp
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.compose.LocalLifecycleOwner
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -53,10 +54,10 @@ import com.k689.identid.model.core.RevokedDocumentDataDomain
 import com.k689.identid.navigation.helper.handleDeepLinkAction
 import com.k689.identid.ui.component.SystemBroadcastReceiver
 import com.k689.identid.ui.component.utils.LifecycleEffect
+import com.k689.identid.ui.component.utils.SPACING_SMALL
 import com.k689.identid.ui.component.wrap.BottomSheetTextDataUi
 import com.k689.identid.ui.component.wrap.BottomSheetWithOptionsList
 import com.k689.identid.ui.component.wrap.WrapModalBottomSheet
-import com.k689.identid.ui.dashboard.component.BottomNavigationBar
 import com.k689.identid.ui.dashboard.component.BottomNavigationItem
 import com.k689.identid.ui.dashboard.dashboard.sidemenu.SideMenuScreen
 import com.k689.identid.ui.dashboard.documents.list.DocumentsScreen
@@ -90,14 +91,15 @@ internal fun DashboardScreen(
             skipPartiallyExpanded = true,
         )
 
-    Scaffold(
-        bottomBar = { BottomNavigationBar(bottomNavigationController) },
-    ) { padding ->
+    Column(
+        modifier =
+            Modifier
+                .padding(top = SPACING_SMALL.dp),
+    ) {
         NavHost(
             modifier =
                 Modifier
-                    .fillMaxSize()
-                    .padding(bottom = padding.calculateBottomPadding()),
+                    .fillMaxSize(),
             navController = bottomNavigationController,
             startDestination = BottomNavigationItem.Home.route,
         ) {
@@ -206,6 +208,16 @@ internal fun DashboardScreen(
                             effect.intent,
                             effect.chooserTitle,
                         )
+                    }
+
+                    is Effect.SwitchTab -> {
+                        bottomNavigationController.navigate(effect.route) {
+                            popUpTo(BottomNavigationItem.Home.route) {
+                                saveState = true
+                            }
+                            launchSingleTop = true
+                            restoreState = true
+                        }
                     }
                 }
             }.collect()

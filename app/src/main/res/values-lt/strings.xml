@@ -141,7 +141,7 @@
     <!-- region Biometric prompt -->
     <string name="biometric_prompt_title">Biometrinis autentifikavimas</string>
     <string name="biometric_prompt_subtitle">Autentifikuokitės naudodami biometrinius duomenis</string>
-    <string name="biometric_login_title">Sveiki sugrįžę</string>
+    <string name="biometric_login_title">Sveiki</string>
     <string name="biometric_login_biometrics_enabled_subtitle">Naudokite biometrinius duomenis, kad pasiektumėte EUDI piniginę.</string>
     <string name="biometric_login_biometrics_not_enabled_subtitle">Kad tęstumėte, įveskite PIN kodą:</string>
     <!--endregion-->
@@ -256,8 +256,8 @@
     <!--endregion-->
     <!-- region Home Screen -->
     <string name="home_screen_title">Pradžia</string>
-    <string name="home_screen_welcome">Sveiki sugrįžę</string>
-    <string name="home_screen_welcome_user_message">Sveiki sugrįžę, %1$s</string>
+    <string name="home_screen_welcome">Sveiki</string>
+    <string name="home_screen_welcome_user_message">Sveiki, %1$s</string>
     <string name="home_screen_authentication_card_title">Autentifikuokitės, tvirtinkite operacijas ir dalinkitės skaitmeniniais dokumentais asmeniškai arba internetu.</string>
     <string name="home_screen_sign_card_title">Elektroniniu būdu pasirašykite skaitmeninius dokumentus naudodami piniginę – pasirinkite failą iš savo įrenginio.</string>
     <string name="home_screen_authenticate">Autentifikavimas</string>
@@ -270,6 +270,13 @@
     <string name="home_screen_sign_document_description">Pasirašykite dokumentą skaitmeniniu būdu – pasirinkite failą iš savo įrenginio arba nuskaitykite QR kodą.</string>
     <string name="home_screen_sign_document_option_from_device">Iš įrenginio</string>
     <string name="home_screen_sign_document_option_scan_qr">Nuskaityti QR kodą</string>
+    <string name="home_screen_content_description_authenticate">Autentifikuotis</string>
+    <string name="home_screen_content_description_sign_document">Pasirašyti dokumentą</string>
+    <string name="home_screen_content_description_add_document">Pridėti dokumentą</string>
+    <string name="home_screen_document_usages_left">Panaudojimai: %1$s</string>
+    <string name="home_screen_document_expires">Galioja iki: %1$s</string>
+    <string name="home_screen_no_documents">Nėra dokumentų</string>
+    <string name="home_screen_add_one_now">Pridėti dabar</string>
     <!--endregion-->
     <!-- region Home Screen Learn More Popups content -->
     <string name="home_screen_authenticate_learn_more_inner_title">Saugiai pasirašykite dokumentus</string>
@@ -344,6 +351,8 @@
     <string name="transactions_filter_item_no_relying_party_transactions">Nėra pasikliaujančiosios šalies</string>
     <string name="transactions_screen_filters_apply">@string/generic_filters_apply</string>
     <string name="transactions_screen_filters_reset">@string/generic_filters_reset</string>
+    <string name="home_screen_no_recent_transactions">Nėra operacijų</string>
+
     <!--endregion-->
     <!-- region Document Sign -->
     <string name="document_sign_title">Pasirašyti dokumentą</string>
@@ -504,4 +513,5 @@
     <string name="transaction_category_month_year">MĖNUO</string>
     <!--endregion-->
     <string name="engagement_aid_group_desc">EUDI piniginės NFC įtraukimas</string>
+    <string name="recent_transactions">Naujausios operacijos</string>
 </resources>

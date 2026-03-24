@@ -1,0 +1,40 @@
+/*
+ * Copyright (c) 2025 European Commission
+ *
+ * Licensed under the EUPL, Version 1.2 or - as soon they will be approved by the European
+ * Commission - subsequent versions of the EUPL (the "Licence"); You may not use this work
+ * except in compliance with the Licence.
+ *
+ * You may obtain a copy of the Licence at:
+ * https://joinup.ec.europa.eu/software/page/eupl
+ *
+ * Unless required by applicable law or agreed to in writing, software distributed under
+ * the Licence is distributed on an "AS IS" basis, WITHOUT WARRANTIES OR CONDITIONS OF
+ * ANY KIND, either express or implied. See the Licence for the specific language
+ * governing permissions and limitations under the Licence.
+ */
+
+package com.k689.identid.theme.templates.structures
+
+import androidx.compose.ui.text.font.FontVariation
+
+sealed class ThemeFontWidth(
+    val value: Float,
+) {
+    data object W50 : ThemeFontWidth(50f) // Flex axes usually use 50-150 range
+
+    data object W100 : ThemeFontWidth(100f) // Normal
+
+    data object W105 : ThemeFontWidth(105f)
+
+    data object W125 : ThemeFontWidth(125f)
+
+    data object W130 : ThemeFontWidth(130f)
+
+    data object W150 : ThemeFontWidth(150f)
+
+    companion object {
+        // Change this to return a FontVariation setting for the "wdth" axis
+        fun ThemeFontWidth.toFontVariation(): FontVariation.Setting = FontVariation.width(this.value)
+    }
+}

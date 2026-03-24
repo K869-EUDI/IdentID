@@ -17,21 +17,33 @@
 package com.k689.identid.theme.templates.structures
 
 import androidx.annotation.FontRes
+import androidx.compose.ui.text.ExperimentalTextApi
 import androidx.compose.ui.text.font.Font
+import androidx.compose.ui.text.font.FontVariation
+import com.k689.identid.theme.templates.structures.ThemeFontRoundness.Companion.toFontVariation
 import com.k689.identid.theme.templates.structures.ThemeFontStyle.Companion.toFontStyle
 import com.k689.identid.theme.templates.structures.ThemeFontWeight.Companion.toFontWeight
+import com.k689.identid.theme.templates.structures.ThemeFontWidth.Companion.toFontVariation
 
 data class ThemeFont(
     @param:FontRes val res: Int,
     val weight: ThemeFontWeight,
+    val width: ThemeFontWidth,
+    val roundness: ThemeFontRoundness,
     val style: ThemeFontStyle,
 ) {
     companion object {
+        @OptIn(ExperimentalTextApi::class)
         fun ThemeFont.toFont(): Font =
             Font(
                 resId = res,
-                weight = weight.toFontWeight(),
                 style = style.toFontStyle(),
+                variationSettings =
+                    FontVariation.Settings(
+                        FontVariation.weight(weight.value.toInt()), // Uses 'wght' axis
+                        FontVariation.width(width.value), // Uses 'wdth' axis
+                        FontVariation.Setting("ROND", roundness.value), // Uses 'ROND' axis
+                    ),
             )
     }
 }

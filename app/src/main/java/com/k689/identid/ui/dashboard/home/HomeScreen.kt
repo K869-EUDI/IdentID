@@ -19,30 +19,71 @@ package com.k689.identid.ui.dashboard.home
 import android.Manifest
 import android.content.Context
 import android.os.Build
+import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.statusBarsPadding
+import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.pager.HorizontalPager
+import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.ArrowForward
+import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.filled.Cancel
+import androidx.compose.material.icons.filled.Check
+import androidx.compose.material.icons.filled.CheckCircle
+import androidx.compose.material.icons.filled.MobileFriendly
+import androidx.compose.material.icons.filled.Person
+import androidx.compose.material3.BottomSheetDefaults
+import androidx.compose.material3.BottomSheetScaffold
+import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.FloatingActionButton
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.SheetState
+import androidx.compose.material3.SheetValue
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
+import androidx.compose.material3.rememberBottomSheetScaffoldState
 import androidx.compose.material3.rememberModalBottomSheetState
+import androidx.compose.material3.rememberStandardBottomSheetState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.util.lerp
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.LifecycleEventObserver
+import androidx.lifecycle.compose.LocalLifecycleOwner
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
@@ -51,28 +92,23 @@ import com.k689.identid.R
 import com.k689.identid.extension.ui.finish
 import com.k689.identid.extension.ui.openAppSettings
 import com.k689.identid.extension.ui.openBleSettings
-import com.k689.identid.extension.ui.paddingFrom
-import com.k689.identid.ui.component.AppIconAndText
-import com.k689.identid.ui.component.AppIconAndTextDataUi
 import com.k689.identid.ui.component.AppIcons
-import com.k689.identid.ui.component.ModalOptionUi
+import com.k689.identid.ui.component.ListItemMainContentDataUi
 import com.k689.identid.ui.component.content.ContentScreen
 import com.k689.identid.ui.component.content.ScreenNavigateAction
 import com.k689.identid.ui.component.preview.PreviewTheme
 import com.k689.identid.ui.component.preview.ThemeModePreviews
-import com.k689.identid.ui.component.utils.HSpacer
-import com.k689.identid.ui.component.utils.OneTimeLaunchedEffect
+import com.k689.identid.ui.component.utils.SPACING_EXTRA_LARGE
+import com.k689.identid.ui.component.utils.SPACING_LARGE
 import com.k689.identid.ui.component.utils.SPACING_MEDIUM
 import com.k689.identid.ui.component.utils.SPACING_SMALL
 import com.k689.identid.ui.component.wrap.ActionCardConfig
 import com.k689.identid.ui.component.wrap.BottomSheetTextDataUi
-import com.k689.identid.ui.component.wrap.BottomSheetWithTwoBigIcons
 import com.k689.identid.ui.component.wrap.DialogBottomSheet
-import com.k689.identid.ui.component.wrap.GenericBottomSheet
-import com.k689.identid.ui.component.wrap.WrapActionCard
-import com.k689.identid.ui.component.wrap.WrapIcon
 import com.k689.identid.ui.component.wrap.WrapIconButton
 import com.k689.identid.ui.component.wrap.WrapModalBottomSheet
+import com.k689.identid.ui.dashboard.component.BottomNavigationItem
+import com.k689.identid.ui.dashboard.transactions.model.TransactionStatusUi
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.Flow
@@ -80,6 +116,7 @@ import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
+import kotlin.math.absoluteValue
 
 typealias DashboardEvent = com.k689.identid.ui.dashboard.dashboard.Event
 typealias OpenSideMenuEvent = com.k689.identid.ui.dashboard.dashboard.Event.SideMenu.Open
@@ -95,37 +132,154 @@ fun HomeScreen(
     val state: State by viewModel.viewState.collectAsStateWithLifecycle()
     val isBottomSheetOpen = state.isBottomSheetOpen
     val scope = rememberCoroutineScope()
-    val bottomSheetState =
-        rememberModalBottomSheetState(
-            skipPartiallyExpanded = true,
+
+    val bottomSheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
+
+    val scaffoldState =
+        rememberBottomSheetScaffoldState(
+            bottomSheetState =
+                rememberStandardBottomSheetState(
+                    initialValue = SheetValue.PartiallyExpanded,
+                ),
         )
 
     ContentScreen(
         isLoading = state.isLoading,
         navigatableAction = ScreenNavigateAction.NONE,
         onBack = { context.finish() },
-        topBar = {
-            TopBar(
-                onEventSent = onDashboardEventSent,
-            )
-        },
     ) { paddingValues ->
-        Content(
-            state = state,
-            effectFlow = viewModel.effect,
-            onEventSent = { event ->
-                viewModel.setEvent(event)
-            },
-            onNavigationRequested = {
-                handleNavigationEffect(it, navHostController, context)
-            },
-            coroutineScope = scope,
-            modalBottomSheetState = bottomSheetState,
-            paddingValues = paddingValues,
-        )
+        Box(modifier = Modifier.fillMaxSize()) {
+            BottomSheetScaffold(
+                modifier = Modifier.fillMaxSize().statusBarsPadding(),
+                scaffoldState = scaffoldState,
+                sheetShadowElevation = 16.dp,
+                sheetPeekHeight = 410.dp,
+                sheetContainerColor = MaterialTheme.colorScheme.surfaceContainerLow,
+                sheetDragHandle = { BottomSheetDefaults.DragHandle() },
+                sheetContent = {
+                    Column(
+                        modifier =
+                            Modifier
+                                .fillMaxHeight()
+                                .padding(bottom = paddingValues.calculateBottomPadding()),
+                    ) {
+                        Text(
+                            text = stringResource(R.string.recent_transactions),
+                            style =
+                                MaterialTheme.typography.headlineSmall.copy(
+                                    color = MaterialTheme.colorScheme.onSurface,
+                                    fontWeight = FontWeight.Bold,
+                                ),
+                            modifier =
+                                Modifier
+                                    .fillMaxWidth()
+                                    .padding(
+                                        horizontal = SPACING_LARGE.dp,
+                                        vertical = SPACING_SMALL.dp,
+                                    ),
+                        )
+
+                        val recentTransactions = state.allTransactions.filter { !it.isPending }
+
+                        if (recentTransactions.isEmpty()) {
+                            Box(modifier = Modifier.weight(1f).fillMaxWidth()) {
+                                Text(
+                                    text = "No recent transactions",
+                                    style = MaterialTheme.typography.bodyLarge,
+                                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                                    modifier =
+                                        Modifier.align(Alignment.Center),
+                                )
+                            }
+                        } else {
+                            RecentTransactionsList(
+                                transactions = recentTransactions,
+                                onTransactionClicked = { viewModel.setEvent(Event.TransactionClicked(it)) },
+                                modifier = Modifier.fillMaxWidth().weight(1f),
+                            )
+                        }
+
+                        HomeScreenSheetContent(
+                            sheetContent = state.sheetContent,
+                            onEventSent = { event -> viewModel.setEvent(event) },
+                        )
+                    }
+                },
+            ) { scaffoldPadding ->
+                Column(modifier = Modifier.fillMaxSize()) {
+                    TopBar(onDashboardEventSent = onDashboardEventSent)
+                    Content(
+                        state = state,
+                        effectFlow = viewModel.effect,
+                        onEventSent = { viewModel.setEvent(it) },
+                        onNavigationRequested = { handleNavigationEffect(it, navHostController, context, onDashboardEventSent) },
+                        coroutineScope = scope,
+                        bottomSheetState = scaffoldState.bottomSheetState,
+                        paddingValues =
+                            PaddingValues(
+                                top = scaffoldPadding.calculateTopPadding(),
+                                bottom = scaffoldPadding.calculateBottomPadding(),
+                            ),
+                        onDashboardEventSent = onDashboardEventSent,
+                    )
+                }
+            }
+
+            Surface(
+                modifier =
+                    Modifier
+                        .align(Alignment.BottomStart)
+                        .padding(
+                            start = SPACING_LARGE.dp,
+                            bottom = SPACING_LARGE.dp + paddingValues.calculateBottomPadding(),
+                        ),
+                shape = RoundedCornerShape(32.dp),
+                color = MaterialTheme.colorScheme.primaryContainer,
+                shadowElevation = 4.dp,
+            ) {
+                Row(
+                    verticalAlignment = Alignment.CenterVertically,
+                    modifier = Modifier.padding(horizontal = 4.dp, vertical = 4.dp),
+                ) {
+                    IconButton(onClick = { viewModel.setEvent(Event.AuthenticateCard.AuthenticatePressed) }) {
+                        Icon(
+                            imageVector = Icons.Default.MobileFriendly,
+                            contentDescription = "Authenticate",
+                            tint = MaterialTheme.colorScheme.onPrimaryContainer,
+                        )
+                    }
+                    IconButton(onClick = { viewModel.setEvent(Event.SignDocumentCard.SignDocumentPressed) }) {
+                        Icon(
+                            imageVector = Icons.Default.Check,
+                            contentDescription = "Sign document",
+                            tint = MaterialTheme.colorScheme.onPrimaryContainer,
+                        )
+                    }
+                }
+            }
+
+            FloatingActionButton(
+                onClick = { viewModel.setEvent(Event.AddDocumentsClicked) },
+                containerColor = MaterialTheme.colorScheme.primaryContainer,
+                contentColor = MaterialTheme.colorScheme.onPrimaryContainer,
+                shape = RoundedCornerShape(16.dp),
+                modifier =
+                    Modifier
+                        .align(Alignment.BottomEnd)
+                        .padding(
+                            end = SPACING_LARGE.dp,
+                            bottom = SPACING_LARGE.dp + paddingValues.calculateBottomPadding(),
+                        ),
+            ) {
+                Icon(
+                    imageVector = Icons.Filled.Add,
+                    contentDescription = "Add document",
+                )
+            }
+        }
     }
 
-    if (isBottomSheetOpen) {
+    if (isBottomSheetOpen && state.sheetContent != HomeScreenBottomSheetContent.None) {
         WrapModalBottomSheet(
             onDismissRequest = {
                 viewModel.setEvent(
@@ -143,21 +297,33 @@ fun HomeScreen(
         }
     }
 
-    OneTimeLaunchedEffect {
-        viewModel.setEvent(Event.Init)
+    // Refresh transactions and state when the screen comes back into focus
+    val lifecycleOwner = LocalLifecycleOwner.current
+    DisposableEffect(lifecycleOwner) {
+        val observer =
+            LifecycleEventObserver { _, event ->
+                if (event == Lifecycle.Event.ON_RESUME) {
+                    viewModel.setEvent(Event.Init)
+                }
+            }
+        lifecycleOwner.lifecycle.addObserver(observer)
+        onDispose {
+            lifecycleOwner.lifecycle.removeObserver(observer)
+        }
     }
 }
 
 @Composable
 private fun TopBar(
-    onEventSent: (DashboardEvent) -> Unit,
+    onDashboardEventSent: (DashboardEvent) -> Unit,
 ) {
     Box(
         modifier =
             Modifier
                 .fillMaxWidth()
                 .padding(
-                    all = SPACING_SMALL.dp,
+                    horizontal = SPACING_LARGE.dp,
+                    vertical = SPACING_SMALL.dp,
                 ),
     ) {
         // home menu icon
@@ -166,13 +332,13 @@ private fun TopBar(
             iconData = AppIcons.Menu,
             customTint = MaterialTheme.colorScheme.onSurface,
         ) {
-            onEventSent(OpenSideMenuEvent)
+            onDashboardEventSent(OpenSideMenuEvent)
         }
 
-        // wallet logo
-        AppIconAndText(
+        Text(
             modifier = Modifier.align(Alignment.Center),
-            appIconAndTextData = AppIconAndTextDataUi(),
+            text = stringResource(R.string.app_title),
+            style = MaterialTheme.typography.titleLarge,
         )
     }
 }
@@ -185,18 +351,25 @@ private fun Content(
     onEventSent: ((event: Event) -> Unit),
     onNavigationRequested: (navigationEffect: Effect.Navigation) -> Unit,
     coroutineScope: CoroutineScope,
-    modalBottomSheetState: SheetState,
+    bottomSheetState: SheetState,
     paddingValues: PaddingValues,
+    onDashboardEventSent: (DashboardEvent) -> Unit,
 ) {
     val scrollState = rememberScrollState()
+
+    val recentDocs = state.allDocuments.filter { !it.isPending }.take(3)
+
+    val pageCount = if (recentDocs.isEmpty()) 1 else recentDocs.size + 1
+    val pagerState = rememberPagerState(pageCount = { pageCount })
+
     Column(
         modifier =
             Modifier
                 .fillMaxSize()
-                .paddingFrom(paddingValues, bottom = false)
-                .verticalScroll(scrollState)
-                .padding(vertical = SPACING_MEDIUM.dp),
-        verticalArrangement = Arrangement.spacedBy(SPACING_MEDIUM.dp),
+                .padding(
+                    top = paddingValues.calculateTopPadding(),
+                    bottom = paddingValues.calculateBottomPadding(),
+                ).verticalScroll(scrollState),
     ) {
         Text(
             text = state.welcomeUserMessage,
@@ -204,35 +377,92 @@ private fun Content(
                 MaterialTheme.typography.headlineMedium.copy(
                     color = MaterialTheme.colorScheme.onSurface,
                 ),
+            modifier =
+                Modifier.padding(
+                    start = SPACING_EXTRA_LARGE.dp,
+                    end = SPACING_EXTRA_LARGE.dp,
+                    top = SPACING_SMALL.dp,
+                    bottom = SPACING_EXTRA_LARGE.dp,
+                ),
         )
 
-        WrapActionCard(
-            config = state.authenticateCardConfig,
-            onActionClick = {
-                onEventSent(
-                    Event.AuthenticateCard.AuthenticatePressed,
+        HorizontalPager(
+            state = pagerState,
+            modifier =
+                Modifier
+                    .fillMaxWidth()
+                    // Increased height to give room for shadows and elevation
+                    .height(220.dp),
+            contentPadding = PaddingValues(horizontal = 32.dp, vertical = 8.dp),
+            pageSpacing = 16.dp,
+            verticalAlignment = Alignment.CenterVertically,
+            beyondViewportPageCount = 1,
+        ) { page ->
+            if (page < recentDocs.size) {
+                DocumentCard(
+                    document = recentDocs[page],
+                    onClicked = { onEventSent(Event.DocumentClicked(recentDocs[page].documentUi.uiData.itemId)) },
+                    modifier =
+                        Modifier
+                            .graphicsLayer {
+                                val pageOffset =
+                                    (
+                                        (pagerState.currentPage - page) +
+                                            pagerState.currentPageOffsetFraction
+                                    ).absoluteValue
+                                alpha =
+                                    lerp(
+                                        start = 0.8f,
+                                        stop = 1f,
+                                        fraction = 1f - pageOffset.coerceIn(0f, 1f),
+                                    )
+                                scaleY =
+                                    lerp(
+                                        start = 0.9f,
+                                        stop = 1f,
+                                        fraction = 1f - pageOffset.coerceIn(0f, 1f),
+                                    )
+                                clip = false
+                            },
                 )
-            },
-            onLearnMoreClick = {
-                onEventSent(
-                    Event.AuthenticateCard.LearnMorePressed,
+            } else {
+                SeeAllDocumentsCard(
+                    recentDocsCount = recentDocs.size,
+                    onClicked = {
+                        if (recentDocs.isEmpty()) {
+                            onEventSent(Event.AddDocumentsClicked)
+                        } else {
+                            onDashboardEventSent(
+                                com.k689.identid.ui.dashboard.dashboard.Event
+                                    .SwitchTab(BottomNavigationItem.Documents),
+                            )
+                        }
+                    },
+                    modifier =
+                        Modifier
+                            .graphicsLayer {
+                                val pageOffset =
+                                    (
+                                        (pagerState.currentPage - page) +
+                                            pagerState.currentPageOffsetFraction
+                                    ).absoluteValue
+                                alpha =
+                                    lerp(
+                                        start = 0.8f,
+                                        stop = 1f,
+                                        fraction = 1f - pageOffset.coerceIn(0f, 1f),
+                                    )
+                                scaleY =
+                                    lerp(
+                                        start = 0.9f,
+                                        stop = 1f,
+                                        fraction = 1f - pageOffset.coerceIn(0f, 1f),
+                                    )
+                                clip = false
+                            },
                 )
-            },
-        )
-
-        WrapActionCard(
-            config = state.signCardConfig,
-            onActionClick = {
-                onEventSent(
-                    Event.SignDocumentCard.SignDocumentPressed,
-                )
-            },
-            onLearnMoreClick = {
-                onEventSent(
-                    Event.SignDocumentCard.LearnMorePressed,
-                )
-            },
-        )
+            }
+        }
     }
 
     if (state.bleAvailability == BleAvailability.NO_PERMISSION) {
@@ -248,28 +478,228 @@ private fun Content(
                     }
 
                     is Effect.CloseBottomSheet -> {
-                        coroutineScope
-                            .launch {
-                                if (effect.hasNextBottomSheet.not()) {
-                                    modalBottomSheetState.hide()
-                                } else {
-                                    modalBottomSheetState.hide().also {
-                                        modalBottomSheetState.show()
-                                        onEventSent(Event.BottomSheet.UpdateBottomSheetState(isOpen = true))
-                                    }
-                                }
-                            }.invokeOnCompletion {
-                                if (!modalBottomSheetState.isVisible) {
-                                    onEventSent(Event.BottomSheet.UpdateBottomSheetState(isOpen = false))
-                                }
-                            }
+                        coroutineScope.launch {
+                            bottomSheetState.partialExpand()
+                        }
+                        onEventSent(Event.BottomSheet.UpdateBottomSheetState(isOpen = false))
                     }
 
                     is Effect.ShowBottomSheet -> {
                         onEventSent(Event.BottomSheet.UpdateBottomSheetState(isOpen = true))
                     }
+
+                    is Effect.SwitchTab -> {
+                        onDashboardEventSent(
+                            com.k689.identid.ui.dashboard.dashboard.Event
+                                .SwitchTab(effect.tab),
+                        )
+                    }
                 }
             }.collect()
+    }
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+private fun DocumentCard(
+    document: DashboardDocument,
+    onClicked: () -> Unit,
+    modifier: Modifier = Modifier,
+) {
+    Card(
+        onClick = onClicked,
+        modifier =
+            modifier
+                .fillMaxSize(),
+        shape = RoundedCornerShape(16.dp), // Snappier corners closer to real card shapes
+        elevation = CardDefaults.cardElevation(defaultElevation = 6.dp),
+        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surfaceContainerHigh),
+    ) {
+        Row(
+            modifier =
+                Modifier
+                    .fillMaxSize()
+                    .padding(horizontal = SPACING_LARGE.dp, vertical = SPACING_MEDIUM.dp),
+            verticalAlignment = Alignment.CenterVertically, // Keeping everything neatly centered vertically
+        ) {
+            // Placeholder area for the future user avatar/icon
+            Box(
+                modifier =
+                    Modifier
+                        .size(72.dp) // Adjusted sizing due to taller card space
+                        .background(MaterialTheme.colorScheme.surfaceVariant, CircleShape),
+                contentAlignment = Alignment.Center,
+            ) {
+                Icon(
+                    imageVector = Icons.Default.Person,
+                    contentDescription = "Avatar Placeholder",
+                    tint = MaterialTheme.colorScheme.onSurfaceVariant,
+                    modifier = Modifier.size(36.dp),
+                )
+            }
+
+            Spacer(modifier = Modifier.width(SPACING_LARGE.dp))
+
+            Column(
+                modifier = Modifier.fillMaxWidth(),
+                verticalArrangement = Arrangement.Center,
+            ) {
+                val docName = (document.documentUi.uiData.mainContentData as? ListItemMainContentDataUi.Text)?.text ?: ""
+                Text(
+                    text = docName,
+                    style = MaterialTheme.typography.titleLarge,
+                    fontWeight = FontWeight.Bold,
+                    color = MaterialTheme.colorScheme.onSurface,
+                    maxLines = 1,
+                    overflow = TextOverflow.Ellipsis,
+                )
+
+                Spacer(modifier = Modifier.height(8.dp))
+
+                Text(
+                    text = "Usages left: ${document.usagesLeft}",
+                    style = MaterialTheme.typography.bodyMedium,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                    maxLines = 1,
+                    overflow = TextOverflow.Ellipsis,
+                )
+
+                Spacer(modifier = Modifier.height(4.dp))
+
+                Text(
+                    text = "Expires: ${document.expiresAt}",
+                    style = MaterialTheme.typography.bodyMedium,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                    maxLines = 1,
+                    overflow = TextOverflow.Ellipsis,
+                )
+            }
+        }
+    }
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+private fun SeeAllDocumentsCard(
+    recentDocsCount: Int,
+    onClicked: () -> Unit,
+    modifier: Modifier = Modifier,
+) {
+    if (recentDocsCount == 0) {
+        Box(
+            modifier = modifier.fillMaxSize().clickable { onClicked() },
+            contentAlignment = Alignment.Center,
+        ) {
+            Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                Text(
+                    text = "No documents",
+                    style = MaterialTheme.typography.titleMedium,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                )
+                Text(
+                    text = "Add one now",
+                    style = MaterialTheme.typography.bodyMedium,
+                    color = MaterialTheme.colorScheme.primary,
+                    fontWeight = FontWeight.Bold,
+                )
+            }
+        }
+    } else {
+        Card(
+            onClick = onClicked,
+            modifier =
+                modifier
+                    .fillMaxSize(),
+            shape = RoundedCornerShape(16.dp),
+            elevation = CardDefaults.cardElevation(defaultElevation = 4.dp),
+            colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.primaryContainer),
+        ) {
+            Box(
+                modifier = Modifier.fillMaxSize(),
+                contentAlignment = Alignment.Center,
+            ) {
+                Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                    Icon(
+                        imageVector = Icons.AutoMirrored.Filled.ArrowForward,
+                        contentDescription = null,
+                        modifier = Modifier.size(48.dp),
+                        tint = MaterialTheme.colorScheme.onPrimaryContainer,
+                    )
+                    Text(
+                        text = stringResource(R.string.generic_view_details),
+                        style = MaterialTheme.typography.titleMedium,
+                        color = MaterialTheme.colorScheme.onPrimaryContainer,
+                    )
+                }
+            }
+        }
+    }
+}
+
+@Composable
+private fun RecentTransactionsList(
+    transactions: List<DashboardTransaction>,
+    onTransactionClicked: (String) -> Unit,
+    modifier: Modifier = Modifier,
+) {
+    LazyColumn(
+        modifier = modifier,
+    ) {
+        items(
+            items = transactions,
+            key = { it.transactionUi.uiData.header.itemId },
+        ) { transaction ->
+            RecentTransactionItem(
+                transaction = transaction,
+                onTransactionClicked = onTransactionClicked,
+            )
+        }
+    }
+}
+
+@Composable
+private fun RecentTransactionItem(
+    transaction: DashboardTransaction,
+    onTransactionClicked: (String) -> Unit,
+) {
+    val itemId = transaction.transactionUi.uiData.header.itemId
+    val header = transaction.transactionUi.uiData.header
+    val status = transaction.transactionUi.uiStatus
+    val isFailed = status == TransactionStatusUi.Failed
+
+    Row(
+        modifier =
+            Modifier
+                .fillMaxWidth()
+                .clickable { onTransactionClicked(itemId) }
+                .padding(horizontal = SPACING_LARGE.dp, vertical = SPACING_MEDIUM.dp),
+        verticalAlignment = Alignment.CenterVertically,
+        horizontalArrangement = Arrangement.spacedBy(SPACING_MEDIUM.dp),
+    ) {
+        Column(modifier = Modifier.weight(1f)) {
+            Text(
+                text = (header.mainContentData as? ListItemMainContentDataUi.Text)?.text ?: "",
+                style = MaterialTheme.typography.titleMedium,
+                fontWeight = FontWeight.Bold,
+                color = MaterialTheme.colorScheme.onSurface,
+                maxLines = 1,
+                overflow = TextOverflow.Ellipsis,
+            )
+            Text(
+                text = header.supportingText ?: "",
+                style = MaterialTheme.typography.bodySmall,
+                color = MaterialTheme.colorScheme.onSurfaceVariant,
+                maxLines = 1,
+                overflow = TextOverflow.Ellipsis,
+            )
+        }
+
+        Icon(
+            imageVector = if (isFailed) Icons.Default.Cancel else Icons.Default.CheckCircle,
+            contentDescription = status.name,
+            tint = if (isFailed) MaterialTheme.colorScheme.error else MaterialTheme.colorScheme.primary,
+            modifier = Modifier.size(24.dp),
+        )
     }
 }
 
@@ -277,6 +707,7 @@ private fun handleNavigationEffect(
     navigationEffect: Effect.Navigation,
     navController: NavController,
     context: Context,
+    onDashboardEventSent: (DashboardEvent) -> Unit,
 ) {
     when (navigationEffect) {
         is Effect.Navigation.SwitchScreen -> {
@@ -304,142 +735,6 @@ private fun HomeScreenSheetContent(
     onEventSent: (event: Event) -> Unit,
 ) {
     when (sheetContent) {
-        is HomeScreenBottomSheetContent.Authenticate -> {
-            BottomSheetWithTwoBigIcons(
-                textData =
-                    BottomSheetTextDataUi(
-                        title = stringResource(R.string.home_screen_authenticate),
-                        message = stringResource(R.string.home_screen_authenticate_description),
-                    ),
-                options =
-                    listOf(
-                        ModalOptionUi(
-                            title = stringResource(R.string.home_screen_authenticate_option_in_person),
-                            leadingIcon = AppIcons.PresentDocumentInPerson,
-                            event = Event.BottomSheet.Authenticate.OpenAuthenticateInPerson,
-                        ),
-                        ModalOptionUi(
-                            title = stringResource(R.string.home_screen_add_document_option_online),
-                            leadingIcon = AppIcons.PresentDocumentOnline,
-                            event = Event.BottomSheet.Authenticate.OpenAuthenticateOnLine,
-                        ),
-                    ),
-                onEventSent = { event ->
-                    onEventSent(event)
-                },
-            )
-        }
-
-        is HomeScreenBottomSheetContent.Sign -> {
-            BottomSheetWithTwoBigIcons(
-                textData =
-                    BottomSheetTextDataUi(
-                        title = stringResource(R.string.home_screen_sign_document),
-                        message = stringResource(R.string.home_screen_sign_document_description),
-                    ),
-                options =
-                    listOf(
-                        ModalOptionUi(
-                            title = stringResource(R.string.home_screen_sign_document_option_from_device),
-                            leadingIcon = AppIcons.SignDocumentFromDevice,
-                            leadingIconTint = MaterialTheme.colorScheme.primary,
-                            event = Event.BottomSheet.SignDocument.OpenFromDevice,
-                        ),
-                        ModalOptionUi(
-                            title = stringResource(R.string.home_screen_sign_document_option_scan_qr),
-                            leadingIcon = AppIcons.SignDocumentFromQr,
-                            leadingIconTint = MaterialTheme.colorScheme.primary,
-                            event = Event.BottomSheet.SignDocument.OpenScanQR,
-                        ),
-                    ),
-                onEventSent = { event ->
-                    onEventSent(event)
-                },
-            )
-        }
-
-        is HomeScreenBottomSheetContent.LearnMoreAboutAuthenticate -> {
-            GenericBottomSheet(
-                titleContent = {
-                    Row(
-                        verticalAlignment = Alignment.CenterVertically,
-                    ) {
-                        WrapIcon(
-                            iconData = AppIcons.Info,
-                            customTint = MaterialTheme.colorScheme.primary,
-                        )
-                        HSpacer.Small()
-                        Text(
-                            text = stringResource(R.string.home_screen_authenticate),
-                            style =
-                                MaterialTheme.typography.headlineSmall.copy(
-                                    color = MaterialTheme.colorScheme.onSurface,
-                                ),
-                        )
-                    }
-                },
-                bodyContent = {
-                    Column(verticalArrangement = Arrangement.spacedBy(SPACING_MEDIUM.dp)) {
-                        Text(
-                            stringResource(R.string.home_screen_sign_learn_more_inner_title),
-                            style =
-                                MaterialTheme.typography.titleMedium.copy(
-                                    color = MaterialTheme.colorScheme.onSurface,
-                                ),
-                        )
-                        Text(
-                            stringResource(R.string.home_screen_sign_learn_more_description),
-                            style =
-                                MaterialTheme.typography.bodyLarge.copy(
-                                    color = MaterialTheme.colorScheme.onSurface,
-                                ),
-                        )
-                    }
-                },
-            )
-        }
-
-        is HomeScreenBottomSheetContent.LearnMoreAboutSignDocument -> {
-            GenericBottomSheet(
-                titleContent = {
-                    Row(
-                        verticalAlignment = Alignment.CenterVertically,
-                    ) {
-                        WrapIcon(
-                            iconData = AppIcons.Info,
-                            customTint = MaterialTheme.colorScheme.primary,
-                        )
-                        HSpacer.Small()
-                        Text(
-                            stringResource(R.string.home_screen_sign),
-                            style =
-                                MaterialTheme.typography.headlineSmall.copy(
-                                    color = MaterialTheme.colorScheme.onSurface,
-                                ),
-                        )
-                    }
-                },
-                bodyContent = {
-                    Column(verticalArrangement = Arrangement.spacedBy(SPACING_MEDIUM.dp)) {
-                        Text(
-                            stringResource(R.string.home_screen_authenticate_learn_more_inner_title),
-                            style =
-                                MaterialTheme.typography.titleMedium.copy(
-                                    color = MaterialTheme.colorScheme.onSurface,
-                                ),
-                        )
-                        Text(
-                            stringResource(R.string.home_screen_authenticate_learn_more_description),
-                            style =
-                                MaterialTheme.typography.bodyLarge.copy(
-                                    color = MaterialTheme.colorScheme.onSurface,
-                                ),
-                        )
-                    }
-                },
-            )
-        }
-
         is HomeScreenBottomSheetContent.Bluetooth -> {
             DialogBottomSheet(
                 textData =
@@ -458,6 +753,10 @@ private fun HomeScreenSheetContent(
                 },
                 onNegativeClick = { onEventSent(Event.BottomSheet.Bluetooth.SecondaryButtonPressed) },
             )
+        }
+
+        else -> {
+            // Placeholder: Learn more modals can be added here
         }
     }
 }
@@ -483,18 +782,18 @@ private fun RequiredPermissionsAsk(
 
     val permissionsState = rememberMultiplePermissionsState(permissions = permissions)
 
-    when {
-        permissionsState.allPermissionsGranted -> {
-            onEventSend(Event.StartProximityFlow)
-        }
+    LaunchedEffect(permissionsState.allPermissionsGranted, permissionsState.shouldShowRationale) {
+        when {
+            permissionsState.allPermissionsGranted -> {
+                onEventSend(Event.StartProximityFlow)
+            }
 
-        !permissionsState.allPermissionsGranted && permissionsState.shouldShowRationale -> {
-            onEventSend(Event.OnShowPermissionsRational)
-        }
+            !permissionsState.allPermissionsGranted && permissionsState.shouldShowRationale -> {
+                onEventSend(Event.OnShowPermissionsRational)
+            }
 
-        else -> {
-            onEventSend(Event.OnPermissionStateChanged(BleAvailability.UNKNOWN))
-            LaunchedEffect(Unit) {
+            else -> {
+                onEventSend(Event.OnPermissionStateChanged(BleAvailability.UNKNOWN))
                 permissionsState.launchMultiplePermissionRequest()
             }
         }
@@ -506,43 +805,68 @@ private fun RequiredPermissionsAsk(
 @Composable
 private fun HomeScreenContentPreview() {
     PreviewTheme {
+        val scaffoldState =
+            rememberBottomSheetScaffoldState(
+                bottomSheetState =
+                    rememberStandardBottomSheetState(
+                        initialValue = SheetValue.PartiallyExpanded,
+                    ),
+            )
+
         ContentScreen(
             isLoading = false,
             navigatableAction = ScreenNavigateAction.NONE,
             onBack = { },
-            topBar = {
-                TopBar(
-                    onEventSent = {},
-                )
-            },
         ) { paddingValues ->
-            Content(
-                state =
-                    State(
-                        isBottomSheetOpen = false,
-                        welcomeUserMessage = "Welcome back, Alex",
-                        authenticateCardConfig =
-                            ActionCardConfig(
-                                title = stringResource(R.string.home_screen_authentication_card_title),
-                                icon = AppIcons.WalletActivated,
-                                primaryButtonText = stringResource(R.string.home_screen_authenticate),
-                                secondaryButtonText = stringResource(R.string.home_screen_learn_more),
+            BottomSheetScaffold(
+                modifier = Modifier.fillMaxSize(),
+                scaffoldState = scaffoldState,
+                sheetPeekHeight = 400.dp + paddingValues.calculateBottomPadding(),
+                sheetContent = {
+                    Column(
+                        modifier =
+                            Modifier
+                                .fillMaxHeight()
+                                .padding(bottom = paddingValues.calculateBottomPadding()),
+                    ) {}
+                },
+            ) { scaffoldPadding ->
+                Column(modifier = Modifier.fillMaxSize()) {
+                    TopBar(onDashboardEventSent = {})
+                    Content(
+                        state =
+                            State(
+                                isBottomSheetOpen = false,
+                                welcomeUserMessage = "Welcome back, Alex",
+                                authenticateCardConfig =
+                                    ActionCardConfig(
+                                        title = stringResource(R.string.home_screen_authentication_card_title),
+                                        icon = AppIcons.WalletActivated,
+                                        primaryButtonText = stringResource(R.string.home_screen_authenticate),
+                                        secondaryButtonText = stringResource(R.string.home_screen_learn_more),
+                                    ),
+                                signCardConfig =
+                                    ActionCardConfig(
+                                        title = stringResource(R.string.home_screen_sign_card_title),
+                                        icon = AppIcons.Contract,
+                                        primaryButtonText = stringResource(R.string.home_screen_sign),
+                                        secondaryButtonText = stringResource(R.string.home_screen_learn_more),
+                                    ),
                             ),
-                        signCardConfig =
-                            ActionCardConfig(
-                                title = stringResource(R.string.home_screen_sign_card_title),
-                                icon = AppIcons.Contract,
-                                primaryButtonText = stringResource(R.string.home_screen_sign),
-                                secondaryButtonText = stringResource(R.string.home_screen_learn_more),
+                        effectFlow = Channel<Effect>().receiveAsFlow(),
+                        onNavigationRequested = {},
+                        coroutineScope = rememberCoroutineScope(),
+                        bottomSheetState = scaffoldState.bottomSheetState,
+                        onEventSent = {},
+                        paddingValues =
+                            PaddingValues(
+                                top = scaffoldPadding.calculateTopPadding(),
+                                bottom = scaffoldPadding.calculateBottomPadding(),
                             ),
-                    ),
-                effectFlow = Channel<Effect>().receiveAsFlow(),
-                onNavigationRequested = {},
-                coroutineScope = rememberCoroutineScope(),
-                modalBottomSheetState = rememberModalBottomSheetState(),
-                onEventSent = {},
-                paddingValues = paddingValues,
-            )
+                        onDashboardEventSent = {},
+                    )
+                }
+            }
         }
     }
 }

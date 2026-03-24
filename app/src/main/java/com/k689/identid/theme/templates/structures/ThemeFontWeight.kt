@@ -16,39 +16,37 @@
 
 package com.k689.identid.theme.templates.structures
 
+import androidx.compose.ui.text.font.FontVariation
 import androidx.compose.ui.text.font.FontWeight
 
-sealed class ThemeFontWeight {
-    data object W100 : ThemeFontWeight()
+sealed class ThemeFontWeight(
+    val value: Float,
+) {
+    data object W100 : ThemeFontWeight(100f)
 
-    data object W200 : ThemeFontWeight()
+    data object W200 : ThemeFontWeight(200f)
 
-    data object W300 : ThemeFontWeight()
+    data object W300 : ThemeFontWeight(300f)
 
-    data object W400 : ThemeFontWeight()
+    data object W400 : ThemeFontWeight(400f)
 
-    data object W500 : ThemeFontWeight()
+    data object W500 : ThemeFontWeight(500f)
 
-    data object W600 : ThemeFontWeight()
+    data object W600 : ThemeFontWeight(600f)
 
-    data object W700 : ThemeFontWeight()
+    data object W700 : ThemeFontWeight(700f)
 
-    data object W800 : ThemeFontWeight()
+    data object W750 : ThemeFontWeight(750f)
 
-    data object W900 : ThemeFontWeight()
+    data object W800 : ThemeFontWeight(800f)
+
+    data object W900 : ThemeFontWeight(900f)
 
     companion object {
-        fun ThemeFontWeight.toFontWeight(): FontWeight =
-            when (this) {
-                W100 -> FontWeight.W100
-                W200 -> FontWeight.W200
-                W300 -> FontWeight.W300
-                W400 -> FontWeight.W400
-                W500 -> FontWeight.W500
-                W600 -> FontWeight.W600
-                W700 -> FontWeight.W700
-                W800 -> FontWeight.W800
-                W900 -> FontWeight.W900
-            }
+        // Standard Compose FontWeight conversion (for non-variable fallback)
+        fun ThemeFontWeight.toFontWeight(): FontWeight = FontWeight(this.value.toInt())
+
+        // Variable Font Variation setting (for Google Sans Flex 'wght' axis)
+        fun ThemeFontWeight.toFontVariation(): FontVariation.Setting = FontVariation.weight(this.value.toInt())
     }
 }

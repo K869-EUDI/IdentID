@@ -21,11 +21,12 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.wrapContentHeight
-import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -33,6 +34,7 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.Dp
@@ -162,10 +164,7 @@ private fun Content(
             }
         }
 
-        Column {
-            HorizontalDivider()
-            NFCSection(paddingValues)
-        }
+        SimplifiedNFCFooter(paddingValues)
     }
 
     LaunchedEffect(Unit) {
@@ -179,31 +178,25 @@ private fun Content(
 }
 
 @Composable
-private fun NFCSection(paddingValues: PaddingValues) {
+private fun SimplifiedNFCFooter(paddingValues: PaddingValues) {
     Column(
         modifier =
             Modifier
                 .fillMaxWidth()
                 .wrapContentHeight()
-                .padding(
-                    start = SPACING_MEDIUM.dp,
-                    end = SPACING_MEDIUM.dp,
-                    top = SPACING_MEDIUM.dp,
-                    bottom = paddingValues.calculateBottomPadding(),
-                ),
+                .padding(bottom = paddingValues.calculateBottomPadding() + SPACING_MEDIUM.dp),
         verticalArrangement = Arrangement.spacedBy(SPACING_SMALL.dp),
         horizontalAlignment = Alignment.CenterHorizontally,
     ) {
-        Text(
-            text = stringResource(id = R.string.proximity_qr_use_nfc),
-            style = MaterialTheme.typography.bodyMedium,
-            color = MaterialTheme.colorScheme.onSurface,
+        WrapImage(
+            iconData = AppIcons.NFC,
+            modifier = Modifier.size(48.dp),
+            colorFilter = ColorFilter.tint(MaterialTheme.colorScheme.primary),
         )
-        WrapImage(iconData = AppIcons.NFC)
         Text(
             text = stringResource(id = R.string.proximity_qr_hold_near_reader),
-            style = MaterialTheme.typography.bodySmall,
-            color = MaterialTheme.colorScheme.onSurface,
+            style = MaterialTheme.typography.bodyMedium,
+            color = MaterialTheme.colorScheme.onSurfaceVariant,
         )
     }
 }

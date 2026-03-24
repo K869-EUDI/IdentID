@@ -253,9 +253,10 @@
     <string name="preferences_theme_option_system_default">System Default</string>
     <!--endregion-->
     <!-- region Home Screen -->
+    <string name="app_title" translatable="false">IdentID</string>
     <string name="home_screen_title">Home</string>
-    <string name="home_screen_welcome">Welcome back</string>
-    <string name="home_screen_welcome_user_message">Welcome back, %1$s</string>
+    <string name="home_screen_welcome">Welcome</string>
+    <string name="home_screen_welcome_user_message">Hi, %1$s</string>
     <string name="home_screen_authentication_card_title">Authenticate, authorise transactions and share your digital documents in person or online.</string>
     <string name="home_screen_sign_card_title">Electronically sign digital documents with your wallet by choosing a file from your device.</string>
     <string name="home_screen_authenticate">Authenticate</string>
@@ -500,4 +501,13 @@
     <string name="transfer_error_transfer_failed">Transfer failed. Please try again.</string>
     <!--endregion-->
     <string name="engagement_aid_group_desc">EUDI Wallet NFC Engagement</string>
+    <string name="recent_transactions">Recent transactions</string>
+    <string name="home_screen_no_recent_transactions">No recent transactions</string>
+    <string name="home_screen_content_description_authenticate">Authenticate</string>
+    <string name="home_screen_content_description_sign_document">Sign document</string>
+    <string name="home_screen_content_description_add_document">Add document</string>
+    <string name="home_screen_document_usages_left">Usages left: %1$s</string>
+    <string name="home_screen_document_expires">Expires: %1$s</string>
+    <string name="home_screen_no_documents">No documents</string>
+    <string name="home_screen_add_one_now">Add one now</string>
 </resources>

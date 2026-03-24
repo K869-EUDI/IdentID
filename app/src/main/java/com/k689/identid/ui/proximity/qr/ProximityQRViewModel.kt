@@ -18,15 +18,20 @@ package com.k689.identid.ui.proximity.qr
 
 import androidx.activity.ComponentActivity
 import androidx.lifecycle.viewModelScope
+import com.k689.identid.R
 import com.k689.identid.config.PresentationMode
+import com.k689.identid.config.QrScanFlow
+import com.k689.identid.config.QrScanUiConfig
 import com.k689.identid.config.RequestUriConfig
 import com.k689.identid.di.core.getOrCreatePresentationScope
 import com.k689.identid.interactor.proximity.ProximityQRInteractor
 import com.k689.identid.interactor.proximity.ProximityQRPartialState
+import com.k689.identid.navigation.CommonScreens
 import com.k689.identid.navigation.DashboardScreens
 import com.k689.identid.navigation.ProximityScreens
 import com.k689.identid.navigation.helper.generateComposableArguments
 import com.k689.identid.navigation.helper.generateComposableNavigationLink
+import com.k689.identid.provider.resources.ResourceProvider
 import com.k689.identid.ui.component.content.ContentErrorConfig
 import com.k689.identid.ui.mvi.MviViewModel
 import com.k689.identid.ui.mvi.ViewEvent
@@ -49,6 +54,8 @@ sealed class Event : ViewEvent {
 
     data object GoBack : Event()
 
+    data object OpenScanQr : Event()
+
     data class NfcEngagement(
         val componentActivity: ComponentActivity,
         val enable: Boolean,
@@ -69,6 +76,7 @@ sealed class Effect : ViewSideEffect {
 class ProximityQRViewModel(
     private val interactor: ProximityQRInteractor,
     private val uiSerializer: UiSerializer,
+    private val resourceProvider: ResourceProvider,
     @InjectedParam private val requestUriConfigRaw: String,
 ) : MviViewModel<Event, State, Effect>() {
     private var interactorJob: Job? = null
@@ -86,6 +94,32 @@ class ProximityQRViewModel(
                 cleanUp()
                 setState { copy(error = null) }
                 setEffect { Effect.Navigation.Pop }
+            }
+
+            is Event.OpenScanQr -> {
+                cleanUp()
+                setEffect {
+                    Effect.Navigation.SwitchScreen(
+                        screenRoute =
+                            generateComposableNavigationLink(
+                                screen = CommonScreens.QrScan,
+                                arguments =
+                                    generateComposableArguments(
+                                        mapOf(
+                                            QrScanUiConfig.serializedKeyName to
+                                                uiSerializer.toBase64(
+                                                    QrScanUiConfig(
+                                                        title = resourceProvider.getString(R.string.presentation_qr_scan_title),
+                                                        subTitle = resourceProvider.getString(R.string.presentation_qr_scan_subtitle),
+                                                        qrScanFlow = QrScanFlow.Presentation,
+                                                    ),
+                                                    QrScanUiConfig.Parser,
+                                                ),
+                                        ),
+                                    ),
+                            ),
+                    )
+                }
             }
 
             is Event.NfcEngagement -> {
