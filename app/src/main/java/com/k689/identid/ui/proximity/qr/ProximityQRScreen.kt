@@ -97,7 +97,6 @@ fun ProximityQRScreen(
                     }
                 }
             },
-            onEventSent = { viewModel.setEvent(it) },
             paddingValues = paddingValues,
         )
     }
@@ -136,7 +135,6 @@ private fun Content(
     state: State,
     effectFlow: Flow<Effect>,
     onNavigationRequested: (navigationEffect: Effect.Navigation) -> Unit,
-    onEventSent: (Event) -> Unit,
     paddingValues: PaddingValues,
 ) {
     val qrSize = screenWidthInDp(true) / 1.4f

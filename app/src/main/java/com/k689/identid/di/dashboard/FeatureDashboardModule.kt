@@ -38,15 +38,10 @@ import com.k689.identid.interactor.dashboard.TransactionsInteractor
 import com.k689.identid.interactor.dashboard.TransactionsInteractorImpl
 import com.k689.identid.provider.UuidProvider
 import com.k689.identid.provider.resources.ResourceProvider
-import com.k689.identid.ui.dashboard.authenticate.AuthenticateViewModel
-import com.k689.identid.ui.dashboard.sign.DocumentSignViewModel
-import com.k689.identid.ui.serializer.UiSerializer
 import com.k689.identid.validator.FilterValidator
-import org.koin.androidx.viewmodel.dsl.viewModel
 import org.koin.core.annotation.ComponentScan
 import org.koin.core.annotation.Factory
 import org.koin.core.annotation.Module
-import org.koin.dsl.module
 
 @Module
 @ComponentScan("com.k689.identid.ui.dashboard", "com.k689.identid.di.dashboard")
@@ -143,8 +138,3 @@ fun provideTransactionDetailsInteractor(
         resourceProvider,
         uuidProvider,
     )
-
-val dashboardUiModule = module {
-    viewModel { AuthenticateViewModel(get(), get()) }
-    viewModel { DocumentSignViewModel(get(), get(), get()) }
-}

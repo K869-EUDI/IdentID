@@ -502,4 +502,12 @@
     <!--endregion-->
     <string name="engagement_aid_group_desc">EUDI Wallet NFC Engagement</string>
     <string name="recent_transactions">Recent transactions</string>
+    <string name="home_screen_no_recent_transactions">No recent transactions</string>
+    <string name="home_screen_content_description_authenticate">Authenticate</string>
+    <string name="home_screen_content_description_sign_document">Sign document</string>
+    <string name="home_screen_content_description_add_document">Add document</string>
+    <string name="home_screen_document_usages_left">Usages left: %1$s</string>
+    <string name="home_screen_document_expires">Expires: %1$s</string>
+    <string name="home_screen_no_documents">No documents</string>
+    <string name="home_screen_add_one_now">Add one now</string>
 </resources>

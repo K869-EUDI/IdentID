@@ -52,6 +52,8 @@ import com.k689.identid.ui.mvi.ViewEvent
 import com.k689.identid.ui.mvi.ViewSideEffect
 import com.k689.identid.ui.mvi.ViewState
 import com.k689.identid.ui.serializer.UiSerializer
+import com.k689.identid.util.business.formatInstant
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.launch
 import org.koin.android.annotation.KoinViewModel
@@ -193,6 +195,8 @@ class HomeViewModel(
     private val uiSerializer: UiSerializer,
     private val resourceProvider: ResourceProvider,
 ) : MviViewModel<Event, State, Effect>() {
+    private var userNameJob: Job? = null
+    private var recentDataJob: Job? = null
     override fun setInitialState(): State =
         State(
             welcomeUserMessage = resourceProvider.getString(R.string.home_screen_welcome),
@@ -216,8 +220,10 @@ class HomeViewModel(
     override fun handleEvents(event: Event) {
         when (event) {
             is Event.Init -> {
-                getUserNameViaMainPidDocument()
-                getRecentData()
+                userNameJob?.cancel()
+                recentDataJob?.cancel()
+                userNameJob = getUserNameViaMainPidDocument()
+                recentDataJob = getRecentData()
             }
 
             is Event.AuthenticateCard.AuthenticatePressed -> {
@@ -504,7 +510,7 @@ class HomeViewModel(
         }
     }
 
-    private fun getUserNameViaMainPidDocument() {
+    private fun getUserNameViaMainPidDocument(): Job =
         viewModelScope.launch {
             homeInteractor.getUserNameViaMainPidDocument().collect { response ->
                 when (response) {
@@ -530,9 +536,8 @@ class HomeViewModel(
                 }
             }
         }
-    }
 
-    private fun getRecentData() {
+    private fun getRecentData(): Job =
         viewModelScope.launch {
             combine(
                 documentsInteractor.getDocuments(),
@@ -553,7 +558,7 @@ class HomeViewModel(
                                     DashboardDocument(
                                         documentUi = docUi,
                                         usagesLeft = usagesLeft,
-                                        expiresAt = attributes?.expiryDate?.toString()?.substringBefore("T") ?: "-",
+                                        expiresAt = attributes?.expiryDate?.formatInstant() ?: "-",
                                         isPending = false,
                                     )
                                 }
@@ -587,5 +592,4 @@ class HomeViewModel(
                 }
             }
         }
-    }
 }
