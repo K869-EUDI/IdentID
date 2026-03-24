@@ -66,7 +66,6 @@ import com.k689.identid.ui.component.preview.PreviewTheme
 import com.k689.identid.ui.component.preview.ThemeModePreviews
 import com.k689.identid.ui.component.utils.OneTimeLaunchedEffect
 import com.k689.identid.ui.component.utils.SIZE_MEDIUM
-import com.k689.identid.ui.component.utils.SPACING_EXTRA_LARGE
 import com.k689.identid.ui.component.utils.SPACING_LARGE
 import com.k689.identid.ui.component.utils.SPACING_SMALL
 import com.k689.identid.ui.component.utils.SPACING_XX_LARGE
@@ -285,7 +284,6 @@ private fun MainContent(
                     Modifier
                         .fillMaxWidth()
                         .padding(vertical = SPACING_SMALL.dp),
-                horizontalAlignment = Alignment.CenterHorizontally,
             ) {
                 Text(
                     modifier =
@@ -298,7 +296,6 @@ private fun MainContent(
                         MaterialTheme.typography.titleMedium.copy(
                             color = MaterialTheme.colorScheme.onSurface,
                         ),
-                    textAlign = TextAlign.Center,
                 )
 
                 PinFieldLayout(
