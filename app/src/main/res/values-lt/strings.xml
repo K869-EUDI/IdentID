@@ -270,6 +270,13 @@
     <string name="home_screen_sign_document_description">Pasirašykite dokumentą skaitmeniniu būdu – pasirinkite failą iš savo įrenginio arba nuskaitykite QR kodą.</string>
     <string name="home_screen_sign_document_option_from_device">Iš įrenginio</string>
     <string name="home_screen_sign_document_option_scan_qr">Nuskaityti QR kodą</string>
+    <string name="home_screen_content_description_authenticate">Autentifikuotis</string>
+    <string name="home_screen_content_description_sign_document">Pasirašyti dokumentą</string>
+    <string name="home_screen_content_description_add_document">Pridėti dokumentą</string>
+    <string name="home_screen_document_usages_left">Panaudojimai: %1$s</string>
+    <string name="home_screen_document_expires">Galioja iki: %1$s</string>
+    <string name="home_screen_no_documents">Nėra dokumentų</string>
+    <string name="home_screen_add_one_now">Pridėti dabar</string>
     <!--endregion-->
     <!-- region Home Screen Learn More Popups content -->
     <string name="home_screen_authenticate_learn_more_inner_title">Saugiai pasirašykite dokumentus</string>
