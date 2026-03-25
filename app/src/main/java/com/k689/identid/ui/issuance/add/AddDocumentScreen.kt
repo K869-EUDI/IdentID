@@ -52,6 +52,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.compose.LocalLifecycleOwner
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -258,17 +259,6 @@ private fun Content(
 
         if (state.showFooterScanner) {
             VSpacer.ExtraSmall()
-            FloatingFooter(
-                modifier =
-                    Modifier
-                        .fillMaxWidth()
-                        // Add standard margin layout spacing to the footer
-                        .padding(
-                            top = SPACING_MEDIUM.dp,
-                            bottom = SPACING_MEDIUM.dp,
-                        ),
-                onEventSend = onEventSend,
-            )
         }
     }
 
@@ -292,9 +282,9 @@ private fun MainContent(
     Column(
         modifier = modifier,
     ) {
-        VSpacer.Medium()
+        //VSpacer.Medium()
 
-        TextField(
+/*        TextField(
             modifier =
                 Modifier
                     .fillMaxWidth()
@@ -314,6 +304,17 @@ private fun MainContent(
                     focusedContainerColor = MaterialTheme.colorScheme.surfaceContainerHigh,
                     unfocusedContainerColor = MaterialTheme.colorScheme.surfaceContainerHigh,
                 ),
+        )*/
+
+        Text(
+            text = stringResource(R.string.issuance_add_document_subtitle),
+            color = MaterialTheme.colorScheme.onSurface,
+            style =
+                MaterialTheme.typography.headlineSmall.copy(
+                    color = MaterialTheme.colorScheme.onSurface,
+                    fontWeight = FontWeight.Bold,
+                    //fontSize = 22.sp,
+                ),
         )
 
         if (state.noOptions) {
@@ -326,7 +327,7 @@ private fun MainContent(
 
             Options(
                 options = state.filteredOptions,
-                modifier = Modifier.fillMaxSize(),
+                modifier = Modifier.weight(1f).fillMaxSize(),
                 onOptionClicked = { itemIds, issuerId ->
                     onEventSend(
                         Event.IssueDocument(
@@ -339,6 +340,17 @@ private fun MainContent(
                 },
             )
         }
+
+        FloatingFooter(
+            modifier =
+                Modifier
+                    .fillMaxWidth()
+                    .padding(
+                        top = SPACING_MEDIUM.dp,
+                        bottom = SPACING_MEDIUM.dp,
+                    ),
+            onEventSend = onEventSend,
+        )
     }
 }
 
@@ -364,7 +376,7 @@ private fun Options(
                         Modifier
                             .fillMaxWidth()
                             .background(MaterialTheme.colorScheme.background),
-                    text = issuerId,
+                    text = issuerId.substringAfter("https://"),
                     textConfig =
                         TextConfig(
                             style =
@@ -378,6 +390,7 @@ private fun Options(
 
             itemsIndexed(
                 items = items,
+                contentType = { _, _ -> "issuer_card" },
                 key = { _, item -> "$issuerId-${item.configurationIds.joinToString(",")}" },
             ) { _, item ->
                 val testTag =
@@ -420,7 +433,7 @@ private fun FloatingFooter(
     modifier: Modifier = Modifier,
     onEventSend: (Event) -> Unit,
 ) {
-    ElevatedCard(
+/*    ElevatedCard(
         modifier = modifier.fillMaxWidth(),
         shape = RoundedCornerShape(24.dp),
         colors =
@@ -430,34 +443,38 @@ private fun FloatingFooter(
             ),
         elevation = CardDefaults.elevatedCardElevation(defaultElevation = 4.dp),
     ) {
-        Column(
-            modifier = Modifier.padding(16.dp),
-            verticalArrangement = Arrangement.spacedBy(12.dp),
-            horizontalAlignment = Alignment.CenterHorizontally,
-        ) {
-            Text(
-                text = stringResource(R.string.issuance_add_document_scan_qr_footer_text),
-                style = MaterialTheme.typography.bodyLarge,
-                textAlign = TextAlign.Center,
-                fontWeight = FontWeight.Bold,
-            )
+    }*/
 
-            WrapButton(
-                modifier = Modifier.fillMaxWidth(),
-                buttonConfig =
-                    ButtonConfig(
-                        type = ButtonType.PRIMARY,
-                        onClick = {
-                            onEventSend(Event.GoToQrScan)
-                        },
+    Column(
+        modifier = Modifier.padding(16.dp),
+        verticalArrangement = Arrangement.spacedBy(12.dp),
+        horizontalAlignment = Alignment.CenterHorizontally,
+    ) {
+        WrapButton(
+            modifier = Modifier.fillMaxWidth(),
+            buttonConfig =
+                ButtonConfig(
+                    type = ButtonType.PRIMARY,
+                    shape = RoundedCornerShape(16.dp),
+
+                    onClick = {
+                        onEventSend(Event.GoToQrScan)
+                    },
+                ),
+        ) {
+            WrapIcon(
+                iconData = AppIcons.QrScanner,
+                modifier = Modifier.padding(end = 8.dp).size(35.dp),
+            )
+            Text(
+                text = stringResource(R.string.issuance_add_document_scan_qr_footer_button_text),
+                style =
+                    MaterialTheme.typography.headlineSmall.copy(
+                        color = MaterialTheme.colorScheme.onPrimary,
+                        fontWeight = FontWeight.Bold,
+                        fontSize = 16.sp,
                     ),
-            ) {
-                WrapIcon(
-                    iconData = AppIcons.QrScanner,
-                    modifier = Modifier.padding(end = 8.dp).size(35.dp),
-                )
-                Text(text = stringResource(R.string.issuance_add_document_scan_qr_footer_button_text))
-            }
+            )
         }
     }
 }
