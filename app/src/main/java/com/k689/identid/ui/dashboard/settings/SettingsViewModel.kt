@@ -54,6 +54,8 @@ sealed class Effect : ViewSideEffect {
         ) : Navigation()
 
         data object OpenPreferences : Navigation()
+
+        data object OpenPseudonyms : Navigation()
     }
 
     data class ShareLogFile(
@@ -116,6 +118,10 @@ class SettingsViewModel(
                         )
                     }
                 }
+            }
+
+            SettingsMenuItemType.PSEUDONYMS -> {
+                setEffect { Effect.Navigation.OpenPseudonyms }
             }
         }
     }

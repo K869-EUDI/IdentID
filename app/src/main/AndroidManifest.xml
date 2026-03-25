@@ -126,6 +126,26 @@
                 android:resource="@xml/transfer_nfc_apdu_service" />
         </service>
 
+        <service
+            android:name=".service.PseudonymCredentialProviderService"
+            android:exported="true"
+            android:label="@string/pseudonym_credential_provider_label"
+            android:permission="android.permission.BIND_CREDENTIAL_PROVIDER_SERVICE">
+            <intent-filter>
+                <action android:name="android.service.credentials.CredentialProviderService" />
+            </intent-filter>
+
+            <meta-data
+                android:name="android.credentials.provider"
+                android:resource="@xml/credential_provider_config" />
+        </service>
+
+        <activity
+            android:name=".service.PseudonymCredentialActivity"
+            android:exported="false"
+            android:theme="@android:style/Theme.Translucent.NoTitleBar"
+            android:excludeFromRecents="true" />
+
         <activity
             android:name=".app.MainActivity"
             android:exported="true"

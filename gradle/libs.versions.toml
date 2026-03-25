@@ -40,6 +40,8 @@ timber = "5.0.1"
 treessence = "1.1.2"
 rqesUiSDK = "0.3.6"
 androidxRoom = "2.8.4"
+androidxCredentials = "1.5.0-rc01"
+cbor = "4.5.6"
 cloudy = "0.5.0"
 
 [libraries]
@@ -98,6 +100,9 @@ treessence = { group = "com.github.bastienpaulfr", name = "Treessence", version.
 rqes-ui-sdk = { group = "eu.europa.ec.eudi", name = "eudi-lib-android-rqes-ui", version.ref = "rqesUiSDK" }
 androidx-room = { group = "androidx.room", name = "room-runtime", version.ref = "androidxRoom" }
 androidx-room-ksp = { group = "androidx.room", name = "room-compiler", version.ref = "androidxRoom" }
+androidx-credentials = { group = "androidx.credentials", name = "credentials", version.ref = "androidxCredentials" }
+androidx-credentials-play-services-auth = { group = "androidx.credentials", name = "credentials-play-services-auth", version.ref = "androidxCredentials" }
+cbor = { group = "com.upokecenter", name = "cbor", version.ref = "cbor" }
 compose-cloudy = { module = "com.github.skydoves:cloudy", version.ref = "cloudy" }
 material = { group = "com.google.android.material", name = "material", version.ref = "material" }
 androidx-camera-core = { group = "androidx.camera", name = "camera-core", version.ref = "cameraCore" }

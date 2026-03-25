@@ -126,7 +126,6 @@
     <string name="biometric_login_biometrics_enabled_subtitle">Use your biometrics to access the EUDI Wallet.</string>
     <string name="biometric_login_biometrics_not_enabled_subtitle">Enter your PIN code to continue:</string>
     <!--endregion-->
-
     <!-- region Login Authentication -->
     <plurals name="login_max_attempts_exceeded_error_message">
         <item quantity="one">
@@ -141,7 +140,6 @@
         <item quantity="other">You have %1$d attempts left.</item>
     </plurals>
     <!--endregion-->
-
     <!-- region Biometrics -->
     <string name="biometric_no_hardware">Your device does not support biometric authentication</string>
     <string name="biometric_unknown_error">Something went wrong initializing biometric authentication. Please try again</string>
@@ -239,9 +237,56 @@
     <string name="settings_screen_option_retrieve_logs_id">retrieveLogsId</string>
     <string name="settings_screen_option_changelog">Changelog</string>
     <string name="settings_screen_option_changelog_id">changelogId</string>
+    <string name="settings_screen_option_pseudonyms">Pseudonyms</string>
+    <string name="settings_screen_option_pseudonyms_id">pseudonymsId</string>
     <string name="settings_intent_chooser_logs_share_title">Share logs</string>
     <string name="settings_preferences_option_preferences">Preferences</string>
     <string name="settings_preferences_option_preferences_id">preferencesId</string>
+    <!--endregion-->
+    <!-- region Pseudonym Screens -->
+    <string name="pseudonym_credential_provider_label">IdentID Pseudonym Provider</string>
+    <string name="pseudonym_credential_provider_name">IdentID Pseudonym</string>
+    <string name="pseudonym_credential_provider_description">Create a pseudonym passkey with IdentID</string>
+    <string name="pseudonym_list_title">Pseudonyms</string>
+    <string name="pseudonym_list_empty">No pseudonyms yet. They will appear here when you register passkeys with websites.</string>
+    <string name="pseudonym_list_created">Created: %1$s</string>
+    <string name="pseudonym_list_last_used">Last used: %1$s</string>
+    <string name="pseudonym_detail_title">Pseudonym Details</string>
+    <string name="pseudonym_detail_relying_party">Relying Party</string>
+    <string name="pseudonym_detail_domain">Domain</string>
+    <string name="pseudonym_detail_username">Username</string>
+    <string name="pseudonym_detail_credential_id">Credential ID</string>
+    <string name="pseudonym_detail_created">Created</string>
+    <string name="pseudonym_detail_last_used">Last Used</string>
+    <string name="pseudonym_detail_alias_label">Alias (optional)</string>
+    <string name="pseudonym_detail_save_alias">Save Alias</string>
+    <string name="pseudonym_detail_alias_saved">Alias saved</string>
+    <string name="pseudonym_detail_delete">Delete Pseudonym</string>
+    <string name="pseudonym_detail_delete_title">Delete Pseudonym</string>
+    <string name="pseudonym_detail_delete_message">This will permanently delete this pseudonym and its cryptographic key. This action cannot be undone.</string>
+    <string name="pseudonym_detail_delete_confirm">Delete</string>
+    <string name="pseudonym_detail_delete_cancel">Cancel</string>
+    <!-- Pseudonym Transaction Log -->
+    <string name="pseudonym_txlog_title">Transaction Log</string>
+    <string name="pseudonym_txlog_empty">No transaction logs yet. Logs will appear here when you register or authenticate with passkeys.</string>
+    <string name="pseudonym_txlog_type_registration">Registration</string>
+    <string name="pseudonym_txlog_type_authentication">Authentication</string>
+    <string name="pseudonym_txlog_status_completed">Completed</string>
+    <string name="pseudonym_txlog_status_failed">Failed</string>
+    <string name="pseudonym_txlog_delete_all_title">Delete All Logs</string>
+    <string name="pseudonym_txlog_delete_all_message">This will permanently delete all pseudonym transaction logs. This action cannot be undone.</string>
+    <string name="pseudonym_txlog_detail_title">Transaction Details</string>
+    <string name="pseudonym_txlog_detail_type">Transaction Type</string>
+    <string name="pseudonym_txlog_detail_status">Status</string>
+    <string name="pseudonym_txlog_detail_timestamp">Date &amp; Time</string>
+    <string name="pseudonym_txlog_detail_rp_name">Relying Party</string>
+    <string name="pseudonym_txlog_detail_rp_id">Domain</string>
+    <string name="pseudonym_txlog_detail_username">Username</string>
+    <string name="pseudonym_txlog_detail_credential_id">Credential ID</string>
+    <string name="pseudonym_txlog_detail_failure_reason">Failure Reason</string>
+    <string name="pseudonym_txlog_detail_delete">Delete Log Entry</string>
+    <string name="pseudonym_txlog_detail_delete_title">Delete Log Entry</string>
+    <string name="pseudonym_txlog_detail_delete_message">This will permanently delete this transaction log entry. This action cannot be undone.</string>
     <!--endregion-->
     <!-- region Preferences Screen -->
     <string name="preferences_screen_title">Preferences</string>
