@@ -17,6 +17,7 @@
 package com.k689.identid.di.business
 
 import android.content.Context
+import com.k689.identid.config.CertificateRepository
 import com.k689.identid.config.ConfigLogic
 import com.k689.identid.config.ConfigLogicImpl
 import com.k689.identid.controller.crypto.CryptoController
@@ -46,7 +47,10 @@ import org.koin.core.annotation.Single
 class LogicBusinessModule
 
 @Single
-fun provideConfigLogic(context: Context): ConfigLogic = ConfigLogicImpl(context)
+fun provideConfigLogic(
+    context: Context,
+    certificateRepository: CertificateRepository,
+): ConfigLogic = ConfigLogicImpl(context, certificateRepository)
 
 @Single
 fun provideLogController(

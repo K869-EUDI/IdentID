@@ -22,6 +22,7 @@ import android.content.pm.PackageManager
 import androidx.work.ExistingPeriodicWorkPolicy
 import androidx.work.PeriodicWorkRequest
 import androidx.work.WorkManager
+import com.k689.identid.config.CertificateRepository
 import com.k689.identid.config.ConfigLogic
 import com.k689.identid.config.WalletCoreConfig
 import com.k689.identid.di.setupKoin
@@ -29,18 +30,32 @@ import com.k689.identid.service.NfcEngagementService
 import com.k689.identid.service.TransferNfcEngagementService
 import com.k689.identid.worker.RevocationWorkManager
 import eu.europa.ec.eudi.rqesui.infrastructure.EudiRQESUi
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.SupervisorJob
+import kotlinx.coroutines.launch
 import org.koin.android.ext.android.inject
 import org.koin.core.KoinApplication
 
 class Application : Application() {
     private val configLogic: ConfigLogic by inject()
     private val walletCoreConfig: WalletCoreConfig by inject()
+    private val certificateRepository: CertificateRepository by inject()
+
+    private val applicationScope = CoroutineScope(SupervisorJob() + Dispatchers.IO)
 
     override fun onCreate() {
         super.onCreate()
         ensureNfcServicesEnabled()
         initializeKoin().initializeRqes()
         initializeRevocationWorkManager()
+        refreshCertificates()
+    }
+
+    private fun refreshCertificates() {
+        applicationScope.launch {
+            certificateRepository.refreshFromServer()
+        }
     }
 
     private fun ensureNfcServicesEnabled() {

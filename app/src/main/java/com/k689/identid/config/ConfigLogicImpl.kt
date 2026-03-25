@@ -21,12 +21,13 @@ import eu.europa.ec.eudi.rqesui.infrastructure.config.EudiRQESUiConfig
 
 class ConfigLogicImpl(
     val context: Context,
+    private val certificateRepository: CertificateRepository,
 ) : ConfigLogic {
     override val appFlavor: AppFlavor
         get() = AppFlavor.DEMO
 
     override val rqesConfig: EudiRQESUiConfig
-        get() = RQESConfigImpl(context)
+        get() = RQESConfigImpl(certificateRepository)
 
     override val changelogUrl: String
         get() = "https://github.com/Skaitmenines-tapatybes-dekle/IdentID"
