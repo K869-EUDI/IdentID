@@ -18,7 +18,6 @@ package com.k689.identid.config
 
 import android.content.Context
 import com.k689.identid.BuildConfig
-import com.k689.identid.R
 import com.k689.identid.service.NfcEngagementService
 import eu.europa.ec.eudi.wallet.EudiWalletConfig
 import eu.europa.ec.eudi.wallet.issue.openid4vci.OpenId4VciManager
@@ -29,6 +28,7 @@ import kotlin.time.Duration.Companion.seconds
 
 internal class WalletCoreConfigImpl(
     private val context: Context,
+    private val certificateRepository: CertificateRepository,
 ) : WalletCoreConfig {
     private var _config: EudiWalletConfig? = null
 
@@ -67,18 +67,7 @@ internal class WalletCoreConfigImpl(
                         }
 
                         configureReaderTrustStore(
-                            context,
-                            R.raw.pidissuerca02_cz,
-                            R.raw.pidissuerca02_ee,
-                            R.raw.pidissuerca02_eu,
-                            R.raw.pidissuerca02_lt,
-                            R.raw.pidissuerca02_lu,
-                            R.raw.pidissuerca02_nl,
-                            R.raw.pidissuerca02_pt,
-                            R.raw.pidissuerca02_ut,
-                            R.raw.dc4eu,
-                            R.raw.r45_staging,
-                            R.raw.verifier,
+                            certificateRepository.getReaderTrustStoreCerts(),
                         )
                     }
             }

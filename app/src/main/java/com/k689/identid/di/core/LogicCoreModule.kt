@@ -17,6 +17,7 @@
 package com.k689.identid.di.core
 
 import android.content.Context
+import com.k689.identid.config.CertificateRepository
 import com.k689.identid.config.WalletCoreConfig
 import com.k689.identid.config.WalletCoreConfigImpl
 import com.k689.identid.controller.core.WalletCoreDocumentsController
@@ -71,7 +72,8 @@ fun provideEudiWallet(
 @Single
 fun provideWalletCoreConfig(
     context: Context,
-): WalletCoreConfig = WalletCoreConfigImpl(context)
+    certificateRepository: CertificateRepository,
+): WalletCoreConfig = WalletCoreConfigImpl(context, certificateRepository)
 
 @Single
 fun provideWalletCoreLogController(logController: LogController): WalletCoreLogController = WalletCoreLogControllerImpl(logController)

@@ -16,6 +16,7 @@
 
 package com.k689.identid.di.network
 
+import com.k689.identid.config.CertificateRepository
 import com.k689.identid.config.AppBuildType
 import com.k689.identid.config.ConfigLogic
 import com.k689.identid.network.repository.WalletAttestationRepository
@@ -71,3 +72,8 @@ fun provideHttpClient(
 
 @Single
 fun provideWalletAttestationRepository(httpClient: HttpClient): WalletAttestationRepository = WalletAttestationRepositoryImpl(httpClient)
+
+@Single
+fun provideCertificateRepository(
+    context: android.content.Context,
+): CertificateRepository = CertificateRepository(context)

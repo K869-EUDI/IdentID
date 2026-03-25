@@ -16,10 +16,9 @@
 
 package com.k689.identid.config
 
-import android.content.Context
 import com.k689.identid.BuildConfig
-import com.k689.identid.R
 import eu.europa.ec.eudi.rqes.HashAlgorithmOID
+import eu.europa.ec.eudi.rqes.core.documentRetrieval.X509CertificateTrust
 import eu.europa.ec.eudi.rqesui.domain.extension.toUriOrEmpty
 import eu.europa.ec.eudi.rqesui.infrastructure.config.DocumentRetrievalConfig
 import eu.europa.ec.eudi.rqesui.infrastructure.config.EudiRQESUiConfig
@@ -27,7 +26,7 @@ import eu.europa.ec.eudi.rqesui.infrastructure.config.data.QtspData
 import java.net.URI
 
 class RQESConfigImpl(
-    val context: Context,
+    private val certificateRepository: CertificateRepository,
 ) : EudiRQESUiConfig {
     override val qtsps: List<QtspData>
         get() =
@@ -46,18 +45,21 @@ class RQESConfigImpl(
     override val printLogs: Boolean get() = BuildConfig.DEBUG
 
     override val documentRetrievalConfig: DocumentRetrievalConfig
-        get() =
-            DocumentRetrievalConfig.X509Certificates(
-                context,
-                listOf(
-                    R.raw.pidissuerca02_cz,
-                    R.raw.pidissuerca02_ee,
-                    R.raw.pidissuerca02_eu,
-                    R.raw.pidissuerca02_lt,
-                    R.raw.pidissuerca02_lu,
-                    R.raw.pidissuerca02_nl,
-                    R.raw.pidissuerca02_pt,
-                    R.raw.pidissuerca02_ut,
-                ),
-            )
+        get() {
+            val certs = certificateRepository.getRqesDocumentRetrievalCerts()
+            return if (certs.isNotEmpty()) {
+                DocumentRetrievalConfig.X509CertificateImpl(
+                    X509CertificateTrust(
+                        trustedCertificates = certs,
+                        logException = if (BuildConfig.DEBUG) {
+                            { th -> th.printStackTrace() }
+                        } else {
+                            null
+                        },
+                    ),
+                )
+            } else {
+                DocumentRetrievalConfig.NoValidation
+            }
+        }
 }
