@@ -26,6 +26,7 @@ import com.k689.identid.di.issuance.FeatureIssuanceModule
 import com.k689.identid.di.network.LogicNetworkModule
 import com.k689.identid.di.presentation.FeaturePresentationModule
 import com.k689.identid.di.proximity.FeatureProximityModule
+import com.k689.identid.di.pseudonym.FeaturePseudonymModule
 import com.k689.identid.di.resources.LogicResourceModule
 import com.k689.identid.di.startup.FeatureStartupModule
 import com.k689.identid.di.storage.LogicStorageModule
@@ -55,6 +56,7 @@ private val assembledModules =
         FeatureProximityModule().module,
         FeatureIssuanceModule().module,
         FeatureTransferModule().module,
+        FeaturePseudonymModule().module,
     )
 
 internal fun Application.setupKoin(): KoinApplication =

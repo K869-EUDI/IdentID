@@ -279,6 +279,13 @@ dependencies {
     // Blur effect
     implementation(libs.compose.cloudy)
 
+    // Credential Manager (WebAuthn/Passkeys)
+    implementation(libs.androidx.credentials)
+    implementation(libs.androidx.credentials.play.services.auth)
+
+    // CBOR encoding (WebAuthn data structures)
+    implementation(libs.cbor)
+
     // Test
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)

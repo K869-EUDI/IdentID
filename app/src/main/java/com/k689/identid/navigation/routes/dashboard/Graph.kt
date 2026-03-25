@@ -33,6 +33,10 @@ import com.k689.identid.ui.dashboard.preferences.PreferencesScreen
 import com.k689.identid.ui.dashboard.settings.SettingsScreen
 import com.k689.identid.ui.dashboard.sign.DocumentSignScreen
 import com.k689.identid.ui.dashboard.transactions.detail.TransactionDetailsScreen
+import com.k689.identid.ui.pseudonym.detail.PseudonymDetailScreen
+import com.k689.identid.ui.pseudonym.list.PseudonymListScreen
+import com.k689.identid.ui.pseudonym.transactions.PseudonymTransactionLogDetailScreen
+import com.k689.identid.ui.pseudonym.transactions.PseudonymTransactionLogListScreen
 import org.koin.androidx.compose.koinViewModel
 import org.koin.core.parameter.parametersOf
 
@@ -147,6 +151,66 @@ fun NavGraphBuilder.featureDashboardGraph(navController: NavController) {
                     parameters = {
                         parametersOf(
                             it.arguments?.getString("transactionId").orEmpty(),
+                        )
+                    },
+                ),
+            )
+        }
+
+        composable(
+            route = DashboardScreens.PseudonymList.screenRoute,
+        ) {
+            PseudonymListScreen(
+                navController = navController,
+                viewModel = koinViewModel(),
+            )
+        }
+
+        composable(
+            route = DashboardScreens.PseudonymDetail.screenRoute,
+            arguments =
+                listOf(
+                    navArgument("pseudonymId") {
+                        type = NavType.StringType
+                    },
+                ),
+        ) {
+            PseudonymDetailScreen(
+                navController = navController,
+                viewModel = koinViewModel(
+                    parameters = {
+                        parametersOf(
+                            it.arguments?.getString("pseudonymId").orEmpty(),
+                        )
+                    },
+                ),
+            )
+        }
+
+        composable(
+            route = DashboardScreens.PseudonymTransactionLogList.screenRoute,
+        ) {
+            PseudonymTransactionLogListScreen(
+                navController = navController,
+                viewModel = koinViewModel(),
+            )
+        }
+
+        composable(
+            route = DashboardScreens.PseudonymTransactionLogDetail.screenRoute,
+            arguments =
+                listOf(
+                    navArgument("logId") {
+                        type = NavType.StringType
+                    },
+                ),
+        ) {
+            PseudonymTransactionLogDetailScreen(
+                navController = navController,
+                viewModel = koinViewModel(
+                    parameters = {
+                        parametersOf(
+                            it.arguments?.getString("logId").orEmpty(),
                         )
                     },
                 ),

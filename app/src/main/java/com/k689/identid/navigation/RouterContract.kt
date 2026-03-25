@@ -67,6 +67,20 @@ sealed class DashboardScreens {
         name = "TRANSACTION_DETAILS",
         parameters = "?transactionId={transactionId}",
     )
+
+    data object PseudonymList : Screen(name = "PSEUDONYM_LIST")
+
+    data object PseudonymDetail : Screen(
+        name = "PSEUDONYM_DETAIL",
+        parameters = "?pseudonymId={pseudonymId}",
+    )
+
+    data object PseudonymTransactionLogList : Screen(name = "PSEUDONYM_TX_LOG_LIST")
+
+    data object PseudonymTransactionLogDetail : Screen(
+        name = "PSEUDONYM_TX_LOG_DETAIL",
+        parameters = "?logId={logId}",
+    )
 }
 
 sealed class PresentationScreens {

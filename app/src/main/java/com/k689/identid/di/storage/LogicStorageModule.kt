@@ -19,6 +19,8 @@ package com.k689.identid.di.storage
 import android.content.Context
 import androidx.room.Room
 import com.k689.identid.storage.dao.BookmarkDao
+import com.k689.identid.storage.dao.PseudonymDao
+import com.k689.identid.storage.dao.PseudonymTransactionLogDao
 import com.k689.identid.storage.dao.RevokedDocumentDao
 import com.k689.identid.storage.dao.TransactionLogDao
 import com.k689.identid.storage.service.DatabaseService
@@ -48,3 +50,10 @@ fun provideRevokedDocumentDao(service: DatabaseService): RevokedDocumentDao = se
 
 @Single
 fun provideTransactionLogDao(service: DatabaseService): TransactionLogDao = service.transactionLogDao()
+
+@Single
+fun providePseudonymDao(service: DatabaseService): PseudonymDao = service.pseudonymDao()
+
+@Single
+fun providePseudonymTransactionLogDao(service: DatabaseService): PseudonymTransactionLogDao =
+    service.pseudonymTransactionLogDao()

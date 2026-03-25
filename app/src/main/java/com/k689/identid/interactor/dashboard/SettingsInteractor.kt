@@ -120,5 +120,27 @@ class SettingsInteractorImpl(
                     ),
                 )
             }
+
+            add(
+                SettingsItemUi(
+                    type = SettingsMenuItemType.PSEUDONYMS,
+                    data =
+                        ListItemDataUi(
+                            itemId = resourceProvider.getString(R.string.settings_screen_option_pseudonyms_id),
+                            mainContentData =
+                                ListItemMainContentDataUi.Text(
+                                    text = resourceProvider.getString(R.string.settings_screen_option_pseudonyms),
+                                ),
+                            leadingContentData =
+                                ListItemLeadingContentDataUi.Icon(
+                                    iconData = AppIcons.Id,
+                                ),
+                            trailingContentData =
+                                ListItemTrailingContentDataUi.Icon(
+                                    iconData = AppIcons.KeyboardArrowRight,
+                                ),
+                        ),
+                ),
+            )
         }
 }

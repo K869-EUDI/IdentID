@@ -98,6 +98,7 @@ private fun handleNavigationEffect(
         is Effect.Navigation.Pop -> navController.popBackStack()
         is Effect.Navigation.OpenUrlExternally -> context.openUrl(uri = navigationEffect.url)
         is Effect.Navigation.OpenPreferences -> navController.navigate(DashboardScreens.Preferences.screenRoute)
+        is Effect.Navigation.OpenPseudonyms -> navController.navigate(DashboardScreens.PseudonymList.screenRoute)
     }
 }
 

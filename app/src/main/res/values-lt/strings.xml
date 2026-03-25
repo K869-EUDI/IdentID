@@ -120,7 +120,6 @@
     <string name="content_description_date_range_icon">Pasirinkti datų intervalą filtrui</string>
     <string name="content_description_settings_icon">Nustatymai</string>
     <!--endregion-->
-
     <!-- region Login Authentication -->
     <plurals name="login_max_attempts_exceeded_error_message" tools:ignore="MissingQuantity">
         <item quantity="one">
@@ -137,7 +136,6 @@
         <item quantity="other">Liko %1$d bandymai.</item>
     </plurals>
     <!--endregion-->
-
     <!-- region Biometric prompt -->
     <string name="biometric_prompt_title">Biometrinis autentifikavimas</string>
     <string name="biometric_prompt_subtitle">Autentifikuokitės naudodami biometrinius duomenis</string>
@@ -241,9 +239,53 @@
     <string name="settings_screen_option_retrieve_logs_id">retrieveLogsId</string>
     <string name="settings_screen_option_changelog">Pakeitimų žurnalas</string>
     <string name="settings_screen_option_changelog_id">changelogId</string>
+    <string name="settings_screen_option_pseudonyms">Pseudonimai</string>
+    <string name="settings_screen_option_pseudonyms_id">pseudonymsId</string>
     <string name="settings_intent_chooser_logs_share_title">Bendrinti žurnalus</string>
     <string name="settings_preferences_option_preferences">Nuostatos</string>
     <string name="settings_preferences_option_preferences_id">preferencesId</string>
+    <!--endregion-->
+    <!-- region Pseudonym Screens -->
+    <string name="pseudonym_list_title">Pseudonimai</string>
+    <string name="pseudonym_list_empty">Pseudonimų dar nėra. Jie atsiras čia, kai užregistruosite prieigos raktus svetainėse.</string>
+    <string name="pseudonym_list_created">Sukurta: %1$s</string>
+    <string name="pseudonym_list_last_used">Paskutinį kartą naudota: %1$s</string>
+    <string name="pseudonym_detail_title">Pseudonimo informacija</string>
+    <string name="pseudonym_detail_relying_party">Pasitikinti šalis</string>
+    <string name="pseudonym_detail_domain">Domenas</string>
+    <string name="pseudonym_detail_username">Naudotojo vardas</string>
+    <string name="pseudonym_detail_credential_id">Kredencialo ID</string>
+    <string name="pseudonym_detail_created">Sukurta</string>
+    <string name="pseudonym_detail_last_used">Paskutinį kartą naudota</string>
+    <string name="pseudonym_detail_alias_label">Slapyvardžis (neprivalomas)</string>
+    <string name="pseudonym_detail_save_alias">Išsaugoti slapyvardį</string>
+    <string name="pseudonym_detail_alias_saved">Slapyvardis išsaugotas</string>
+    <string name="pseudonym_detail_delete">Ištrinti pseudonimą</string>
+    <string name="pseudonym_detail_delete_title">Ištrinti pseudonimą</string>
+    <string name="pseudonym_detail_delete_message">Pseudonimas ir jo kriptografinis raktas bus neatstatomai ištrinti. Šio veiksmo negalima atšaukti.</string>
+    <string name="pseudonym_detail_delete_confirm">Ištrinti</string>
+    <string name="pseudonym_detail_delete_cancel">Atšaukti</string>
+    <!-- Pseudonym Transaction Log -->
+    <string name="pseudonym_txlog_title">Operacijų žurnalas</string>
+    <string name="pseudonym_txlog_empty">Operacijų žurnalo įrašų dar nėra. Jie atsiras čia, kai registruositės arba autentifikuositės naudodami prieigos raktus.</string>
+    <string name="pseudonym_txlog_type_registration">Registracija</string>
+    <string name="pseudonym_txlog_type_authentication">Autentifikacija</string>
+    <string name="pseudonym_txlog_status_completed">Atlikta</string>
+    <string name="pseudonym_txlog_status_failed">Nepavyko</string>
+    <string name="pseudonym_txlog_delete_all_title">Ištrinti visus įrašus</string>
+    <string name="pseudonym_txlog_delete_all_message">Visi pseudonimų operacijų žurnalo įrašai bus neatstatomai ištrinti. Šio veiksmo negalima atšaukti.</string>
+    <string name="pseudonym_txlog_detail_title">Operacijos informacija</string>
+    <string name="pseudonym_txlog_detail_type">Operacijos tipas</string>
+    <string name="pseudonym_txlog_detail_status">Būsena</string>
+    <string name="pseudonym_txlog_detail_timestamp">Data ir laikas</string>
+    <string name="pseudonym_txlog_detail_rp_name">Pasitikinti šalis</string>
+    <string name="pseudonym_txlog_detail_rp_id">Domenas</string>
+    <string name="pseudonym_txlog_detail_username">Naudotojo vardas</string>
+    <string name="pseudonym_txlog_detail_credential_id">Kredencialo ID</string>
+    <string name="pseudonym_txlog_detail_failure_reason">Nesėkmės priežastis</string>
+    <string name="pseudonym_txlog_detail_delete">Ištrinti žurnalo įrašą</string>
+    <string name="pseudonym_txlog_detail_delete_title">Ištrinti žurnalo įrašą</string>
+    <string name="pseudonym_txlog_detail_delete_message">Šis operacijos žurnalo įrašas bus neatstatomai ištrintas. Šio veiksmo negalima atšaukti.</string>
     <!--endregion-->
     <!-- region Preferences Screen -->
     <string name="preferences_screen_title">Nuostatos</string>
@@ -351,7 +393,6 @@
     <string name="transactions_screen_filters_apply">@string/generic_filters_apply</string>
     <string name="transactions_screen_filters_reset">@string/generic_filters_reset</string>
     <string name="home_screen_no_recent_transactions">Nėra operacijų</string>
-
     <!--endregion-->
     <!-- region Document Sign -->
     <string name="document_sign_title">Pasirašyti dokumentą</string>
