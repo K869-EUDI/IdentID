@@ -409,7 +409,7 @@
     <string name="issuance_add_document_subtitle">Choose a digital document:</string>
     <string name="issuance_add_document_no_options">No available documents. Try a different search term.</string>
     <string name="issuance_add_document_scan_qr_footer_text">@string/generic_or</string>
-    <string name="issuance_add_document_scan_qr_footer_button_text">Scan QR code instead</string>
+    <string name="issuance_add_document_scan_qr_footer_button_text">Scan QR code</string>
     <string name="issuance_add_document_deferred_success_text">@string/generic_deferred_success_text</string>
     <string name="issuance_add_document_deferred_success_description">Your document has been requested. You will be notified when it has been issued to your wallet.</string>
     <string name="issuance_add_document_deferred_success_primary_button_text">@string/generic_ok</string>

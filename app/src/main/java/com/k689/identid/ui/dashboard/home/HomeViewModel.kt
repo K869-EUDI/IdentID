@@ -58,6 +58,9 @@ import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.launch
 import org.koin.android.annotation.KoinViewModel
 import java.time.Instant
+import java.time.ZoneId
+import java.time.format.DateTimeFormatter
+import java.util.Locale
 
 enum class BleAvailability {
     AVAILABLE,
@@ -144,8 +147,14 @@ sealed class Event : ViewEvent {
         val availability: BleAvailability,
     ) : Event()
 
-    data class DocumentClicked(val documentId: String) : Event()
-    data class TransactionClicked(val transactionId: String) : Event()
+    data class DocumentClicked(
+        val documentId: String,
+    ) : Event()
+
+    data class TransactionClicked(
+        val transactionId: String,
+    ) : Event()
+
     data object SeeAllDocumentsClicked : Event()
 }
 
@@ -168,7 +177,9 @@ sealed class Effect : ViewSideEffect {
         val hasNextBottomSheet: Boolean,
     ) : Effect()
 
-    data class SwitchTab(val tab: BottomNavigationItem) : Effect()
+    data class SwitchTab(
+        val tab: BottomNavigationItem,
+    ) : Effect()
 }
 
 sealed class HomeScreenBottomSheetContent {
@@ -197,6 +208,7 @@ class HomeViewModel(
 ) : MviViewModel<Event, State, Effect>() {
     private var userNameJob: Job? = null
     private var recentDataJob: Job? = null
+
     override fun setInitialState(): State =
         State(
             welcomeUserMessage = resourceProvider.getString(R.string.home_screen_welcome),
@@ -537,6 +549,15 @@ class HomeViewModel(
             }
         }
 
+    private fun Instant.formatInstant(): String {
+        val formatter =
+            DateTimeFormatter
+                .ofPattern("dd/MM/yyyy", Locale.getDefault())
+                .withZone(ZoneId.systemDefault())
+
+        return formatter.format(this)
+    }
+
     private fun getRecentData(): Job =
         viewModelScope.launch {
             combine(
@@ -551,10 +572,11 @@ class HomeViewModel(
                                 (item.payload as? DocumentUi)?.let { docUi ->
                                     if (docUi.documentIssuanceState == DocumentIssuanceStateUi.Pending) return@let null
                                     val attributes = item.attributes as? DocumentsFilterableAttributes
-                                    val usagesLeft = when (val trailing = docUi.uiData.trailingContentData) {
-                                        is ListItemTrailingContentDataUi.TextWithIcon -> trailing.text
-                                        else -> "-"
-                                    }
+                                    val usagesLeft =
+                                        when (val trailing = docUi.uiData.trailingContentData) {
+                                            is ListItemTrailingContentDataUi.TextWithIcon -> trailing.text
+                                            else -> "-"
+                                        }
                                     DashboardDocument(
                                         documentUi = docUi,
                                         usagesLeft = usagesLeft,

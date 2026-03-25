@@ -557,7 +557,7 @@ private fun DocumentCard(
                 Spacer(modifier = Modifier.height(8.dp))
 
                 Text(
-                    text = "Usages left: ${document.usagesLeft}",
+                    text = stringResource(R.string.home_screen_document_usages_left, document.usagesLeft),
                     style = MaterialTheme.typography.bodyMedium,
                     color = MaterialTheme.colorScheme.onSurfaceVariant,
                     maxLines = 1,
@@ -567,7 +567,7 @@ private fun DocumentCard(
                 Spacer(modifier = Modifier.height(4.dp))
 
                 Text(
-                    text = "Expires: ${document.expiresAt}",
+                    text = stringResource(R.string.home_screen_document_expires, document.expiresAt),
                     style = MaterialTheme.typography.bodyMedium,
                     color = MaterialTheme.colorScheme.onSurfaceVariant,
                     maxLines = 1,

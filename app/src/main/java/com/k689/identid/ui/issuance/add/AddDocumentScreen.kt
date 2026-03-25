@@ -341,6 +341,7 @@ private fun MainContent(
             )
         }
 
+        VSpacer.Small()
         FloatingFooter(
             modifier =
                 Modifier

@@ -457,7 +457,7 @@
     <!--endregion-->
     <!-- region Issuance Add Document Screen -->
     <string name="issuance_add_document_title">Pridėti dokumentą</string>
-    <string name="issuance_add_document_subtitle">Pasirinkite skaitmeninį dokumentą iš sąrašo:</string>
+    <string name="issuance_add_document_subtitle">Pasirinkite skaitmeninį dokumentą:</string>
     <string name="issuance_add_document_no_options">Nėra galimų dokumentų. Pabandykite kitą paieškos terminą.</string>
     <string name="issuance_add_document_scan_qr_footer_text">@string/generic_or</string>
     <string name="issuance_add_document_scan_qr_footer_button_text">Skenuoti QR kodą</string>
