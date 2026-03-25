@@ -18,7 +18,7 @@ data class State(
 ) : ViewState
 
 sealed class Event : ViewEvent {
-    data class Init(val pseudonymId: String) : Event()
+    data object Init : Event()
     data object Pop : Event()
     data class UpdateAlias(val alias: String) : Event()
     data object SaveAlias : Event()

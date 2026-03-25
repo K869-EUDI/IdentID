@@ -21,10 +21,13 @@ import androidx.credentials.provider.CreateEntry
 import androidx.credentials.provider.CredentialProviderService
 import androidx.credentials.provider.ProviderClearCredentialStateRequest
 import androidx.credentials.provider.PublicKeyCredentialEntry
+import com.k689.identid.R
 import com.k689.identid.controller.pseudonym.PseudonymRepository
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.SupervisorJob
+import kotlinx.coroutines.cancel
 import kotlinx.coroutines.launch
 import org.json.JSONObject
 import org.koin.android.ext.android.inject
@@ -34,6 +37,11 @@ import timber.log.Timber
 class PseudonymCredentialProviderService : CredentialProviderService() {
     private val pseudonymRepository: PseudonymRepository by inject()
     private val serviceScope = CoroutineScope(SupervisorJob() + Dispatchers.IO)
+
+    override fun onDestroy() {
+        serviceScope.cancel()
+        super.onDestroy()
+    }
 
     override fun onBeginCreateCredentialRequest(
         request: BeginCreateCredentialRequest,
@@ -51,9 +59,9 @@ class PseudonymCredentialProviderService : CredentialProviderService() {
         Timber.d("onBeginCreateCredentialRequest: Building CreateEntry")
 
         val createEntry = CreateEntry.Builder(
-            "IdentID Pseudonym",
+            getString(R.string.pseudonym_credential_provider_name),
             createNewPendingIntent(PseudonymCredentialActivity.ACTION_CREATE),
-        ).setDescription("Create a pseudonym passkey with IdentID")
+        ).setDescription(getString(R.string.pseudonym_credential_provider_description))
             .build()
 
         callback.onResult(
@@ -72,7 +80,7 @@ class PseudonymCredentialProviderService : CredentialProviderService() {
     ) {
         Timber.d("onBeginGetCredentialRequest: options=${request.beginGetCredentialOptions.size}")
 
-        serviceScope.launch {
+        val job = serviceScope.launch {
             try {
                 val responseBuilder = BeginGetCredentialResponse.Builder()
                 var hasEntries = false
@@ -115,6 +123,7 @@ class PseudonymCredentialProviderService : CredentialProviderService() {
                 callback.onError(GetCredentialUnknownException(e.message))
             }
         }
+        cancellationSignal.setOnCancelListener { job.cancel() }
     }
 
     override fun onClearCredentialStateRequest(
@@ -123,7 +132,7 @@ class PseudonymCredentialProviderService : CredentialProviderService() {
         callback: OutcomeReceiver<Void?, ClearCredentialException>,
     ) {
         Timber.d("onClearCredentialStateRequest")
-        serviceScope.launch {
+        val job = serviceScope.launch {
             try {
                 pseudonymRepository.deleteAllPseudonyms()
                 callback.onResult(null)
@@ -132,6 +141,7 @@ class PseudonymCredentialProviderService : CredentialProviderService() {
                 callback.onError(ClearCredentialUnknownException(e.message))
             }
         }
+        cancellationSignal.setOnCancelListener { job.cancel() }
     }
 
     private fun createNewPendingIntent(action: String, pseudonymId: String? = null): PendingIntent {

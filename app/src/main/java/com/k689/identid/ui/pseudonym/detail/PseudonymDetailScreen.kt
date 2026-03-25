@@ -14,7 +14,6 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
-import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
@@ -50,17 +49,13 @@ fun PseudonymDetailScreen(
         navigatableAction = ScreenNavigateAction.BACKABLE,
         isLoading = state.isLoading,
         onBack = { viewModel.setEvent(Event.Pop) },
+        snackbarHost = { SnackbarHost(snackbarHostState) },
     ) { paddingValues ->
-        Scaffold(
-            snackbarHost = { SnackbarHost(snackbarHostState) },
-            containerColor = MaterialTheme.colorScheme.background,
-        ) { scaffoldPadding ->
-            Content(
-                state = state,
-                onEventSend = { viewModel.setEvent(it) },
-                paddingValues = paddingValues,
-            )
-        }
+        Content(
+            state = state,
+            onEventSend = { viewModel.setEvent(it) },
+            paddingValues = paddingValues,
+        )
     }
 
     if (state.showDeleteConfirmation) {

@@ -246,6 +246,9 @@
     <string name="settings_preferences_option_preferences_id">preferencesId</string>
     <!--endregion-->
     <!-- region Pseudonym Screens -->
+    <string name="pseudonym_credential_provider_label">IdentID pseudonimų teikėjas</string>
+    <string name="pseudonym_credential_provider_name">IdentID pseudonimas</string>
+    <string name="pseudonym_credential_provider_description">Sukurkite pseudonimo prieigos raktą su IdentID</string>
     <string name="pseudonym_list_title">Pseudonimai</string>
     <string name="pseudonym_list_empty">Pseudonimų dar nėra. Jie atsiras čia, kai užregistruosite prieigos raktus svetainėse.</string>
     <string name="pseudonym_list_created">Sukurta: %1$s</string>

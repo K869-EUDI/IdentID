@@ -16,6 +16,7 @@ import com.k689.identid.controller.pseudonym.PseudonymTransactionLogger
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
+import kotlinx.coroutines.cancel
 import kotlinx.coroutines.launch
 import org.json.JSONObject
 import org.koin.android.ext.android.inject
@@ -26,6 +27,11 @@ class PseudonymCredentialActivity : Activity() {
     private val pseudonymRepository: PseudonymRepository by inject()
     private val transactionLogger: PseudonymTransactionLogger by inject()
     private val scope = CoroutineScope(SupervisorJob() + Dispatchers.IO)
+
+    override fun onDestroy() {
+        scope.cancel()
+        super.onDestroy()
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -66,12 +72,14 @@ class PseudonymCredentialActivity : Activity() {
         val requestJson = callingRequest.requestJson
         Timber.d("PseudonymCredentialActivity: requestJson=$requestJson")
 
+        // Parse rpId/rpName outside try so they're available in catch for logging
+        val json = JSONObject(requestJson)
+        val rp = json.getJSONObject("rp")
+        val rpId = rp.getString("id")
+        val rpName = rp.optString("name", rpId)
+
         scope.launch {
             try {
-                val json = JSONObject(requestJson)
-                val rp = json.getJSONObject("rp")
-                val rpId = rp.getString("id")
-                val rpName = rp.optString("name", rpId)
                 val user = json.getJSONObject("user")
                 val userId = Base64.decode(
                     user.getString("id"),
@@ -174,14 +182,16 @@ class PseudonymCredentialActivity : Activity() {
 
                 val resultIntent = android.content.Intent()
                 PendingIntentHandler.setCreateCredentialResponse(resultIntent, credentialResponse)
-                setResult(RESULT_OK, resultIntent)
-                finish()
+                runOnUiThread {
+                    setResult(RESULT_OK, resultIntent)
+                    finish()
+                }
             } catch (e: Exception) {
                 Timber.e(e, "PseudonymCredentialActivity: Create failed")
                 try {
                     transactionLogger.logRegistrationFailed(
-                        rpId = intent.getStringExtra("rpId") ?: "unknown",
-                        rpName = intent.getStringExtra("rpName") ?: "unknown",
+                        rpId = rpId,
+                        rpName = rpName,
                         reason = e.message ?: "Unknown error",
                     )
                 } catch (_: Exception) { }
@@ -190,8 +200,10 @@ class PseudonymCredentialActivity : Activity() {
                     resultIntent,
                     androidx.credentials.exceptions.CreateCredentialUnknownException(e.message),
                 )
-                setResult(RESULT_OK, resultIntent)
-                finish()
+                runOnUiThread {
+                    setResult(RESULT_OK, resultIntent)
+                    finish()
+                }
             }
         }
     }
@@ -216,8 +228,8 @@ class PseudonymCredentialActivity : Activity() {
         Timber.d("PseudonymCredentialActivity: Get request, pseudonymId=$pseudonymId")
 
         scope.launch {
+            var rpId = "unknown"
             try {
-                // Find the PublicKeyCredentialRequestOptions from the request
                 var requestJson: String? = null
                 var callerClientDataHash: ByteArray? = null
                 for (option in request.credentialOptions) {
@@ -230,14 +242,16 @@ class PseudonymCredentialActivity : Activity() {
 
                 if (requestJson == null) {
                     Timber.e("PseudonymCredentialActivity: No request JSON in get request")
-                    setResult(RESULT_CANCELED)
-                    runOnUiThread { finish() }
+                    runOnUiThread {
+                        setResult(RESULT_CANCELED)
+                        finish()
+                    }
                     return@launch
                 }
 
                 val json = JSONObject(requestJson)
                 val challengeStr = json.getString("challenge")
-                val rpId = json.getString("rpId")
+                rpId = json.getString("rpId")
 
                 // Use caller-provided clientDataHash if available (browser flow)
                 val clientDataJsonBytes: ByteArray?
@@ -262,8 +276,10 @@ class PseudonymCredentialActivity : Activity() {
                 val authResult = pseudonymRepository.authenticate(pseudonymId, clientDataHash)
                 if (authResult == null) {
                     Timber.e("PseudonymCredentialActivity: Pseudonym not found: $pseudonymId")
-                    setResult(RESULT_CANCELED)
-                    runOnUiThread { finish() }
+                    runOnUiThread {
+                        setResult(RESULT_CANCELED)
+                        finish()
+                    }
                     return@launch
                 }
 
@@ -329,13 +345,15 @@ class PseudonymCredentialActivity : Activity() {
 
                 val resultIntent = android.content.Intent()
                 PendingIntentHandler.setGetCredentialResponse(resultIntent, credentialResponse)
-                setResult(RESULT_OK, resultIntent)
-                runOnUiThread { finish() }
+                runOnUiThread {
+                    setResult(RESULT_OK, resultIntent)
+                    finish()
+                }
             } catch (e: Exception) {
                 Timber.e(e, "PseudonymCredentialActivity: Get failed")
                 try {
                     transactionLogger.logAuthenticationFailed(
-                        rpId = "unknown",
+                        rpId = rpId,
                         rpName = "unknown",
                         reason = e.message ?: "Unknown error",
                         pseudonymId = pseudonymId,
@@ -346,8 +364,10 @@ class PseudonymCredentialActivity : Activity() {
                     resultIntent,
                     androidx.credentials.exceptions.GetCredentialUnknownException(e.message),
                 )
-                setResult(RESULT_OK, resultIntent)
-                runOnUiThread { finish() }
+                runOnUiThread {
+                    setResult(RESULT_OK, resultIntent)
+                    finish()
+                }
             }
         }
     }

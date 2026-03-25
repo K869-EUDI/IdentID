@@ -244,6 +244,9 @@
     <string name="settings_preferences_option_preferences_id">preferencesId</string>
     <!--endregion-->
     <!-- region Pseudonym Screens -->
+    <string name="pseudonym_credential_provider_label">IdentID Pseudonym Provider</string>
+    <string name="pseudonym_credential_provider_name">IdentID Pseudonym</string>
+    <string name="pseudonym_credential_provider_description">Create a pseudonym passkey with IdentID</string>
     <string name="pseudonym_list_title">Pseudonyms</string>
     <string name="pseudonym_list_empty">No pseudonyms yet. They will appear here when you register passkeys with websites.</string>
     <string name="pseudonym_list_created">Created: %1$s</string>
