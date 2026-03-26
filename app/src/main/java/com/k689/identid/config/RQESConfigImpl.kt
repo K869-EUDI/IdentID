@@ -33,10 +33,10 @@ class RQESConfigImpl(
             listOf(
                 QtspData(
                     name = "Wallet-Centric",
-                    endpoint = "https://walletcentric.signer.eudiw.dev/csc/v2".toUriOrEmpty(),
+                    endpoint = "https://qtsp.linux123123.com/csc/v2".toUriOrEmpty(),
                     tsaUrl = "https://timestamp.sectigo.com/qualified",
                     clientId = "wallet-client",
-                    clientSecret = "somesecret2",
+                    clientSecret = "wallet-client-secret",
                     authFlowRedirectionURI = URI.create(BuildConfig.RQES_DEEPLINK),
                     hashAlgorithm = HashAlgorithmOID.SHA_256,
                 ),
