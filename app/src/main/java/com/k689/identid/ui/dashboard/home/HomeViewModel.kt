@@ -357,6 +357,7 @@ class HomeViewModel(
 
     private fun checkIfBluetoothIsEnabled() {
         if (homeInteractor.isBleAvailable()) {
+            hideBottomSheet()
             setState { copy(bleAvailability = BleAvailability.NO_PERMISSION) }
         } else {
             setState { copy(bleAvailability = BleAvailability.DISABLED) }

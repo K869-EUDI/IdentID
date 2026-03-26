@@ -16,6 +16,8 @@
 
 package com.k689.identid.ui.dashboard.authenticate
 
+import android.Manifest
+import android.os.Build
 import androidx.activity.ComponentActivity
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -42,6 +44,8 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
+import com.google.accompanist.permissions.ExperimentalPermissionsApi
+import com.google.accompanist.permissions.rememberMultiplePermissionsState
 import com.k689.identid.R
 import com.k689.identid.ui.component.AppIcons
 import com.k689.identid.ui.component.LargeActionFooter
@@ -60,6 +64,7 @@ import com.k689.identid.ui.proximity.qr.component.rememberQrBitmapPainter
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.onEach
 
+@OptIn(ExperimentalPermissionsApi::class)
 @Composable
 internal fun AuthenticateScreen(
     navController: NavController,
@@ -72,15 +77,34 @@ internal fun AuthenticateScreen(
         viewModel.setEvent(Event.Init)
     }
 
-    DisposableEffect(context) {
+    val permissionsState =
+        rememberMultiplePermissionsState(
+            permissions =
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+                    listOf(Manifest.permission.BLUETOOTH_CONNECT, Manifest.permission.BLUETOOTH_ADVERTISE)
+                } else {
+                    emptyList() // Legacy BT doesn't need runtime connect permission
+                },
+        )
+
+    DisposableEffect(context, permissionsState.allPermissionsGranted) {
         val activity = context as? ComponentActivity
-        activity?.let {
-            viewModel.setEvent(Event.NfcEngagement(it, true))
+
+        // ONLY start NFC engagement if permissions are granted
+        if (permissionsState.allPermissionsGranted && activity != null) {
+            viewModel.setEvent(Event.NfcEngagement(activity, true))
         }
+
         onDispose {
             activity?.let {
                 viewModel.setEvent(Event.NfcEngagement(it, false))
             }
+        }
+    }
+
+    LaunchedEffect(Unit) {
+        if (!permissionsState.allPermissionsGranted) {
+            permissionsState.launchMultiplePermissionRequest()
         }
     }
 
