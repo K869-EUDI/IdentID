@@ -323,13 +323,14 @@ class DocumentsInteractorImpl(
 
             val userLocale = resourceProvider.getLocale()
 
+            val revokedIds = walletCoreDocumentsController.getRevokedDocumentIds().toSet()
+
             val allDocuments =
                 FilterableList(
                     items =
                         walletCoreDocumentsController.getAllDocuments().map { document ->
 
-                            val documentIsRevoked =
-                                walletCoreDocumentsController.isDocumentRevoked(document.id)
+                            val documentIsRevoked = revokedIds.contains(document.id)
 
                             when (document) {
                                 is IssuedDocument -> {

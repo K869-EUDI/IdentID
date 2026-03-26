@@ -91,7 +91,10 @@ data class State(
     val bleAvailability: BleAvailability = BleAvailability.UNKNOWN,
     val isBleCentralClientModeEnabled: Boolean = false,
     val allDocuments: List<DashboardDocument> = emptyList(),
+    val recentDocuments: List<DashboardDocument> = emptyList(),
     val allTransactions: List<DashboardTransaction> = emptyList(),
+    val recentTransactions: List<DashboardTransaction> = emptyList(),
+    val hasMoreTransactions: Boolean = false,
 ) : ViewState
 
 sealed class Event : ViewEvent {
@@ -583,9 +586,13 @@ class HomeViewModel(
 
     private fun getRecentData(): Job =
         viewModelScope.launch {
+            // Use parallel loading for documents and transactions
+            val documentsFlow = documentsInteractor.getDocuments()
+            val transactionsFlow = transactionsInteractor.getTransactions()
+
             combine(
-                documentsInteractor.getDocuments(),
-                transactionsInteractor.getTransactions(),
+                documentsFlow,
+                transactionsFlow,
             ) { docsResponse, transResponse ->
                 val allDocs =
                     if (docsResponse is DocumentInteractorGetDocumentsPartialState.Success) {
@@ -629,10 +636,18 @@ class HomeViewModel(
 
                 allDocs to allTrans
             }.collect { (docs, trans) ->
+                val recentDocs = docs.take(3)
+                val filteredTrans = trans.filter { !it.isPending }.reversed()
+                val recentTrans = filteredTrans.take(5)
+                val hasMoreTrans = filteredTrans.size > 5
+
                 setState {
                     copy(
                         allDocuments = docs,
+                        recentDocuments = recentDocs,
                         allTransactions = trans,
+                        recentTransactions = recentTrans,
+                        hasMoreTransactions = hasMoreTrans,
                     )
                 }
             }
