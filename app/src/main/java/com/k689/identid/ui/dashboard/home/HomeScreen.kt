@@ -35,6 +35,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.pager.HorizontalPager
@@ -159,52 +160,100 @@ fun HomeScreen(
                 sheetContainerColor = MaterialTheme.colorScheme.surfaceContainerLow,
                 sheetDragHandle = { BottomSheetDefaults.DragHandle() },
                 sheetContent = {
-                    Column(
+                    val allRecentTransactions =
+                        state.allTransactions
+                            .filter { !it.isPending }
+                            .reversed()
+
+                    val displayedTransactions = allRecentTransactions.take(5)
+
+                    LazyColumn(
                         modifier =
                             Modifier
-                                .fillMaxHeight()
+                                .fillMaxHeight(0.80f)
                                 .padding(bottom = paddingValues.calculateBottomPadding()),
                     ) {
-                        Text(
-                            text = stringResource(R.string.recent_transactions),
-                            style =
-                                MaterialTheme.typography.headlineSmall.copy(
-                                    color = MaterialTheme.colorScheme.onSurface,
-                                    fontWeight = FontWeight.Bold,
-                                ),
-                            modifier =
-                                Modifier
-                                    .fillMaxWidth()
-                                    .padding(
-                                        horizontal = SPACING_LARGE.dp,
-                                        vertical = SPACING_SMALL.dp,
+                        item {
+                            Text(
+                                text = stringResource(R.string.recent_transactions),
+                                style =
+                                    MaterialTheme.typography.headlineSmall.copy(
+                                        color = MaterialTheme.colorScheme.onSurface,
+                                        fontWeight = FontWeight.Bold,
                                     ),
-                        )
-
-                        val recentTransactions = state.allTransactions.filter { !it.isPending }
-
-                        if (recentTransactions.isEmpty()) {
-                            Box(modifier = Modifier.weight(1f).fillMaxWidth()) {
-                                Text(
-                                    text = "No recent transactions",
-                                    style = MaterialTheme.typography.bodyLarge,
-                                    color = MaterialTheme.colorScheme.onSurfaceVariant,
-                                    modifier =
-                                        Modifier.align(Alignment.Center),
-                                )
-                            }
-                        } else {
-                            RecentTransactionsList(
-                                transactions = recentTransactions,
-                                onTransactionClicked = { viewModel.setEvent(Event.TransactionClicked(it)) },
-                                modifier = Modifier.fillMaxWidth().weight(1f),
+                                modifier =
+                                    Modifier
+                                        .fillMaxWidth()
+                                        .padding(
+                                            horizontal = SPACING_LARGE.dp,
+                                            vertical = SPACING_SMALL.dp,
+                                        ),
                             )
                         }
 
-                        HomeScreenSheetContent(
-                            sheetContent = state.sheetContent,
-                            onEventSent = { event -> viewModel.setEvent(event) },
-                        )
+                        if (displayedTransactions.isEmpty()) {
+                            item {
+                                Box(
+                                    modifier =
+                                        Modifier
+                                            .fillMaxWidth()
+                                            .padding(vertical = 64.dp),
+                                ) {
+                                    Text(
+                                        text = "No recent transactions",
+                                        style = MaterialTheme.typography.bodyLarge,
+                                        color = MaterialTheme.colorScheme.onSurfaceVariant,
+                                        modifier = Modifier.align(Alignment.Center),
+                                    )
+                                }
+                            }
+                        } else {
+                            items(
+                                items = displayedTransactions,
+                                key = { it.transactionUi.uiData.header.itemId },
+                            ) { transaction ->
+                                RecentTransactionItem(
+                                    transaction = transaction,
+                                    onTransactionClicked = { viewModel.setEvent(Event.TransactionClicked(it)) },
+                                )
+                            }
+
+                            // Show all button
+                            if (allRecentTransactions.size > displayedTransactions.size) {
+                                item {
+                                    androidx.compose.material3.TextButton(
+                                        onClick = {
+                                            onDashboardEventSent(
+                                                com.k689.identid.ui.dashboard.dashboard.Event.SwitchTab(
+                                                    BottomNavigationItem.Transactions,
+                                                ),
+                                            )
+                                        },
+                                        modifier =
+                                            Modifier
+                                                .fillMaxWidth()
+                                                .padding(
+                                                    horizontal = SPACING_LARGE.dp,
+                                                    vertical = SPACING_SMALL.dp,
+                                                ),
+                                    ) {
+                                        Text(
+                                            text = "Show all transactions",
+                                            style = MaterialTheme.typography.labelLarge,
+                                            color = MaterialTheme.colorScheme.primary,
+                                            fontWeight = FontWeight.Bold,
+                                        )
+                                    }
+                                }
+                            }
+                        }
+
+                        item {
+                            HomeScreenSheetContent(
+                                sheetContent = state.sheetContent,
+                                onEventSent = { event -> viewModel.setEvent(event) },
+                            )
+                        }
                     }
                 },
             ) { scaffoldPadding ->
@@ -409,25 +458,27 @@ private fun Content(
                             .graphicsLayer {
                                 val pageOffset =
                                     (
-                                            (pagerState.currentPage - page) +
-                                                    pagerState.currentPageOffsetFraction
-                                            ).absoluteValue
+                                        (pagerState.currentPage - page) +
+                                            pagerState.currentPageOffsetFraction
+                                    ).absoluteValue
 
-                                val scale = lerp(
-                                    start = 0.9f,
-                                    stop = 1f,
-                                    fraction = 1f - pageOffset.coerceIn(0f, 1f),
-                                )
+                                val scale =
+                                    lerp(
+                                        start = 0.9f,
+                                        stop = 1f,
+                                        fraction = 1f - pageOffset.coerceIn(0f, 1f),
+                                    )
 
                                 // Scale both X and Y to stop the cards from looking squashed/wonky
                                 scaleX = scale
                                 scaleY = scale
 
-                                alpha = lerp(
-                                    start = 0.8f,
-                                    stop = 1f,
-                                    fraction = 1f - pageOffset.coerceIn(0f, 1f),
-                                )
+                                alpha =
+                                    lerp(
+                                        start = 0.8f,
+                                        stop = 1f,
+                                        fraction = 1f - pageOffset.coerceIn(0f, 1f),
+                                    )
 
                                 // FIX: Compute the shadow here instead of inside the Card
                                 shadowElevation = 6.dp.toPx()
@@ -453,24 +504,26 @@ private fun Content(
                             .graphicsLayer {
                                 val pageOffset =
                                     (
-                                            (pagerState.currentPage - page) +
-                                                    pagerState.currentPageOffsetFraction
-                                            ).absoluteValue
+                                        (pagerState.currentPage - page) +
+                                            pagerState.currentPageOffsetFraction
+                                    ).absoluteValue
 
-                                val scale = lerp(
-                                    start = 0.9f,
-                                    stop = 1f,
-                                    fraction = 1f - pageOffset.coerceIn(0f, 1f),
-                                )
+                                val scale =
+                                    lerp(
+                                        start = 0.9f,
+                                        stop = 1f,
+                                        fraction = 1f - pageOffset.coerceIn(0f, 1f),
+                                    )
 
                                 scaleX = scale
                                 scaleY = scale
 
-                                alpha = lerp(
-                                    start = 0.8f,
-                                    stop = 1f,
-                                    fraction = 1f - pageOffset.coerceIn(0f, 1f),
-                                )
+                                alpha =
+                                    lerp(
+                                        start = 0.8f,
+                                        stop = 1f,
+                                        fraction = 1f - pageOffset.coerceIn(0f, 1f),
+                                    )
 
                                 // Only apply the shadow if it's the actual card, not the empty state
                                 if (recentDocs.isNotEmpty()) {
@@ -654,27 +707,6 @@ private fun SeeAllDocumentsCard(
 }
 
 @Composable
-private fun RecentTransactionsList(
-    transactions: List<DashboardTransaction>,
-    onTransactionClicked: (String) -> Unit,
-    modifier: Modifier = Modifier,
-) {
-    LazyColumn(
-        modifier = modifier,
-    ) {
-        items(
-            items = transactions,
-            key = { it.transactionUi.uiData.header.itemId },
-        ) { transaction ->
-            RecentTransactionItem(
-                transaction = transaction,
-                onTransactionClicked = onTransactionClicked,
-            )
-        }
-    }
-}
-
-@Composable
 private fun RecentTransactionItem(
     transaction: DashboardTransaction,
     onTransactionClicked: (String) -> Unit,
@@ -840,7 +872,7 @@ private fun HomeScreenContentPreview() {
                 scaffoldState = scaffoldState,
                 sheetPeekHeight = 400.dp + paddingValues.calculateBottomPadding(),
                 sheetContent = {
-                    Column(
+                    LazyColumn(
                         modifier =
                             Modifier
                                 .fillMaxHeight()

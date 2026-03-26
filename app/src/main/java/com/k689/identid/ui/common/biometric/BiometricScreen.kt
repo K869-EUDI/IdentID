@@ -298,7 +298,7 @@ private fun ColumnScope.MainContent(
                             .padding(vertical = SPACING_SMALL.dp),
                     text = mode.textAbovePin,
                     style =
-                        MaterialTheme.typography.headlineMedium.copy(
+                        MaterialTheme.typography.headlineSmall.copy(
                             color = MaterialTheme.colorScheme.onSurface,
                         ),
                     fontSize = MaterialTheme.typography.headlineMedium.fontSize,
