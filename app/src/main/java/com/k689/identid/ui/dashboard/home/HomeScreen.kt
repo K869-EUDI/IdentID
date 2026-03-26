@@ -223,11 +223,7 @@ fun HomeScreen(
                                 item {
                                     androidx.compose.material3.TextButton(
                                         onClick = {
-                                            onDashboardEventSent(
-                                                com.k689.identid.ui.dashboard.dashboard.Event.SwitchTab(
-                                                    BottomNavigationItem.Transactions,
-                                                ),
-                                            )
+                                            viewModel.setEvent(Event.SeeAllTransactionsClicked)
                                         },
                                         modifier =
                                             Modifier

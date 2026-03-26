@@ -135,7 +135,7 @@ fun DocumentsScreen(
 
     ContentScreen(
         isLoading = state.isLoading,
-        navigatableAction = ScreenNavigateAction.CANCELABLE,
+        navigatableAction = ScreenNavigateAction.BACKABLE,
         onBack = { viewModel.setEvent(Event.Pop) },
         contentErrorConfig = null,
         toolBarConfig =
@@ -552,7 +552,7 @@ private fun DocumentsSheetContent(
                         ),
                     ),
                 onEventSent = onEventSent,
-                //hostTab = BottomNavigationItem.Documents.route.lowercase(),
+                // hostTab = BottomNavigationItem.Documents.route.lowercase(),
             )
         }
 

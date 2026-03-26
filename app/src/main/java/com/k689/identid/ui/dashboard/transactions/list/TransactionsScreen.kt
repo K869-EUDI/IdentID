@@ -83,6 +83,7 @@ import com.k689.identid.ui.component.ListItemTrailingContentDataUi
 import com.k689.identid.ui.component.SectionTitle
 import com.k689.identid.ui.component.content.ContentScreen
 import com.k689.identid.ui.component.content.ScreenNavigateAction
+import com.k689.identid.ui.component.content.ToolbarConfig
 import com.k689.identid.ui.component.preview.PreviewTheme
 import com.k689.identid.ui.component.preview.ThemeModePreviews
 import com.k689.identid.ui.component.utils.HSpacer
@@ -143,13 +144,12 @@ fun TransactionsScreen(
     ContentScreen(
         isLoading = state.isLoading,
         contentErrorConfig = null,
-        navigatableAction = ScreenNavigateAction.NONE,
-        onBack = { context.finish() },
-        topBar = {
-            TopBar(
-                onDashboardEventSent = onDashboardEventSent,
-            )
-        },
+        navigatableAction = ScreenNavigateAction.BACKABLE,
+        onBack = { viewModel.setEvent(Event.Pop) },
+        toolBarConfig =
+            ToolbarConfig(
+                title = stringResource(R.string.transactions_screen_title),
+            ),
     ) { paddingValues ->
         Content(
             state = state,
@@ -342,7 +342,7 @@ private fun handleNavigationEffect(
 ) {
     when (navigationEffect) {
         is Effect.Navigation.Pop -> {
-            context.finish()
+            navController.popBackStack()
         }
 
         is Effect.Navigation.SwitchScreen -> {

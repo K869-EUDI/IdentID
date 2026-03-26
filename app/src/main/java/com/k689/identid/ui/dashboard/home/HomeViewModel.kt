@@ -156,6 +156,8 @@ sealed class Event : ViewEvent {
     ) : Event()
 
     data object SeeAllDocumentsClicked : Event()
+
+    data object SeeAllTransactionsClicked : Event()
 }
 
 sealed class Effect : ViewSideEffect {
@@ -352,6 +354,10 @@ class HomeViewModel(
             is Event.SeeAllDocumentsClicked -> {
                 navigateToAllDocuments()
             }
+
+            is Event.SeeAllTransactionsClicked -> {
+                navigateToAllTransactions()
+            }
         }
     }
 
@@ -425,6 +431,14 @@ class HomeViewModel(
         setEffect {
             Effect.Navigation.SwitchScreen(
                 screenRoute = DashboardScreens.Documents.screenRoute,
+            )
+        }
+    }
+
+    private fun navigateToAllTransactions() {
+        setEffect {
+            Effect.Navigation.SwitchScreen(
+                screenRoute = DashboardScreens.Transactions.screenRoute,
             )
         }
     }
