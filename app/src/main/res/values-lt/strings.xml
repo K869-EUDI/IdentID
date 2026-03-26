@@ -447,10 +447,11 @@
     <string name="transaction_details_collapsed_supporting_text">@string/generic_view_details</string>
     <!--endregion-->
     <!-- region Proximity QR -->
-    <string name="proximity_qr_title">Pateikti dokumentą asmeniškai</string>
+    <string name="proximity_qr_title">Pateikti dokumentą gyvai</string>
     <string name="proximity_qr_subtitle">Parodykite šį QR kodą pasikliaujančiajai šaliai, kad pateiktumėte skaitmeninį dokumentą.</string>
     <string name="proximity_qr_use_nfc">Arba dalinkitės per NFC</string>
     <string name="proximity_qr_hold_near_reader">Pridėkite telefoną prie skaitytuvo, kad jis būtų nuskaitytas.</string>
+    <string name="presentation_qr_scan_option">ARBA</string>
     <!--endregion-->
     <!-- region Wallet Transfer -->
     <string name="transfer_side_menu_move_wallet">Perkelti piniginę į naują įrenginį</string>

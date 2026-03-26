@@ -84,8 +84,10 @@ class AuthenticateViewModel(
     override fun handleEvents(event: Event) {
         when (event) {
             is Event.Init -> {
-                initializeConfig()
-                generateQrCode()
+                if (interactor == null) {
+                    initializeConfig()
+                    generateQrCode()
+                }
             }
 
             is Event.GoBack -> {
@@ -95,7 +97,6 @@ class AuthenticateViewModel(
             }
 
             is Event.OpenScanQr -> {
-                cleanUp()
                 setEffect {
                     Effect.Navigation.SwitchScreen(
                         screenRoute =

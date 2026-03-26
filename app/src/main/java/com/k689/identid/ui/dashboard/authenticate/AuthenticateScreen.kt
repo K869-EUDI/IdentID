@@ -36,6 +36,8 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -49,6 +51,7 @@ import com.k689.identid.ui.component.content.ScreenNavigateAction
 import com.k689.identid.ui.component.content.ToolbarConfig
 import com.k689.identid.ui.component.preview.PreviewTheme
 import com.k689.identid.ui.component.preview.ThemeModePreviews
+import com.k689.identid.ui.component.utils.SPACING_EXTRA_SMALL
 import com.k689.identid.ui.component.utils.SPACING_MEDIUM
 import com.k689.identid.ui.component.utils.SPACING_SMALL
 import com.k689.identid.ui.component.utils.screenWidthInDp
@@ -128,9 +131,15 @@ private fun Content(
                 .fillMaxSize()
                 .padding(paddingValues),
     ) {
-        ContentTitle(
-            modifier = Modifier.fillMaxWidth(),
-            title = stringResource(id = R.string.proximity_qr_title),
+        Text(
+            text = stringResource(id = R.string.proximity_qr_title),
+            color = MaterialTheme.colorScheme.onSurface,
+            style =
+                MaterialTheme.typography.headlineSmall.copy(
+                    color = MaterialTheme.colorScheme.onSurface,
+                    fontWeight = FontWeight.Bold,
+                    // fontSize = 22.sp,
+                ),
         )
 
         Box(
@@ -144,6 +153,17 @@ private fun Content(
         }
 
         SimplifiedNFCFooter(paddingValues)
+
+        Text(
+            modifier =
+                Modifier
+                    .fillMaxWidth()
+                    .padding(top = SPACING_SMALL.dp),
+            text = stringResource(id = R.string.presentation_qr_scan_option),
+            style = MaterialTheme.typography.titleSmall,
+            color = MaterialTheme.colorScheme.primary,
+            textAlign = TextAlign.Center,
+        )
 
         LargeActionFooter(
             modifier =
@@ -163,7 +183,7 @@ private fun SimplifiedNFCFooter(paddingValues: PaddingValues) {
             Modifier
                 .fillMaxWidth()
                 .wrapContentHeight()
-                .padding(bottom = SPACING_MEDIUM.dp),
+                .padding(bottom = SPACING_EXTRA_SMALL.dp),
         verticalArrangement = Arrangement.spacedBy(SPACING_SMALL.dp),
         horizontalAlignment = Alignment.CenterHorizontally,
     ) {
@@ -175,6 +195,7 @@ private fun SimplifiedNFCFooter(paddingValues: PaddingValues) {
             text = stringResource(id = R.string.proximity_qr_hold_near_reader),
             style = MaterialTheme.typography.bodyMedium,
             color = MaterialTheme.colorScheme.onSurfaceVariant,
+            textAlign = TextAlign.Center,
         )
     }
 }
