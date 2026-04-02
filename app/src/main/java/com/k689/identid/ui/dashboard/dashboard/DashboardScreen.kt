@@ -22,9 +22,8 @@ import androidx.compose.animation.core.tween
 import androidx.compose.animation.fadeOut
 import androidx.compose.animation.slideInHorizontally
 import androidx.compose.animation.slideOutHorizontally
-import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
@@ -34,7 +33,6 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.unit.dp
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.compose.LocalLifecycleOwner
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -54,7 +52,6 @@ import com.k689.identid.model.core.RevokedDocumentDataDomain
 import com.k689.identid.navigation.helper.handleDeepLinkAction
 import com.k689.identid.ui.component.SystemBroadcastReceiver
 import com.k689.identid.ui.component.utils.LifecycleEffect
-import com.k689.identid.ui.component.utils.SPACING_SMALL
 import com.k689.identid.ui.component.wrap.BottomSheetTextDataUi
 import com.k689.identid.ui.component.wrap.BottomSheetWithOptionsList
 import com.k689.identid.ui.component.wrap.WrapModalBottomSheet
@@ -91,19 +88,24 @@ internal fun DashboardScreen(
             skipPartiallyExpanded = true,
         )
 
-    Column(
-        modifier =
-            Modifier
-                .padding(top = SPACING_SMALL.dp),
+    Box(
+        modifier = Modifier.fillMaxSize(),
     ) {
-        HomeScreen(
-            hostNavController,
-            homeViewModel,
-            onDashboardEventSent = { event ->
-                viewModel.setEvent(event)
-            },
-        )
- /*           composable(BottomNavigationItem.Documents.route) {
+        NavHost(
+            navController = bottomNavigationController,
+            startDestination = BottomNavigationItem.Home.route,
+            modifier = Modifier.fillMaxSize(),
+        ) {
+            composable(BottomNavigationItem.Home.route) {
+                HomeScreen(
+                    hostNavController,
+                    homeViewModel,
+                    onDashboardEventSent = { event ->
+                        viewModel.setEvent(event)
+                    },
+                )
+            }
+            composable(BottomNavigationItem.Documents.route) {
                 DocumentsScreen(
                     hostNavController,
                     documentsViewModel,
@@ -120,7 +122,8 @@ internal fun DashboardScreen(
                         viewModel.setEvent(event)
                     },
                 )
-            }*/
+            }
+        }
 
         if (state.isBottomSheetOpen) {
             WrapModalBottomSheet(

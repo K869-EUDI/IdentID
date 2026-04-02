@@ -16,20 +16,24 @@
 
 package com.k689.identid.ui.dashboard.home.components
 
+import androidx.annotation.StringRes
+import com.k689.identid.R
 import com.k689.identid.navigation.DashboardScreens
 import com.k689.identid.navigation.TransferScreens
 
 sealed class DrawerMenuItem(
-    val title: String,
+    @StringRes val titleRes: Int,
     val route: String? = null,
 ) {
-    data object ChangePin : DrawerMenuItem(title = "Change PIN")
+    data object ChangePin : DrawerMenuItem(titleRes = R.string.dashboard_side_menu_option_change_pin)
 
-    data object MoveWallet : DrawerMenuItem(title = "Move wallet", route = TransferScreens.MoveWallet.screenRoute)
+    data object MoveWallet : DrawerMenuItem(titleRes = R.string.transfer_move_wallet_title, route = TransferScreens.MoveWallet.screenRoute)
 
-    data object ReceiveWallet : DrawerMenuItem(title = "Receive wallet", route = TransferScreens.ReceiveWallet.screenRoute)
+    data object ReceiveWallet : DrawerMenuItem(titleRes = R.string.transfer_receive_title, route = TransferScreens.ReceiveWallet.screenRoute)
 
-    data object Preferences : DrawerMenuItem(title = "Preferences", route = DashboardScreens.Preferences.screenRoute)
+    data object Preferences : DrawerMenuItem(titleRes = R.string.preferences_screen_title, route = DashboardScreens.Preferences.screenRoute)
+
+    data object Pseudonyms : DrawerMenuItem(titleRes = R.string.pseudonym_list_title, route = DashboardScreens.PseudonymList.screenRoute)
 
     companion object {
         val all: List<DrawerMenuItem> =
@@ -38,6 +42,7 @@ sealed class DrawerMenuItem(
                 MoveWallet,
                 ReceiveWallet,
                 Preferences,
+                Pseudonyms,
             )
     }
 }

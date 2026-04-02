@@ -313,6 +313,7 @@
     <string name="home_screen_sign_document_description">Sign a document digitally by choosing a file from your device or by scanning a QR code.</string>
     <string name="home_screen_sign_document_option_from_device">Pick a file from device storage</string>
     <string name="home_screen_sign_document_option_scan_qr">Scan QR</string>
+    <string name="home_screen_show_all_transactions">Show all transactions</string>
     <!--endregion-->
     <!-- region Home Screen Learn More Popups content -->
     <string name="home_screen_authenticate_learn_more_inner_title">Sign documents safely</string>
