@@ -18,6 +18,8 @@ package com.k689.identid.ui.common.biometric
 
 import android.content.Context
 import android.net.Uri
+import androidx.compose.ui.unit.TextUnit
+import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewModelScope
 import com.k689.identid.R
 import com.k689.identid.config.BiometricUiConfig
@@ -79,6 +81,7 @@ data class State(
     val notifyOnAuthenticationFailure: Boolean = true,
     val quickPinSize: Int = 6,
     val isPinInputEnabled: Boolean = true,
+    val titleFontSize: TextUnit = 16.sp,
 ) : ViewState
 
 sealed class Effect : ViewSideEffect {

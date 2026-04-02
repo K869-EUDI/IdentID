@@ -38,6 +38,7 @@ import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -267,6 +268,7 @@ private fun Body(
 private fun ColumnScope.MainContent(
     state: State,
     onEventSent: (event: Event) -> Unit,
+    textFontSize: TextUnit = 16.sp,
 ) {
     when (val mode = state.config.mode) {
         is BiometricMode.Default -> {
@@ -300,8 +302,8 @@ private fun ColumnScope.MainContent(
                     style =
                         MaterialTheme.typography.headlineSmall.copy(
                             color = MaterialTheme.colorScheme.onSurface,
+                            fontSize = textFontSize,
                         ),
-                    fontSize = MaterialTheme.typography.headlineMedium.fontSize,
                     textAlign = TextAlign.Center,
                 )
 
@@ -344,9 +346,9 @@ private fun ColumnScope.MainContent(
                 Text(
                     text = subtitle,
                     style =
-                        MaterialTheme.typography.headlineSmall.copy(
+                        MaterialTheme.typography.labelLarge.copy(
                             color = MaterialTheme.colorScheme.onSurface,
-                            fontSize = 16.sp,
+                            fontSize = textFontSize,
                         ),
                     textAlign = TextAlign.Center,
                 )

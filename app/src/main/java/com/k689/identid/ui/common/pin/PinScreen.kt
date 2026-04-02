@@ -19,12 +19,12 @@ package com.k689.identid.ui.common.pin
 import android.content.Context
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.ColumnScope
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.SheetState
@@ -39,9 +39,11 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.PasswordVisualTransformation
+import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
 import com.k689.identid.R
@@ -122,38 +124,40 @@ fun PinScreen(
             }
         },
     ) { paddingValues ->
-        Content(
-            state = state,
-            effectFlow = viewModel.effect,
-            onEventSend = { event -> viewModel.setEvent(event) },
-            onNavigationRequested = { navigationEffect ->
-                handleNavigationEffect(
-                    context,
-                    navigationEffect,
-                    navController,
-                )
-            },
-            paddingValues = paddingValues,
-            coroutineScope = scope,
-            modalBottomSheetState = bottomSheetState,
-        )
-
-        if (isBottomSheetOpen) {
-            WrapModalBottomSheet(
-                onDismissRequest = {
-                    viewModel.setEvent(
-                        Event.BottomSheet.UpdateBottomSheetState(
-                            isOpen = false,
-                        ),
+        Column {
+            Content(
+                state = state,
+                effectFlow = viewModel.effect,
+                onEventSend = { event -> viewModel.setEvent(event) },
+                onNavigationRequested = { navigationEffect ->
+                    handleNavigationEffect(
+                        context,
+                        navigationEffect,
+                        navController,
                     )
                 },
-                sheetState = bottomSheetState,
-            ) {
-                SheetContent(
-                    onEventSent = {
-                        viewModel.setEvent(it)
+                paddingValues = paddingValues,
+                coroutineScope = scope,
+                modalBottomSheetState = bottomSheetState,
+            )
+
+            if (isBottomSheetOpen) {
+                WrapModalBottomSheet(
+                    onDismissRequest = {
+                        viewModel.setEvent(
+                            Event.BottomSheet.UpdateBottomSheetState(
+                                isOpen = false,
+                            ),
+                        )
                     },
-                )
+                    sheetState = bottomSheetState,
+                ) {
+                    SheetContent(
+                        onEventSent = {
+                            viewModel.setEvent(it)
+                        },
+                    )
+                }
             }
         }
     }
@@ -189,7 +193,7 @@ private fun handleNavigationEffect(
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-private fun Content(
+private fun ColumnScope.Content(
     state: State,
     effectFlow: Flow<Effect>,
     onEventSend: (Event) -> Unit,
@@ -197,13 +201,14 @@ private fun Content(
     paddingValues: PaddingValues,
     coroutineScope: CoroutineScope,
     modalBottomSheetState: SheetState,
+    textFontSize: TextUnit = 16.sp,
 ) {
     Column(
         modifier =
             Modifier
                 .fillMaxSize()
                 .padding(paddingValues)
-                .verticalScroll(rememberScrollState()),
+                .weight(1.0f),
     ) {
         VSpacer.Large()
         AppIconAndText(
@@ -213,38 +218,35 @@ private fun Content(
                     .padding(bottom = SPACING_LARGE.dp),
             appIconAndTextData = AppIconAndTextDataUi(),
         )
-
         Column(
             modifier =
                 Modifier
                     .fillMaxWidth()
-                    .padding(vertical = SPACING_LARGE.dp),
+                    .padding(vertical = SPACING_LARGE.dp)
+                    .weight(1.0f),
             verticalArrangement = Arrangement.spacedBy(SPACING_SMALL.dp, Alignment.Top),
         ) {
+            Spacer(modifier = Modifier.weight(1f))
             Text(
                 text = state.title,
-                modifier = Modifier.testTag(TestTag.PinScreen.TITLE),
+                textAlign = TextAlign.Center,
+                modifier = Modifier.testTag(TestTag.PinScreen.TITLE).align(Alignment.CenterHorizontally),
                 style =
                     MaterialTheme.typography.headlineSmall.copy(
                         color = MaterialTheme.colorScheme.onSurface,
+                        fontSize = textFontSize,
                     ),
             )
             Text(
                 text = state.subtitle,
+                modifier = Modifier.align(Alignment.CenterHorizontally),
+                textAlign = TextAlign.Center,
                 style =
                     MaterialTheme.typography.headlineSmall.copy(
-                        color = MaterialTheme.colorScheme.onSurface,
+                        color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.6f),
+                        fontSize = textFontSize,
                     ),
             )
-        }
-
-        Column(
-            modifier =
-                Modifier
-                    .fillMaxWidth()
-                    .padding(top = SPACING_LARGE.dp),
-            verticalArrangement = Arrangement.spacedBy(SPACING_SMALL.dp, Alignment.Top),
-        ) {
             PinFieldLayout(
                 modifier = Modifier.fillMaxWidth(),
                 state = state,
@@ -252,6 +254,7 @@ private fun Content(
                     onEventSend(Event.OnQuickPinEntered(quickPin))
                 },
             )
+            Spacer(modifier = Modifier.weight(2.8f))
         }
     }
 
@@ -321,19 +324,21 @@ private fun PinFieldLayout(
 @Composable
 private fun PinScreenEmptyPreview() {
     PreviewTheme {
-        Content(
-            state =
-                State(
-                    pinFlow = PinFlow.CREATE_WITH_ACTIVATION,
-                    pinState = PinValidationState.ENTER,
-                ),
-            effectFlow = Channel<Effect>().receiveAsFlow(),
-            onEventSend = {},
-            onNavigationRequested = {},
-            paddingValues = PaddingValues(10.dp),
-            coroutineScope = rememberCoroutineScope(),
-            modalBottomSheetState = rememberModalBottomSheetState(),
-        )
+        Column {
+            Content(
+                state =
+                    State(
+                        pinFlow = PinFlow.CREATE_WITH_ACTIVATION,
+                        pinState = PinValidationState.ENTER,
+                    ),
+                effectFlow = Channel<Effect>().receiveAsFlow(),
+                onEventSend = {},
+                onNavigationRequested = {},
+                paddingValues = PaddingValues(10.dp),
+                coroutineScope = rememberCoroutineScope(),
+                modalBottomSheetState = rememberModalBottomSheetState(),
+            )
+        }
     }
 }
 
