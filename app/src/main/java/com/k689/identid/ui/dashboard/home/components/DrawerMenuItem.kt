@@ -21,28 +21,21 @@ import com.k689.identid.R
 import com.k689.identid.navigation.DashboardScreens
 import com.k689.identid.navigation.TransferScreens
 
-sealed class DrawerMenuItem(
+enum class DrawerMenuItem(
     @StringRes val titleRes: Int,
     val route: String? = null,
 ) {
-    data object ChangePin : DrawerMenuItem(titleRes = R.string.dashboard_side_menu_option_change_pin)
+    ChangePin(titleRes = R.string.dashboard_side_menu_option_change_pin),
 
-    data object MoveWallet : DrawerMenuItem(titleRes = R.string.transfer_move_wallet_title, route = TransferScreens.MoveWallet.screenRoute)
+    MoveWallet(titleRes = R.string.transfer_move_wallet_title, route = TransferScreens.MoveWallet.screenRoute),
 
-    data object ReceiveWallet : DrawerMenuItem(titleRes = R.string.transfer_receive_title, route = TransferScreens.ReceiveWallet.screenRoute)
+    ReceiveWallet(titleRes = R.string.transfer_receive_title, route = TransferScreens.ReceiveWallet.screenRoute),
 
-    data object Preferences : DrawerMenuItem(titleRes = R.string.preferences_screen_title, route = DashboardScreens.Preferences.screenRoute)
+    Preferences(titleRes = R.string.preferences_screen_title, route = DashboardScreens.Preferences.screenRoute),
 
-    data object Pseudonyms : DrawerMenuItem(titleRes = R.string.pseudonym_list_title, route = DashboardScreens.PseudonymList.screenRoute)
+    Pseudonyms(titleRes = R.string.pseudonym_list_title, route = DashboardScreens.PseudonymList.screenRoute);
 
     companion object {
-        val all: List<DrawerMenuItem> =
-            listOf(
-                ChangePin,
-                MoveWallet,
-                ReceiveWallet,
-                Preferences,
-                Pseudonyms,
-            )
+        val all: List<DrawerMenuItem> = entries.toList()
     }
 }
