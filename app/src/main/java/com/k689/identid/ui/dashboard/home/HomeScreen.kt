@@ -388,7 +388,6 @@ private fun QuickActions(
 @Composable
 private fun TopBar(
     onMenuClick: () -> Unit,
-    onDashboardEventSent: (DashboardEvent) -> Unit,
 ) {
     Box(
         modifier =
