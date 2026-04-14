@@ -22,7 +22,7 @@ import com.k689.identid.navigation.DashboardScreens
 import com.k689.identid.navigation.TransferScreens
 
 enum class DrawerMenuItem(
-    @StringRes val titleRes: Int,
+    @param:StringRes val titleRes: Int,
     val route: String? = null,
 ) {
     ChangePin(titleRes = R.string.dashboard_side_menu_option_change_pin),
