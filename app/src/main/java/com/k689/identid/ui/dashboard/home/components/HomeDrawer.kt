@@ -72,12 +72,12 @@ fun HomeDrawer(
                     Text(
                         text = group.key,
                         style =
-                            MaterialTheme.typography.labelMedium.copy(
+                            MaterialTheme.typography.labelLarge.copy(
                                 color = MaterialTheme.colorScheme.onSurfaceVariant,
                                 fontWeight = FontWeight.Medium,
                                 fontSize = 14.sp,
                             ),
-                        modifier = Modifier.padding(horizontal = 12.dp, vertical = 8.dp),
+                        modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp),
                     )
                     group.value.forEach { item ->
                         NavigationDrawerItem(
@@ -85,7 +85,7 @@ fun HomeDrawer(
                                 Text(
                                     text = stringResource(id = item.titleRes),
                                     style =
-                                        MaterialTheme.typography.bodyLarge.copy(
+                                        MaterialTheme.typography.labelLarge.copy(
                                             color = MaterialTheme.colorScheme.onSurface,
                                             fontWeight = FontWeight.SemiBold,
                                             fontSize = 20.sp,
@@ -94,7 +94,7 @@ fun HomeDrawer(
                             },
                             selected = false,
                             onClick = { onMenuItemClick(item) },
-                            modifier = Modifier.padding(horizontal = 12.dp, vertical = 3.dp),
+                            modifier = Modifier.padding(vertical = 3.dp, horizontal = 0.dp),
                         )
                     }
                 }
