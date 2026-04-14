@@ -33,7 +33,10 @@ import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.setValue
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
@@ -85,6 +88,7 @@ fun PinScreen(
 ) {
     val state: State by viewModel.viewState.collectAsStateWithLifecycle()
     val context = LocalContext.current
+    var pinInput by rememberSaveable(state.pinState, state.quickPinSize) { mutableStateOf("") }
 
     val isBottomSheetOpen = state.isBottomSheetOpen
     val scope = rememberCoroutineScope()
@@ -92,6 +96,15 @@ fun PinScreen(
         rememberModalBottomSheetState(
             skipPartiallyExpanded = true,
         )
+
+    LaunchedEffect(state.resetPin) {
+        if (state.resetPin) {
+            pinInput = ""
+        }
+    }
+
+    val quickPinError = state.quickPinError?.takeIf { pinInput == state.pin }
+    val isButtonEnabled = pinInput.length == state.quickPinSize
 
     ContentScreen(
         isLoading = state.isLoading,
@@ -112,9 +125,9 @@ fun PinScreen(
                                 config =
                                     ButtonConfig(
                                         type = ButtonType.PRIMARY,
-                                        enabled = state.isButtonEnabled,
+                                        enabled = isButtonEnabled,
                                         onClick = {
-                                            viewModel.setEvent(Event.NextButtonPressed(pin = state.pin))
+                                            viewModel.setEvent(Event.NextButtonPressed(pin = pinInput))
                                         },
                                     ),
                             ),
@@ -136,6 +149,9 @@ fun PinScreen(
                         navController,
                     )
                 },
+                pinInput = pinInput,
+                onPinInput = { pinInput = it },
+                quickPinError = quickPinError,
                 paddingValues = paddingValues,
                 coroutineScope = scope,
                 modalBottomSheetState = bottomSheetState,
@@ -198,6 +214,9 @@ private fun ColumnScope.Content(
     effectFlow: Flow<Effect>,
     onEventSend: (Event) -> Unit,
     onNavigationRequested: (Effect.Navigation) -> Unit,
+    pinInput: String,
+    onPinInput: (String) -> Unit,
+    quickPinError: String?,
     paddingValues: PaddingValues,
     coroutineScope: CoroutineScope,
     modalBottomSheetState: SheetState,
@@ -250,9 +269,9 @@ private fun ColumnScope.Content(
             PinFieldLayout(
                 modifier = Modifier.fillMaxWidth(),
                 state = state,
-                onPinInput = { quickPin ->
-                    onEventSend(Event.OnQuickPinEntered(quickPin))
-                },
+                pinInput = pinInput,
+                quickPinError = quickPinError,
+                onPinInput = onPinInput,
             )
             Spacer(modifier = Modifier.weight(2.8f))
         }
@@ -304,14 +323,17 @@ private fun SheetContent(onEventSent: (event: Event) -> Unit) {
 private fun PinFieldLayout(
     modifier: Modifier = Modifier,
     state: State,
+    pinInput: String,
+    quickPinError: String?,
     onPinInput: (String) -> Unit,
 ) {
     WrapPinTextField(
         modifier = modifier,
+        displayCode = pinInput,
         onPinUpdate = onPinInput,
         length = state.quickPinSize,
-        hasError = !state.quickPinError.isNullOrEmpty(),
-        errorMessage = state.quickPinError,
+        hasError = !quickPinError.isNullOrEmpty(),
+        errorMessage = quickPinError,
         visualTransformation = PasswordVisualTransformation(),
         pinWidth = 42.dp,
         clearCode = state.resetPin,
@@ -334,6 +356,9 @@ private fun PinScreenEmptyPreview() {
                 effectFlow = Channel<Effect>().receiveAsFlow(),
                 onEventSend = {},
                 onNavigationRequested = {},
+                pinInput = "",
+                onPinInput = {},
+                quickPinError = null,
                 paddingValues = PaddingValues(10.dp),
                 coroutineScope = rememberCoroutineScope(),
                 modalBottomSheetState = rememberModalBottomSheetState(),

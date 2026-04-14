@@ -31,6 +31,9 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
@@ -89,6 +92,15 @@ fun BiometricScreen(
 ) {
     val state: State by viewModel.viewState.collectAsStateWithLifecycle()
     val context = LocalContext.current
+    var pinInput by rememberSaveable(state.quickPinSize, state.isPinInputEnabled) { mutableStateOf("") }
+
+    LaunchedEffect(state.isPinInputEnabled) {
+        if (!state.isPinInputEnabled) {
+            pinInput = ""
+        }
+    }
+
+    val quickPinError = state.quickPinError?.takeIf { pinInput == state.quickPin }
 
     ContentScreen(
         isLoading = state.isLoading,
@@ -173,6 +185,14 @@ fun BiometricScreen(
                     }
                 }
             },
+            pinInput = pinInput,
+            quickPinError = quickPinError,
+            onPinInput = { updatedPin ->
+                pinInput = updatedPin
+                if (updatedPin.length == state.quickPinSize) {
+                    viewModel.setEvent(Event.OnQuickPinEntered(updatedPin))
+                }
+            },
             padding = it,
         )
     }
@@ -197,6 +217,9 @@ private fun Body(
     effectFlow: Flow<Effect>,
     onEventSent: ((event: Event) -> Unit),
     onNavigationRequested: ((navigationEffect: Effect.Navigation) -> Unit),
+    pinInput: String,
+    quickPinError: String?,
+    onPinInput: (String) -> Unit,
     padding: PaddingValues,
 ) {
     // Get application context.
@@ -216,6 +239,9 @@ private fun Body(
             MainContent(
                 state = state,
                 onEventSent = onEventSent,
+                pinInput = pinInput,
+                quickPinError = quickPinError,
+                onPinInput = onPinInput,
             )
         }
 
@@ -268,6 +294,9 @@ private fun Body(
 private fun ColumnScope.MainContent(
     state: State,
     onEventSent: (event: Event) -> Unit,
+    pinInput: String,
+    quickPinError: String?,
+    onPinInput: (String) -> Unit,
     textFontSize: TextUnit = 16.sp,
 ) {
     when (val mode = state.config.mode) {
@@ -310,9 +339,9 @@ private fun ColumnScope.MainContent(
                 PinFieldLayout(
                     modifier = Modifier.fillMaxWidth(),
                     state = state,
-                    onPinInput = { quickPin ->
-                        onEventSent(Event.OnQuickPinEntered(quickPin))
-                    },
+                    pinInput = pinInput,
+                    quickPinError = quickPinError,
+                    onPinInput = onPinInput,
                 )
 
                 Spacer(modifier = Modifier.weight(2.8f))
@@ -358,9 +387,9 @@ private fun ColumnScope.MainContent(
                             .fillMaxWidth()
                             .padding(vertical = SPACING_LARGE.dp),
                     state = state,
-                    onPinInput = { quickPin ->
-                        onEventSent(Event.OnQuickPinEntered(quickPin))
-                    },
+                    pinInput = pinInput,
+                    quickPinError = quickPinError,
+                    onPinInput = onPinInput,
                 )
 
                 Spacer(modifier = Modifier.weight(2.8f))
@@ -373,15 +402,18 @@ private fun ColumnScope.MainContent(
 private fun PinFieldLayout(
     modifier: Modifier = Modifier,
     state: State,
+    pinInput: String,
+    quickPinError: String?,
     onPinInput: (String) -> Unit,
 ) {
     WrapPinTextField(
         clearCode = !state.isPinInputEnabled,
         modifier = modifier,
+        displayCode = pinInput,
         onPinUpdate = onPinInput,
         length = state.quickPinSize,
-        hasError = !state.quickPinError.isNullOrEmpty(),
-        errorMessage = state.quickPinError,
+        hasError = !quickPinError.isNullOrEmpty(),
+        errorMessage = quickPinError,
         visualTransformation = PasswordVisualTransformation(),
         pinWidth = 42.dp,
         focusOnCreate = !state.userBiometricsAreEnabled,
@@ -425,6 +457,9 @@ private fun PreviewBiometricScreen() {
             effectFlow = Channel<Effect>().receiveAsFlow(),
             onEventSent = {},
             onNavigationRequested = {},
+            pinInput = "",
+            quickPinError = null,
+            onPinInput = {},
             padding = PaddingValues(SIZE_MEDIUM.dp),
         )
     }

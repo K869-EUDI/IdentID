@@ -30,6 +30,9 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
@@ -63,6 +66,7 @@ fun DocumentOfferCodeScreen(
 ) {
     val state: State by viewModel.viewState.collectAsStateWithLifecycle()
     val context = LocalContext.current
+    var pinInput by rememberSaveable(state.offerCodeUiConfig.txCodeLength) { mutableStateOf("") }
 
     ContentScreen(
         isLoading = state.isLoading,
@@ -77,7 +81,17 @@ fun DocumentOfferCodeScreen(
             subTitle = state.screenSubtitle,
             pinCodeLength = state.offerCodeUiConfig.txCodeLength,
             effectFlow = viewModel.effect,
-            onEventSend = { viewModel.setEvent(it) },
+            pinInput = pinInput,
+            onPinInput = { pinInput = it },
+            onCompletePinInput = { completedPin ->
+                pinInput = completedPin
+                viewModel.setEvent(
+                    Event.OnPinChange(
+                        code = completedPin,
+                        context = context,
+                    ),
+                )
+            },
             onNavigationRequested = { navigationEffect ->
                 handleNavigationEffect(navigationEffect, navController)
             },
@@ -93,7 +107,9 @@ private fun Content(
     subTitle: String,
     pinCodeLength: Int,
     effectFlow: Flow<Effect>,
-    onEventSend: (Event) -> Unit,
+    pinInput: String,
+    onPinInput: (String) -> Unit,
+    onCompletePinInput: (String) -> Unit,
     onNavigationRequested: (Effect.Navigation) -> Unit,
     paddingValues: PaddingValues,
 ) {
@@ -142,13 +158,12 @@ private fun Content(
                     .fillMaxWidth()
                     .padding(top = SPACING_LARGE.dp),
             length = pinCodeLength,
+            pinInput = pinInput,
             onPinInput = { quickPin ->
-                onEventSend(
-                    Event.OnPinChange(
-                        code = quickPin,
-                        context = context,
-                    ),
-                )
+                onPinInput(quickPin)
+                if (quickPin.length == pinCodeLength) {
+                    onCompletePinInput(quickPin)
+                }
             },
         )
     }
@@ -167,10 +182,12 @@ private fun Content(
 private fun CodeFieldLayout(
     modifier: Modifier,
     length: Int,
+    pinInput: String,
     onPinInput: (String) -> Unit,
 ) {
     WrapPinTextField(
         modifier = modifier,
+        displayCode = pinInput,
         onPinUpdate = {
             onPinInput(it)
         },
@@ -210,7 +227,9 @@ private fun DocumentOfferCodeScreenEmptyPreview() {
             subTitle = "Type the 5-digit transaction code you received.",
             pinCodeLength = 5,
             effectFlow = Channel<Effect>().receiveAsFlow(),
-            onEventSend = {},
+            pinInput = "",
+            onPinInput = {},
+            onCompletePinInput = {},
             onNavigationRequested = {},
             paddingValues = PaddingValues(SPACING_MEDIUM.dp),
             context = LocalContext.current,

@@ -37,8 +37,7 @@ data class MoveWalletApprovalState(
     val isLoading: Boolean = true,
     val error: ContentErrorConfig? = null,
     val documents: List<TransferableDocument> = emptyList(),
-    val pinInput: String = "",
-    val pinError: Boolean = false,
+    val invalidPin: String? = null,
     val isSending: Boolean = false,
     val isSent: Boolean = false,
 ) : ViewState
@@ -52,11 +51,8 @@ sealed class MoveWalletApprovalEvent : ViewEvent {
         val context: Context,
     ) : MoveWalletApprovalEvent()
 
-    data class PinChanged(
-        val pin: String,
-    ) : MoveWalletApprovalEvent()
-
     data class ConfirmTransfer(
+        val pin: String,
         val context: Context,
     ) : MoveWalletApprovalEvent()
 }
@@ -91,12 +87,8 @@ class MoveWalletApprovalViewModel(
                 setEffect { MoveWalletApprovalEffect.Navigation.Pop }
             }
 
-            is MoveWalletApprovalEvent.PinChanged -> {
-                setState { copy(pinInput = event.pin, pinError = false) }
-            }
-
             is MoveWalletApprovalEvent.ConfirmTransfer -> {
-                confirmAndSend(event.context)
+                confirmAndSend(pin = event.pin, context = event.context)
             }
         }
     }
@@ -154,14 +146,16 @@ class MoveWalletApprovalViewModel(
         }
     }
 
-    private fun confirmAndSend(context: Context) {
-        val currentPin = viewState.value.pinInput
-        if (!pinStorageController.isPinValid(currentPin)) {
-            setState { copy(pinError = true) }
+    private fun confirmAndSend(
+        pin: String,
+        context: Context,
+    ) {
+        if (!pinStorageController.isPinValid(pin)) {
+            setState { copy(invalidPin = pin) }
             return
         }
 
-        setState { copy(isSending = true, pinError = false) }
+        setState { copy(isSending = true, invalidPin = null) }
 
         viewModelScope.launch {
             try {
@@ -195,7 +189,7 @@ class MoveWalletApprovalViewModel(
                         error =
                             ContentErrorConfig(
                                 errorSubTitle = e.localizedMessage ?: resourceProvider.getString(R.string.transfer_error_transfer_failed),
-                                onRetry = { setEvent(MoveWalletApprovalEvent.ConfirmTransfer(context)) },
+                                onRetry = { setEvent(MoveWalletApprovalEvent.ConfirmTransfer(pin = pin, context = context)) },
                                 onCancel = { setEffect { MoveWalletApprovalEffect.Navigation.Pop } },
                             ),
                     )
