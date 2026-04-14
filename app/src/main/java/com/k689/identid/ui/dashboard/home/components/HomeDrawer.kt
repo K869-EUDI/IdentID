@@ -49,6 +49,7 @@ fun HomeDrawer(
     onMenuItemClick: (DrawerMenuItem) -> Unit,
     content: @Composable () -> Unit,
 ) {
+    val groupedItems = menuItems.groupBy(DrawerMenuItem::groupName)
     ModalNavigationDrawer(
         drawerState = drawerState,
         drawerContent = {
@@ -67,23 +68,35 @@ fun HomeDrawer(
                             .height(56.dp),
                     contentScale = ContentScale.FillHeight,
                 )
-                menuItems.forEach { item ->
-                    NavigationDrawerItem(
-                        label = {
-                            Text(
-                                text = stringResource(id = item.titleRes),
-                                style =
-                                    MaterialTheme.typography.bodyLarge.copy(
-                                        color = MaterialTheme.colorScheme.onSurface,
-                                        fontWeight = FontWeight.SemiBold,
-                                        fontSize = 20.sp,
-                                    ),
-                            )
-                        },
-                        selected = false,
-                        onClick = { onMenuItemClick(item) },
-                        modifier = Modifier.padding(horizontal = 12.dp, vertical = 3.dp),
+                groupedItems.forEach { group ->
+                    Text(
+                        text = group.key,
+                        style =
+                            MaterialTheme.typography.labelMedium.copy(
+                                color = MaterialTheme.colorScheme.onSurfaceVariant,
+                                fontWeight = FontWeight.Medium,
+                                fontSize = 14.sp,
+                            ),
+                        modifier = Modifier.padding(horizontal = 12.dp, vertical = 8.dp),
                     )
+                    group.value.forEach { item ->
+                        NavigationDrawerItem(
+                            label = {
+                                Text(
+                                    text = stringResource(id = item.titleRes),
+                                    style =
+                                        MaterialTheme.typography.bodyLarge.copy(
+                                            color = MaterialTheme.colorScheme.onSurface,
+                                            fontWeight = FontWeight.SemiBold,
+                                            fontSize = 20.sp,
+                                        ),
+                                )
+                            },
+                            selected = false,
+                            onClick = { onMenuItemClick(item) },
+                            modifier = Modifier.padding(horizontal = 12.dp, vertical = 3.dp),
+                        )
+                    }
                 }
 
                 Spacer(modifier = Modifier.weight(1f))

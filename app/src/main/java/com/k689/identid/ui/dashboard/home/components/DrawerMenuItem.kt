@@ -22,18 +22,19 @@ import com.k689.identid.navigation.DashboardScreens
 import com.k689.identid.navigation.TransferScreens
 
 enum class DrawerMenuItem(
-    @StringRes val titleRes: Int,
+    @param:StringRes val titleRes: Int,
     val route: String? = null,
+    val groupName: String,
 ) {
-    ChangePin(titleRes = R.string.dashboard_side_menu_option_change_pin),
+    Pseudonyms(titleRes = R.string.pseudonym_list_title, route = DashboardScreens.PseudonymList.screenRoute, groupName = "Operations"),
+    Transactions(titleRes = R.string.transactions_screen_title, route = DashboardScreens.Transactions.screenRoute, groupName = "Operations"),
 
-    MoveWallet(titleRes = R.string.transfer_move_wallet_title, route = TransferScreens.MoveWallet.screenRoute),
+    MoveWallet(titleRes = R.string.transfer_move_wallet_title, route = TransferScreens.MoveWallet.screenRoute, groupName = "Wallet"),
 
-    ReceiveWallet(titleRes = R.string.transfer_receive_title, route = TransferScreens.ReceiveWallet.screenRoute),
-
-    Preferences(titleRes = R.string.preferences_screen_title, route = DashboardScreens.Preferences.screenRoute),
-
-    Pseudonyms(titleRes = R.string.pseudonym_list_title, route = DashboardScreens.PseudonymList.screenRoute);
+    ReceiveWallet(titleRes = R.string.transfer_receive_title, route = TransferScreens.ReceiveWallet.screenRoute, groupName = "Wallet"),
+    ChangePin(titleRes = R.string.dashboard_side_menu_option_change_pin, groupName = "Settings"),
+    Preferences(titleRes = R.string.preferences_screen_title, route = DashboardScreens.Preferences.screenRoute, groupName = "Settings"),
+    ;
 
     companion object {
         val all: List<DrawerMenuItem> = entries.toList()
