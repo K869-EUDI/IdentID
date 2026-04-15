@@ -66,7 +66,7 @@ fun MoveWalletApprovalScreen(
     val state: MoveWalletApprovalState by viewModel.viewState.collectAsStateWithLifecycle()
     val context = LocalContext.current
     var pinInput by rememberSaveable { mutableStateOf("") }
-    val pinError = state.invalidPin == pinInput
+    var pinError by rememberSaveable { mutableStateOf(false) }
 
     ContentScreen(
         isLoading = state.isLoading || state.isSending,
@@ -78,7 +78,10 @@ fun MoveWalletApprovalScreen(
             state = state,
             pinInput = pinInput,
             pinError = pinError,
-            onPinChanged = { pinInput = it },
+            onPinChanged = {
+                pinInput = it
+                pinError = false
+            },
             onConfirm = { viewModel.setEvent(MoveWalletApprovalEvent.ConfirmTransfer(pin = pinInput, context = context)) },
             paddingValues = paddingValues,
         )
@@ -92,6 +95,10 @@ fun MoveWalletApprovalScreen(
         viewModel.effect
             .onEach { effect ->
                 when (effect) {
+                    MoveWalletApprovalEffect.InvalidPin -> {
+                        pinError = true
+                    }
+
                     is MoveWalletApprovalEffect.Navigation.Pop -> {
                         navController.popBackStack()
                     }

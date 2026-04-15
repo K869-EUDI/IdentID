@@ -40,9 +40,7 @@ import androidx.compose.foundation.text.selection.LocalTextSelectionColors
 import androidx.compose.foundation.text.selection.TextSelectionColors
 import androidx.compose.material3.LocalTextStyle
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextFieldColors
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.LaunchedEffect
@@ -72,6 +70,8 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.compose.ui.semantics.password
+import androidx.compose.ui.semantics.semantics
 import com.k689.identid.ui.component.preview.PreviewTheme
 import com.k689.identid.ui.component.preview.ThemeModePreviews
 import com.k689.identid.ui.component.utils.EmptyTextToolbar
@@ -113,11 +113,6 @@ fun WrapPinTextField(
     clearCode: Boolean = false,
     focusOnCreate: Boolean = false,
     shouldHideKeyboardOnCompletion: Boolean = false,
-    colors: TextFieldColors =
-        OutlinedTextFieldDefaults.colors(
-            focusedBorderColor = MaterialTheme.colorScheme.primary,
-            unfocusedBorderColor = MaterialTheme.colorScheme.outlineVariant,
-        ),
     enabled: Boolean = true,
 ) {
     val fieldsRange = 0 until length
@@ -195,11 +190,17 @@ fun WrapPinTextField(
                                 keyboardController?.hide()
                             },
                         ),
+                    visualTransformation = visualTransformation,
                     modifier =
                         Modifier
                             .fillMaxWidth()
                             .focusRequester(focusRequester)
-                            .onFocusChanged { isFocused = it.isFocused },
+                            .onFocusChanged { isFocused = it.isFocused }
+                            .semantics {
+                                if (visualTransformation != VisualTransformation.None) {
+                                    password()
+                                }
+                            },
                     decorationBox = { innerTextField ->
                         Box(
                             modifier =
