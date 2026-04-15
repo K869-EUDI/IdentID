@@ -30,6 +30,7 @@ import androidx.compose.material3.ModalNavigationDrawer
 import androidx.compose.material3.NavigationDrawerItem
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.stringResource
@@ -67,23 +68,38 @@ fun HomeDrawer(
                             .height(56.dp),
                     contentScale = ContentScale.FillHeight,
                 )
-                menuItems.forEach { item ->
-                    NavigationDrawerItem(
-                        label = {
-                            Text(
-                                text = stringResource(id = item.titleRes),
-                                style =
-                                    MaterialTheme.typography.bodyLarge.copy(
-                                        color = MaterialTheme.colorScheme.onSurface,
-                                        fontWeight = FontWeight.SemiBold,
-                                        fontSize = 20.sp,
-                                    ),
-                            )
-                        },
-                        selected = false,
-                        onClick = { onMenuItemClick(item) },
-                        modifier = Modifier.padding(horizontal = 12.dp, vertical = 3.dp),
+
+                val menuGroups = remember { menuItems.groupBy { it.groupName } }
+
+                menuGroups.forEach { (group, items) ->
+                    Text(
+                        text = stringResource(group.titleRes),
+                        style =
+                            MaterialTheme.typography.labelLarge.copy(
+                                color = MaterialTheme.colorScheme.onSurfaceVariant,
+                                fontWeight = FontWeight.Medium,
+                                fontSize = 14.sp,
+                            ),
+                        modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp),
                     )
+                    items.forEach { item ->
+                        NavigationDrawerItem(
+                            label = {
+                                Text(
+                                    text = stringResource(id = item.titleRes),
+                                    style =
+                                        MaterialTheme.typography.labelLarge.copy(
+                                            color = MaterialTheme.colorScheme.onSurface,
+                                            fontWeight = FontWeight.SemiBold,
+                                            fontSize = 20.sp,
+                                        ),
+                                )
+                            },
+                            selected = false,
+                            onClick = { onMenuItemClick(item) },
+                            modifier = Modifier.padding(vertical = 3.dp, horizontal = 0.dp),
+                        )
+                    }
                 }
 
                 Spacer(modifier = Modifier.weight(1f))
