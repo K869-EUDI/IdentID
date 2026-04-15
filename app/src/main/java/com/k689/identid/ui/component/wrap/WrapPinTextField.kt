@@ -16,15 +16,23 @@
 
 package com.k689.identid.ui.component.wrap
 
+import androidx.compose.foundation.background
+import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.interaction.MutableInteractionSource
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.text.selection.DisableSelection
@@ -32,28 +40,27 @@ import androidx.compose.foundation.text.selection.LocalTextSelectionColors
 import androidx.compose.foundation.text.selection.TextSelectionColors
 import androidx.compose.material3.LocalTextStyle
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.OutlinedTextField
-import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextFieldColors
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
+import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.input.key.Key
-import androidx.compose.ui.input.key.key
-import androidx.compose.ui.input.key.onKeyEvent
+import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.platform.LocalTextToolbar
 import androidx.compose.ui.platform.testTag
+import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
@@ -63,7 +70,8 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.core.text.isDigitsOnly
+import androidx.compose.ui.semantics.password
+import androidx.compose.ui.semantics.semantics
 import com.k689.identid.ui.component.preview.PreviewTheme
 import com.k689.identid.ui.component.preview.ThemeModePreviews
 import com.k689.identid.ui.component.utils.EmptyTextToolbar
@@ -72,6 +80,25 @@ import com.k689.identid.ui.component.utils.OneTimeLaunchedEffect
 import com.k689.identid.ui.component.utils.SIZE_SMALL
 import com.k689.identid.ui.component.utils.SPACING_SMALL
 import com.k689.identid.util.ui.TestTag
+
+internal fun sanitizePinInput(
+    rawValue: String,
+    length: Int,
+): String = rawValue.filter(Char::isDigit).take(length)
+
+internal fun pinSlotCharacter(
+    pin: String,
+    index: Int,
+    visualTransformation: VisualTransformation,
+): String {
+    val digit = pin.getOrNull(index)?.toString().orEmpty()
+    if (digit.isEmpty()) return ""
+
+    return visualTransformation
+        .filter(AnnotatedString(digit))
+        .text
+        .text
+}
 
 @Composable
 fun WrapPinTextField(
@@ -86,55 +113,31 @@ fun WrapPinTextField(
     clearCode: Boolean = false,
     focusOnCreate: Boolean = false,
     shouldHideKeyboardOnCompletion: Boolean = false,
-    colors: TextFieldColors =
-        OutlinedTextFieldDefaults.colors(
-            focusedBorderColor = MaterialTheme.colorScheme.primary,
-            unfocusedBorderColor = MaterialTheme.colorScheme.outlineVariant,
-        ),
     enabled: Boolean = true,
 ) {
-    fun List<FocusRequester>.requestFocus(index: Int) {
-        this.elementAtOrNull(index)?.requestFocus()
-    }
-
-    // Text field range.
     val fieldsRange = 0 until length
-
-    // Get keyboard controller.
     val keyboardController = LocalSoftwareKeyboardController.current
-
-    // Get Focus Manager
     val focusManager = LocalFocusManager.current
-
-    // Init list of all digits.
-    val textFieldStateList =
-        rememberSaveable {
-            fieldsRange.map {
-                mutableStateOf("")
-            }
-        }
-    // Init focus requesters.
-    val focusRequesters: List<FocusRequester> =
-        remember {
-            fieldsRange.map { FocusRequester() }
-        }
+    var pinCode by rememberSaveable(length) { mutableStateOf(displayCode?.let { sanitizePinInput(it, length) }.orEmpty()) }
+    var isFocused by remember { mutableStateOf(false) }
+    val focusRequester = remember { FocusRequester() }
+    val interactionSource = remember { MutableInteractionSource() }
 
     LaunchedEffect(clearCode) {
         if (clearCode) {
-            textFieldStateList.forEach {
-                it.value = ""
+            if (pinCode.isNotEmpty()) {
+                pinCode = ""
+                onPinUpdate.invoke("")
             }
-            onPinUpdate.invoke("")
-            focusRequesters.requestFocus(0)
+            focusRequester.requestFocus()
         }
     }
 
-    displayCode?.let { otpCode ->
-        // Assign each charter from otpCode to the corresponding TextField
-        textFieldStateList.forEachIndexed { index, mutableState ->
-            mutableState.value = otpCode[index].toString()
+    LaunchedEffect(displayCode, length) {
+        val updatedDisplayCode = displayCode?.let { sanitizePinInput(it, length) }.orEmpty()
+        if (updatedDisplayCode != pinCode) {
+            pinCode = updatedDisplayCode
         }
-        onPinUpdate.invoke(otpCode)
     }
 
     CompositionLocalProvider(
@@ -150,134 +153,143 @@ fun WrapPinTextField(
             verticalArrangement = Arrangement.Center,
             horizontalAlignment = Alignment.CenterHorizontally,
         ) {
-            Row(
-                modifier = Modifier.wrapContentWidth(),
-                horizontalArrangement = Arrangement.SpaceBetween,
-            ) {
-                for (currentTextField in fieldsRange) {
-                    DisableSelection {
-                        OutlinedTextField(
-                            enabled = enabled,
-                            modifier =
-                                Modifier
-                                    .testTag(TestTag.pinTextField(currentTextField))
-                                    .focusRequester(focusRequesters[currentTextField])
-                                    .then(
-                                        pinWidth?.let { dp ->
-                                            Modifier
-                                                .width(dp)
-                                                .padding(vertical = SPACING_SMALL.dp)
-                                        } ?: Modifier
-                                            .weight(1f)
-                                            .wrapContentSize(),
-                                    ).then(
-                                        Modifier.onKeyEvent { keyEvent ->
-                                            if (!enabled) return@onKeyEvent true
-                                            if (keyEvent.key == Key.Backspace) {
-                                                if (textFieldStateList[currentTextField].value.isNotEmpty()) {
-                                                    textFieldStateList[currentTextField].value = ""
-                                                    // Notify listener.
-                                                    onPinUpdate.invoke(
-                                                        textFieldStateList.joinToString(
-                                                            separator = "",
-                                                            transform = { textField ->
-                                                                textField.value
-                                                            },
-                                                        ),
-                                                    )
-                                                }
-                                                focusRequesters.requestFocus(currentTextField - 1)
-                                                true
-                                            } else {
-                                                false
-                                            }
-                                        },
-                                    ),
-                            shape = RoundedCornerShape(SIZE_SMALL.dp),
-                            value = textFieldStateList[currentTextField].value,
-                            textStyle =
-                                LocalTextStyle.current.copy(
-                                    fontWeight = FontWeight.Bold,
-                                    textAlign = TextAlign.Center,
-                                ),
-                            colors =
-                                colors.copy(
-                                    cursorColor = Color.Transparent,
-                                    errorCursorColor = Color.Transparent,
-                                ),
-                            visualTransformation = visualTransformation,
-                            isError = hasError,
-                            singleLine = true,
-                            onValueChange = { newText: String ->
-                                if (!enabled) return@OutlinedTextField
+            DisableSelection {
+                BasicTextField(
+                    value = pinCode,
+                    onValueChange = { newText ->
+                        if (!enabled) return@BasicTextField
 
-                                if (
-                                    !newText.isDigitsOnly() ||
-                                    (
-                                        (
-                                            textFieldStateList.all { textField -> textField.value.isEmpty() } ||
-                                                textFieldStateList.all { textField -> textField.value.isNotEmpty() }
-                                        ) &&
-                                            currentTextField == fieldsRange.last &&
-                                            newText.isNotEmpty()
-                                    )
-                                ) {
-                                    return@OutlinedTextField
-                                }
+                        val sanitizedPin = sanitizePinInput(newText, length)
+                        if (sanitizedPin == pinCode) return@BasicTextField
 
-                                if (newText != textFieldStateList[currentTextField].value) {
-                                    textFieldStateList[currentTextField].value =
-                                        newText.replaceFirst(
-                                            textFieldStateList[currentTextField].value,
-                                            "",
-                                        )
+                        pinCode = sanitizedPin
+                        onPinUpdate.invoke(sanitizedPin)
 
-                                    // Check if all fields are valid.
-                                    if (
-                                        !textFieldStateList.any { textField -> textField.value.isEmpty() } &&
-                                        shouldHideKeyboardOnCompletion
-                                    ) {
-                                        focusManager.clearFocus()
-                                        keyboardController?.hide()
-                                    } else if (currentTextField < fieldsRange.last && newText.isNotEmpty()) {
-                                        focusRequesters.requestFocus(currentTextField + 1)
-                                    }
-                                    // Notify listener.
-                                    onPinUpdate.invoke(
-                                        textFieldStateList.joinToString(
-                                            separator = "",
-                                            transform = { textField ->
-                                                textField.value
-                                            },
-                                        ),
-                                    )
+                        if (sanitizedPin.length == length && shouldHideKeyboardOnCompletion) {
+                            focusManager.clearFocus()
+                            keyboardController?.hide()
+                        }
+                    },
+                    enabled = enabled,
+                    singleLine = true,
+                    textStyle =
+                        LocalTextStyle.current.copy(
+                            color = Color.Transparent,
+                            fontWeight = FontWeight.Bold,
+                            textAlign = TextAlign.Center,
+                        ),
+                    cursorBrush = SolidColor(Color.Transparent),
+                    keyboardOptions =
+                        KeyboardOptions(
+                            keyboardType = KeyboardType.NumberPassword,
+                            imeAction = ImeAction.Done,
+                        ),
+                    keyboardActions =
+                        KeyboardActions(
+                            onDone = {
+                                keyboardController?.hide()
+                            },
+                        ),
+                    visualTransformation = visualTransformation,
+                    modifier =
+                        Modifier
+                            .fillMaxWidth()
+                            .focusRequester(focusRequester)
+                            .onFocusChanged { isFocused = it.isFocused }
+                            .semantics {
+                                if (visualTransformation != VisualTransformation.None) {
+                                    password()
                                 }
                             },
-                            keyboardOptions =
-                                KeyboardOptions(
-                                    keyboardType = KeyboardType.NumberPassword,
-                                    imeAction =
-                                        when (currentTextField < fieldsRange.last) {
-                                            true -> ImeAction.Next
-                                            false -> ImeAction.Done
-                                        },
-                                ),
-                            keyboardActions =
-                                KeyboardActions(
-                                    onNext = {
-                                        focusRequesters.requestFocus(currentTextField + 1)
+                    decorationBox = { innerTextField ->
+                        Box(
+                            modifier =
+                                Modifier
+                                    .fillMaxWidth()
+                                    .clickable(
+                                        enabled = enabled,
+                                        interactionSource = interactionSource,
+                                        indication = null,
+                                    ) {
+                                        focusRequester.requestFocus()
+                                        keyboardController?.show()
                                     },
-                                    onDone = {
-                                        keyboardController?.hide()
-                                    },
-                                ),
-                        )
-                    }
+                            contentAlignment = Alignment.Center,
+                        ) {
+                            Row(
+                                modifier = Modifier.wrapContentWidth(),
+                                horizontalArrangement = Arrangement.SpaceBetween,
+                            ) {
+                                for (currentTextField in fieldsRange) {
+                                    val isActiveSlot =
+                                        enabled &&
+                                            (pinCode.length == currentTextField || (pinCode.length == length && currentTextField == fieldsRange.last))
+                                    val borderColor =
+                                        when {
+                                            hasError -> MaterialTheme.colorScheme.error
+                                            isFocused && isActiveSlot -> MaterialTheme.colorScheme.primary
+                                            else -> MaterialTheme.colorScheme.outlineVariant
+                                        }
 
-                    if (currentTextField != fieldsRange.last) {
-                        HSpacer.Small()
-                    }
-                }
+                                    Box(
+                                        modifier =
+                                            Modifier
+                                                .testTag(TestTag.pinTextField(currentTextField))
+                                                .then(
+                                                    pinWidth?.let { dp ->
+                                                        Modifier
+                                                            .width(dp)
+                                                            .padding(vertical = SPACING_SMALL.dp)
+                                                    } ?: Modifier
+                                                        .weight(1f)
+                                                        .wrapContentSize(),
+                                                ).height(56.dp)
+                                                .border(
+                                                    width = 1.dp,
+                                                    color = borderColor,
+                                                    shape = RoundedCornerShape(SIZE_SMALL.dp),
+                                                )
+                                                .background(
+                                                    color = MaterialTheme.colorScheme.surface,
+                                                    shape = RoundedCornerShape(SIZE_SMALL.dp),
+                                                ),
+                                        contentAlignment = Alignment.Center,
+                                    ) {
+                                        Text(
+                                            text = pinSlotCharacter(pinCode, currentTextField, visualTransformation),
+                                            style =
+                                                MaterialTheme.typography.titleLarge.copy(
+                                                    color = MaterialTheme.colorScheme.onSurface,
+                                                    fontWeight = FontWeight.Bold,
+                                                ),
+                                        )
+                                    }
+
+                                    if (currentTextField != fieldsRange.last) {
+                                        HSpacer.Small()
+                                    }
+                                }
+                            }
+
+                            Box(
+                                modifier =
+                                    Modifier
+                                        .matchParentSize()
+                                        .padding(vertical = SPACING_SMALL.dp)
+                                        .background(Color.Transparent),
+                            ) {
+                                Box(
+                                    modifier =
+                                        Modifier
+                                            .size(1.dp)
+                                            .align(Alignment.Center),
+                                ) {
+                                    innerTextField()
+                                }
+                            }
+                        }
+                    },
+                )
             }
             errorMessage?.let {
                 Text(
@@ -290,7 +302,7 @@ fun WrapPinTextField(
 
             OneTimeLaunchedEffect {
                 if (focusOnCreate) {
-                    focusRequesters.requestFocus(0)
+                    focusRequester.requestFocus()
                 }
             }
         }

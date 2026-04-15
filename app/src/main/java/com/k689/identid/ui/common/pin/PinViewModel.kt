@@ -41,9 +41,6 @@ import com.k689.identid.ui.mvi.ViewEvent
 import com.k689.identid.ui.mvi.ViewSideEffect
 import com.k689.identid.ui.mvi.ViewState
 import com.k689.identid.ui.serializer.UiSerializer
-import com.k689.identid.validator.Form
-import com.k689.identid.validator.FormValidationResult
-import com.k689.identid.validator.Rule
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import org.koin.android.annotation.KoinViewModel
@@ -58,9 +55,7 @@ enum class PinValidationState {
 data class State(
     private val pinFlow: PinFlow,
     val isLoading: Boolean = false,
-    val isButtonEnabled: Boolean = false,
     val quickPinError: String? = null,
-    val validationResult: FormValidationResult = FormValidationResult(false),
     val subtitle: String = "",
     val title: String = "",
     val pin: String = "",
@@ -91,10 +86,6 @@ data class State(
 sealed class Event : ViewEvent {
     data class NextButtonPressed(
         val pin: String,
-    ) : Event()
-
-    data class OnQuickPinEntered(
-        val quickPin: String,
     ) : Event()
 
     data object CancelPressed : Event()
@@ -176,25 +167,6 @@ class PinViewModel(
 
     override fun handleEvents(event: Event) {
         when (event) {
-            is Event.OnQuickPinEntered -> {
-                // Optimization: Only update state and validate when the PIN is complete.
-                // This reduces the number of UI recompositions and background validation tasks.
-                if (event.quickPin.length == viewState.value.quickPinSize) {
-                    validateForm(event.quickPin)
-                } else {
-                    // Update the pin in state without full validation loop for every character
-                    // This keeps the UI responsive during typing.
-                    setState {
-                        copy(
-                            pin = event.quickPin,
-                            isButtonEnabled = false,
-                            quickPinError = null,
-                            resetPin = false,
-                        )
-                    }
-                }
-            }
-
             is Event.NextButtonPressed -> {
                 val state = viewState.value
 
@@ -205,12 +177,24 @@ class PinViewModel(
                     }
 
                     PinValidationState.REENTER -> {
+                        setState {
+                            copy(
+                                pin = event.pin,
+                                quickPinError = null,
+                            )
+                        }
                         // Save the new pin
-                        saveNewPin(newPin = state.pin, enteredPin = state.enteredPin)
+                        saveNewPin(newPin = event.pin, enteredPin = state.enteredPin)
                     }
 
                     PinValidationState.VALIDATE -> {
-                        validatePin(currentPin = state.pin)
+                        setState {
+                            copy(
+                                pin = event.pin,
+                                quickPinError = null,
+                            )
+                        }
+                        validatePin(currentPin = event.pin)
                     }
                 }
             }
@@ -324,37 +308,6 @@ class PinViewModel(
                         }
                     }
                 }
-        }
-    }
-
-    private fun getListOfRules(pin: String): Form =
-        Form(
-            mapOf(
-                listOf(
-                    Rule.ValidateStringRange(
-                        viewState.value.quickPinSize..viewState.value.quickPinSize,
-                        "",
-                    ),
-                    Rule.ValidateRegex(
-                        "-?\\d+(\\.\\d+)?".toRegex(),
-                        resourceProvider.getString(R.string.quick_pin_numerical_rule_invalid_error_message),
-                    ),
-                ) to pin,
-            ),
-        )
-
-    private fun validateForm(pin: String) {
-        viewModelScope.launch {
-            val validationResult = interactor.validateForm(getListOfRules(pin))
-            setState {
-                copy(
-                    validationResult = validationResult,
-                    isButtonEnabled = validationResult.isValid,
-                    quickPinError = validationResult.message,
-                    pin = pin,
-                    resetPin = false,
-                )
-            }
         }
     }
 

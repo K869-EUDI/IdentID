@@ -37,8 +37,6 @@ data class MoveWalletApprovalState(
     val isLoading: Boolean = true,
     val error: ContentErrorConfig? = null,
     val documents: List<TransferableDocument> = emptyList(),
-    val pinInput: String = "",
-    val pinError: Boolean = false,
     val isSending: Boolean = false,
     val isSent: Boolean = false,
 ) : ViewState
@@ -52,16 +50,17 @@ sealed class MoveWalletApprovalEvent : ViewEvent {
         val context: Context,
     ) : MoveWalletApprovalEvent()
 
-    data class PinChanged(
-        val pin: String,
-    ) : MoveWalletApprovalEvent()
-
     data class ConfirmTransfer(
+        val pin: String,
         val context: Context,
     ) : MoveWalletApprovalEvent()
+
+    data object DismissError : MoveWalletApprovalEvent()
 }
 
 sealed class MoveWalletApprovalEffect : ViewSideEffect {
+    data object InvalidPin : MoveWalletApprovalEffect()
+
     sealed class Navigation : MoveWalletApprovalEffect() {
         data object Pop : Navigation()
 
@@ -91,12 +90,12 @@ class MoveWalletApprovalViewModel(
                 setEffect { MoveWalletApprovalEffect.Navigation.Pop }
             }
 
-            is MoveWalletApprovalEvent.PinChanged -> {
-                setState { copy(pinInput = event.pin, pinError = false) }
+            is MoveWalletApprovalEvent.ConfirmTransfer -> {
+                confirmAndSend(pin = event.pin, context = event.context)
             }
 
-            is MoveWalletApprovalEvent.ConfirmTransfer -> {
-                confirmAndSend(event.context)
+            MoveWalletApprovalEvent.DismissError -> {
+                setState { copy(error = null) }
             }
         }
     }
@@ -154,14 +153,16 @@ class MoveWalletApprovalViewModel(
         }
     }
 
-    private fun confirmAndSend(context: Context) {
-        val currentPin = viewState.value.pinInput
-        if (!pinStorageController.isPinValid(currentPin)) {
-            setState { copy(pinError = true) }
+    private fun confirmAndSend(
+        pin: String,
+        context: Context,
+    ) {
+        if (!pinStorageController.isPinValid(pin)) {
+            setEffect { MoveWalletApprovalEffect.InvalidPin }
             return
         }
 
-        setState { copy(isSending = true, pinError = false) }
+        setState { copy(isSending = true) }
 
         viewModelScope.launch {
             try {
@@ -182,7 +183,7 @@ class MoveWalletApprovalViewModel(
                             error =
                                 ContentErrorConfig(
                                     errorSubTitle = resourceProvider.getString(R.string.transfer_error_no_connection),
-                                    onRetry = { setEvent(MoveWalletApprovalEvent.Init(context)) },
+                                    onRetry = { setEvent(MoveWalletApprovalEvent.DismissError) },
                                     onCancel = { setEffect { MoveWalletApprovalEffect.Navigation.Pop } },
                                 ),
                         )
@@ -195,7 +196,7 @@ class MoveWalletApprovalViewModel(
                         error =
                             ContentErrorConfig(
                                 errorSubTitle = e.localizedMessage ?: resourceProvider.getString(R.string.transfer_error_transfer_failed),
-                                onRetry = { setEvent(MoveWalletApprovalEvent.ConfirmTransfer(context)) },
+                                onRetry = { setEvent(MoveWalletApprovalEvent.DismissError) },
                                 onCancel = { setEffect { MoveWalletApprovalEffect.Navigation.Pop } },
                             ),
                     )
