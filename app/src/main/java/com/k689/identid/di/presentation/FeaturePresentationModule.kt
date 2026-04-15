@@ -47,8 +47,8 @@ fun providePresentationRequestInteractor(
     PresentationRequestInteractorImpl(
         resourceProvider,
         uuidProvider,
-        walletCorePresentationController,
         walletCoreDocumentsController,
+        walletCorePresentationController,
     )
 
 @Factory
@@ -57,8 +57,8 @@ fun providePresentationLoadingInteractor(
     deviceAuthenticationInteractor: DeviceAuthenticationInteractor,
 ): PresentationLoadingInteractor =
     PresentationLoadingInteractorImpl(
-        walletCorePresentationController,
         deviceAuthenticationInteractor,
+        walletCorePresentationController,
     )
 
 @Factory
@@ -69,8 +69,8 @@ fun providePresentationSuccessInteractor(
     uuidProvider: UuidProvider,
 ): PresentationSuccessInteractor =
     PresentationSuccessInteractorImpl(
-        walletCorePresentationController,
         walletCoreDocumentsController,
         resourceProvider,
         uuidProvider,
+        walletCorePresentationController,
     )

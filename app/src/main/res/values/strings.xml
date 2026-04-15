@@ -35,9 +35,9 @@
     <string name="generic_default_issuer_name">Issuer</string>
     <string name="generic_view_details">View details</string>
     <string name="generic_deferred_success_text">In progress!</string>
-    <string name="generic_bottom_sheet_delete_title">Delete document?</string>
-    <string name="generic_bottom_sheet_delete_subtitle">This document will be permanently deleted from your wallet and may affect access to services.</string>
-    <string name="generic_bottom_sheet_delete_primary_button_text">Delete</string>
+    <string name="generic_bottom_sheet_delete_title">Remove document?</string>
+    <string name="generic_bottom_sheet_delete_subtitle">This document will be removed from your wallet and may affect access to services.</string>
+    <string name="generic_bottom_sheet_delete_primary_button_text">Remove</string>
     <string name="generic_bottom_sheet_delete_secondary_button_text">Cancel</string>
     <string name="generic_scan_qr">Scan QR</string>
     <string name="generic_or">OR</string>
@@ -204,7 +204,7 @@
     <string name="dashboard_document_deferred_pending">Pending</string>
     <string name="dashboard_document_deferred_failed">Issuance failed</string>
     <string name="dashboard_document_revoked">Revoked</string>
-    <string name="dashboard_document_credentials_info_text">%d/%d</string>
+    <string name="dashboard_document_credentials_info_text">%1$d/%2$d</string>
     <string name="dashboard_bottom_sheet_bluetooth_title">Enable bluetooth?</string>
     <string name="dashboard_bottom_sheet_bluetooth_subtitle">Enable bluetooth to share your information using the Authenticate in person or online option</string>
     <string name="dashboard_bottom_sheet_bluetooth_primary_button_text">@string/generic_enable_capitalized</string>
@@ -410,7 +410,7 @@
     <string name="document_details_bottom_sheet_delete_subtitle">@string/generic_bottom_sheet_delete_subtitle</string>
     <string name="document_details_bottom_sheet_delete_primary_button_text">@string/generic_bottom_sheet_delete_primary_button_text</string>
     <string name="document_details_bottom_sheet_delete_secondary_button_text">@string/generic_bottom_sheet_delete_secondary_button_text</string>
-    <string name="document_details_document_credentials_info_text">%d/%d instances remaining</string>
+    <string name="document_details_document_credentials_info_text">%1$d/%2$d instances remaining</string>
     <string name="document_details_document_credentials_info_more_info_text">More info</string>
     <string name="document_details_document_credentials_info_expanded_text_subtitle">For security reasons, this document can be shared a limited number of times before it needs to be re-issued by the issuing authority.</string>
     <string name="document_details_document_credentials_info_expanded_button_update_now_text">Issue new</string>

@@ -206,7 +206,7 @@
     <string name="dashboard_document_deferred_pending">Laukiama</string>
     <string name="dashboard_document_deferred_failed">Išdavimas nepavyko</string>
     <string name="dashboard_document_revoked">Atšauktas</string>
-    <string name="dashboard_document_credentials_info_text">%d/%d</string>
+    <string name="dashboard_document_credentials_info_text">%1$d/%2$d</string>
     <string name="dashboard_bottom_sheet_bluetooth_title">Įjungti „Bluetooth"?</string>
     <string name="dashboard_bottom_sheet_bluetooth_subtitle">Įjunkite „Bluetooth", kad galėtumėte dalintis informacija naudodami autentifikavimą asmeniškai arba internetu</string>
     <string name="dashboard_bottom_sheet_bluetooth_primary_button_text">@string/generic_enable_capitalized</string>
@@ -421,7 +421,7 @@
     <string name="document_details_bottom_sheet_delete_subtitle">@string/generic_bottom_sheet_delete_subtitle</string>
     <string name="document_details_bottom_sheet_delete_primary_button_text">@string/generic_bottom_sheet_delete_primary_button_text</string>
     <string name="document_details_bottom_sheet_delete_secondary_button_text">@string/generic_bottom_sheet_delete_secondary_button_text</string>
-    <string name="document_details_document_credentials_info_text">Liko %d/%d egzempliorių</string>
+    <string name="document_details_document_credentials_info_text">Liko %1$d/%2$d egzempliorių</string>
     <string name="document_details_document_credentials_info_more_info_text">Daugiau informacijos</string>
     <string name="document_details_document_credentials_info_expanded_text_subtitle">Saugumo sumetimais šis dokumentas gali būti pateiktas ribotą skaičių kartų, po to jį reikia iš naujo gauti iš išdavimo institucijos.</string>
     <string name="document_details_document_credentials_info_expanded_button_update_now_text">Gauti naują</string>

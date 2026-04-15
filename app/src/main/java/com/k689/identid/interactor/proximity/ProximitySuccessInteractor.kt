@@ -23,6 +23,8 @@ import com.k689.identid.extension.business.ifEmptyOrNull
 import com.k689.identid.extension.business.safeAsync
 import com.k689.identid.extension.common.toExpandableListItems
 import com.k689.identid.extension.core.toClaimPath
+import com.k689.identid.interactor.common.ScopedPresentationInteractor
+import com.k689.identid.interactor.common.ScopedPresentationInteractorDelegate
 import com.k689.identid.provider.UuidProvider
 import com.k689.identid.provider.resources.ResourceProvider
 import com.k689.identid.ui.component.AppIcons
@@ -48,18 +50,19 @@ sealed class ProximitySuccessInteractorGetUiItemsPartialState {
     ) : ProximitySuccessInteractorGetUiItemsPartialState()
 }
 
-interface ProximitySuccessInteractor {
+interface ProximitySuccessInteractor : ScopedPresentationInteractor {
     fun getUiItems(): Flow<ProximitySuccessInteractorGetUiItemsPartialState>
 
     fun stopPresentation()
 }
 
 class ProximitySuccessInteractorImpl(
-    private val walletCorePresentationController: WalletCorePresentationController,
     private val walletCoreDocumentsController: WalletCoreDocumentsController,
     private val resourceProvider: ResourceProvider,
     private val uuidProvider: UuidProvider,
-) : ProximitySuccessInteractor {
+    walletCorePresentationController: WalletCorePresentationController? = null,
+) : ProximitySuccessInteractor,
+    ScopedPresentationInteractorDelegate(walletCorePresentationController) {
     private val genericErrorMsg
         get() = resourceProvider.genericErrorMessage()
 

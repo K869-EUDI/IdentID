@@ -518,7 +518,6 @@ class WalletCoreDocumentsControllerImpl(
                 val manager: OpenId4VciManager? =
                     deferredDoc.issuerMetadata
                         ?.credentialIssuerIdentifier
-                        ?.toString()
                         ?.let { id ->
                             openId4VciManagers.entries
                                 .find { (vciConfig, _) ->

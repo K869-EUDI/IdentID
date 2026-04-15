@@ -22,6 +22,8 @@ import com.k689.identid.config.toDomainConfig
 import com.k689.identid.controller.core.TransferEventPartialState
 import com.k689.identid.controller.core.WalletCorePresentationController
 import com.k689.identid.extension.business.safeAsync
+import com.k689.identid.interactor.common.ScopedPresentationInteractor
+import com.k689.identid.interactor.common.ScopedPresentationInteractorDelegate
 import com.k689.identid.provider.resources.ResourceProvider
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
@@ -42,7 +44,7 @@ sealed class ProximityQRPartialState {
     data object Disconnected : ProximityQRPartialState()
 }
 
-interface ProximityQRInteractor {
+interface ProximityQRInteractor : ScopedPresentationInteractor {
     fun startQrEngagement(): Flow<ProximityQRPartialState>
 
     fun toggleNfcEngagement(
@@ -57,8 +59,9 @@ interface ProximityQRInteractor {
 
 class ProximityQRInteractorImpl(
     private val resourceProvider: ResourceProvider,
-    private val walletCorePresentationController: WalletCorePresentationController,
-) : ProximityQRInteractor {
+    walletCorePresentationController: WalletCorePresentationController? = null,
+) : ProximityQRInteractor,
+    ScopedPresentationInteractorDelegate(walletCorePresentationController) {
     private val genericErrorMsg
         get() = resourceProvider.genericErrorMessage()
 

@@ -21,6 +21,8 @@ import com.k689.identid.config.toDomainConfig
 import com.k689.identid.controller.core.TransferEventPartialState
 import com.k689.identid.controller.core.WalletCoreDocumentsController
 import com.k689.identid.controller.core.WalletCorePresentationController
+import com.k689.identid.interactor.common.ScopedPresentationInteractor
+import com.k689.identid.interactor.common.ScopedPresentationInteractorDelegate
 import com.k689.identid.extension.business.safeAsync
 import com.k689.identid.provider.UuidProvider
 import com.k689.identid.provider.resources.ResourceProvider
@@ -48,7 +50,7 @@ sealed class ProximityRequestInteractorPartialState {
     data object Disconnect : ProximityRequestInteractorPartialState()
 }
 
-interface ProximityRequestInteractor {
+interface ProximityRequestInteractor : ScopedPresentationInteractor {
     fun getRequestDocuments(): Flow<ProximityRequestInteractorPartialState>
 
     fun stopPresentation()
@@ -61,9 +63,10 @@ interface ProximityRequestInteractor {
 class ProximityRequestInteractorImpl(
     private val resourceProvider: ResourceProvider,
     private val uuidProvider: UuidProvider,
-    private val walletCorePresentationController: WalletCorePresentationController,
     private val walletCoreDocumentsController: WalletCoreDocumentsController,
-) : ProximityRequestInteractor {
+    walletCorePresentationController: WalletCorePresentationController? = null,
+) : ProximityRequestInteractor,
+    ScopedPresentationInteractorDelegate(walletCorePresentationController) {
     private val genericErrorMsg
         get() = resourceProvider.genericErrorMessage()
 

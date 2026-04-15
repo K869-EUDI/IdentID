@@ -55,15 +55,15 @@ fun provideProximityRequestInteractor(
     ProximityRequestInteractorImpl(
         resourceProvider,
         uuidProvider,
-        walletCorePresentationController,
         walletCoreDocumentsController,
+        walletCorePresentationController,
     )
 
 @Factory
 fun provideProximityLoadingInteractor(
     @ScopeId(name = PRESENTATION_SCOPE_ID) walletCorePresentationController: WalletCorePresentationController,
     deviceAuthenticationInteractor: DeviceAuthenticationInteractor,
-): ProximityLoadingInteractor = ProximityLoadingInteractorImpl(walletCorePresentationController, deviceAuthenticationInteractor)
+): ProximityLoadingInteractor = ProximityLoadingInteractorImpl(deviceAuthenticationInteractor, walletCorePresentationController)
 
 @Factory
 fun provideProximitySuccessInteractor(
@@ -73,8 +73,8 @@ fun provideProximitySuccessInteractor(
     uuidProvider: UuidProvider,
 ): ProximitySuccessInteractor =
     ProximitySuccessInteractorImpl(
-        walletCorePresentationController,
         walletCoreDocumentsController,
         resourceProvider,
         uuidProvider,
+        walletCorePresentationController,
     )

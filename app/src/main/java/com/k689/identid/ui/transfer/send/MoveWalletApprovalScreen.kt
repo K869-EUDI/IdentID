@@ -33,6 +33,9 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
@@ -62,6 +65,8 @@ fun MoveWalletApprovalScreen(
 ) {
     val state: MoveWalletApprovalState by viewModel.viewState.collectAsStateWithLifecycle()
     val context = LocalContext.current
+    var pinInput by rememberSaveable { mutableStateOf("") }
+    var pinError by rememberSaveable { mutableStateOf(false) }
 
     ContentScreen(
         isLoading = state.isLoading || state.isSending,
@@ -71,8 +76,13 @@ fun MoveWalletApprovalScreen(
     ) { paddingValues ->
         Content(
             state = state,
-            onPinChanged = { viewModel.setEvent(MoveWalletApprovalEvent.PinChanged(it)) },
-            onConfirm = { viewModel.setEvent(MoveWalletApprovalEvent.ConfirmTransfer(context)) },
+            pinInput = pinInput,
+            pinError = pinError,
+            onPinChanged = {
+                pinInput = it
+                pinError = false
+            },
+            onConfirm = { viewModel.setEvent(MoveWalletApprovalEvent.ConfirmTransfer(pin = pinInput, context = context)) },
             paddingValues = paddingValues,
         )
     }
@@ -85,6 +95,10 @@ fun MoveWalletApprovalScreen(
         viewModel.effect
             .onEach { effect ->
                 when (effect) {
+                    MoveWalletApprovalEffect.InvalidPin -> {
+                        pinError = true
+                    }
+
                     is MoveWalletApprovalEffect.Navigation.Pop -> {
                         navController.popBackStack()
                     }
@@ -102,6 +116,8 @@ fun MoveWalletApprovalScreen(
 @Composable
 private fun Content(
     state: MoveWalletApprovalState,
+    pinInput: String,
+    pinError: Boolean,
     onPinChanged: (String) -> Unit,
     onConfirm: () -> Unit,
     paddingValues: PaddingValues,
@@ -135,13 +151,13 @@ private fun Content(
         Spacer(modifier = Modifier.height(SPACING_MEDIUM.dp))
 
         OutlinedTextField(
-            value = state.pinInput,
+            value = pinInput,
             onValueChange = onPinChanged,
             modifier = Modifier.fillMaxWidth(),
             label = { Text(stringResource(id = R.string.transfer_approval_pin_label)) },
-            isError = state.pinError,
+            isError = pinError,
             supportingText =
-                if (state.pinError) {
+                if (pinError) {
                     { Text(stringResource(id = R.string.transfer_approval_pin_error)) }
                 } else {
                     null
@@ -158,7 +174,7 @@ private fun Content(
             buttonConfig =
                 ButtonConfig(
                     type = ButtonType.PRIMARY,
-                    enabled = state.pinInput.isNotEmpty() && !state.isSending,
+                    enabled = pinInput.isNotEmpty() && !state.isSending,
                     onClick = onConfirm,
                 ),
         ) {

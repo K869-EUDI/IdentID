@@ -24,6 +24,7 @@ import com.k689.identid.config.ConfigNavigation
 import com.k689.identid.config.NavigationType
 import com.k689.identid.config.OnBackNavigationConfig
 import com.k689.identid.config.RequestUriConfig
+import com.k689.identid.di.core.getOrCreatePresentationScope
 import com.k689.identid.extension.business.ifEmptyOrNull
 import com.k689.identid.interactor.presentation.PresentationRequestInteractor
 import com.k689.identid.interactor.presentation.PresentationRequestInteractorPartialState
@@ -194,6 +195,7 @@ class PresentationRequestViewModel(
     override fun cleanUp() {
         super.cleanUp()
         interactor.stopPresentation()
+        getOrCreatePresentationScope().close()
     }
 
     private fun getRelyingPartyData(

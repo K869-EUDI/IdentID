@@ -21,6 +21,8 @@ import com.k689.identid.config.toDomainConfig
 import com.k689.identid.controller.core.TransferEventPartialState
 import com.k689.identid.controller.core.WalletCoreDocumentsController
 import com.k689.identid.controller.core.WalletCorePresentationController
+import com.k689.identid.interactor.common.ScopedPresentationInteractor
+import com.k689.identid.interactor.common.ScopedPresentationInteractorDelegate
 import com.k689.identid.extension.business.safeAsync
 import com.k689.identid.provider.UuidProvider
 import com.k689.identid.provider.resources.ResourceProvider
@@ -48,7 +50,7 @@ sealed class PresentationRequestInteractorPartialState {
     data object Disconnect : PresentationRequestInteractorPartialState()
 }
 
-interface PresentationRequestInteractor {
+interface PresentationRequestInteractor : ScopedPresentationInteractor {
     fun getRequestDocuments(): Flow<PresentationRequestInteractorPartialState>
 
     fun stopPresentation()
@@ -61,9 +63,10 @@ interface PresentationRequestInteractor {
 class PresentationRequestInteractorImpl(
     private val resourceProvider: ResourceProvider,
     private val uuidProvider: UuidProvider,
-    private val walletCorePresentationController: WalletCorePresentationController,
     private val walletCoreDocumentsController: WalletCoreDocumentsController,
-) : PresentationRequestInteractor {
+    walletCorePresentationController: WalletCorePresentationController? = null,
+) : PresentationRequestInteractor,
+    ScopedPresentationInteractorDelegate(walletCorePresentationController) {
     private val genericErrorMsg
         get() = resourceProvider.genericErrorMessage()
 

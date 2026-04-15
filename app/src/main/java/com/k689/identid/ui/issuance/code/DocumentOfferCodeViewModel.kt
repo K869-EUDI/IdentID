@@ -22,7 +22,7 @@ import com.k689.identid.R
 import com.k689.identid.config.ConfigNavigation
 import com.k689.identid.config.IssuanceSuccessUiConfig
 import com.k689.identid.config.OfferCodeUiConfig
-import com.k689.identid.di.common.CREDENTIAL_OFFER_ISSUANCE_SCOPE_ID
+import com.k689.identid.di.common.getOrCreateCredentialOfferScope
 import com.k689.identid.interactor.issuance.DocumentOfferInteractor
 import com.k689.identid.interactor.issuance.IssueDocumentsInteractorPartialState
 import com.k689.identid.navigation.IssuanceScreens
@@ -39,7 +39,6 @@ import eu.europa.ec.eudi.wallet.document.DocumentId
 import kotlinx.coroutines.launch
 import org.koin.android.annotation.KoinViewModel
 import org.koin.core.annotation.InjectedParam
-import org.koin.core.annotation.ScopeId
 
 private typealias PinCode = String
 
@@ -75,11 +74,19 @@ sealed class Effect : ViewSideEffect {
 
 @KoinViewModel
 class DocumentOfferCodeViewModel(
-    @ScopeId(name = CREDENTIAL_OFFER_ISSUANCE_SCOPE_ID) private val documentOfferInteractor: DocumentOfferInteractor,
     private val resourceProvider: ResourceProvider,
     private val uiSerializer: UiSerializer,
     @InjectedParam private val offerCodeSerializedConfig: String,
+    documentOfferInteractor: DocumentOfferInteractor? = null,
 ) : MviViewModel<Event, State, Effect>() {
+    private var _documentOfferInteractor: DocumentOfferInteractor? = documentOfferInteractor
+
+    private val documentOfferInteractor: DocumentOfferInteractor
+        get() = _documentOfferInteractor
+            ?: getOrCreateCredentialOfferScope().get<DocumentOfferInteractor>().also {
+                _documentOfferInteractor = it
+            }
+
     override fun setInitialState(): State {
         val deserializedOfferCodeUiConfig =
             uiSerializer.fromBase64(

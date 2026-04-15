@@ -23,6 +23,8 @@ import com.k689.identid.controller.core.SendRequestedDocumentsPartialState
 import com.k689.identid.controller.core.WalletCorePartialState
 import com.k689.identid.controller.core.WalletCorePresentationController
 import com.k689.identid.interactor.common.DeviceAuthenticationInteractor
+import com.k689.identid.interactor.common.ScopedPresentationInteractor
+import com.k689.identid.interactor.common.ScopedPresentationInteractorDelegate
 import com.k689.identid.model.authentication.BiometricCrypto
 import com.k689.identid.model.core.AuthenticationData
 import kotlinx.coroutines.flow.Flow
@@ -55,7 +57,7 @@ sealed class PresentationLoadingSendRequestedDocumentPartialState {
     data object Success : PresentationLoadingSendRequestedDocumentPartialState()
 }
 
-interface PresentationLoadingInteractor {
+interface PresentationLoadingInteractor : ScopedPresentationInteractor {
     fun observeResponse(): Flow<PresentationLoadingObserveResponsePartialState>
 
     fun sendRequestedDocuments(): PresentationLoadingSendRequestedDocumentPartialState
@@ -69,9 +71,10 @@ interface PresentationLoadingInteractor {
 }
 
 class PresentationLoadingInteractorImpl(
-    private val walletCorePresentationController: WalletCorePresentationController,
     private val deviceAuthenticationInteractor: DeviceAuthenticationInteractor,
-) : PresentationLoadingInteractor {
+    walletCorePresentationController: WalletCorePresentationController? = null,
+) : PresentationLoadingInteractor,
+    ScopedPresentationInteractorDelegate(walletCorePresentationController) {
     override fun observeResponse(): Flow<PresentationLoadingObserveResponsePartialState> =
         walletCorePresentationController.observeSentDocumentsRequest().mapNotNull { response ->
             when (response) {

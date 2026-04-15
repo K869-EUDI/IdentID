@@ -23,6 +23,8 @@ import com.k689.identid.extension.business.ifEmptyOrNull
 import com.k689.identid.extension.business.safeAsync
 import com.k689.identid.extension.common.toExpandableListItems
 import com.k689.identid.extension.core.toClaimPath
+import com.k689.identid.interactor.common.ScopedPresentationInteractor
+import com.k689.identid.interactor.common.ScopedPresentationInteractorDelegate
 import com.k689.identid.provider.UuidProvider
 import com.k689.identid.provider.resources.ResourceProvider
 import com.k689.identid.ui.component.AppIcons
@@ -49,7 +51,7 @@ sealed class PresentationSuccessInteractorGetUiItemsPartialState {
     ) : PresentationSuccessInteractorGetUiItemsPartialState()
 }
 
-interface PresentationSuccessInteractor {
+interface PresentationSuccessInteractor : ScopedPresentationInteractor {
     val initiatorRoute: String
     val redirectUri: URI?
 
@@ -59,17 +61,20 @@ interface PresentationSuccessInteractor {
 }
 
 class PresentationSuccessInteractorImpl(
-    private val walletCorePresentationController: WalletCorePresentationController,
     private val walletCoreDocumentsController: WalletCoreDocumentsController,
     private val resourceProvider: ResourceProvider,
     private val uuidProvider: UuidProvider,
-) : PresentationSuccessInteractor {
+    initialWalletCorePresentationController: WalletCorePresentationController? = null,
+) : PresentationSuccessInteractor,
+    ScopedPresentationInteractorDelegate(initialWalletCorePresentationController) {
     private val genericErrorMsg
         get() = resourceProvider.genericErrorMessage()
 
-    override val initiatorRoute: String = walletCorePresentationController.initiatorRoute
+    override val initiatorRoute: String
+        get() = walletCorePresentationController.initiatorRoute
 
-    override val redirectUri: URI? = walletCorePresentationController.redirectUri
+    override val redirectUri: URI?
+        get() = walletCorePresentationController.redirectUri
 
     override fun getUiItems(): Flow<PresentationSuccessInteractorGetUiItemsPartialState> =
         flow {
