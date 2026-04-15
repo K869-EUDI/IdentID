@@ -30,6 +30,7 @@ import androidx.compose.material3.ModalNavigationDrawer
 import androidx.compose.material3.NavigationDrawerItem
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.stringResource
@@ -49,7 +50,6 @@ fun HomeDrawer(
     onMenuItemClick: (DrawerMenuItem) -> Unit,
     content: @Composable () -> Unit,
 ) {
-    val groupedItems = menuItems.groupBy(DrawerMenuItem::groupName)
     ModalNavigationDrawer(
         drawerState = drawerState,
         drawerContent = {
@@ -68,9 +68,12 @@ fun HomeDrawer(
                             .height(56.dp),
                     contentScale = ContentScale.FillHeight,
                 )
-                groupedItems.forEach { group ->
+
+                val menuGroups = remember { menuItems.groupBy { it.groupName } }
+
+                menuGroups.forEach { (group, items) ->
                     Text(
-                        text = group.key,
+                        text = stringResource(group.titleRes),
                         style =
                             MaterialTheme.typography.labelLarge.copy(
                                 color = MaterialTheme.colorScheme.onSurfaceVariant,
@@ -79,7 +82,7 @@ fun HomeDrawer(
                             ),
                         modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp),
                     )
-                    group.value.forEach { item ->
+                    items.forEach { item ->
                         NavigationDrawerItem(
                             label = {
                                 Text(
