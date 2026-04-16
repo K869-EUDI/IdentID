@@ -106,6 +106,7 @@ sealed class Event : ViewEvent {
 
     data class TransactionItemPressed(
         val itemId: String,
+        val isPseudonym: Boolean,
     ) : Event()
 
     sealed class BottomSheet : Event() {

@@ -34,4 +34,7 @@ object TransactionFilterIds {
     const val FILTER_BY_TRANSACTION_TYPE_PRESENTATION = "by_transaction_type_presentation"
     const val FILTER_BY_TRANSACTION_TYPE_ISSUANCE = "by_transaction_type_issuance"
     const val FILTER_BY_TRANSACTION_TYPE_SIGNING = "by_transaction_type_signing"
+
+    const val FILTER_BY_TRANSACTION_TYPE_PSEUDONYM_REGISTRATION = "by_transaction_type_pseudonym_registration"
+    const val FILTER_BY_TRANSACTION_TYPE_PSEUDONYM_AUTHENTICATION = "by_transaction_type_pseudonym_authentication"
 }

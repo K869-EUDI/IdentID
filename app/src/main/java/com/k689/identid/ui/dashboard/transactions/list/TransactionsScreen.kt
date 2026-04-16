@@ -390,7 +390,7 @@ private fun TransactionCategory(
             items = transactionItems,
             onItemClick = { item ->
                 onEventSend(
-                    Event.TransactionItemPressed(itemId = item.itemId),
+                    Event.TransactionItemPressed(itemId = item.itemId, isPseudonym = transactionMap[item.itemId]!!.isPseudonym),
                 )
             },
             onExpandedChange = null,
@@ -742,6 +742,7 @@ private fun TransactionsScreenPreview() {
                     ),
                 uiStatus = entry.status,
                 transactionCategoryUi = entry.category,
+                isPseudonym = false,
             )
         }
 

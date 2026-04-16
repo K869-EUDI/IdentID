@@ -24,4 +24,5 @@ data class TransactionUi(
     val uiData: ExpandableListItemUi.SingleListItem,
     val uiStatus: TransactionStatusUi,
     val transactionCategoryUi: TransactionCategoryUi,
+    val isPseudonym: Boolean,
 ) : FilterableItemPayload

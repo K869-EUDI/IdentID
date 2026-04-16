@@ -39,6 +39,8 @@ enum class TransactionTypeUi {
     PRESENTATION,
     ISSUANCE,
     SIGNING,
+    PSEUDONYM_REGISTRATION,
+    PSEUDONYM_AUTHENTICATION,
 }
 
 fun TransactionLog.Status.toTransactionStatusUi(): TransactionStatusUi =
