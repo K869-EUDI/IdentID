@@ -18,10 +18,12 @@ package com.k689.identid.interactor.dashboard
 
 import com.k689.identid.R
 import com.k689.identid.controller.core.WalletCoreDocumentsController
+import com.k689.identid.controller.pseudonym.PseudonymTransactionLogger
 import com.k689.identid.extension.business.safeAsync
 import com.k689.identid.model.core.TransactionLogDataDomain
 import com.k689.identid.model.core.TransactionLogDataDomain.Companion.getTransactionDocumentNames
 import com.k689.identid.model.core.TransactionLogDataDomain.Companion.getTransactionTypeLabel
+import com.k689.identid.model.storage.PseudonymTransactionLog
 import com.k689.identid.model.validator.FilterAction
 import com.k689.identid.model.validator.FilterElement
 import com.k689.identid.model.validator.FilterElement.FilterItem
@@ -55,7 +57,6 @@ import com.k689.identid.util.business.isToday
 import com.k689.identid.util.business.isWithinLastHour
 import com.k689.identid.util.business.isWithinThisWeek
 import com.k689.identid.util.business.minutesToNow
-import com.k689.identid.util.business.safeLet
 import com.k689.identid.validator.FilterValidator
 import com.k689.identid.validator.FilterValidatorPartialState
 import kotlinx.coroutines.flow.Flow
@@ -152,6 +153,7 @@ class TransactionsInteractorImpl(
     private val resourceProvider: ResourceProvider,
     private val filterValidator: FilterValidator,
     private val walletCoreDocumentsController: WalletCoreDocumentsController,
+    private val pseudonymTransactionLogger: PseudonymTransactionLogger,
 ) : TransactionsInteractor {
     private val genericErrorMsg
         get() = resourceProvider.genericErrorMessage()
@@ -262,7 +264,9 @@ class TransactionsInteractorImpl(
     override fun getTransactions(): Flow<TransactionInteractorGetTransactionsPartialState> =
         flow {
             val transactions = walletCoreDocumentsController.getTransactionLogs()
-            val filterableItems =
+            val pseudonymTransactions = pseudonymTransactionLogger.getAllLogs()
+
+            val coreFilterableItems: List<FilterableItem> =
                 transactions.map { transaction ->
 
                     val trailingContentData =
@@ -294,6 +298,7 @@ class TransactionsInteractorImpl(
                                     ),
                                 uiStatus = transaction.status.toTransactionStatusUi(),
                                 transactionCategoryUi = getTransactionCategory(dateTime = transaction.creationLocalDateTime),
+                                isPseudonym = false,
                             ),
                         attributes =
                             TransactionsFilterableAttributes(
@@ -320,24 +325,98 @@ class TransactionsInteractorImpl(
                     )
                 }
 
-            val creationDates =
+            val pseudonymFilterableItems: List<FilterableItem> =
+                pseudonymTransactions.map { transaction ->
+                    val creationLocalDateTime =
+                        LocalDateTime.ofInstant(
+                            java.time.Instant.ofEpochMilli(transaction.timestamp),
+                            java.time.ZoneId.systemDefault(),
+                        )
+                    val transactionStatus =
+                        if (transaction.status == PseudonymTransactionLog.STATUS_COMPLETED) {
+                            TransactionStatusUi.Completed
+                        } else {
+                            TransactionStatusUi.Failed
+                        }
+                    val transactionType =
+                        if (transaction.transactionType == PseudonymTransactionLog.TYPE_REGISTRATION) {
+                            TransactionTypeUi.PSEUDONYM_REGISTRATION
+                        } else {
+                            TransactionTypeUi.PSEUDONYM_AUTHENTICATION
+                        }
+                    val transactionTypeLabel =
+                        if (transaction.transactionType == PseudonymTransactionLog.TYPE_REGISTRATION) {
+                            resourceProvider.getString(R.string.transactions_screen_filters_filter_by_transaction_type_pseudonym_registration)
+                        } else {
+                            resourceProvider.getString(R.string.transactions_screen_filters_filter_by_transaction_type_pseudonym_authentication)
+                        }
+
+                    val trailingContentData =
+                        ListItemTrailingContentDataUi.TextWithIcon(
+                            text = transactionTypeLabel,
+                            iconData = AppIcons.KeyboardArrowRight,
+                        )
+
+                    FilterableItem(
+                        payload =
+                            TransactionUi(
+                                uiData =
+                                    ExpandableListItemUi.SingleListItem(
+                                        header =
+                                            ListItemDataUi(
+                                                itemId = transaction.id,
+                                                mainContentData = ListItemMainContentDataUi.Text(text = transaction.rpName),
+                                                overlineText = transactionStatus.toUiText(resourceProvider),
+                                                supportingText = creationLocalDateTime.toFormattedDisplayableDate(),
+                                                trailingContentData = trailingContentData,
+                                            ),
+                                    ),
+                                uiStatus = transactionStatus,
+                                transactionCategoryUi = getTransactionCategory(dateTime = creationLocalDateTime),
+                                isPseudonym = true,
+                            ),
+                        attributes =
+                            TransactionsFilterableAttributes(
+                                searchTags =
+                                    buildList {
+                                        add(transaction.rpName)
+                                        transaction.userName?.let { add(it) }
+                                    },
+                                transactionStatus = transactionStatus,
+                                transactionType = transactionType,
+                                creationLocalDateTime = creationLocalDateTime,
+                                relyingPartyName = transaction.rpName,
+                            ),
+                    )
+                }
+
+            val filterableItems: List<FilterableItem> = coreFilterableItems + pseudonymFilterableItems
+
+            val creationDates: List<LocalDate> =
                 filterableItems
-                    .mapNotNull {
-                        (it.attributes as? TransactionsFilterableAttributes)?.creationLocalDateTime?.toLocalDate()
+                    .mapNotNull { filterableItem ->
+                        (filterableItem.attributes as? TransactionsFilterableAttributes)?.creationLocalDateTime?.toLocalDate()
                     }
 
-            emit(
+            val availableDates: Pair<LocalDate, LocalDate>? =
+                if (creationDates.isNotEmpty()) {
+                    val minDate = creationDates.minOrNull()
+                    val maxDate = creationDates.maxOrNull()
+                    if (minDate != null && maxDate != null) {
+                        Pair(minDate, maxDate)
+                    } else {
+                        null
+                    }
+                } else {
+                    null
+                }
+
+            val successState =
                 TransactionInteractorGetTransactionsPartialState.Success(
                     allTransactions = FilterableList(items = filterableItems),
-                    availableDates =
-                        safeLet(
-                            creationDates.minOrNull(),
-                            creationDates.maxOrNull(),
-                        ) { minDate, maxDate ->
-                            minDate to maxDate
-                        },
-                ),
-            )
+                    availableDates = availableDates,
+                )
+            emit(successState)
         }.safeAsync {
             TransactionInteractorGetTransactionsPartialState.Failure(
                 error = it.localizedMessage ?: genericErrorMsg,
@@ -490,26 +569,48 @@ class TransactionsInteractorImpl(
                         id = TransactionFilterIds.FILTER_BY_TRANSACTION_TYPE_GROUP_ID,
                         name = resourceProvider.getString(R.string.transactions_screen_filters_filter_by_transaction_type),
                         filters =
-                            listOf(
-                                FilterItem(
-                                    id = TransactionFilterIds.FILTER_BY_TRANSACTION_TYPE_PRESENTATION,
-                                    name = resourceProvider.getString(R.string.transactions_screen_filters_filter_by_transaction_type_presentation),
-                                    selected = true,
-                                    isDefault = true,
-                                ),
-                                FilterItem(
-                                    id = TransactionFilterIds.FILTER_BY_TRANSACTION_TYPE_ISSUANCE,
-                                    name = resourceProvider.getString(R.string.transactions_screen_filters_filter_by_transaction_type_issuance),
-                                    selected = true,
-                                    isDefault = true,
-                                ),
-                                FilterItem(
-                                    id = TransactionFilterIds.FILTER_BY_TRANSACTION_TYPE_SIGNING,
-                                    name = resourceProvider.getString(R.string.transactions_screen_filters_filter_by_transaction_type_signing),
-                                    selected = true,
-                                    isDefault = true,
-                                ),
-                            ),
+                            buildList {
+                                add(
+                                    FilterItem(
+                                        id = TransactionFilterIds.FILTER_BY_TRANSACTION_TYPE_PRESENTATION,
+                                        name = resourceProvider.getString(R.string.transactions_screen_filters_filter_by_transaction_type_presentation),
+                                        selected = true,
+                                        isDefault = true,
+                                    ),
+                                )
+                                add(
+                                    FilterItem(
+                                        id = TransactionFilterIds.FILTER_BY_TRANSACTION_TYPE_ISSUANCE,
+                                        name = resourceProvider.getString(R.string.transactions_screen_filters_filter_by_transaction_type_issuance),
+                                        selected = true,
+                                        isDefault = true,
+                                    ),
+                                )
+                                add(
+                                    FilterItem(
+                                        id = TransactionFilterIds.FILTER_BY_TRANSACTION_TYPE_SIGNING,
+                                        name = resourceProvider.getString(R.string.transactions_screen_filters_filter_by_transaction_type_signing),
+                                        selected = true,
+                                        isDefault = true,
+                                    ),
+                                )
+                                add(
+                                    FilterItem(
+                                        id = TransactionFilterIds.FILTER_BY_TRANSACTION_TYPE_PSEUDONYM_REGISTRATION,
+                                        name = resourceProvider.getString(R.string.transactions_screen_filters_filter_by_transaction_type_pseudonym_registration),
+                                        selected = true,
+                                        isDefault = true,
+                                    ),
+                                )
+                                add(
+                                    FilterItem(
+                                        id = TransactionFilterIds.FILTER_BY_TRANSACTION_TYPE_PSEUDONYM_AUTHENTICATION,
+                                        name = resourceProvider.getString(R.string.transactions_screen_filters_filter_by_transaction_type_pseudonym_authentication),
+                                        selected = true,
+                                        isDefault = true,
+                                    ),
+                                )
+                            },
                         filterableAction =
                             FilterMultipleAction<TransactionsFilterableAttributes> { attributes, filter ->
                                 when (filter.id) {
@@ -523,6 +624,14 @@ class TransactionsInteractorImpl(
 
                                     TransactionFilterIds.FILTER_BY_TRANSACTION_TYPE_SIGNING -> {
                                         attributes.transactionType == TransactionTypeUi.SIGNING
+                                    }
+
+                                    TransactionFilterIds.FILTER_BY_TRANSACTION_TYPE_PSEUDONYM_REGISTRATION -> {
+                                        attributes.transactionType == TransactionTypeUi.PSEUDONYM_REGISTRATION
+                                    }
+
+                                    TransactionFilterIds.FILTER_BY_TRANSACTION_TYPE_PSEUDONYM_AUTHENTICATION -> {
+                                        attributes.transactionType == TransactionTypeUi.PSEUDONYM_AUTHENTICATION
                                     }
 
                                     else -> {

@@ -20,6 +20,7 @@ import com.k689.identid.config.ConfigLogic
 import com.k689.identid.config.WalletCoreConfig
 import com.k689.identid.controller.core.WalletCoreDocumentsController
 import com.k689.identid.controller.log.LogController
+import com.k689.identid.controller.pseudonym.PseudonymTransactionLogger
 import com.k689.identid.interactor.dashboard.DashboardInteractor
 import com.k689.identid.interactor.dashboard.DashboardInteractorImpl
 import com.k689.identid.interactor.dashboard.DocumentDetailsInteractor
@@ -98,11 +99,13 @@ fun provideTransactionInteractor(
     resourceProvider: ResourceProvider,
     filterValidator: FilterValidator,
     walletCoreDocumentsController: WalletCoreDocumentsController,
+    pseudonymTransactionLogger: PseudonymTransactionLogger,
 ): TransactionsInteractor =
     TransactionsInteractorImpl(
         resourceProvider,
         filterValidator,
         walletCoreDocumentsController,
+        pseudonymTransactionLogger,
     )
 
 @Factory
@@ -130,11 +133,13 @@ fun provideDocumentDetailsInteractor(
 @Factory
 fun provideTransactionDetailsInteractor(
     walletCoreDocumentsController: WalletCoreDocumentsController,
+    pseudonymTransactionLogger: PseudonymTransactionLogger,
     resourceProvider: ResourceProvider,
     uuidProvider: UuidProvider,
 ): TransactionDetailsInteractor =
     TransactionDetailsInteractorImpl(
         walletCoreDocumentsController,
+        pseudonymTransactionLogger,
         resourceProvider,
         uuidProvider,
     )

@@ -79,8 +79,6 @@ sealed class DashboardScreens {
         parameters = "?pseudonymId={pseudonymId}",
     )
 
-    data object PseudonymTransactionLogList : Screen(name = "PSEUDONYM_TX_LOG_LIST")
-
     data object PseudonymTransactionLogDetail : Screen(
         name = "PSEUDONYM_TX_LOG_DETAIL",
         parameters = "?logId={logId}",

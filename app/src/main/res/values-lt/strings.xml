@@ -391,6 +391,8 @@
     <string name="transactions_screen_filters_filter_by_transaction_type_presentation">Pateikimas</string>
     <string name="transactions_screen_filters_filter_by_transaction_type_issuance">Išdavimas</string>
     <string name="transactions_screen_filters_filter_by_transaction_type_signing">Pasirašymas</string>
+    <string name="transactions_screen_filters_filter_by_transaction_type_pseudonym_registration">Pseudonimo registracija</string>
+    <string name="transactions_screen_filters_filter_by_transaction_type_pseudonym_authentication">Pseudonimo autentifikacija</string>
     <string name="transactions_screen_filters_date_from">Data nuo</string>
     <string name="transactions_screen_filters_date_to">Data iki</string>
     <string name="transactions_filter_item_status_completed">Atlikta</string>

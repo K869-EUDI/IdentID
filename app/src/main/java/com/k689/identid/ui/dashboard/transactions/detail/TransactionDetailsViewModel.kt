@@ -114,7 +114,10 @@ internal class TransactionDetailsViewModel(
         }
     }
 
-    private fun getTransactionDetails(event: Event) {
+    private fun getTransactionDetails(
+        event: Event,
+        isPseudonym: Boolean = false,
+    ) {
         setState {
             copy(
                 isLoading = true,
@@ -126,6 +129,7 @@ internal class TransactionDetailsViewModel(
             interactor
                 .getTransactionDetails(
                     transactionId = transactionId,
+                    isPseudonym = isPseudonym,
                 ).collect { response ->
                     when (response) {
                         is TransactionDetailsInteractorPartialState.Success -> {

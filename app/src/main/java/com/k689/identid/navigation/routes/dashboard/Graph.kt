@@ -38,7 +38,6 @@ import com.k689.identid.ui.dashboard.transactions.list.TransactionsScreen
 import com.k689.identid.ui.pseudonym.detail.PseudonymDetailScreen
 import com.k689.identid.ui.pseudonym.list.PseudonymListScreen
 import com.k689.identid.ui.pseudonym.transactions.PseudonymTransactionLogDetailScreen
-import com.k689.identid.ui.pseudonym.transactions.PseudonymTransactionLogListScreen
 import org.koin.androidx.compose.koinViewModel
 import org.koin.core.parameter.parametersOf
 
@@ -209,15 +208,6 @@ fun NavGraphBuilder.featureDashboardGraph(navController: NavController) {
                             )
                         },
                     ),
-            )
-        }
-
-        composable(
-            route = DashboardScreens.PseudonymTransactionLogList.screenRoute,
-        ) {
-            PseudonymTransactionLogListScreen(
-                navController = navController,
-                viewModel = koinViewModel(),
             )
         }
 

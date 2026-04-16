@@ -106,6 +106,7 @@ sealed class Event : ViewEvent {
 
     data class TransactionItemPressed(
         val itemId: String,
+        val isPseudonym: Boolean,
     ) : Event()
 
     sealed class BottomSheet : Event() {
@@ -220,7 +221,7 @@ class TransactionsViewModel(
             }
 
             is Event.TransactionItemPressed -> {
-                onTransactionItemClicked(itemId = event.itemId)
+                onTransactionItemClicked(itemId = event.itemId, isPseudonym = event.isPseudonym)
             }
 
             is Event.BottomSheet.UpdateBottomSheetState -> {
@@ -449,23 +450,41 @@ class TransactionsViewModel(
         }
     }
 
-    private fun onTransactionItemClicked(itemId: String) {
-        goToTransactionDetails(transactionId = itemId)
+    private fun onTransactionItemClicked(
+        itemId: String,
+        isPseudonym: Boolean,
+    ) {
+        goToTransactionDetails(transactionId = itemId, isPseudonym = isPseudonym)
     }
 
-    private fun goToTransactionDetails(transactionId: String) {
+    private fun goToTransactionDetails(
+        transactionId: String,
+        isPseudonym: Boolean,
+    ) {
         setEffect {
             Effect.Navigation.SwitchScreen(
                 screenRoute =
-                    generateComposableNavigationLink(
-                        screen = DashboardScreens.TransactionDetails,
-                        arguments =
-                            generateComposableArguments(
-                                mapOf(
-                                    "transactionId" to transactionId,
+                    if (!isPseudonym) {
+                        generateComposableNavigationLink(
+                            screen = DashboardScreens.TransactionDetails,
+                            arguments =
+                                generateComposableArguments(
+                                    mapOf(
+                                        "transactionId" to transactionId,
+                                    ),
                                 ),
-                            ),
-                    ),
+                        )
+                    } else {
+                        generateComposableNavigationLink(
+                            screen = DashboardScreens.PseudonymTransactionLogDetail,
+                            arguments =
+                                generateComposableArguments(
+                                    mapOf(
+                                        "logId" to transactionId,
+                                    ),
+                                ),
+                        )
+                    },
             )
         }
     }

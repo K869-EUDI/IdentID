@@ -11,13 +11,9 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.filled.List
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.HorizontalDivider
-import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -33,15 +29,14 @@ import androidx.lifecycle.compose.LocalLifecycleOwner
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
 import com.k689.identid.R
-import com.k689.identid.interactor.pseudonym.PseudonymGroupUi
 import com.k689.identid.interactor.pseudonym.PseudonymItemUi
 import com.k689.identid.navigation.DashboardScreens
 import com.k689.identid.ui.component.content.ContentScreen
 import com.k689.identid.ui.component.content.ContentTitle
 import com.k689.identid.ui.component.content.ScreenNavigateAction
+import com.k689.identid.ui.component.utils.LifecycleEffect
 import com.k689.identid.ui.component.utils.SPACING_MEDIUM
 import com.k689.identid.ui.component.utils.SPACING_SMALL
-import com.k689.identid.ui.component.utils.LifecycleEffect
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.onEach
 
@@ -75,16 +70,14 @@ fun PseudonymListScreen(
         viewModel.effect
             .onEach { effect ->
                 when (effect) {
-                    is Effect.Navigation.Pop -> navController.popBackStack()
+                    is Effect.Navigation.Pop -> {
+                        navController.popBackStack()
+                    }
+
                     is Effect.Navigation.ToDetail -> {
                         navController.navigate(
                             DashboardScreens.PseudonymDetail.screenRoute
                                 .replace("{pseudonymId}", effect.pseudonymId),
-                        )
-                    }
-                    is Effect.Navigation.ToTransactionLog -> {
-                        navController.navigate(
-                            DashboardScreens.PseudonymTransactionLogList.screenRoute,
                         )
                     }
                 }
@@ -99,9 +92,10 @@ private fun Content(
     paddingValues: PaddingValues,
 ) {
     Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .padding(paddingValues),
+        modifier =
+            Modifier
+                .fillMaxSize()
+                .padding(paddingValues),
     ) {
         Row(
             modifier = Modifier.fillMaxWidth(),
@@ -111,24 +105,15 @@ private fun Content(
                 modifier = Modifier.weight(1f),
                 title = stringResource(R.string.pseudonym_list_title),
             )
-            IconButton(
-                onClick = { onEventSend(Event.NavigateToTransactionLog) },
-                modifier = Modifier.padding(end = SPACING_MEDIUM.dp),
-            ) {
-                Icon(
-                    imageVector = Icons.AutoMirrored.Filled.List,
-                    contentDescription = stringResource(R.string.pseudonym_txlog_title),
-                    tint = MaterialTheme.colorScheme.primary,
-                )
-            }
         }
 
         if (state.groups.isEmpty() && !state.isLoading) {
             Spacer(modifier = Modifier.height(SPACING_MEDIUM.dp))
             Text(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(horizontal = SPACING_MEDIUM.dp),
+                modifier =
+                    Modifier
+                        .fillMaxWidth()
+                        .padding(horizontal = SPACING_MEDIUM.dp),
                 text = stringResource(R.string.pseudonym_list_empty),
                 style = MaterialTheme.typography.bodyMedium,
                 color = MaterialTheme.colorScheme.onSurfaceVariant,
@@ -141,12 +126,13 @@ private fun Content(
                 state.groups.forEach { group ->
                     item {
                         Text(
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .padding(
-                                    horizontal = SPACING_MEDIUM.dp,
-                                    vertical = SPACING_SMALL.dp,
-                                ),
+                            modifier =
+                                Modifier
+                                    .fillMaxWidth()
+                                    .padding(
+                                        horizontal = SPACING_MEDIUM.dp,
+                                        vertical = SPACING_SMALL.dp,
+                                    ),
                             text = group.rpName,
                             style = MaterialTheme.typography.titleSmall,
                             color = MaterialTheme.colorScheme.primary,
@@ -175,13 +161,15 @@ private fun PseudonymItem(
     onClick: () -> Unit,
 ) {
     Card(
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(horizontal = SPACING_MEDIUM.dp, vertical = 4.dp)
-            .clickable(onClick = onClick),
-        colors = CardDefaults.cardColors(
-            containerColor = MaterialTheme.colorScheme.surfaceVariant,
-        ),
+        modifier =
+            Modifier
+                .fillMaxWidth()
+                .padding(horizontal = SPACING_MEDIUM.dp, vertical = 4.dp)
+                .clickable(onClick = onClick),
+        colors =
+            CardDefaults.cardColors(
+                containerColor = MaterialTheme.colorScheme.surfaceVariant,
+            ),
     ) {
         Column(
             modifier = Modifier.padding(SPACING_MEDIUM.dp),

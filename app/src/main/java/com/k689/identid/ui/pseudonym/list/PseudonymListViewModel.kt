@@ -17,16 +17,21 @@ data class State(
 
 sealed class Event : ViewEvent {
     data object Init : Event()
+
     data object Pop : Event()
-    data class NavigateToDetail(val pseudonymId: String) : Event()
-    data object NavigateToTransactionLog : Event()
+
+    data class NavigateToDetail(
+        val pseudonymId: String,
+    ) : Event()
 }
 
 sealed class Effect : ViewSideEffect {
     sealed class Navigation : Effect() {
         data object Pop : Navigation()
-        data class ToDetail(val pseudonymId: String) : Navigation()
-        data object ToTransactionLog : Navigation()
+
+        data class ToDetail(
+            val pseudonymId: String,
+        ) : Navigation()
     }
 }
 
@@ -34,7 +39,6 @@ sealed class Effect : ViewSideEffect {
 class PseudonymListViewModel(
     private val pseudonymInteractor: PseudonymInteractor,
 ) : MviViewModel<Event, State, Effect>() {
-
     override fun setInitialState(): State = State()
 
     init {
@@ -46,7 +50,6 @@ class PseudonymListViewModel(
             is Event.Init -> loadPseudonyms()
             is Event.Pop -> setEffect { Effect.Navigation.Pop }
             is Event.NavigateToDetail -> setEffect { Effect.Navigation.ToDetail(event.pseudonymId) }
-            is Event.NavigateToTransactionLog -> setEffect { Effect.Navigation.ToTransactionLog }
         }
     }
 
