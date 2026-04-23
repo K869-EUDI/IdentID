@@ -212,6 +212,8 @@ interface WalletCoreDocumentsController {
 
     suspend fun getTransactionLog(id: String): TransactionLogDataDomain?
 
+    suspend fun getBookmarkedDocumentIds(): Set<DocumentId>
+
     suspend fun isDocumentBookmarked(documentId: DocumentId): Boolean
 
     suspend fun storeBookmark(bookmarkId: DocumentId)
@@ -626,6 +628,11 @@ class WalletCoreDocumentsControllerImpl(
                 ?.toTransactionLogData(id)
         }
 
+    override suspend fun getBookmarkedDocumentIds(): Set<DocumentId> =
+        withContext(dispatcher) {
+            bookmarkDao.retrieveAll().mapTo(mutableSetOf()) { it.identifier }
+        }
+
     override suspend fun isDocumentBookmarked(documentId: DocumentId): Boolean = bookmarkDao.retrieve(documentId) != null
 
     override suspend fun storeBookmark(bookmarkId: DocumentId) = bookmarkDao.store(Bookmark(bookmarkId))
@@ -736,35 +743,39 @@ class WalletCoreDocumentsControllerImpl(
                     }
 
                     is IssueEvent.Finished -> {
-                        if (deferredDocuments.isNotEmpty() && (prioritizeDeferred || (issuedDocuments.isEmpty()))) {
-                            trySendBlocking(IssueDocumentsPartialState.DeferredSuccess(deferredDocuments))
-                            return@OnIssueEvent
-                        }
+                        launch {
+                            storeBookmarksIfNeeded(event.issuedDocuments)
 
-                        if (event.issuedDocuments.isEmpty()) {
-                            trySendBlocking(
-                                IssueDocumentsPartialState.Failure(
-                                    errorMessage = documentErrorMessage,
-                                ),
-                            )
-                            return@OnIssueEvent
-                        }
+                            if (deferredDocuments.isNotEmpty() && (prioritizeDeferred || (issuedDocuments.isEmpty()))) {
+                                trySendBlocking(IssueDocumentsPartialState.DeferredSuccess(deferredDocuments))
+                                return@launch
+                            }
 
-                        if (event.issuedDocuments.size == totalDocumentsToBeIssued) {
+                            if (event.issuedDocuments.isEmpty()) {
+                                trySendBlocking(
+                                    IssueDocumentsPartialState.Failure(
+                                        errorMessage = documentErrorMessage,
+                                    ),
+                                )
+                                return@launch
+                            }
+
+                            if (event.issuedDocuments.size == totalDocumentsToBeIssued) {
+                                trySendBlocking(
+                                    IssueDocumentsPartialState.Success(
+                                        documentIds = event.issuedDocuments,
+                                    ),
+                                )
+                                return@launch
+                            }
+
                             trySendBlocking(
-                                IssueDocumentsPartialState.Success(
+                                IssueDocumentsPartialState.PartialSuccess(
                                     documentIds = event.issuedDocuments,
+                                    nonIssuedDocuments = nonIssuedDocuments,
                                 ),
                             )
-                            return@OnIssueEvent
                         }
-
-                        trySendBlocking(
-                            IssueDocumentsPartialState.PartialSuccess(
-                                documentIds = event.issuedDocuments,
-                                nonIssuedDocuments = nonIssuedDocuments,
-                            ),
-                        )
                     }
 
                     is IssueEvent.DocumentIssued -> {
@@ -791,4 +802,16 @@ class WalletCoreDocumentsControllerImpl(
             val json = JSONObject(decoded)
             json.getString("credential_issuer")
         }
+
+    private suspend fun storeBookmarksIfNeeded(documentIds: List<DocumentId>) {
+        if (documentIds.isEmpty()) {
+            return
+        }
+
+        withContext(dispatcher) {
+            if (bookmarkDao.retrieveAll().isEmpty()) {
+                bookmarkDao.storeAll(documentIds.distinct().map(::Bookmark))
+            }
+        }
+    }
 }

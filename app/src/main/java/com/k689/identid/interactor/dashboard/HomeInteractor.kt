@@ -43,6 +43,8 @@ interface HomeInteractor {
     fun isBleCentralClientModeEnabled(): Boolean
 
     fun getUserNameViaMainPidDocument(): Flow<HomeInteractorGetUserNameViaMainPidDocumentPartialState>
+
+    suspend fun getBookmarkedDocumentIds(): Set<String>
 }
 
 class HomeInteractorImpl(
@@ -85,4 +87,6 @@ class HomeInteractorImpl(
                 error = it.localizedMessage ?: genericErrorMsg,
             )
         }
+
+    override suspend fun getBookmarkedDocumentIds(): Set<String> = walletCoreDocumentsController.getBookmarkedDocumentIds()
 }

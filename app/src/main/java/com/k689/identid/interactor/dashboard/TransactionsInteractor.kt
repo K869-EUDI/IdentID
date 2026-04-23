@@ -309,6 +309,7 @@ class TransactionsInteractorImpl(
                                             addAll(transactionDocumentNames)
                                         }
                                     },
+                                documentNames = transactionDocumentNames,
                                 transactionStatus = transactionStatus,
                                 transactionType = transaction.toTransactionTypeUi(),
                                 creationLocalDateTime = transaction.creationLocalDateTime,
@@ -382,6 +383,7 @@ class TransactionsInteractorImpl(
                                         add(transaction.rpName)
                                         transaction.userName?.let { add(it) }
                                     },
+                                documentNames = emptyList(),
                                 transactionStatus = transactionStatus,
                                 transactionType = transactionType,
                                 creationLocalDateTime = creationLocalDateTime,

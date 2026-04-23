@@ -46,6 +46,7 @@ import com.k689.identid.ui.dashboard.documents.list.model.DocumentUi
 import com.k689.identid.ui.dashboard.documents.list.model.DocumentsFilterableAttributes
 import com.k689.identid.ui.dashboard.home.HomeScreenBottomSheetContent.Bluetooth
 import com.k689.identid.ui.dashboard.home.components.DrawerMenuItem
+import com.k689.identid.ui.dashboard.transactions.list.model.TransactionsFilterableAttributes
 import com.k689.identid.ui.dashboard.transactions.list.model.TransactionUi
 import com.k689.identid.ui.mvi.MviViewModel
 import com.k689.identid.ui.mvi.ViewEvent
@@ -78,6 +79,11 @@ data class DashboardDocument(
 data class DashboardTransaction(
     val transactionUi: TransactionUi,
     val isPending: Boolean = false,
+)
+
+private data class HomeDocumentCandidate(
+    val dashboardDocument: DashboardDocument,
+    val attributes: DocumentsFilterableAttributes?,
 )
 
 data class State(
@@ -509,9 +515,11 @@ class HomeViewModel(
         return formatter.format(this)
     }
 
+    private fun java.time.LocalDateTime.toUsageInstant(): Instant =
+        atZone(ZoneId.systemDefault()).toInstant()
+
     private fun getRecentData(): Job =
         viewModelScope.launch {
-            // Use parallel loading for documents and transactions
             val documentsFlow = documentsInteractor.getDocuments()
             val transactionsFlow = transactionsInteractor.getTransactions()
 
@@ -519,30 +527,44 @@ class HomeViewModel(
                 documentsFlow,
                 transactionsFlow,
             ) { docsResponse, transResponse ->
-                val allDocs =
+                docsResponse to transResponse
+            }.collect { (docsResponse, transResponse) ->
+                val bookmarkedDocumentIds = homeInteractor.getBookmarkedDocumentIds()
+
+                val documentCandidates =
                     if (docsResponse is DocumentInteractorGetDocumentsPartialState.Success) {
                         docsResponse.allDocuments.items
                             .sortedByDescending { (it.attributes as? DocumentsFilterableAttributes)?.issuedDate ?: Instant.MIN }
                             .mapNotNull { item ->
                                 (item.payload as? DocumentUi)?.let { docUi ->
-                                    if (docUi.documentIssuanceState == DocumentIssuanceStateUi.Pending) return@let null
+                                    if (docUi.documentIssuanceState == DocumentIssuanceStateUi.Pending) {
+                                        return@let null
+                                    }
+
                                     val attributes = item.attributes as? DocumentsFilterableAttributes
                                     val usagesLeft =
                                         when (val trailing = docUi.uiData.trailingContentData) {
                                             is ListItemTrailingContentDataUi.TextWithIcon -> trailing.text
                                             else -> "-"
                                         }
-                                    DashboardDocument(
-                                        documentUi = docUi,
-                                        usagesLeft = usagesLeft,
-                                        expiresAt = attributes?.expiryDate?.formatInstant() ?: "-",
-                                        isPending = false,
+
+                                    HomeDocumentCandidate(
+                                        dashboardDocument =
+                                            DashboardDocument(
+                                                documentUi = docUi,
+                                                usagesLeft = usagesLeft,
+                                                expiresAt = attributes?.expiryDate?.formatInstant() ?: "-",
+                                                isPending = false,
+                                            ),
+                                        attributes = attributes,
                                     )
                                 }
                             }
                     } else {
                         emptyList()
                     }
+
+                val allDocs = documentCandidates.map { it.dashboardDocument }
 
                 val allTrans =
                     if (transResponse is TransactionInteractorGetTransactionsPartialState.Success) {
@@ -559,18 +581,40 @@ class HomeViewModel(
                         emptyList()
                     }
 
-                allDocs to allTrans
-            }.collect { (docs, trans) ->
-                val recentDocs = docs.take(3)
-                val filteredTrans = trans.filter { !it.isPending }.reversed()
+                val latestUsageByDocumentName =
+                    if (transResponse is TransactionInteractorGetTransactionsPartialState.Success) {
+                        transResponse.allTransactions.items
+                            .mapNotNull { item ->
+                                val attributes = item.attributes as? TransactionsFilterableAttributes ?: return@mapNotNull null
+                                val usageInstant = attributes.creationLocalDateTime?.toUsageInstant() ?: return@mapNotNull null
+                                attributes.documentNames.map { documentName -> documentName to usageInstant }
+                            }.flatten()
+                            .groupBy(keySelector = { it.first }, valueTransform = { it.second })
+                            .mapValues { (_, usages) -> usages.maxOrNull() ?: Instant.MIN }
+                    } else {
+                        emptyMap()
+                    }
+
+                val bookmarkedDocs =
+                    documentCandidates
+                        .filter { it.dashboardDocument.documentUi.uiData.itemId in bookmarkedDocumentIds }
+                        .sortedWith(
+                            compareByDescending<HomeDocumentCandidate> {
+                                latestUsageByDocumentName[it.attributes?.name] ?: Instant.MIN
+                            }.thenByDescending {
+                                it.attributes?.issuedDate ?: Instant.MIN
+                            },
+                        ).map { it.dashboardDocument }
+
+                val filteredTrans = allTrans.filter { !it.isPending }.reversed()
                 val recentTrans = filteredTrans.take(5)
                 val hasMoreTrans = filteredTrans.size > 5
 
                 setState {
                     copy(
-                        allDocuments = docs,
-                        recentDocuments = recentDocs,
-                        allTransactions = trans,
+                        allDocuments = allDocs,
+                        recentDocuments = bookmarkedDocs,
+                        allTransactions = allTrans,
                         recentTransactions = recentTrans,
                         hasMoreTransactions = hasMoreTrans,
                     )

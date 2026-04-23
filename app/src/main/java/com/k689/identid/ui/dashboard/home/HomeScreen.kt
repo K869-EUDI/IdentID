@@ -506,8 +506,9 @@ private fun Content(
             } else {
                 SeeAllDocumentsCard(
                     recentDocsCount = recentDocs.size,
+                    hasAnyDocuments = state.allDocuments.isNotEmpty(),
                     onClicked = {
-                        if (recentDocs.isEmpty()) {
+                        if (state.allDocuments.isEmpty()) {
                             onEventSent(Event.AddDocumentsClicked)
                         } else {
                             onEventSent(Event.SeeAllDocumentsClicked)
@@ -578,10 +579,11 @@ private fun Content(
 @Composable
 private fun SeeAllDocumentsCard(
     recentDocsCount: Int,
+    hasAnyDocuments: Boolean,
     onClicked: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
-    if (recentDocsCount == 0) {
+    if (recentDocsCount == 0 && !hasAnyDocuments) {
         Box(
             modifier = modifier.fillMaxSize().clickable { onClicked() },
             contentAlignment = Alignment.Center,

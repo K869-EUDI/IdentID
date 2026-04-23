@@ -23,6 +23,7 @@ import java.time.LocalDateTime
 
 data class TransactionsFilterableAttributes(
     override val searchTags: List<String>,
+    val documentNames: List<String>,
     val transactionStatus: TransactionStatusUi,
     val transactionType: TransactionTypeUi,
     val creationLocalDateTime: LocalDateTime?,
