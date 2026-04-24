@@ -561,4 +561,5 @@
     <string name="home_screen_document_expires">Expires: %1$s</string>
     <string name="home_screen_no_documents">No documents</string>
     <string name="home_screen_add_one_now">Add one now</string>
+    <string name="generic_view_all">View All</string>
 </resources>

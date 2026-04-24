@@ -340,6 +340,18 @@ class PrefsControllerImpl(
 }
 
 interface PrefKeys {
+    val seedColor: StateFlow<Int?>
+
+    fun setSeedColor(color: Int?)
+
+    val oledMode: StateFlow<Boolean>
+
+    fun setOledMode(enabled: Boolean)
+
+    val useDynamicColor: StateFlow<Boolean>
+
+    fun setUseDynamicColor(enabled: Boolean)
+
     fun getCryptoAlias(): String
 
     fun setCryptoAlias(value: String)
@@ -357,11 +369,26 @@ class PrefKeysImpl(
     companion object {
         private const val THEME_KEY = "AppTheme"
         private const val CRYPTO_KEY = "CryptoAlias"
+        private const val SEED_COLOR_KEY = "SeedColor"
+        private const val OLED_MODE_KEY = "OledMode"
+        private const val DYNAMIC_COLOR_KEY = "DynamicColor"
     }
 
     private val _theme = MutableStateFlow(loadTheme())
 
     override val theme = _theme.asStateFlow()
+
+    private val _seedColor = MutableStateFlow(loadSeedColor())
+
+    override val seedColor = _seedColor.asStateFlow()
+
+    private val _oledMode = MutableStateFlow(loadOledMode())
+
+    override val oledMode = _oledMode.asStateFlow()
+
+    private val _useDynamicColor = MutableStateFlow(loadUseDynamicColor())
+
+    override val useDynamicColor = _useDynamicColor.asStateFlow()
 
     override fun loadTheme(): AppTheme {
         val theme = prefsController.getString(THEME_KEY, "")
@@ -375,6 +402,34 @@ class PrefKeysImpl(
     override fun setTheme(theme: AppTheme) {
         prefsController.setString(THEME_KEY, theme.name)
         _theme.value = theme
+    }
+
+    fun loadSeedColor(): Int? {
+        val color = prefsController.getInt(SEED_COLOR_KEY, -1)
+        return if (color == -1) null else color
+    }
+
+    override fun setSeedColor(color: Int?) {
+        if (color == null) {
+            prefsController.clear(SEED_COLOR_KEY)
+        } else {
+            prefsController.setInt(SEED_COLOR_KEY, color)
+        }
+        _seedColor.value = color
+    }
+
+    fun loadOledMode(): Boolean = prefsController.getBool(OLED_MODE_KEY, false)
+
+    override fun setOledMode(enabled: Boolean) {
+        prefsController.setBool(OLED_MODE_KEY, enabled)
+        _oledMode.value = enabled
+    }
+
+    fun loadUseDynamicColor(): Boolean = prefsController.getBool(DYNAMIC_COLOR_KEY, true)
+
+    override fun setUseDynamicColor(enabled: Boolean) {
+        prefsController.setBool(DYNAMIC_COLOR_KEY, enabled)
+        _useDynamicColor.value = enabled
     }
 
     /**

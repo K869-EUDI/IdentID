@@ -38,7 +38,7 @@ import androidx.compose.material3.FabPosition
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
-import androidx.compose.material3.TopAppBar
+import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.minimumInteractiveComponentSize
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -135,6 +135,7 @@ fun ContentScreen(
     val topSpacing = if (hasToolBar) TopSpacing.WithToolbar else TopSpacing.WithoutToolbar
 
     Scaffold(
+        containerColor = MaterialTheme.colorScheme.surface,
         topBar = {
             if (topBar != null && contentErrorConfig == null) {
                 Box(
@@ -269,6 +270,10 @@ private fun DefaultToolBar(
     toolbarConfig: ToolbarConfig?,
 ) {
     CenterAlignedTopAppBar(
+        colors =
+            TopAppBarDefaults.topAppBarColors(
+                containerColor = MaterialTheme.colorScheme.surface,
+            ),
         modifier =
             Modifier
                 .padding(

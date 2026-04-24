@@ -1,5 +1,7 @@
 package com.k689.identid.ui.dashboard.preferences
 
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.toArgb
 import com.k689.identid.R
 import com.k689.identid.controller.storage.PrefKeys
 import com.k689.identid.provider.resources.ResourceProvider
@@ -19,6 +21,9 @@ data class State(
     val themeOptions: List<Pair<AppTheme, String>> = emptyList(),
     val selectedTheme: AppTheme = AppTheme.SYSTEM,
     val selectedLanguage: AppLanguage = AppLanguage.SYSTEM,
+    val selectedColor: Color? = null,
+    val isOledMode: Boolean = false,
+    val useDynamicColor: Boolean = true,
 ) : ViewState
 
 sealed class Event : ViewEvent {
@@ -30,6 +35,18 @@ sealed class Event : ViewEvent {
 
     data class OnLanguageSelected(
         val language: AppLanguage,
+    ) : Event()
+
+    data class OnColorSelected(
+        val color: Color,
+    ) : Event()
+
+    data class OnOledModeChanged(
+        val enabled: Boolean,
+    ) : Event()
+
+    data class OnUseDynamicColorChanged(
+        val enabled: Boolean,
     ) : Event()
 }
 
@@ -52,6 +69,9 @@ class PreferencesViewModel(
             themeOptions = AppTheme.entries.map { it to it.toUiText(resourceProvider) },
             selectedTheme = prefKeys.theme.value,
             selectedLanguage = AppLanguage.fromCurrentLocale(resourceProvider.provideContext()),
+            selectedColor = prefKeys.seedColor.value?.let { Color(it) },
+            isOledMode = prefKeys.oledMode.value,
+            useDynamicColor = prefKeys.useDynamicColor.value,
         )
 
     override fun handleEvents(event: Event) {
@@ -70,6 +90,21 @@ class PreferencesViewModel(
                     context = resourceProvider.provideContext(),
                     language = event.language,
                 )
+            }
+
+            is Event.OnColorSelected -> {
+                prefKeys.setSeedColor(event.color.toArgb())
+                setState { copy(selectedColor = event.color) }
+            }
+
+            is Event.OnOledModeChanged -> {
+                prefKeys.setOledMode(event.enabled)
+                setState { copy(isOledMode = event.enabled) }
+            }
+
+            is Event.OnUseDynamicColorChanged -> {
+                prefKeys.setUseDynamicColor(event.enabled)
+                setState { copy(useDynamicColor = event.enabled) }
             }
         }
     }

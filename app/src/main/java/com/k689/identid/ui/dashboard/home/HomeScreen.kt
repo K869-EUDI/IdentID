@@ -73,10 +73,12 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.util.lerp
@@ -101,6 +103,7 @@ import com.k689.identid.ui.component.utils.SPACING_EXTRA_LARGE
 import com.k689.identid.ui.component.utils.SPACING_LARGE
 import com.k689.identid.ui.component.utils.SPACING_MEDIUM
 import com.k689.identid.ui.component.utils.SPACING_SMALL
+import com.k689.identid.ui.component.utils.SPACING_XX_LARGE
 import com.k689.identid.ui.component.wrap.ActionCardConfig
 import com.k689.identid.ui.component.wrap.BottomSheetTextDataUi
 import com.k689.identid.ui.component.wrap.DialogBottomSheet
@@ -164,9 +167,10 @@ fun HomeScreen(
                 BottomSheetScaffold(
                     modifier = Modifier.fillMaxSize().statusBarsPadding(),
                     scaffoldState = scaffoldState,
-                    sheetShadowElevation = 16.dp,
+                    sheetShadowElevation = 0.dp,
                     sheetPeekHeight = 410.dp,
                     sheetContainerColor = MaterialTheme.colorScheme.surfaceContainerLow,
+                    sheetShape = RoundedCornerShape(topStart = 32.dp, topEnd = 32.dp),
                     sheetDragHandle = { BottomSheetDefaults.DragHandle() },
                     sheetContent = {
                         val displayedTransactions = state.recentTransactions
@@ -497,10 +501,6 @@ private fun Content(
                                 scaleX = scale
                                 scaleY = scale
                                 alpha = lerp(0.8f, 1f, fraction)
-
-                                shadowElevation = 6.dp.toPx()
-                                shape = RoundedCornerShape(16.dp)
-                                clip = true
                             },
                 )
             } else {
@@ -529,12 +529,6 @@ private fun Content(
                                 scaleX = scale
                                 scaleY = scale
                                 alpha = lerp(0.8f, 1f, fraction)
-
-                                if (recentDocs.isNotEmpty()) {
-                                    shadowElevation = 4.dp.toPx()
-                                    shape = RoundedCornerShape(16.dp)
-                                    clip = true
-                                }
                             },
                 )
             }
@@ -603,29 +597,32 @@ private fun SeeAllDocumentsCard(
             }
         }
     } else {
-        Card(
-            onClick = onClicked,
+        Surface(
             modifier =
-                modifier
-                    .fillMaxSize(),
-            shape = RoundedCornerShape(16.dp),
-            colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.primaryContainer),
+                Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = 110.dp)
+                    .clip(MaterialTheme.shapes.extraLarge)
+                    .clickable { onClicked() },
+            color = MaterialTheme.colorScheme.primaryContainer,
+            shape = MaterialTheme.shapes.extraLarge,
         ) {
             Box(
-                modifier = Modifier.fillMaxSize(),
+                modifier = Modifier.size(100.dp).padding(16.dp),
                 contentAlignment = Alignment.Center,
             ) {
                 Column(horizontalAlignment = Alignment.CenterHorizontally) {
                     Icon(
                         imageVector = Icons.AutoMirrored.Filled.ArrowForward,
                         contentDescription = null,
-                        modifier = Modifier.size(48.dp),
+                        modifier = Modifier.size(36.dp),
                         tint = MaterialTheme.colorScheme.onPrimaryContainer,
                     )
                     Text(
-                        text = stringResource(R.string.generic_view_details),
-                        style = MaterialTheme.typography.titleMedium,
+                        text = stringResource(R.string.generic_view_all),
+                        style = MaterialTheme.typography.labelLarge,
                         color = MaterialTheme.colorScheme.onPrimaryContainer,
+                        textAlign = TextAlign.Center,
                     )
                 }
             }

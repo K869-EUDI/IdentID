@@ -46,6 +46,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.res.stringResource
@@ -87,7 +88,7 @@ private val defaultBottomSheetPadding: PaddingValues =
     )
 
 private val bottomSheetDefaultBackgroundColor: Color
-    @Composable get() = MaterialTheme.colorScheme.surfaceContainerLowest
+    @Composable get() = MaterialTheme.colorScheme.surfaceContainerLow
 
 private val bottomSheetDefaultTextColor: Color
     @Composable get() = MaterialTheme.colorScheme.onSurface
@@ -132,9 +133,12 @@ fun WrapModalBottomSheet(
         modifier =
             Modifier
                 .exposeTestTagsAsResourceId()
+                .shadow(elevation = 6.dp, shape = shape)
                 .then(modifier),
         sheetState = sheetState,
         shape = shape,
+        containerColor = MaterialTheme.colorScheme.surfaceContainerLow,
+        tonalElevation = 0.dp,
         dragHandle = dragHandle,
         content = sheetContent,
     )

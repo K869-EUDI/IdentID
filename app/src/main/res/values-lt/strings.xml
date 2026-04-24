@@ -564,4 +564,5 @@
     <!--endregion-->
     <string name="engagement_aid_group_desc">EUDI piniginės NFC įtraukimas</string>
     <string name="recent_transactions">Naujausios operacijos</string>
+    <string name="generic_view_all">Daugiau</string>
 </resources>

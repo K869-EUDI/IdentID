@@ -31,6 +31,7 @@ import androidx.compose.runtime.SideEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.core.view.WindowCompat
 import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.lifecycleScope
@@ -121,6 +122,9 @@ open class EudiComponentActivity : FragmentActivity() {
         builder: NavGraphBuilder.(NavController) -> Unit,
     ) {
         val themeMode by prefKeys.theme.collectAsState()
+        val seedColor by prefKeys.seedColor.collectAsState()
+        val oledMode by prefKeys.oledMode.collectAsState()
+        val useDynamicColor by prefKeys.useDynamicColor.collectAsState()
         val darkTheme =
             when (themeMode) {
                 AppTheme.SYSTEM -> isSystemInDarkTheme()
@@ -134,7 +138,15 @@ open class EudiComponentActivity : FragmentActivity() {
             windowInsetsController.isAppearanceLightNavigationBars = !darkTheme
         }
 
-        ThemeManager.instance.Theme(darkTheme = darkTheme) {
+        ThemeManager.instance.Theme(
+            darkTheme = darkTheme,
+            seedColor =
+                seedColor?.let {
+                    Color(it)
+                },
+            isOledMode = oledMode,
+            useDynamicColor = useDynamicColor,
+        ) {
             Surface(
                 modifier =
                     Modifier
