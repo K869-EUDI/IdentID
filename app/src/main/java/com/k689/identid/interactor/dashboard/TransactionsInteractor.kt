@@ -394,9 +394,9 @@ class TransactionsInteractorImpl(
 
             val filterableItems: List<FilterableItem> =
                 (coreFilterableItems + pseudonymFilterableItems)
-                    .sortedBy { filterableItem ->
-                        (filterableItem.payload as? TransactionUi)?.uiData?.header?.supportingText
-                    }.reversed()
+                    .sortedByDescending { filterableItem ->
+                        (filterableItem.attributes as? TransactionsFilterableAttributes)?.creationLocalDateTime
+                    }
 
             val creationDates: List<LocalDate> =
                 filterableItems

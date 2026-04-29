@@ -23,6 +23,8 @@ import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Build
+import androidx.annotation.StringRes
+import androidx.compose.ui.res.stringResource
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
 import androidx.core.content.ContextCompat
@@ -31,6 +33,9 @@ import androidx.work.WorkerParameters
 import com.k689.identid.R
 import com.k689.identid.app.MainActivity
 import com.k689.identid.controller.core.WalletCoreDocumentsController
+import com.k689.identid.provider.resources.ResourceProvider
+import com.k689.identid.worker.ExpiryNotificationWorkManager.`<no name provided>`.CHANNEL_ID
+import com.k689.identid.worker.ExpiryNotificationWorkManager.`<no name provided>`.NOTIFICATION_ID
 import eu.europa.ec.eudi.wallet.document.IssuedDocument
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
@@ -42,6 +47,7 @@ class ExpiryNotificationWorkManager(
 ) : CoroutineWorker(appContext, workerParams),
     KoinComponent {
     private val walletCoreDocumentsController: WalletCoreDocumentsController by inject()
+    private val resourceProvider: ResourceProvider by inject()
 
     companion object {
         const val EXPIRY_WORK_NAME = "expiryWorker"
@@ -73,19 +79,19 @@ class ExpiryNotificationWorkManager(
 
             if (hasExpiringDocuments) {
                 sendNotification(
-                    "Document Expiry Notification",
-                    "One or more of your documents are about to expire.",
+                    R.string.expired_document_notification,
+                    R.string.expired_document_notification_description,
                 )
             }
             return Result.success()
         } catch (e: Exception) {
-            return Result.failure()
+            return Result.retry()
         }
     }
 
     private fun sendNotification(
-        title: String,
-        content: String,
+        @StringRes title: Int,
+        @StringRes content: Int,
     ) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU &&
             ContextCompat.checkSelfPermission(applicationContext, android.Manifest.permission.POST_NOTIFICATIONS) != PackageManager.PERMISSION_GRANTED
@@ -120,8 +126,8 @@ class ExpiryNotificationWorkManager(
             NotificationCompat
                 .Builder(applicationContext, CHANNEL_ID)
                 .setSmallIcon(R.mipmap.ic_launcher)
-                .setContentTitle(title)
-                .setContentText(content)
+                .setContentTitle(resourceProvider.getString(title))
+                .setContentText(resourceProvider.getString(content))
                 .setPriority(NotificationCompat.PRIORITY_DEFAULT)
                 .setContentIntent(pendingIntent)
                 .setAutoCancel(true)

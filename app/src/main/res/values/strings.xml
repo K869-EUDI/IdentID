@@ -395,6 +395,10 @@
     </plurals>
     <string name="transactions_screen_text_field_date_pattern">dd/mm/yyyy</string>
     <!--endregion-->
+    <!-- region Notifications -->
+    <string name="expired_document_notification">Document Expiry Notification</string>
+    <string name="expired_document_notification_description">One or more of your documents are about to expire.</string>
+    <!--endregion-->
     <!-- region Transactions Screen, Filter labels-->
     <string name="transactions_screen_filters_title">@string/generic_filters_title</string>
     <string name="transactions_screen_filters_sort_by">@string/generic_filters_sort_by</string>

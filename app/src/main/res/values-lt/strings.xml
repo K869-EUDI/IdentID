@@ -120,6 +120,10 @@
     <string name="content_description_date_range_icon">Pasirinkti datų intervalą filtrui</string>
     <string name="content_description_settings_icon">Nustatymai</string>
     <!--endregion-->
+    <!-- region Notifications -->
+    <string name="expired_document_notification">Dokumento Galiojimo Pabaigos Pranešimas</string>
+    <string name="expired_document_notification_description">Vienas ar daugiau jūsų dokumentų tuoj baigs galioti.</string>
+    <!--endregion-->
     <!-- region Login Authentication -->
     <plurals name="login_max_attempts_exceeded_error_message" tools:ignore="MissingQuantity">
         <item quantity="one">
