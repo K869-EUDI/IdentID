@@ -64,6 +64,7 @@ import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.map
 import java.time.LocalDate
 import java.time.LocalDateTime
+import java.time.ZoneOffset
 
 sealed class TransactionInteractorFilterPartialState {
     data class FilterApplyResult(
@@ -394,8 +395,8 @@ class TransactionsInteractorImpl(
 
             val filterableItems: List<FilterableItem> =
                 (coreFilterableItems + pseudonymFilterableItems)
-                    .sortedByDescending { filterableItem ->
-                        (filterableItem.attributes as? TransactionsFilterableAttributes)?.creationLocalDateTime
+                    .sortedBy { filterableItem ->
+                        (filterableItem.attributes as? TransactionsFilterableAttributes)?.creationLocalDateTime?.toEpochSecond(ZoneOffset.UTC)
                     }
 
             val creationDates: List<LocalDate> =
