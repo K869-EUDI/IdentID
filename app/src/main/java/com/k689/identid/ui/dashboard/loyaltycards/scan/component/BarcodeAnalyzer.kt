@@ -1,5 +1,6 @@
 package com.k689.identid.ui.dashboard.loyaltycards.scan.component
 
+import androidx.camera.core.ExperimentalGetImage
 import androidx.camera.core.ImageAnalysis
 import androidx.camera.core.ImageProxy
 import com.google.mlkit.vision.barcode.BarcodeScannerOptions
@@ -28,6 +29,7 @@ class BarcodeAnalyzer(
                 ).build(),
         )
 
+    @ExperimentalGetImage
     override fun analyze(image: ImageProxy) {
         val mediaImage = image.image
         if (mediaImage == null) {
@@ -55,6 +57,10 @@ class BarcodeAnalyzer(
             }.addOnCompleteListener {
                 image.close()
             }
+    }
+
+    fun close() {
+        scanner.close()
     }
 }
 

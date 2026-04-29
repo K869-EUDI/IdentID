@@ -47,8 +47,8 @@ fun provideAppDatabase(context: Context): DatabaseService =
 @Single
 fun provideBookmarkDao(service: DatabaseService): BookmarkDao = service.bookmarkDao()
 
-    @Single
-    fun provideLoyaltyCardDao(service: DatabaseService): LoyaltyCardDao = service.loyaltyCardDao()
+@Single
+fun provideLoyaltyCardDao(service: DatabaseService): LoyaltyCardDao = service.loyaltyCardDao()
 
 @Single
 fun provideRevokedDocumentDao(service: DatabaseService): RevokedDocumentDao = service.revokedDocumentDao()

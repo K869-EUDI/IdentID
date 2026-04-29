@@ -12,10 +12,10 @@ import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.ui.Modifier
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
 import com.k689.identid.R
-import com.k689.identid.ui.component.AppIcons
 import com.k689.identid.ui.component.content.ContentScreen
 import com.k689.identid.ui.component.content.ContentTitle
 import com.k689.identid.ui.component.content.ScreenNavigateAction
@@ -23,11 +23,10 @@ import com.k689.identid.ui.component.wrap.ButtonConfig
 import com.k689.identid.ui.component.wrap.ButtonType
 import com.k689.identid.ui.component.wrap.WrapButton
 import com.k689.identid.ui.dashboard.loyaltycards.component.BarcodeVisual
-import kotlinx.coroutines.flow.collect
-import kotlinx.coroutines.flow.onEach
-import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.onEach
 
 @Composable
 fun LoyaltyCardDetailScreen(

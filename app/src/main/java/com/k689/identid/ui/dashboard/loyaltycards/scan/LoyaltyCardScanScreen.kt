@@ -6,7 +6,6 @@ import androidx.camera.core.ImageAnalysis
 import androidx.camera.core.Preview
 import androidx.camera.lifecycle.ProcessCameraProvider
 import androidx.camera.view.PreviewView
-import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -19,6 +18,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -70,14 +70,47 @@ fun LoyaltyCardScanScreen(
     val lifecycleOwner = LocalLifecycleOwner.current
     val permissionState = rememberPermissionState(permission = android.Manifest.permission.CAMERA)
     val cameraProviderFuture = remember { ProcessCameraProvider.getInstance(context) }
-    val scannerAreaSize = screenWidthInDp(true) - SIZE_100.dp
     var hasPermission by remember { mutableStateOf(false) }
     var shouldShowPermissionRationale by remember { mutableStateOf(false) }
     var finishedScanning by remember { mutableStateOf(false) }
+    var cameraBindingFailed by remember { mutableStateOf(false) }
+    val barcodeAnalyzer =
+        remember {
+            BarcodeAnalyzer { result ->
+                if (finishedScanning) {
+                    return@BarcodeAnalyzer
+                }
+                finishedScanning = true
+                navController.navigate(
+                    generateComposableNavigationLink(
+                        screen = DashboardScreens.LoyaltyCardCreate,
+                        arguments = generateComposableArguments(
+                            mapOf(
+                                "barcodeValue" to Uri.encode(result.value),
+                                "barcodeFormat" to Uri.encode(result.format),
+                            ),
+                        ),
+                    ),
+                ) {
+                    popUpTo(DashboardScreens.LoyaltyCardScan.screenRoute) { inclusive = true }
+                }
+            }
+        }
+    val scannerAreaSize = screenWidthInDp(true) - SIZE_100.dp
+
+    DisposableEffect(cameraProviderFuture, barcodeAnalyzer) {
+        onDispose {
+            barcodeAnalyzer.close()
+            if (cameraProviderFuture.isDone) {
+                runCatching { cameraProviderFuture.get().unbindAll() }
+            }
+        }
+    }
 
     LaunchedEffect(permissionState.status) {
         hasPermission = permissionState.status.isGranted
         shouldShowPermissionRationale = permissionState.status.shouldShowRationale
+        cameraBindingFailed = false
         if (!permissionState.status.isGranted && !permissionState.status.shouldShowRationale) {
             permissionState.launchPermissionRequest()
         }
@@ -104,48 +137,38 @@ fun LoyaltyCardScanScreen(
                         modifier = Modifier.fillMaxSize(),
                         factory = { previewContext ->
                             val previewView = PreviewView(previewContext)
-                            val preview = Preview.Builder().build()
-                            val selector =
-                                CameraSelector.Builder()
-                                    .requireLensFacing(CameraSelector.LENS_FACING_BACK)
-                                    .build()
-                            val imageAnalysis =
-                                ImageAnalysis.Builder()
-                                    .setBackpressureStrategy(ImageAnalysis.STRATEGY_KEEP_ONLY_LATEST)
-                                    .build().also { analysis ->
-                                analysis.setAnalyzer(
-                                    ContextCompat.getMainExecutor(previewContext),
-                                    BarcodeAnalyzer { result ->
-                                        if (finishedScanning) {
-                                            return@BarcodeAnalyzer
-                                        }
-                                        finishedScanning = true
-                                        navController.navigate(
-                                            generateComposableNavigationLink(
-                                                screen = DashboardScreens.LoyaltyCardCreate,
-                                                arguments = generateComposableArguments(
-                                                    mapOf(
-                                                        "barcodeValue" to Uri.encode(result.value),
-                                                        "barcodeFormat" to Uri.encode(result.format),
-                                                    ),
-                                                ),
-                                            ),
-                                        ) {
-                                            popUpTo(DashboardScreens.LoyaltyCardScan.screenRoute) { inclusive = true }
-                                        }
-                                    },
-                                )
-                            }
+                            cameraProviderFuture.addListener(
+                                {
+                                    runCatching {
+                                        val cameraProvider = cameraProviderFuture.get()
+                                        val preview =
+                                            Preview.Builder().build().also {
+                                                it.surfaceProvider = previewView.surfaceProvider
+                                            }
+                                        val imageAnalysis =
+                                            ImageAnalysis.Builder()
+                                                .setBackpressureStrategy(ImageAnalysis.STRATEGY_KEEP_ONLY_LATEST)
+                                                .build().also { analysis ->
+                                                    analysis.setAnalyzer(
+                                                        ContextCompat.getMainExecutor(previewContext),
+                                                        barcodeAnalyzer,
+                                                    )
+                                                }
 
-                            val cameraProvider = cameraProviderFuture.get()
-                            cameraProvider.unbindAll()
-                            cameraProvider.bindToLifecycle(
-                                lifecycleOwner,
-                                selector,
-                                preview,
-                                imageAnalysis,
+                                        cameraProvider.unbindAll()
+                                        cameraProvider.bindToLifecycle(
+                                            lifecycleOwner,
+                                            CameraSelector.DEFAULT_BACK_CAMERA,
+                                            preview,
+                                            imageAnalysis,
+                                        )
+                                    }.onFailure {
+                                        cameraBindingFailed = true
+                                    }
+                                },
+                                ContextCompat.getMainExecutor(previewContext),
                             )
-                            preview.surfaceProvider = previewView.surfaceProvider
+
                             previewView
                         },
                     )
@@ -167,6 +190,13 @@ fun LoyaltyCardScanScreen(
                         modifier = Modifier.align(Alignment.BottomCenter).padding(16.dp),
                     ) {
                         InformativeText(text = stringResource(R.string.loyalty_cards_scan_hint))
+                    }
+                    if (cameraBindingFailed) {
+                        ErrorInfo(
+                            informativeText = stringResource(id = R.string.generic_error_message),
+                            contentColor = Color.White,
+                            modifier = Modifier.padding(24.dp),
+                        )
                     }
                 } else if (shouldShowPermissionRationale) {
                     ErrorInfo(

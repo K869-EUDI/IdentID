@@ -293,6 +293,30 @@
     <string name="pseudonym_txlog_detail_delete_title">Ištrinti žurnalo įrašą</string>
     <string name="pseudonym_txlog_detail_delete_message">Šis operacijos žurnalo įrašas bus neatstatomai ištrintas. Šio veiksmo negalima atšaukti.</string>
     <!--endregion-->
+    <!-- region Loyalty Cards -->
+    <string name="loyalty_cards_title">Lojalumo kortelės</string>
+    <string name="loyalty_cards_empty">Lojalumo kortelių dar nėra. Pridėkite ją nuskaitydami kortelės brūkšninį kodą.</string>
+    <string name="loyalty_cards_add">Pridėti lojalumo kortelę</string>
+    <string name="loyalty_cards_scan_title">Nuskaityti lojalumo kortelę</string>
+    <string name="loyalty_cards_scan_subtitle">Nuskaitykite kortelės brūkšninį kodą, kad išsaugotumėte ją piniginėje.</string>
+    <string name="loyalty_cards_scan_hint">Sulygiuokite brūkšninį kodą rėmelio viduje. Jei prekybos brūkšninis kodas ilgas, laikykite telefoną šiek tiek toliau ir kodą laikykite horizontaliai.</string>
+    <string name="loyalty_cards_scan_permission_wait">Laukiama kameros leidimo…</string>
+    <string name="loyalty_cards_name_title">Pavadinkite lojalumo kortelę</string>
+    <string name="loyalty_cards_name_subtitle">Prieš išsaugodami suteikite kortelei atpažįstamą pavadinimą.</string>
+    <string name="loyalty_cards_name_label">Kortelės pavadinimas</string>
+    <string name="loyalty_cards_name_save">Išsaugoti lojalumo kortelę</string>
+    <string name="loyalty_cards_detail_title">Lojalumo kortelė</string>
+    <string name="loyalty_cards_detail_code">Kodas</string>
+    <string name="loyalty_cards_detail_format">Brūkšninio kodo formatas</string>
+    <string name="loyalty_cards_detail_created">Pridėta</string>
+    <string name="loyalty_cards_detail_bookmark">Prisegti pradžios ekrane</string>
+    <string name="loyalty_cards_detail_remove_bookmark">Pašalinti iš pradžios ekrano</string>
+    <string name="loyalty_cards_delete">Ištrinti lojalumo kortelę</string>
+    <string name="loyalty_cards_delete_title">Ištrinti lojalumo kortelę</string>
+    <string name="loyalty_cards_delete_message">Išsaugota lojalumo kortelė bus neatstatomai ištrinta. Šio veiksmo negalima atšaukti.</string>
+    <string name="loyalty_cards_saved">Lojalumo kortelė išsaugota</string>
+    <string name="loyalty_cards_bookmarked_label">Prisegta</string>
+    <!--endregion-->
     <!-- region Preferences Screen -->
     <string name="preferences_screen_title">Nuostatos</string>
     <string name="preferences_theme_label">Tema</string>

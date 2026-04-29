@@ -3,9 +3,6 @@ package com.k689.identid.ui.dashboard.loyaltycards.create
 import android.net.Uri
 import androidx.lifecycle.viewModelScope
 import com.k689.identid.interactor.dashboard.LoyaltyCardsInteractor
-import com.k689.identid.navigation.DashboardScreens
-import com.k689.identid.navigation.helper.generateComposableArguments
-import com.k689.identid.navigation.helper.generateComposableNavigationLink
 import com.k689.identid.ui.mvi.MviViewModel
 import com.k689.identid.ui.mvi.ViewEvent
 import com.k689.identid.ui.mvi.ViewSideEffect
