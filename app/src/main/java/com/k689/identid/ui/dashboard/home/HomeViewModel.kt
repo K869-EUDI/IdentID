@@ -27,9 +27,11 @@ import com.k689.identid.interactor.dashboard.DocumentInteractorGetDocumentsParti
 import com.k689.identid.interactor.dashboard.DocumentsInteractor
 import com.k689.identid.interactor.dashboard.HomeInteractor
 import com.k689.identid.interactor.dashboard.HomeInteractorGetUserNameViaMainPidDocumentPartialState
+import com.k689.identid.interactor.dashboard.LoyaltyCardsInteractor
 import com.k689.identid.interactor.dashboard.TransactionInteractorGetTransactionsPartialState
 import com.k689.identid.interactor.dashboard.TransactionsInteractor
 import com.k689.identid.model.common.PinFlow
+import com.k689.identid.model.storage.loyaltyCardBookmarkId
 import com.k689.identid.navigation.CommonScreens
 import com.k689.identid.navigation.DashboardScreens
 import com.k689.identid.navigation.IssuanceScreens
@@ -76,6 +78,23 @@ data class DashboardDocument(
     val isPending: Boolean = false,
 )
 
+sealed interface HomeBookmarkedItem {
+    val sortEpochMillis: Long
+
+    data class Document(
+        val value: DashboardDocument,
+        override val sortEpochMillis: Long,
+    ) : HomeBookmarkedItem
+
+    data class LoyaltyCard(
+        val id: String,
+        val name: String,
+        val barcodeValue: String,
+        val barcodeFormat: String,
+        override val sortEpochMillis: Long,
+    ) : HomeBookmarkedItem
+}
+
 data class DashboardTransaction(
     val transactionUi: TransactionUi,
     val isPending: Boolean = false,
@@ -96,7 +115,8 @@ data class State(
     val bleAvailability: BleAvailability = BleAvailability.UNKNOWN,
     val isBleCentralClientModeEnabled: Boolean = false,
     val allDocuments: List<DashboardDocument> = emptyList(),
-    val recentDocuments: List<DashboardDocument> = emptyList(),
+    val recentBookmarks: List<HomeBookmarkedItem> = emptyList(),
+    val hasAnyLoyaltyCards: Boolean = false,
     val allTransactions: List<DashboardTransaction> = emptyList(),
     val recentTransactions: List<DashboardTransaction> = emptyList(),
     val hasMoreTransactions: Boolean = false,
@@ -141,6 +161,10 @@ sealed class Event : ViewEvent {
 
     data class DocumentClicked(
         val documentId: String,
+    ) : Event()
+
+    data class LoyaltyCardClicked(
+        val loyaltyCardId: String,
     ) : Event()
 
     data class TransactionClicked(
@@ -194,6 +218,7 @@ class HomeViewModel(
     private val homeInteractor: HomeInteractor,
     private val documentsInteractor: DocumentsInteractor,
     private val transactionsInteractor: TransactionsInteractor,
+    private val loyaltyCardsInteractor: LoyaltyCardsInteractor,
     private val uiSerializer: UiSerializer,
     private val resourceProvider: ResourceProvider,
 ) : MviViewModel<Event, State, Effect>() {
@@ -305,6 +330,10 @@ class HomeViewModel(
                 navigateToDocumentDetails(event.documentId)
             }
 
+            is Event.LoyaltyCardClicked -> {
+                navigateToLoyaltyCardDetails(event.loyaltyCardId)
+            }
+
             is Event.TransactionClicked -> {
                 navigateToTransactionDetails(event.transactionId, event.isPseudonym)
             }
@@ -407,6 +436,18 @@ class HomeViewModel(
         setEffect {
             Effect.Navigation.SwitchScreen(
                 screenRoute = DashboardScreens.Transactions.screenRoute,
+            )
+        }
+    }
+
+    private fun navigateToLoyaltyCardDetails(loyaltyCardId: String) {
+        setEffect {
+            Effect.Navigation.SwitchScreen(
+                screenRoute =
+                    generateComposableNavigationLink(
+                        screen = DashboardScreens.LoyaltyCardDetails,
+                        arguments = generateComposableArguments(mapOf("loyaltyCardId" to loyaltyCardId)),
+                    ),
             )
         }
     }
@@ -522,13 +563,15 @@ class HomeViewModel(
         viewModelScope.launch {
             val documentsFlow = documentsInteractor.getDocuments()
             val transactionsFlow = transactionsInteractor.getTransactions()
+            val loyaltyCardsFlow = loyaltyCardsInteractor.observeLoyaltyCards()
 
             combine(
                 documentsFlow,
                 transactionsFlow,
-            ) { docsResponse, transResponse ->
-                docsResponse to transResponse
-            }.collect { (docsResponse, transResponse) ->
+                loyaltyCardsFlow,
+            ) { docsResponse, transResponse, loyaltyCards ->
+                Triple(docsResponse, transResponse, loyaltyCards)
+            }.collect { (docsResponse, transResponse, loyaltyCards) ->
                 val bookmarkedDocumentIds = homeInteractor.getBookmarkedDocumentIds()
 
                 val documentCandidates =
@@ -598,13 +641,31 @@ class HomeViewModel(
                 val bookmarkedDocs =
                     documentCandidates
                         .filter { it.dashboardDocument.documentUi.uiData.itemId in bookmarkedDocumentIds }
-                        .sortedWith(
-                            compareByDescending<HomeDocumentCandidate> {
-                                latestUsageByDocumentName[it.attributes?.name] ?: Instant.MIN
-                            }.thenByDescending {
-                                it.attributes?.issuedDate ?: Instant.MIN
-                            },
-                        ).map { it.dashboardDocument }
+                        .map { candidate ->
+                            HomeBookmarkedItem.Document(
+                                value = candidate.dashboardDocument,
+                                sortEpochMillis =
+                                    latestUsageByDocumentName[candidate.attributes?.name]?.toEpochMillisSafe()
+                                        ?: candidate.attributes?.issuedDate.toEpochMillisSafe(),
+                            )
+                        }
+
+                val bookmarkedLoyaltyCards =
+                    loyaltyCards
+                        .filter { loyaltyCardBookmarkId(it.id) in bookmarkedDocumentIds }
+                        .map { card ->
+                            HomeBookmarkedItem.LoyaltyCard(
+                                id = card.id,
+                                name = card.displayName,
+                                barcodeValue = card.barcodeValue,
+                                barcodeFormat = card.barcodeFormat,
+                                sortEpochMillis = card.updatedAt,
+                            )
+                        }
+
+                val bookmarkedItems =
+                    (bookmarkedDocs + bookmarkedLoyaltyCards)
+                        .sortedByDescending { it.sortEpochMillis }
 
                 val filteredTrans = allTrans.filter { !it.isPending }.reversed()
                 val recentTrans = filteredTrans.take(5)
@@ -613,7 +674,8 @@ class HomeViewModel(
                 setState {
                     copy(
                         allDocuments = allDocs,
-                        recentDocuments = bookmarkedDocs,
+                        recentBookmarks = bookmarkedItems,
+                        hasAnyLoyaltyCards = loyaltyCards.isNotEmpty(),
                         allTransactions = allTrans,
                         recentTransactions = recentTrans,
                         hasMoreTransactions = hasMoreTrans,
@@ -621,4 +683,8 @@ class HomeViewModel(
                 }
             }
         }
+
+    private fun Instant?.toEpochMillisSafe(): Long =
+        this?.let { instant -> runCatching { instant.toEpochMilli() }.getOrDefault(Long.MIN_VALUE) }
+            ?: Long.MIN_VALUE
 }

@@ -31,6 +31,8 @@ import com.k689.identid.interactor.dashboard.DocumentsInteractor
 import com.k689.identid.interactor.dashboard.DocumentsInteractorImpl
 import com.k689.identid.interactor.dashboard.HomeInteractor
 import com.k689.identid.interactor.dashboard.HomeInteractorImpl
+import com.k689.identid.interactor.dashboard.LoyaltyCardsInteractor
+import com.k689.identid.interactor.dashboard.LoyaltyCardsInteractorImpl
 import com.k689.identid.interactor.dashboard.SettingsInteractor
 import com.k689.identid.interactor.dashboard.SettingsInteractorImpl
 import com.k689.identid.interactor.dashboard.TransactionDetailsInteractor
@@ -39,6 +41,8 @@ import com.k689.identid.interactor.dashboard.TransactionsInteractor
 import com.k689.identid.interactor.dashboard.TransactionsInteractorImpl
 import com.k689.identid.provider.UuidProvider
 import com.k689.identid.provider.resources.ResourceProvider
+import com.k689.identid.storage.dao.BookmarkDao
+import com.k689.identid.storage.dao.LoyaltyCardDao
 import com.k689.identid.validator.FilterValidator
 import org.koin.core.annotation.ComponentScan
 import org.koin.core.annotation.Factory
@@ -78,6 +82,16 @@ fun provideHomeInteractor(
         resourceProvider,
         walletCoreDocumentsController,
         walletCoreConfig,
+    )
+
+@Factory
+fun provideLoyaltyCardsInteractor(
+    loyaltyCardDao: LoyaltyCardDao,
+    bookmarkDao: BookmarkDao,
+): LoyaltyCardsInteractor =
+    LoyaltyCardsInteractorImpl(
+        loyaltyCardDao,
+        bookmarkDao,
     )
 
 @Factory

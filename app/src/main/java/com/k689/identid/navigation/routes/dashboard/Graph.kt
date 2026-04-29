@@ -28,6 +28,10 @@ import com.k689.identid.navigation.DashboardScreens
 import com.k689.identid.navigation.ModuleRoute
 import com.k689.identid.ui.dashboard.authenticate.AuthenticateScreen
 import com.k689.identid.ui.dashboard.dashboard.DashboardScreen
+import com.k689.identid.ui.dashboard.loyaltycards.create.LoyaltyCardCreateScreen
+import com.k689.identid.ui.dashboard.loyaltycards.detail.LoyaltyCardDetailScreen
+import com.k689.identid.ui.dashboard.loyaltycards.list.LoyaltyCardsScreen
+import com.k689.identid.ui.dashboard.loyaltycards.scan.LoyaltyCardScanScreen
 import com.k689.identid.ui.dashboard.documents.detail.DocumentDetailsScreen
 import com.k689.identid.ui.dashboard.documents.list.DocumentsScreen
 import com.k689.identid.ui.dashboard.preferences.PreferencesScreen
@@ -73,6 +77,63 @@ fun NavGraphBuilder.featureDashboardGraph(navController: NavController) {
                 navHostController = navController,
                 viewModel = koinViewModel(),
                 onDashboardEventSent = { /* handle if needed */ },
+            )
+        }
+
+        composable(
+            route = DashboardScreens.LoyaltyCards.screenRoute,
+        ) {
+            LoyaltyCardsScreen(
+                navController = navController,
+                viewModel = koinViewModel(),
+            )
+        }
+
+        composable(
+            route = DashboardScreens.LoyaltyCardScan.screenRoute,
+        ) {
+            LoyaltyCardScanScreen(navController = navController)
+        }
+
+        composable(
+            route = DashboardScreens.LoyaltyCardCreate.screenRoute,
+            arguments =
+                listOf(
+                    navArgument("barcodeValue") { type = NavType.StringType },
+                    navArgument("barcodeFormat") { type = NavType.StringType },
+                ),
+        ) {
+            LoyaltyCardCreateScreen(
+                navController = navController,
+                viewModel =
+                    koinViewModel(
+                        parameters = {
+                            parametersOf(
+                                it.arguments?.getString("barcodeValue").orEmpty(),
+                                it.arguments?.getString("barcodeFormat").orEmpty(),
+                            )
+                        },
+                    ),
+            )
+        }
+
+        composable(
+            route = DashboardScreens.LoyaltyCardDetails.screenRoute,
+            arguments =
+                listOf(
+                    navArgument("loyaltyCardId") { type = NavType.StringType },
+                ),
+        ) {
+            LoyaltyCardDetailScreen(
+                navController = navController,
+                viewModel =
+                    koinViewModel(
+                        parameters = {
+                            parametersOf(
+                                it.arguments?.getString("loyaltyCardId").orEmpty(),
+                            )
+                        },
+                    ),
             )
         }
 

@@ -19,6 +19,7 @@ package com.k689.identid.di.storage
 import android.content.Context
 import androidx.room.Room
 import com.k689.identid.storage.dao.BookmarkDao
+import com.k689.identid.storage.dao.LoyaltyCardDao
 import com.k689.identid.storage.dao.PseudonymDao
 import com.k689.identid.storage.dao.PseudonymTransactionLogDao
 import com.k689.identid.storage.dao.RevokedDocumentDao
@@ -39,12 +40,15 @@ fun provideAppDatabase(context: Context): DatabaseService =
             context,
             DatabaseService::class.java,
             "eudi.app.wallet.storage",
-        ).addMigrations(DatabaseService.MIGRATION_3_4)
+        ).addMigrations(DatabaseService.MIGRATION_3_4, DatabaseService.MIGRATION_4_5)
         .fallbackToDestructiveMigration(true)
         .build()
 
 @Single
 fun provideBookmarkDao(service: DatabaseService): BookmarkDao = service.bookmarkDao()
+
+    @Single
+    fun provideLoyaltyCardDao(service: DatabaseService): LoyaltyCardDao = service.loyaltyCardDao()
 
 @Single
 fun provideRevokedDocumentDao(service: DatabaseService): RevokedDocumentDao = service.revokedDocumentDao()

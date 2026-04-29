@@ -24,3 +24,5 @@ data class Bookmark(
     @PrimaryKey
     val identifier: String,
 )
+
+fun loyaltyCardBookmarkId(loyaltyCardId: String): String = "loyalty:$loyaltyCardId"
