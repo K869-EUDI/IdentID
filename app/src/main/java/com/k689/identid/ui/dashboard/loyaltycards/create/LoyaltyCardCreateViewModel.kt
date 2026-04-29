@@ -14,6 +14,7 @@ data class State(
     val barcodeValue: String,
     val barcodeFormat: String,
     val name: String = "",
+    val duplicateCardName: String? = null,
     val isSaving: Boolean = false,
 ) : ViewState
 
@@ -45,11 +46,22 @@ class LoyaltyCardCreateViewModel(
             barcodeFormat = decodedBarcodeFormat,
         )
 
+    init {
+        refreshDuplicateState()
+    }
+
     override fun handleEvents(event: Event) {
         when (event) {
             is Event.Pop -> setEffect { Effect.Navigation.Pop }
             is Event.NameChanged -> setState { copy(name = event.value) }
             is Event.Save -> save()
+        }
+    }
+
+    private fun refreshDuplicateState() {
+        viewModelScope.launch {
+            val duplicate = loyaltyCardsInteractor.findExistingByBarcodeValue(viewState.value.barcodeValue)
+            setState { copy(duplicateCardName = duplicate?.displayName) }
         }
     }
 
@@ -60,6 +72,12 @@ class LoyaltyCardCreateViewModel(
         }
 
         viewModelScope.launch {
+            val duplicate = loyaltyCardsInteractor.findExistingByBarcodeValue(viewState.value.barcodeValue)
+            if (duplicate != null) {
+                setState { copy(duplicateCardName = duplicate.displayName) }
+                return@launch
+            }
+
             setState { copy(isSaving = true) }
             val id = loyaltyCardsInteractor.save(name, viewState.value.barcodeValue, viewState.value.barcodeFormat)
             setState { copy(isSaving = false) }

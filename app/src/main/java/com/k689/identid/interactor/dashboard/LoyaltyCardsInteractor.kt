@@ -34,6 +34,8 @@ interface LoyaltyCardsInteractor {
 
     suspend fun getAll(): List<LoyaltyCardListItemUi>
 
+    suspend fun findExistingByBarcodeValue(barcodeValue: String): LoyaltyCardListItemUi?
+
     suspend fun getDetail(id: String): LoyaltyCardDetailUi?
 
     suspend fun save(displayName: String, barcodeValue: String, barcodeFormat: String): String
@@ -53,6 +55,11 @@ class LoyaltyCardsInteractorImpl(
 
     override suspend fun getAll(): List<LoyaltyCardListItemUi> =
         loyaltyCardDao.retrieveAll().map { it.toListItemUi() }
+
+    override suspend fun findExistingByBarcodeValue(barcodeValue: String): LoyaltyCardListItemUi? =
+        loyaltyCardDao.retrieveAll()
+            .firstOrNull { it.barcodeValue == barcodeValue.trim() }
+            ?.toListItemUi()
 
     override suspend fun getDetail(id: String): LoyaltyCardDetailUi? {
         val card = loyaltyCardDao.retrieve(id) ?: return null

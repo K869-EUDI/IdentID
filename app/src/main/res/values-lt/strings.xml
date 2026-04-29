@@ -303,7 +303,9 @@
     <string name="loyalty_cards_scan_permission_wait">Laukiama kameros leidimo…</string>
     <string name="loyalty_cards_name_title">Pavadinkite lojalumo kortelę</string>
     <string name="loyalty_cards_name_subtitle">Prieš išsaugodami suteikite kortelei atpažįstamą pavadinimą.</string>
+    <string name="loyalty_cards_name_barcode_label">Nuskaitytas brūkšninis kodas</string>
     <string name="loyalty_cards_name_label">Kortelės pavadinimas</string>
+    <string name="loyalty_cards_name_duplicate_warning">Šis brūkšninis kodas jau išsaugotas kaip „%1$s“. Pašalinkite esamą kortelę prieš pridėdami ją dar kartą.</string>
     <string name="loyalty_cards_name_save">Išsaugoti lojalumo kortelę</string>
     <string name="loyalty_cards_detail_title">Lojalumo kortelė</string>
     <string name="loyalty_cards_detail_code">Kodas</string>

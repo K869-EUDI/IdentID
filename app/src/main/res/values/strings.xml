@@ -301,7 +301,9 @@
     <string name="loyalty_cards_scan_permission_wait">Waiting for camera permission…</string>
     <string name="loyalty_cards_name_title">Name your loyalty card</string>
     <string name="loyalty_cards_name_subtitle">Give this card a recognizable name before saving it.</string>
+    <string name="loyalty_cards_name_barcode_label">Scanned barcode</string>
     <string name="loyalty_cards_name_label">Card name</string>
+    <string name="loyalty_cards_name_duplicate_warning">This barcode is already saved as "%1$s". Remove the existing card before adding it again.</string>
     <string name="loyalty_cards_name_save">Save loyalty card</string>
     <string name="loyalty_cards_detail_title">Loyalty Card</string>
     <string name="loyalty_cards_detail_code">Code</string>
