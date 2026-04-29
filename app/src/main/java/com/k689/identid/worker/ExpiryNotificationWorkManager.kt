@@ -24,7 +24,6 @@ import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Build
 import androidx.annotation.StringRes
-import androidx.compose.ui.res.stringResource
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
 import androidx.core.content.ContextCompat
@@ -34,8 +33,6 @@ import com.k689.identid.R
 import com.k689.identid.app.MainActivity
 import com.k689.identid.controller.core.WalletCoreDocumentsController
 import com.k689.identid.provider.resources.ResourceProvider
-import com.k689.identid.worker.ExpiryNotificationWorkManager.`<no name provided>`.CHANNEL_ID
-import com.k689.identid.worker.ExpiryNotificationWorkManager.`<no name provided>`.NOTIFICATION_ID
 import eu.europa.ec.eudi.wallet.document.IssuedDocument
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
