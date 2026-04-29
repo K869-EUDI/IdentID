@@ -111,6 +111,7 @@ import com.k689.identid.ui.component.wrap.WrapIconButton
 import com.k689.identid.ui.component.wrap.WrapModalBottomSheet
 import com.k689.identid.ui.dashboard.documents.component.DocumentIdentityCard
 import com.k689.identid.ui.dashboard.documents.component.toCardIdentificationTag
+import com.k689.identid.ui.dashboard.loyaltycards.component.BarcodeVisual
 import com.k689.identid.ui.dashboard.home.components.DrawerMenuItem
 import com.k689.identid.ui.dashboard.home.components.HomeDrawer
 import com.k689.identid.ui.dashboard.transactions.model.TransactionStatusUi
@@ -430,7 +431,7 @@ private fun Content(
 ) {
     val scrollState = rememberScrollState()
 
-    val recentDocs = state.recentDocuments
+    val recentDocs = state.recentBookmarks
     val pageCount =
         remember(recentDocs) {
             if (recentDocs.isEmpty()) 1 else recentDocs.size + 1
@@ -473,63 +474,50 @@ private fun Content(
             beyondViewportPageCount = 1,
         ) { page ->
             if (page < recentDocs.size) {
-                val doc = recentDocs[page]
-                val documentTitle = (doc.documentUi.uiData.mainContentData as? ListItemMainContentDataUi.Text)?.text ?: ""
-                val categoryLabel = stringResource(doc.documentUi.documentCategory.stringResId)
+                val item = recentDocs[page]
+                when (item) {
+                    is HomeBookmarkedItem.Document -> {
+                        val doc = item.value
+                        val documentTitle = (doc.documentUi.uiData.mainContentData as? ListItemMainContentDataUi.Text)?.text ?: ""
+                        val categoryLabel = stringResource(doc.documentUi.documentCategory.stringResId)
 
-                DocumentIdentityCard(
-                    title = documentTitle,
-                    identification = "$categoryLabel • ${doc.documentUi.documentIdentifier.toCardIdentificationTag()}",
-                    supportingLines =
-                        listOf(
-                            stringResource(R.string.home_screen_document_usages_left, doc.usagesLeft),
-                            stringResource(R.string.home_screen_document_expires, doc.expiresAt),
-                        ),
-                    onClick = { onEventSent(Event.DocumentClicked(doc.documentUi.uiData.itemId)) },
-                    modifier =
-                        Modifier
-                            .graphicsLayer {
-                                val pageOffset =
-                                    (
-                                        (pagerState.currentPage - page) +
-                                            pagerState.currentPageOffsetFraction
-                                    ).absoluteValue
+                        DocumentIdentityCard(
+                            title = documentTitle,
+                            identification = "$categoryLabel • ${doc.documentUi.documentIdentifier.toCardIdentificationTag()}",
+                            supportingLines =
+                                listOf(
+                                    stringResource(R.string.home_screen_document_usages_left, doc.usagesLeft),
+                                    stringResource(R.string.home_screen_document_expires, doc.expiresAt),
+                                ),
+                            onClick = { onEventSent(Event.DocumentClicked(doc.documentUi.uiData.itemId)) },
+                            modifier = Modifier.pagerCardTransform(page, pagerState.currentPage, pagerState.currentPageOffsetFraction),
+                        )
+                    }
 
-                                val fraction = 1f - pageOffset.coerceIn(0f, 1f)
-                                val scale = lerp(0.9f, 1f, fraction)
-
-                                scaleX = scale
-                                scaleY = scale
-                                alpha = lerp(0.8f, 1f, fraction)
-                            },
-                )
+                    is HomeBookmarkedItem.LoyaltyCard -> {
+                        LoyaltyCardPagerCard(
+                            name = item.name,
+                            barcodeValue = item.barcodeValue,
+                            barcodeFormat = item.barcodeFormat,
+                            onClick = { onEventSent(Event.LoyaltyCardClicked(item.id)) },
+                            modifier = Modifier.pagerCardTransform(page, pagerState.currentPage, pagerState.currentPageOffsetFraction),
+                        )
+                    }
+                }
             } else {
                 SeeAllDocumentsCard(
                     recentDocsCount = recentDocs.size,
-                    hasAnyDocuments = state.allDocuments.isNotEmpty(),
+                    hasAnyDocuments = state.allDocuments.isNotEmpty() || state.hasAnyLoyaltyCards,
                     onClicked = {
-                        if (state.allDocuments.isEmpty()) {
+                        if (state.allDocuments.isEmpty() && !state.hasAnyLoyaltyCards) {
                             onEventSent(Event.AddDocumentsClicked)
+                        } else if (state.allDocuments.isEmpty() && state.hasAnyLoyaltyCards) {
+                            onEventSent(Event.DrawerMenuItemClicked(DrawerMenuItem.LoyaltyCards))
                         } else {
                             onEventSent(Event.SeeAllDocumentsClicked)
                         }
                     },
-                    modifier =
-                        Modifier
-                            .graphicsLayer {
-                                val pageOffset =
-                                    (
-                                        (pagerState.currentPage - page) +
-                                            pagerState.currentPageOffsetFraction
-                                    ).absoluteValue
-
-                                val fraction = 1f - pageOffset.coerceIn(0f, 1f)
-                                val scale = lerp(0.9f, 1f, fraction)
-
-                                scaleX = scale
-                                scaleY = scale
-                                alpha = lerp(0.8f, 1f, fraction)
-                            },
+                    modifier = Modifier.pagerCardTransform(page, pagerState.currentPage, pagerState.currentPageOffsetFraction),
                 )
             }
         }
@@ -566,6 +554,54 @@ private fun Content(
                     }
                 }
             }.collect()
+    }
+}
+
+private fun Modifier.pagerCardTransform(
+    page: Int,
+    currentPage: Int,
+    currentPageOffsetFraction: Float,
+): Modifier =
+    graphicsLayer {
+        val pageOffset = ((currentPage - page) + currentPageOffsetFraction).absoluteValue
+        val fraction = 1f - pageOffset.coerceIn(0f, 1f)
+        val scale = lerp(0.9f, 1f, fraction)
+
+        scaleX = scale
+        scaleY = scale
+        alpha = lerp(0.8f, 1f, fraction)
+    }
+
+@Composable
+private fun LoyaltyCardPagerCard(
+    name: String,
+    barcodeValue: String,
+    barcodeFormat: String,
+    onClick: () -> Unit,
+    modifier: Modifier = Modifier,
+) {
+    Card(
+        modifier = modifier.fillMaxWidth().height(212.dp).clickable { onClick() },
+        shape = RoundedCornerShape(22.dp),
+        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surfaceContainerHigh),
+    ) {
+        Column(
+            modifier = Modifier.fillMaxSize().padding(16.dp),
+            verticalArrangement = Arrangement.spacedBy(12.dp),
+        ) {
+            Text(
+                text = name,
+                style = MaterialTheme.typography.titleLarge,
+                fontWeight = FontWeight.SemiBold,
+                maxLines = 1,
+                overflow = TextOverflow.Ellipsis,
+            )
+            BarcodeVisual(
+                barcodeValue = barcodeValue,
+                barcodeFormat = barcodeFormat,
+                modifier = Modifier.fillMaxWidth(),
+            )
+        }
     }
 }
 

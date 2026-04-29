@@ -27,6 +27,7 @@ enum class DrawerMenuItem(
     val groupName: DrawerMenuType,
 ) {
     Pseudonyms(titleRes = R.string.pseudonym_list_title, route = DashboardScreens.PseudonymList.screenRoute, groupName = DrawerMenuType.OPERATION),
+    LoyaltyCards(titleRes = R.string.loyalty_cards_title, route = DashboardScreens.LoyaltyCards.screenRoute, groupName = DrawerMenuType.OPERATION),
     Transactions(titleRes = R.string.transactions_screen_title, route = DashboardScreens.Transactions.screenRoute, groupName = DrawerMenuType.OPERATION),
 
     MoveWallet(titleRes = R.string.transfer_move_wallet_title, route = TransferScreens.MoveWallet.screenRoute, groupName = DrawerMenuType.WALLET),

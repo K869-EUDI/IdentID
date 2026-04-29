@@ -291,6 +291,32 @@
     <string name="pseudonym_txlog_detail_delete_title">Delete Log Entry</string>
     <string name="pseudonym_txlog_detail_delete_message">This will permanently delete this transaction log entry. This action cannot be undone.</string>
     <!--endregion-->
+    <!-- region Loyalty Cards -->
+    <string name="loyalty_cards_title">Loyalty Cards</string>
+    <string name="loyalty_cards_empty">No loyalty cards yet. Add one by scanning a card barcode.</string>
+    <string name="loyalty_cards_add">Add loyalty card</string>
+    <string name="loyalty_cards_scan_title">Scan loyalty card</string>
+    <string name="loyalty_cards_scan_subtitle">Scan the barcode on your card to save it to your wallet.</string>
+    <string name="loyalty_cards_scan_hint">Align the barcode inside the frame. For long retail barcodes, hold the phone a bit farther back and keep the code horizontal.</string>
+    <string name="loyalty_cards_scan_permission_wait">Waiting for camera permission…</string>
+    <string name="loyalty_cards_name_title">Name your loyalty card</string>
+    <string name="loyalty_cards_name_subtitle">Give this card a recognizable name before saving it.</string>
+    <string name="loyalty_cards_name_barcode_label">Scanned barcode</string>
+    <string name="loyalty_cards_name_label">Card name</string>
+    <string name="loyalty_cards_name_duplicate_warning">This barcode is already saved as "%1$s". Remove the existing card before adding it again.</string>
+    <string name="loyalty_cards_name_save">Save loyalty card</string>
+    <string name="loyalty_cards_detail_title">Loyalty Card</string>
+    <string name="loyalty_cards_detail_code">Code</string>
+    <string name="loyalty_cards_detail_format">Barcode format</string>
+    <string name="loyalty_cards_detail_created">Added</string>
+    <string name="loyalty_cards_detail_bookmark">Pin to home</string>
+    <string name="loyalty_cards_detail_remove_bookmark">Remove from home</string>
+    <string name="loyalty_cards_delete">Delete loyalty card</string>
+    <string name="loyalty_cards_delete_title">Delete loyalty card</string>
+    <string name="loyalty_cards_delete_message">This will permanently delete the saved loyalty card. This action cannot be undone.</string>
+    <string name="loyalty_cards_saved">Loyalty card saved</string>
+    <string name="loyalty_cards_bookmarked_label">Pinned</string>
+    <!-- endregion -->
     <!-- region Preferences Screen -->
     <string name="preferences_screen_title">Preferences</string>
     <string name="preferences_theme_label">Theme</string>

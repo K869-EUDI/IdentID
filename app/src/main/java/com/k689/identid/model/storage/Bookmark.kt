@@ -24,3 +24,10 @@ data class Bookmark(
     @PrimaryKey
     val identifier: String,
 )
+
+private const val LOYALTY_CARD_BOOKMARK_PREFIX = "loyalty:"
+
+fun loyaltyCardBookmarkId(loyaltyCardId: String): String = "$LOYALTY_CARD_BOOKMARK_PREFIX$loyaltyCardId"
+
+fun loyaltyCardIdFromBookmarkId(bookmarkId: String): String? =
+    bookmarkId.takeIf { it.startsWith(LOYALTY_CARD_BOOKMARK_PREFIX) }?.removePrefix(LOYALTY_CARD_BOOKMARK_PREFIX)

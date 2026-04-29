@@ -52,6 +52,20 @@ sealed class DashboardScreens {
 
     data object Documents : Screen(name = "DOCUMENTS")
 
+    data object LoyaltyCards : Screen(name = "LOYALTY_CARDS")
+
+    data object LoyaltyCardScan : Screen(name = "LOYALTY_CARD_SCAN")
+
+    data object LoyaltyCardCreate : Screen(
+        name = "LOYALTY_CARD_CREATE",
+        parameters = "?barcodeValue={barcodeValue}&barcodeFormat={barcodeFormat}",
+    )
+
+    data object LoyaltyCardDetails : Screen(
+        name = "LOYALTY_CARD_DETAILS",
+        parameters = "?loyaltyCardId={loyaltyCardId}",
+    )
+
     data object Transactions : Screen(name = "TRANSACTIONS")
 
     data object Settings : Screen(name = "SETTINGS")
