@@ -74,6 +74,8 @@ data class State(
     val filtersUi: List<ExpandableListItemUi.NestedListItem> = emptyList(),
     val sortOrder: DualSelectorButtonDataUi,
     val isFilteringActive: Boolean,
+    val isSelectionModeActive: Boolean = false,
+    val selectedDocumentIds: Set<DocumentId> = emptySet(),
 ) : ViewState
 
 sealed class Event : ViewEvent {
@@ -104,9 +106,21 @@ sealed class Event : ViewEvent {
 
     data object OnFiltersApply : Event()
 
+    data class OnToggleFilterExpansion(val groupId: String) : Event()
+
     data class OnSortingOrderChanged(
         val sortingOrder: DualSelectorButton,
     ) : Event()
+
+    data class OnDocumentClick(val docId: DocumentId) : Event()
+
+    data class OnDocumentLongClick(val docId: DocumentId) : Event()
+
+    data object OnCancelSelectionMode : Event()
+
+    data object OnDeleteSelectedDocuments : Event()
+
+    data object OnConfirmDelete : Event()
 
     data object AddDocumentPressed : Event()
 
@@ -180,6 +194,10 @@ sealed class DocumentsBottomSheetContent {
         val successfullyIssuedDeferredDocuments: List<DeferredDocumentDataDomain>,
         val options: List<ModalOptionUi<Event>>,
     ) : DocumentsBottomSheetContent()
+
+    data class ConfirmDelete(
+        val documentIds: List<DocumentId>,
+    ) : DocumentsBottomSheetContent()
 }
 
 @KoinViewModel
@@ -252,8 +270,54 @@ class DocumentsViewModel(
                 resetFilters()
             }
 
+            is Event.OnToggleFilterExpansion -> {
+                toggleFilterExpansion(event.groupId)
+            }
+
             is Event.OnSortingOrderChanged -> {
                 sortOrderChanged(event.sortingOrder)
+            }
+
+            is Event.OnDocumentClick -> {
+                if (viewState.value.isSelectionModeActive) {
+                    toggleDocumentSelection(event.docId)
+                } else {
+                    handleDocumentClick(event.docId)
+                }
+            }
+
+            is Event.OnDocumentLongClick -> {
+                if (!viewState.value.isSelectionModeActive) {
+                    setState {
+                        copy(
+                            isSelectionModeActive = true,
+                            selectedDocumentIds = setOf(event.docId),
+                        )
+                    }
+                }
+            }
+
+            is Event.OnCancelSelectionMode -> {
+                setState {
+                    copy(
+                        isSelectionModeActive = false,
+                        selectedDocumentIds = emptySet(),
+                    )
+                }
+            }
+
+            is Event.OnDeleteSelectedDocuments -> {
+                showBottomSheet(
+                    sheetContent = DocumentsBottomSheetContent.ConfirmDelete(
+                        documentIds = viewState.value.selectedDocumentIds.toList(),
+                    ),
+                )
+            }
+
+            is Event.OnConfirmDelete -> {
+                val selectedIds = viewState.value.selectedDocumentIds.toList()
+                hideBottomSheet()
+                deleteDocuments(selectedIds)
             }
 
             is Event.BottomSheet.UpdateBottomSheetState -> {
@@ -425,6 +489,13 @@ class DocumentsViewModel(
         event: Event,
         documentId: DocumentId,
     ) {
+        deleteDocuments(listOf(documentId), event)
+    }
+
+    private fun deleteDocuments(
+        documentIds: List<DocumentId>,
+        event: Event? = null,
+    ) {
         setState {
             copy(
                 isLoading = true,
@@ -434,8 +505,8 @@ class DocumentsViewModel(
 
         viewModelScope.launch {
             interactor
-                .deleteDocument(
-                    documentId = documentId,
+                .deleteDocuments(
+                    documentIds = documentIds,
                 ).collect { response ->
                     when (response) {
                         is DocumentInteractorDeleteDocumentPartialState.AllDocumentsDeleted -> {
@@ -456,8 +527,14 @@ class DocumentsViewModel(
                         }
 
                         is DocumentInteractorDeleteDocumentPartialState.SingleDocumentDeleted -> {
+                            setState {
+                                copy(
+                                    isSelectionModeActive = false,
+                                    selectedDocumentIds = emptySet(),
+                                )
+                            }
                             getDocuments(
-                                event = event,
+                                event = event ?: Event.GetDocuments(),
                                 deferredFailedDocIds = viewState.value.deferredFailedDocIds,
                             )
                         }
@@ -468,7 +545,10 @@ class DocumentsViewModel(
                                     isLoading = false,
                                     error =
                                         ContentErrorConfig(
-                                            onRetry = { setEvent(event) },
+                                            onRetry = {
+                                                if (event != null) setEvent(event)
+                                                else deleteDocuments(documentIds)
+                                            },
                                             errorSubTitle = response.errorMessage,
                                             onCancel = {
                                                 setState {
@@ -481,6 +561,45 @@ class DocumentsViewModel(
                         }
                     }
                 }
+        }
+    }
+
+    private fun toggleDocumentSelection(docId: DocumentId) {
+        val currentSelected = viewState.value.selectedDocumentIds
+        val newSelected = if (currentSelected.contains(docId)) {
+            currentSelected - docId
+        } else {
+            currentSelected + docId
+        }
+
+        if (newSelected.isEmpty()) {
+            setState {
+                copy(
+                    isSelectionModeActive = false,
+                    selectedDocumentIds = emptySet(),
+                )
+            }
+        } else {
+            setState {
+                copy(selectedDocumentIds = newSelected)
+            }
+        }
+    }
+
+    private fun handleDocumentClick(docId: DocumentId) {
+        val document = viewState.value.documentsUi.flatMap { it.second }.find { it.uiData.itemId == docId }
+        if (document != null) {
+            if (document.documentIssuanceState == DocumentIssuanceStateUi.Pending ||
+                document.documentIssuanceState == DocumentIssuanceStateUi.Failed
+            ) {
+                showBottomSheet(
+                    sheetContent = DeferredDocumentPressed(
+                        documentId = docId,
+                    ),
+                )
+            } else {
+                goToDocumentDetails(docId)
+            }
         }
     }
 
@@ -589,6 +708,18 @@ class DocumentsViewModel(
     ) {
         setState { copy(shouldRevertFilterChanges = true) }
         interactor.updateFilter(filterGroupId = groupId, filterId = filterId)
+    }
+
+    private fun toggleFilterExpansion(groupId: String) {
+        val currentFilters = viewState.value.filtersUi
+        val updatedFilters = currentFilters.map { filter ->
+            if (filter.header.itemId == groupId) {
+                filter.copy(isExpanded = !filter.isExpanded)
+            } else {
+                filter
+            }
+        }
+        setState { copy(filtersUi = updatedFilters) }
     }
 
     private fun applySelectedFilters() {

@@ -40,6 +40,7 @@ import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.SheetState
+import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -137,7 +138,7 @@ fun WrapModalBottomSheet(
                 .then(modifier),
         sheetState = sheetState,
         shape = shape,
-        containerColor = MaterialTheme.colorScheme.surfaceContainerLow,
+        containerColor = MaterialTheme.colorScheme.surface,
         tonalElevation = 0.dp,
         dragHandle = dragHandle,
         content = sheetContent,
@@ -205,6 +206,7 @@ fun DialogBottomSheet(
         textData = textData,
         leadingIcon = leadingIcon,
         leadingIconTint = leadingIconTint,
+        sheetBackgroundColor = MaterialTheme.colorScheme.surface,
         bodyContent = {
             VSpacer.Small()
             Row(
@@ -864,3 +866,24 @@ private fun BottomSheetWithTwoBigIconsUnevenTextPreview() {
 }
 
 // endregion
+
+@OptIn(ExperimentalMaterial3Api::class)
+@ThemeModePreviews
+@Composable
+private fun WrapModalBottomSheetReproPreview() {
+    PreviewTheme {
+        WrapModalBottomSheet(
+            onDismissRequest = {},
+            sheetState = rememberModalBottomSheetState(),
+        ) {
+            DialogBottomSheet(
+                textData = BottomSheetTextDataUi(
+                    title = "Repro Title",
+                    message = "Repro Message",
+                    positiveButtonText = "OK",
+                    negativeButtonText = "Cancel"
+                )
+            )
+        }
+    }
+}

@@ -38,7 +38,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
@@ -73,6 +72,7 @@ import com.k689.identid.ui.component.SystemBroadcastReceiver
 import com.k689.identid.ui.component.content.BroadcastAction
 import com.k689.identid.ui.component.content.ContentScreen
 import com.k689.identid.ui.component.content.ScreenNavigateAction
+import com.k689.identid.ui.component.content.ToolbarActionUi
 import com.k689.identid.ui.component.content.ToolbarConfig
 import com.k689.identid.ui.component.preview.PreviewTheme
 import com.k689.identid.ui.component.preview.ThemeModePreviews
@@ -101,10 +101,10 @@ import com.k689.identid.ui.dashboard.documents.detail.model.DocumentIssuanceStat
 import com.k689.identid.ui.dashboard.documents.list.model.DocumentUi
 import com.k689.identid.util.core.CoreActions
 import com.k689.identid.util.dashboard.TestTag
+import eu.europa.ec.eudi.wallet.document.DocumentId
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
 
@@ -128,15 +128,36 @@ fun DocumentsScreen(
             skipPartiallyExpanded = true,
         )
 
-    ContentScreen(
-        isLoading = state.isLoading,
-        navigatableAction = ScreenNavigateAction.BACKABLE,
-        onBack = { onEventSend(Event.Pop) },
-        contentErrorConfig = null,
-        toolBarConfig =
+    val toolbarConfig =
+        if (state.isSelectionModeActive) {
+            ToolbarConfig(
+                title = stringResource(R.string.documents_screen_selection_title, state.selectedDocumentIds.size),
+                actions =
+                    listOf(
+                        ToolbarActionUi(
+                            icon = AppIcons.Delete,
+                            onClick = { onEventSend(Event.OnDeleteSelectedDocuments) },
+                        ),
+                    ),
+            )
+        } else {
             ToolbarConfig(
                 title = stringResource(R.string.documents_screen_title),
-            ),
+            )
+        }
+
+    ContentScreen(
+        isLoading = state.isLoading,
+        navigatableAction = if (state.isSelectionModeActive) ScreenNavigateAction.CANCELABLE else ScreenNavigateAction.BACKABLE,
+        onBack = {
+            if (state.isSelectionModeActive) {
+                onEventSend(Event.OnCancelSelectionMode)
+            } else {
+                onEventSend(Event.Pop)
+            }
+        },
+        contentErrorConfig = null,
+        toolBarConfig = toolbarConfig,
         broadcastAction =
             BroadcastAction(
                 intentFilters =
@@ -183,8 +204,9 @@ fun DocumentsScreen(
     SystemBroadcastReceiver(
         intentFilters = listOf(CoreActions.DEFERRED_ISSUANCE_REFRESH_ACTION),
     ) { intent ->
-        val failedIds = intent?.getStringArrayListExtra(CoreActions.DEFERRED_ISSUANCE_FAILED_IDS_EXTRA)
-            ?: emptyList()
+        val failedIds =
+            intent?.getStringArrayListExtra(CoreActions.DEFERRED_ISSUANCE_FAILED_IDS_EXTRA)
+                ?: emptyList()
         onEventSend(Event.GetDocuments(failedIds))
     }
 }
@@ -293,6 +315,8 @@ private fun Content(
                         modifier = Modifier.fillMaxWidth(),
                         category = documentCategory,
                         documents = documents,
+                        selectedDocumentIds = state.selectedDocumentIds,
+                        isSelectionModeActive = state.isSelectionModeActive,
                         onEventSend = onEventSend,
                     )
 
@@ -367,6 +391,8 @@ private fun DocumentCategorySection(
     modifier: Modifier = Modifier,
     category: DocumentCategory,
     documents: List<DocumentUi>,
+    selectedDocumentIds: Set<DocumentId>,
+    isSelectionModeActive: Boolean,
     onEventSend: (Event) -> Unit,
 ) {
     Column(
@@ -386,19 +412,13 @@ private fun DocumentCategorySection(
                 identification = "$categoryLabel • ${documentItem.documentIdentifier.toCardIdentificationTag()}",
                 supportingLines = documentItem.cardSupportingLines(),
                 status = documentItem.documentIssuanceState.toCardStatusLabel(),
+                isSelected = selectedDocumentIds.contains(documentItem.uiData.itemId),
+                isSelectionModeActive = isSelectionModeActive,
                 onClick = {
-                    if (
-                        documentItem.documentIssuanceState == DocumentIssuanceStateUi.Pending ||
-                        documentItem.documentIssuanceState == DocumentIssuanceStateUi.Failed
-                    ) {
-                        onEventSend(
-                            Event.BottomSheet.DeferredDocument.DeferredNotReadyYet.DocumentSelected(
-                                documentId = documentItem.uiData.itemId,
-                            ),
-                        )
-                    } else {
-                        onEventSend(Event.GoToDocumentDetails(documentItem.uiData.itemId))
-                    }
+                    onEventSend(Event.OnDocumentClick(documentItem.uiData.itemId))
+                },
+                onLongClick = {
+                    onEventSend(Event.OnDocumentLongClick(documentItem.uiData.itemId))
                 },
             )
         }
@@ -423,8 +443,7 @@ private fun NoResults(
     }
 }
 
-private fun DocumentUi.cardTitle(): String =
-    (uiData.mainContentData as? ListItemMainContentDataUi.Text)?.text.orEmpty()
+private fun DocumentUi.cardTitle(): String = (uiData.mainContentData as? ListItemMainContentDataUi.Text)?.text.orEmpty()
 
 private fun DocumentUi.cardSupportingLines(): List<String> =
     listOfNotNull(
@@ -458,10 +477,6 @@ private fun DocumentsSheetContent(
                     )
                 },
                 bodyContent = {
-                    val expandStateList by remember {
-                        mutableStateOf(state.filtersUi.map { false }.toMutableStateList())
-                    }
-
                     var buttonsRowHeight by remember { mutableIntStateOf(0) }
 
                     Box {
@@ -476,14 +491,14 @@ private fun DocumentsSheetContent(
                             DualSelectorButtons(state.sortOrder) {
                                 onEventSent(Event.OnSortingOrderChanged(it))
                             }
-                            state.filtersUi.forEachIndexed { index, filter ->
+                            state.filtersUi.forEach { filter ->
                                 if (filter.nestedItems.isNotEmpty()) {
                                     WrapExpandableListItem(
                                         header = filter.header,
                                         data = filter.nestedItems,
-                                        isExpanded = expandStateList[index],
+                                        isExpanded = filter.isExpanded,
                                         onExpandedChange = {
-                                            expandStateList[index] = !expandStateList[index]
+                                            onEventSent(Event.OnToggleFilterExpansion(it.itemId))
                                         },
                                         onItemClick = {
                                             val id = it.itemId
@@ -611,6 +626,27 @@ private fun DocumentsSheetContent(
                     ),
                 options = sheetContent.options,
                 onEventSent = onEventSent,
+            )
+        }
+
+        is DocumentsBottomSheetContent.ConfirmDelete -> {
+            DialogBottomSheet(
+                textData =
+                    BottomSheetTextDataUi(
+                        title = stringResource(R.string.documents_screen_delete_confirmation_title),
+                        message = stringResource(R.string.documents_screen_delete_confirmation_message, sheetContent.documentIds.size),
+                        positiveButtonText = stringResource(R.string.documents_screen_delete_confirmation_positive),
+                        isPositiveButtonWarning = true,
+                        negativeButtonText = stringResource(R.string.documents_screen_delete_confirmation_negative),
+                    ),
+                leadingIcon = AppIcons.Delete,
+                leadingIconTint = MaterialTheme.colorScheme.error,
+                onPositiveClick = {
+                    onEventSent(Event.OnConfirmDelete)
+                },
+                onNegativeClick = {
+                    onEventSent(Event.BottomSheet.UpdateBottomSheetState(isOpen = false))
+                },
             )
         }
     }

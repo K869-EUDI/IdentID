@@ -352,6 +352,11 @@
     <!--endregion-->
     <!-- region Documents Screen -->
     <string name="documents_screen_title">Documents</string>
+    <string name="documents_screen_selection_title">%1$d selected</string>
+    <string name="documents_screen_delete_confirmation_title">Delete documents?</string>
+    <string name="documents_screen_delete_confirmation_message">Are you sure you want to delete %1$d selected documents? This action cannot be undone.</string>
+    <string name="documents_screen_delete_confirmation_positive">Delete</string>
+    <string name="documents_screen_delete_confirmation_negative">Cancel</string>
     <string name="documents_screen_search_label">Search Documents</string>
     <string name="documents_screen_search_no_results">No documents match your search. Try changing your search query or filters.</string>
     <string name="documents_screen_search_no_results_id">noResultsId</string>
