@@ -352,9 +352,15 @@
     <!--endregion-->
     <!-- region Documents Screen -->
     <string name="documents_screen_title">Documents</string>
-    <string name="documents_screen_selection_title">%1$d selected</string>
+    <plurals name="documents_screen_selection_title">
+        <item quantity="one">%1$d selected</item>
+        <item quantity="other">%1$d selected</item>
+    </plurals>
     <string name="documents_screen_delete_confirmation_title">Delete documents?</string>
-    <string name="documents_screen_delete_confirmation_message">Are you sure you want to delete %1$d selected documents? This action cannot be undone.</string>
+    <plurals name="documents_screen_delete_confirmation_message">
+        <item quantity="one">Are you sure you want to delete %1$d selected document? This action cannot be undone.</item>
+        <item quantity="other">Are you sure you want to delete %1$d selected documents? This action cannot be undone.</item>
+    </plurals>
     <string name="documents_screen_delete_confirmation_positive">Delete</string>
     <string name="documents_screen_delete_confirmation_negative">Cancel</string>
     <string name="documents_screen_search_label">Search Documents</string>
