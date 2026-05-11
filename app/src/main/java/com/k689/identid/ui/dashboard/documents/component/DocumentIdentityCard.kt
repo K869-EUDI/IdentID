@@ -89,9 +89,15 @@ fun DocumentIdentityCard(
         Box(
             modifier = Modifier
                 .fillMaxSize()
-                .combinedClickable(
-                    onClick = { onClick?.invoke() },
-                    onLongClick = { onLongClick?.invoke() },
+                .then(
+                    if (onClick != null || onLongClick != null) {
+                        Modifier.combinedClickable(
+                            onClick = onClick ?: {},
+                            onLongClick = onLongClick,
+                        )
+                    } else {
+                        Modifier
+                    }
                 )
         ) {
             Column(
