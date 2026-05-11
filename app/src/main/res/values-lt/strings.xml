@@ -363,6 +363,21 @@
     <!--endregion-->
     <!-- region Documents Screen -->
     <string name="documents_screen_title">Dokumentai</string>
+    <plurals name="documents_screen_selection_title" tools:ignore="MissingQuantity">
+        <item quantity="one">Pasirinktas %1$d</item>
+        <item quantity="few">Pasirinkti %1$d</item>
+        <item quantity="many">Pasirinkta %1$d</item>
+        <item quantity="other">Pasirinkta %1$d</item>
+    </plurals>
+    <string name="documents_screen_delete_confirmation_title">Ištrinti dokumentus?</string>
+    <plurals name="documents_screen_delete_confirmation_message" tools:ignore="MissingQuantity">
+        <item quantity="one">Ar tikrai norite ištrinti %1$d pasirinktą dokumentą? Šio veiksmo negalima bus atšaukti.</item>
+        <item quantity="few">Ar tikrai norite ištrinti %1$d pasirinktus dokumentus? Šio veiksmo negalima bus atšaukti.</item>
+        <item quantity="many">Ar tikrai norite ištrinti %1$d pasirinktų dokumentų? Šio veiksmo negalima bus atšaukti.</item>
+        <item quantity="other">Ar tikrai norite ištrinti %1$d pasirinktų dokumentų? Šio veiksmo negalima bus atšaukti.</item>
+    </plurals>
+    <string name="documents_screen_delete_confirmation_positive">Ištrinti</string>
+    <string name="documents_screen_delete_confirmation_negative">Atšaukti</string>
     <string name="documents_screen_search_label">Ieškoti dokumentų</string>
     <string name="documents_screen_search_no_results">Nė vienas dokumentas neatitinka paieškos. Pabandykite pakeisti paieškos užklausą arba filtrus.</string>
     <string name="documents_screen_search_no_results_id">noResultsId</string>

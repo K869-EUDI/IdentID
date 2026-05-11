@@ -47,6 +47,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.platform.testTag
+import androidx.compose.ui.res.pluralStringResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
@@ -131,7 +132,7 @@ fun DocumentsScreen(
     val toolbarConfig =
         if (state.isSelectionModeActive) {
             ToolbarConfig(
-                title = stringResource(R.string.documents_screen_selection_title, state.selectedDocumentIds.size),
+                title = pluralStringResource(R.plurals.documents_screen_selection_title, state.selectedDocumentIds.size, state.selectedDocumentIds.size),
                 actions =
                     listOf(
                         ToolbarActionUi(
@@ -186,7 +187,7 @@ fun DocumentsScreen(
                 is DocumentsBottomSheetContent.ConfirmDelete -> {
                     WrapConfirmationDialog(
                         title = stringResource(R.string.documents_screen_delete_confirmation_title),
-                        message = stringResource(R.string.documents_screen_delete_confirmation_message, content.documentIds.size),
+                        message = pluralStringResource(R.plurals.documents_screen_delete_confirmation_message, content.documentIds.size, content.documentIds.size),
                         primaryButtonText = stringResource(R.string.documents_screen_delete_confirmation_positive),
                         onPrimaryClick = { onEventSend(Event.OnConfirmDelete) },
                         secondaryButtonText = stringResource(R.string.documents_screen_delete_confirmation_negative),
