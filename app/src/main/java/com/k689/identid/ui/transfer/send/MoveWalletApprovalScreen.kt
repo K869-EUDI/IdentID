@@ -52,9 +52,9 @@ import com.k689.identid.ui.component.content.ContentTitle
 import com.k689.identid.ui.component.content.ScreenNavigateAction
 import com.k689.identid.ui.component.utils.OneTimeLaunchedEffect
 import com.k689.identid.ui.component.utils.SPACING_MEDIUM
-import com.k689.identid.ui.component.wrap.ButtonConfig
-import com.k689.identid.ui.component.wrap.ButtonType
-import com.k689.identid.ui.component.wrap.WrapButton
+import com.k689.identid.ui.component.wrap.StickyBottomConfig
+import com.k689.identid.ui.component.wrap.StickyBottomType
+import com.k689.identid.ui.component.wrap.WrapStickyBottomContent
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.onEach
 
@@ -73,6 +73,19 @@ fun MoveWalletApprovalScreen(
         navigatableAction = ScreenNavigateAction.BACKABLE,
         onBack = { viewModel.setEvent(MoveWalletApprovalEvent.GoBack(context)) },
         contentErrorConfig = state.error,
+        stickyBottom = { stickyPadding ->
+            WrapStickyBottomContent(
+                modifier = Modifier.fillMaxWidth().padding(stickyPadding),
+                stickyBottomConfig = StickyBottomConfig(
+                    type = StickyBottomType.LargeButton(
+                        text = stringResource(id = R.string.transfer_approval_confirm_button),
+                        enabled = pinInput.isNotEmpty() && !state.isSending,
+                        onClick = { viewModel.setEvent(MoveWalletApprovalEvent.ConfirmTransfer(pin = pinInput, context = context)) }
+                    ),
+                    showDivider = false
+                )
+            ) {}
+        }
     ) { paddingValues ->
         Content(
             state = state,
@@ -82,7 +95,6 @@ fun MoveWalletApprovalScreen(
                 pinInput = it
                 pinError = false
             },
-            onConfirm = { viewModel.setEvent(MoveWalletApprovalEvent.ConfirmTransfer(pin = pinInput, context = context)) },
             paddingValues = paddingValues,
         )
     }
@@ -119,7 +131,6 @@ private fun Content(
     pinInput: String,
     pinError: Boolean,
     onPinChanged: (String) -> Unit,
-    onConfirm: () -> Unit,
     paddingValues: PaddingValues,
 ) {
     Column(
@@ -166,20 +177,6 @@ private fun Content(
             keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.NumberPassword),
             singleLine = true,
         )
-
-        Spacer(modifier = Modifier.height(SPACING_MEDIUM.dp))
-
-        WrapButton(
-            modifier = Modifier.fillMaxWidth(),
-            buttonConfig =
-                ButtonConfig(
-                    type = ButtonType.PRIMARY,
-                    enabled = pinInput.isNotEmpty() && !state.isSending,
-                    onClick = onConfirm,
-                ),
-        ) {
-            Text(stringResource(id = R.string.transfer_approval_confirm_button))
-        }
     }
 }
 

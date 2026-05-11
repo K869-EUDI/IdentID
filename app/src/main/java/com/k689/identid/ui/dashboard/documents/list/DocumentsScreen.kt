@@ -88,7 +88,7 @@ import com.k689.identid.ui.component.wrap.BottomSheetTextDataUi
 import com.k689.identid.ui.component.wrap.BottomSheetWithOptionsList
 import com.k689.identid.ui.component.wrap.ButtonConfig
 import com.k689.identid.ui.component.wrap.ButtonType
-import com.k689.identid.ui.component.wrap.DialogBottomSheet
+import com.k689.identid.ui.component.wrap.WrapConfirmationDialog
 import com.k689.identid.ui.component.wrap.GenericBottomSheet
 import com.k689.identid.ui.component.wrap.WrapButton
 import com.k689.identid.ui.component.wrap.WrapExpandableListItem
@@ -182,21 +182,62 @@ fun DocumentsScreen(
         )
 
         if (isBottomSheetOpen) {
-            WrapModalBottomSheet(
-                onDismissRequest = {
-                    onEventSend(
-                        Event.BottomSheet.UpdateBottomSheetState(
-                            isOpen = false,
-                        ),
+            when (val content = state.sheetContent) {
+                is DocumentsBottomSheetContent.ConfirmDelete -> {
+                    WrapConfirmationDialog(
+                        title = stringResource(R.string.documents_screen_delete_confirmation_title),
+                        message = stringResource(R.string.documents_screen_delete_confirmation_message, content.documentIds.size),
+                        primaryButtonText = stringResource(R.string.documents_screen_delete_confirmation_positive),
+                        onPrimaryClick = { onEventSend(Event.OnConfirmDelete) },
+                        secondaryButtonText = stringResource(R.string.documents_screen_delete_confirmation_negative),
+                        onSecondaryClick = { onEventSend(Event.BottomSheet.UpdateBottomSheetState(isOpen = false)) },
+                        isPrimaryWarning = true,
+                        onDismissRequest = { onEventSend(Event.BottomSheet.UpdateBottomSheetState(isOpen = false)) }
                     )
-                },
-                sheetState = bottomSheetState,
-            ) {
-                DocumentsSheetContent(
-                    sheetContent = state.sheetContent,
-                    state = state,
-                    onEventSent = onEventSend,
-                )
+                }
+
+                is DocumentsBottomSheetContent.DeferredDocumentPressed -> {
+                    WrapConfirmationDialog(
+                        title = stringResource(id = R.string.dashboard_bottom_sheet_deferred_document_pressed_title),
+                        message = stringResource(id = R.string.dashboard_bottom_sheet_deferred_document_pressed_subtitle),
+                        primaryButtonText = stringResource(id = R.string.dashboard_bottom_sheet_deferred_document_pressed_primary_button_text),
+                        onPrimaryClick = {
+                            onEventSend(
+                                Event.BottomSheet.DeferredDocument.DeferredNotReadyYet.PrimaryButtonPressed(
+                                    documentId = content.documentId,
+                                ),
+                            )
+                        },
+                        secondaryButtonText = stringResource(id = R.string.dashboard_bottom_sheet_deferred_document_pressed_secondary_button_text),
+                        onSecondaryClick = {
+                            onEventSend(
+                                Event.BottomSheet.DeferredDocument.DeferredNotReadyYet.SecondaryButtonPressed(
+                                    documentId = content.documentId,
+                                ),
+                            )
+                        },
+                        onDismissRequest = { onEventSend(Event.BottomSheet.UpdateBottomSheetState(isOpen = false)) }
+                    )
+                }
+
+                else -> {
+                    WrapModalBottomSheet(
+                        onDismissRequest = {
+                            onEventSend(
+                                Event.BottomSheet.UpdateBottomSheetState(
+                                    isOpen = false,
+                                ),
+                            )
+                        },
+                        sheetState = bottomSheetState,
+                    ) {
+                        DocumentsSheetContent(
+                            sheetContent = content,
+                            state = state,
+                            onEventSent = onEventSend,
+                        )
+                    }
+                }
             }
         }
     }
@@ -580,35 +621,7 @@ private fun DocumentsSheetContent(
         }
 
         is DocumentsBottomSheetContent.DeferredDocumentPressed -> {
-            DialogBottomSheet(
-                textData =
-                    BottomSheetTextDataUi(
-                        title =
-                            stringResource(
-                                id = R.string.dashboard_bottom_sheet_deferred_document_pressed_title,
-                            ),
-                        message =
-                            stringResource(
-                                id = R.string.dashboard_bottom_sheet_deferred_document_pressed_subtitle,
-                            ),
-                        positiveButtonText = stringResource(id = R.string.dashboard_bottom_sheet_deferred_document_pressed_primary_button_text),
-                        negativeButtonText = stringResource(id = R.string.dashboard_bottom_sheet_deferred_document_pressed_secondary_button_text),
-                    ),
-                onPositiveClick = {
-                    onEventSent(
-                        Event.BottomSheet.DeferredDocument.DeferredNotReadyYet.PrimaryButtonPressed(
-                            documentId = sheetContent.documentId,
-                        ),
-                    )
-                },
-                onNegativeClick = {
-                    onEventSent(
-                        Event.BottomSheet.DeferredDocument.DeferredNotReadyYet.SecondaryButtonPressed(
-                            documentId = sheetContent.documentId,
-                        ),
-                    )
-                },
-            )
+            // Handled by WrapConfirmationDialog
         }
 
         is DocumentsBottomSheetContent.DeferredDocumentsReady -> {
@@ -630,24 +643,7 @@ private fun DocumentsSheetContent(
         }
 
         is DocumentsBottomSheetContent.ConfirmDelete -> {
-            DialogBottomSheet(
-                textData =
-                    BottomSheetTextDataUi(
-                        title = stringResource(R.string.documents_screen_delete_confirmation_title),
-                        message = stringResource(R.string.documents_screen_delete_confirmation_message, sheetContent.documentIds.size),
-                        positiveButtonText = stringResource(R.string.documents_screen_delete_confirmation_positive),
-                        isPositiveButtonWarning = true,
-                        negativeButtonText = stringResource(R.string.documents_screen_delete_confirmation_negative),
-                    ),
-                leadingIcon = AppIcons.Delete,
-                leadingIconTint = MaterialTheme.colorScheme.error,
-                onPositiveClick = {
-                    onEventSent(Event.OnConfirmDelete)
-                },
-                onNegativeClick = {
-                    onEventSent(Event.BottomSheet.UpdateBottomSheetState(isOpen = false))
-                },
-            )
+            // Handled by WrapConfirmationDialog
         }
     }
 }

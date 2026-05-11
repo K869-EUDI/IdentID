@@ -46,6 +46,7 @@ import com.k689.identid.extension.ui.getPendingDeepLink
 import com.k689.identid.navigation.DashboardScreens
 import com.k689.identid.navigation.IssuanceScreens
 import com.k689.identid.navigation.helper.handleDeepLinkAction
+import com.k689.identid.ui.component.AppIcons
 import com.k689.identid.ui.component.ErrorInfo
 import com.k689.identid.ui.component.ListItemDataUi
 import com.k689.identid.ui.component.ListItemMainContentDataUi
@@ -98,18 +99,15 @@ fun DocumentOfferScreen(
                 stickyBottomConfig =
                     StickyBottomConfig(
                         type =
-                            StickyBottomType.OneButton(
-                                config =
-                                    ButtonConfig(
-                                        type = ButtonType.PRIMARY,
-                                        enabled = !state.isLoading && !state.noDocument,
-                                        onClick = { viewModel.setEvent(Event.StickyButtonPressed(context)) },
-                                    ),
+                            StickyBottomType.LargeButton(
+                                text = stringResource(R.string.issuance_document_offer_primary_button_text_add),
+                                enabled = !state.isLoading && !state.noDocument,
+                                icon = AppIcons.Add,
+                                onClick = { viewModel.setEvent(Event.StickyButtonPressed(context)) },
                             ),
+                        showDivider = false,
                     ),
-            ) {
-                Text(text = stringResource(R.string.issuance_document_offer_primary_button_text_add))
-            }
+            ) {}
         },
         broadcastAction =
             BroadcastAction(

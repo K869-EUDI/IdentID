@@ -76,18 +76,15 @@ fun DocumentSuccessScreen(
                 stickyBottomConfig =
                     StickyBottomConfig(
                         type =
-                            StickyBottomType.OneButton(
-                                config =
-                                    ButtonConfig(
-                                        type = ButtonType.SECONDARY,
-                                        enabled = !state.isLoading,
-                                        onClick = { viewModel.setEvent(Event.StickyButtonPressed) },
-                                    ),
+                            StickyBottomType.LargeButton(
+                                text = stringResource(R.string.document_success_sticky_button_text),
+                                enabled = !state.isLoading,
+                                type = ButtonType.SECONDARY,
+                                onClick = { viewModel.setEvent(Event.StickyButtonPressed) },
                             ),
+                        showDivider = false,
                     ),
-            ) {
-                Text(text = stringResource(R.string.document_success_sticky_button_text))
-            }
+            ) {}
         },
         navigatableAction = ScreenNavigateAction.NONE,
     ) { paddingValues ->

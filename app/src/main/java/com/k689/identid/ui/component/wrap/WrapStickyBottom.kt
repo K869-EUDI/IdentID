@@ -20,17 +20,33 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import com.k689.identid.theme.values.divider
+import com.k689.identid.ui.component.IconDataUi
+import com.k689.identid.ui.component.LargeActionFooter
+import com.k689.identid.ui.component.utils.SPACING_MEDIUM
 
 sealed interface StickyBottomType {
     data class OneButton(
         val config: ButtonConfig,
+    ) : StickyBottomType
+
+    data class LargeButton(
+        val text: String,
+        val onClick: () -> Unit,
+        val enabled: Boolean = true,
+        val type: ButtonType = ButtonType.PRIMARY,
+        val icon: IconDataUi? = null,
     ) : StickyBottomType
 
     data class TwoButtons(
@@ -79,6 +95,17 @@ fun WrapStickyBottomContent(
                     }
                 }
             }
+        }
+
+        is StickyBottomType.LargeButton -> {
+            LargeActionFooter(
+                modifier = modifier,
+                text = stickyBottomType.text,
+                onClick = stickyBottomType.onClick,
+                enabled = stickyBottomType.enabled,
+                icon = stickyBottomType.icon,
+                buttonType = stickyBottomType.type,
+            )
         }
 
         is StickyBottomType.TwoButtons -> {

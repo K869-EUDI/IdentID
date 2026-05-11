@@ -62,13 +62,9 @@ import com.k689.identid.ui.component.preview.ThemeModePreviews
 import com.k689.identid.ui.component.utils.SPACING_LARGE
 import com.k689.identid.ui.component.utils.SPACING_SMALL
 import com.k689.identid.ui.component.utils.VSpacer
-import com.k689.identid.ui.component.wrap.BottomSheetTextDataUi
-import com.k689.identid.ui.component.wrap.ButtonConfig
-import com.k689.identid.ui.component.wrap.ButtonType
-import com.k689.identid.ui.component.wrap.DialogBottomSheet
+import com.k689.identid.ui.component.wrap.WrapConfirmationDialog
 import com.k689.identid.ui.component.wrap.StickyBottomConfig
 import com.k689.identid.ui.component.wrap.StickyBottomType
-import com.k689.identid.ui.component.wrap.WrapModalBottomSheet
 import com.k689.identid.ui.component.wrap.WrapPinTextField
 import com.k689.identid.ui.component.wrap.WrapStickyBottomContent
 import com.k689.identid.util.common.TestTag
@@ -121,20 +117,16 @@ fun PinScreen(
                 stickyBottomConfig =
                     StickyBottomConfig(
                         type =
-                            StickyBottomType.OneButton(
-                                config =
-                                    ButtonConfig(
-                                        type = ButtonType.PRIMARY,
-                                        enabled = isButtonEnabled,
-                                        onClick = {
-                                            viewModel.setEvent(Event.NextButtonPressed(pin = pinInput))
-                                        },
-                                    ),
+                            StickyBottomType.LargeButton(
+                                text = state.buttonText,
+                                enabled = isButtonEnabled,
+                                onClick = {
+                                    viewModel.setEvent(Event.NextButtonPressed(pin = pinInput))
+                                },
                             ),
+                        showDivider = false,
                     ),
-            ) {
-                Text(text = state.buttonText)
-            }
+            ) {}
         },
     ) { paddingValues ->
         Column {
@@ -158,7 +150,13 @@ fun PinScreen(
             )
 
             if (isBottomSheetOpen) {
-                WrapModalBottomSheet(
+                WrapConfirmationDialog(
+                    title = stringResource(id = R.string.quick_pin_bottom_sheet_cancel_title),
+                    message = stringResource(id = R.string.quick_pin_bottom_sheet_cancel_subtitle),
+                    primaryButtonText = stringResource(id = R.string.quick_pin_bottom_sheet_cancel_primary_button_text),
+                    onPrimaryClick = { viewModel.setEvent(Event.BottomSheet.Cancel.PrimaryButtonPressed) },
+                    secondaryButtonText = stringResource(id = R.string.quick_pin_bottom_sheet_cancel_secondary_button_text),
+                    onSecondaryClick = { viewModel.setEvent(Event.BottomSheet.Cancel.SecondaryButtonPressed) },
                     onDismissRequest = {
                         viewModel.setEvent(
                             Event.BottomSheet.UpdateBottomSheetState(
@@ -166,14 +164,7 @@ fun PinScreen(
                             ),
                         )
                     },
-                    sheetState = bottomSheetState,
-                ) {
-                    SheetContent(
-                        onEventSent = {
-                            viewModel.setEvent(it)
-                        },
-                    )
-                }
+                )
             }
         }
     }
@@ -305,21 +296,6 @@ private fun ColumnScope.Content(
 }
 
 @Composable
-private fun SheetContent(onEventSent: (event: Event) -> Unit) {
-    DialogBottomSheet(
-        textData =
-            BottomSheetTextDataUi(
-                title = stringResource(id = R.string.quick_pin_bottom_sheet_cancel_title),
-                message = stringResource(id = R.string.quick_pin_bottom_sheet_cancel_subtitle),
-                positiveButtonText = stringResource(id = R.string.quick_pin_bottom_sheet_cancel_primary_button_text),
-                negativeButtonText = stringResource(id = R.string.quick_pin_bottom_sheet_cancel_secondary_button_text),
-            ),
-        onPositiveClick = { onEventSent(Event.BottomSheet.Cancel.PrimaryButtonPressed) },
-        onNegativeClick = { onEventSent(Event.BottomSheet.Cancel.SecondaryButtonPressed) },
-    )
-}
-
-@Composable
 private fun PinFieldLayout(
     modifier: Modifier = Modifier,
     state: State,
@@ -367,12 +343,3 @@ private fun PinScreenEmptyPreview() {
     }
 }
 
-@ThemeModePreviews
-@Composable
-private fun SheetContentCancelPreview() {
-    PreviewTheme {
-        SheetContent(
-            onEventSent = {},
-        )
-    }
-}

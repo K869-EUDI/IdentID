@@ -18,6 +18,7 @@ package com.k689.identid.ui.component
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.RowScope
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
@@ -27,38 +28,30 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.k689.identid.R
 import com.k689.identid.ui.component.utils.SPACING_MEDIUM
 import com.k689.identid.ui.component.wrap.ButtonConfig
 import com.k689.identid.ui.component.wrap.ButtonType
 import com.k689.identid.ui.component.wrap.WrapButton
 import com.k689.identid.ui.component.wrap.WrapIcon
-import com.k689.identid.ui.issuance.add.Event
 
+/**
+ * A dynamic footer component with a large action button.
+ * Used for primary screen actions like scanning, submitting, or proceeding.
+ */
 @Composable
 fun LargeActionFooter(
     modifier: Modifier = Modifier,
     text: String,
     onClick: () -> Unit,
+    enabled: Boolean = true,
+    icon: IconDataUi? = null,
+    buttonType: ButtonType = ButtonType.PRIMARY,
 ) {
-    /*    ElevatedCard(
-            modifier = modifier.fillMaxWidth(),
-            shape = RoundedCornerShape(24.dp),
-            colors =
-                CardDefaults.elevatedCardColors(
-                    containerColor = MaterialTheme.colorScheme.surfaceContainer,
-                    contentColor = MaterialTheme.colorScheme.onSurface,
-                ),
-            elevation = CardDefaults.elevatedCardElevation(defaultElevation = 4.dp),
-        ) {
-        }*/
-
     Column(
-        modifier = Modifier.padding(SPACING_MEDIUM.dp),
+        modifier = modifier.padding(SPACING_MEDIUM.dp),
         verticalArrangement = Arrangement.spacedBy(12.dp),
         horizontalAlignment = Alignment.CenterHorizontally,
     ) {
@@ -66,20 +59,27 @@ fun LargeActionFooter(
             modifier = Modifier.fillMaxWidth(),
             buttonConfig =
                 ButtonConfig(
-                    type = ButtonType.PRIMARY,
+                    type = buttonType,
                     shape = RoundedCornerShape(16.dp),
                     onClick = onClick,
+                    enabled = enabled,
                 ),
         ) {
-            WrapIcon(
-                iconData = AppIcons.QrScanner,
-                modifier = Modifier.padding(end = 8.dp).size(35.dp),
-            )
+            if (icon != null) {
+                WrapIcon(
+                    iconData = icon,
+                    modifier = Modifier.padding(end = 8.dp).size(24.dp),
+                )
+            }
             Text(
                 text = text,
                 style =
                     MaterialTheme.typography.headlineSmall.copy(
-                        color = MaterialTheme.colorScheme.onPrimary,
+                        color = if (buttonType == ButtonType.PRIMARY) {
+                            MaterialTheme.colorScheme.onPrimary
+                        } else {
+                            MaterialTheme.colorScheme.primary
+                        },
                         fontWeight = FontWeight.Bold,
                         fontSize = 16.sp,
                     ),

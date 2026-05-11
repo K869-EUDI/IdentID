@@ -113,18 +113,14 @@ fun RequestScreen(
                 stickyBottomConfig =
                     StickyBottomConfig(
                         type =
-                            StickyBottomType.OneButton(
-                                config =
-                                    ButtonConfig(
-                                        type = ButtonType.PRIMARY,
-                                        enabled = !state.isLoading && state.allowShare,
-                                        onClick = { viewModel.setEvent(Event.StickyButtonPressed) },
-                                    ),
+                            StickyBottomType.LargeButton(
+                                text = stringResource(R.string.request_sticky_button_text),
+                                enabled = !state.isLoading && state.allowShare,
+                                onClick = { viewModel.setEvent(Event.StickyButtonPressed) },
                             ),
+                        showDivider = false,
                     ),
-            ) {
-                Text(text = stringResource(R.string.request_sticky_button_text))
-            }
+            ) {}
         },
         contentErrorConfig = state.error,
     ) { paddingValues ->

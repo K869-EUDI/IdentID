@@ -5,10 +5,8 @@ import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -23,6 +21,7 @@ import com.k689.identid.ui.component.content.ScreenNavigateAction
 import com.k689.identid.ui.component.wrap.ButtonConfig
 import com.k689.identid.ui.component.wrap.ButtonType
 import com.k689.identid.ui.component.wrap.WrapButton
+import com.k689.identid.ui.component.wrap.WrapConfirmationDialog
 import com.k689.identid.ui.dashboard.loyaltycards.component.BarcodeVisual
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
@@ -53,20 +52,15 @@ fun LoyaltyCardDetailScreen(
     }
 
     if (state.showDeleteConfirmation) {
-        AlertDialog(
+        WrapConfirmationDialog(
+            title = stringResource(R.string.loyalty_cards_delete_title),
+            message = stringResource(R.string.loyalty_cards_delete_message),
+            primaryButtonText = stringResource(R.string.generic_bottom_sheet_delete_primary_button_text),
+            onPrimaryClick = { viewModel.setEvent(Event.ConfirmDelete) },
+            secondaryButtonText = stringResource(R.string.generic_bottom_sheet_delete_secondary_button_text),
+            onSecondaryClick = { viewModel.setEvent(Event.DismissDelete) },
+            isPrimaryWarning = true,
             onDismissRequest = { viewModel.setEvent(Event.DismissDelete) },
-            title = { Text(stringResource(R.string.loyalty_cards_delete_title)) },
-            text = { Text(stringResource(R.string.loyalty_cards_delete_message)) },
-            confirmButton = {
-                TextButton(onClick = { viewModel.setEvent(Event.ConfirmDelete) }) {
-                    Text(stringResource(R.string.generic_bottom_sheet_delete_primary_button_text), color = MaterialTheme.colorScheme.error)
-                }
-            },
-            dismissButton = {
-                TextButton(onClick = { viewModel.setEvent(Event.DismissDelete) }) {
-                    Text(stringResource(R.string.generic_bottom_sheet_delete_secondary_button_text))
-                }
-            },
         )
     }
 
