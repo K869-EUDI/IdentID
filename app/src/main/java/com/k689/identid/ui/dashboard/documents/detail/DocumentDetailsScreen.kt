@@ -86,10 +86,9 @@ import com.k689.identid.ui.component.utils.SPACING_LARGE
 import com.k689.identid.ui.component.utils.SPACING_MEDIUM
 import com.k689.identid.ui.component.utils.SPACING_SMALL
 import com.k689.identid.ui.component.utils.VSpacer
-import com.k689.identid.ui.component.wrap.BottomSheetTextDataUi
+import com.k689.identid.ui.component.wrap.WrapConfirmationDialog
 import com.k689.identid.ui.component.wrap.ButtonConfig
 import com.k689.identid.ui.component.wrap.ButtonType
-import com.k689.identid.ui.component.wrap.DialogBottomSheet
 import com.k689.identid.ui.component.wrap.ExpandableListItemUi
 import com.k689.identid.ui.component.wrap.SimpleBottomSheet
 import com.k689.identid.ui.component.wrap.TextConfig
@@ -176,16 +175,33 @@ fun DocumentDetailsScreen(
         )
 
         if (isBottomSheetOpen) {
-            WrapModalBottomSheet(
-                onDismissRequest = {
-                    onEventSend(Event.BottomSheet.UpdateBottomSheetState(isOpen = false))
-                },
-                sheetState = bottomSheetState,
-            ) {
-                SheetContent(
-                    sheetContent = state.sheetContent,
-                    onEventSent = onEventSend,
-                )
+            when (val content = state.sheetContent) {
+                is DocumentDetailsBottomSheetContent.DeleteDocumentConfirmation -> {
+                    WrapConfirmationDialog(
+                        title = stringResource(id = R.string.document_details_bottom_sheet_delete_title),
+                        message = stringResource(id = R.string.document_details_bottom_sheet_delete_subtitle),
+                        primaryButtonText = stringResource(id = R.string.document_details_bottom_sheet_delete_primary_button_text),
+                        onPrimaryClick = { onEventSend(Event.BottomSheet.Delete.PrimaryButtonPressed) },
+                        secondaryButtonText = stringResource(id = R.string.document_details_bottom_sheet_delete_secondary_button_text),
+                        onSecondaryClick = { onEventSend(Event.BottomSheet.Delete.SecondaryButtonPressed) },
+                        isPrimaryWarning = true,
+                        onDismissRequest = { onEventSend(Event.BottomSheet.UpdateBottomSheetState(isOpen = false)) }
+                    )
+                }
+
+                else -> {
+                    WrapModalBottomSheet(
+                        onDismissRequest = {
+                            onEventSend(Event.BottomSheet.UpdateBottomSheetState(isOpen = false))
+                        },
+                        sheetState = bottomSheetState,
+                    ) {
+                        SheetContent(
+                            sheetContent = content,
+                            onEventSent = onEventSend,
+                        )
+                    }
+                }
             }
         }
     }
@@ -425,28 +441,7 @@ private fun SheetContent(
 ) {
     when (sheetContent) {
         is DocumentDetailsBottomSheetContent.DeleteDocumentConfirmation -> {
-            DialogBottomSheet(
-                textData =
-                    BottomSheetTextDataUi(
-                        title =
-                            stringResource(
-                                id = R.string.document_details_bottom_sheet_delete_title,
-                            ),
-                        message =
-                            stringResource(
-                                id = R.string.document_details_bottom_sheet_delete_subtitle,
-                            ),
-                        positiveButtonText = stringResource(id = R.string.document_details_bottom_sheet_delete_primary_button_text),
-                        negativeButtonText = stringResource(id = R.string.document_details_bottom_sheet_delete_secondary_button_text),
-                        isPositiveButtonWarning = true,
-                    ),
-                leadingIcon = AppIcons.Delete,
-                leadingIconTint = MaterialTheme.colorScheme.error,
-                onPositiveClick = { onEventSent(Event.BottomSheet.Delete.PrimaryButtonPressed) },
-                positiveButtonTestTag = TestTag.DocumentDetailsScreen.BOTTOM_SHEET_DELETE_DOCUMENT_POSITIVE_BUTTON,
-                onNegativeClick = { onEventSent(Event.BottomSheet.Delete.SecondaryButtonPressed) },
-                negativeButtonTestTag = TestTag.DocumentDetailsScreen.BOTTOM_SHEET_DELETE_DOCUMENT_NEGATIVE_BUTTON,
-            )
+            // Handled by WrapConfirmationDialog
         }
 
         is DocumentDetailsBottomSheetContent.BookmarkStoredInfo -> {

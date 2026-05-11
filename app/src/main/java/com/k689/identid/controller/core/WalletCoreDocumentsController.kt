@@ -190,6 +190,10 @@ interface WalletCoreDocumentsController {
         documentId: String,
     ): Flow<DeleteDocumentPartialState>
 
+    fun deleteDocuments(
+        documentIds: List<String>,
+    ): Flow<DeleteDocumentPartialState>
+
     fun deleteAllDocuments(): Flow<DeleteAllDocumentsPartialState>
 
     fun resolveDocumentOffer(offerUri: String): Flow<ResolveDocumentOfferPartialState>
@@ -401,6 +405,34 @@ class WalletCoreDocumentsControllerImpl(
                         ),
                     )
                 }
+        }.safeAsync {
+            DeleteDocumentPartialState.Failure(
+                errorMessage = it.localizedMessage ?: genericErrorMessage,
+            )
+        }
+
+    override fun deleteDocuments(documentIds: List<String>): Flow<DeleteDocumentPartialState> =
+        flow {
+            for (documentId in documentIds) {
+                val deleteResult =
+                    eudiWallet
+                        .deleteDocumentById(documentId = documentId)
+                        .kotlinResult
+
+                deleteResult
+                    .onSuccess {
+                        revokedDocumentDao.delete(documentId)
+                    }.onFailure {
+                        emit(
+                            DeleteDocumentPartialState.Failure(
+                                errorMessage = it.localizedMessage ?: genericErrorMessage,
+                            ),
+                        )
+                        return@flow
+                    }
+            }
+
+            emit(DeleteDocumentPartialState.Success)
         }.safeAsync {
             DeleteDocumentPartialState.Failure(
                 errorMessage = it.localizedMessage ?: genericErrorMessage,

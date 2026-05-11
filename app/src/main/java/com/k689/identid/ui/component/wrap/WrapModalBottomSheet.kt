@@ -130,15 +130,11 @@ fun WrapModalBottomSheet(
 ) {
     ModalBottomSheet(
         onDismissRequest = onDismissRequest,
-        modifier =
-            Modifier
-                .exposeTestTagsAsResourceId()
-                .shadow(elevation = 6.dp, shape = shape)
-                .then(modifier),
+        modifier = Modifier.exposeTestTagsAsResourceId().then(modifier),
         sheetState = sheetState,
         shape = shape,
-        containerColor = MaterialTheme.colorScheme.surfaceContainerLow,
-        tonalElevation = 0.dp,
+        containerColor = MaterialTheme.colorScheme.surface,
+        tonalElevation = 6.dp,
         dragHandle = dragHandle,
         content = sheetContent,
     )
@@ -205,6 +201,7 @@ fun DialogBottomSheet(
         textData = textData,
         leadingIcon = leadingIcon,
         leadingIconTint = leadingIconTint,
+        sheetBackgroundColor = MaterialTheme.colorScheme.surface,
         bodyContent = {
             VSpacer.Small()
             Row(

@@ -1,3 +1,19 @@
+/*
+ * Copyright (c) 2026 European Commission
+ *
+ * Licensed under the EUPL, Version 1.2 or - as soon they will be approved by the European
+ * Commission - subsequent versions of the EUPL (the "Licence"); You may not use this work
+ * except in compliance with the Licence.
+ *
+ * You may obtain a copy of the Licence at:
+ * https://joinup.ec.europa.eu/software/page/eupl
+ *
+ * Unless required by applicable law or agreed to in writing, software distributed under
+ * the Licence is distributed on an "AS IS" basis, WITHOUT WARRANTIES OR CONDITIONS OF
+ * ANY KIND, either express or implied. See the Licence for the specific language
+ * governing permissions and limitations under the Licence.
+ */
+
 package com.k689.identid.ui.pseudonym.transactions
 
 import androidx.compose.foundation.layout.Column
@@ -9,12 +25,10 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -29,6 +43,7 @@ import com.k689.identid.ui.component.content.ContentTitle
 import com.k689.identid.ui.component.content.ScreenNavigateAction
 import com.k689.identid.ui.component.utils.SPACING_MEDIUM
 import com.k689.identid.ui.component.utils.SPACING_SMALL
+import com.k689.identid.ui.component.wrap.WrapConfirmationDialog
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.onEach
 
@@ -52,23 +67,15 @@ fun PseudonymTransactionLogDetailScreen(
     }
 
     if (state.showDeleteConfirmation) {
-        AlertDialog(
+        WrapConfirmationDialog(
+            title = stringResource(R.string.pseudonym_txlog_detail_delete_title),
+            message = stringResource(R.string.pseudonym_txlog_detail_delete_message),
+            primaryButtonText = stringResource(R.string.pseudonym_detail_delete_confirm),
+            onPrimaryClick = { viewModel.setEvent(DetailEvent.ConfirmDelete) },
+            secondaryButtonText = stringResource(R.string.pseudonym_detail_delete_cancel),
+            onSecondaryClick = { viewModel.setEvent(DetailEvent.DismissDelete) },
+            isPrimaryWarning = true,
             onDismissRequest = { viewModel.setEvent(DetailEvent.DismissDelete) },
-            title = { Text(stringResource(R.string.pseudonym_txlog_detail_delete_title)) },
-            text = { Text(stringResource(R.string.pseudonym_txlog_detail_delete_message)) },
-            confirmButton = {
-                TextButton(onClick = { viewModel.setEvent(DetailEvent.ConfirmDelete) }) {
-                    Text(
-                        stringResource(R.string.pseudonym_detail_delete_confirm),
-                        color = MaterialTheme.colorScheme.error,
-                    )
-                }
-            },
-            dismissButton = {
-                TextButton(onClick = { viewModel.setEvent(DetailEvent.DismissDelete) }) {
-                    Text(stringResource(R.string.pseudonym_detail_delete_cancel))
-                }
-            },
         )
     }
 

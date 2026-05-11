@@ -151,6 +151,10 @@ interface DocumentsInteractor {
         documentId: String,
     ): Flow<DocumentInteractorDeleteDocumentPartialState>
 
+    fun deleteDocuments(
+        documentIds: List<String>,
+    ): Flow<DocumentInteractorDeleteDocumentPartialState>
+
     fun onFilterStateChange(): Flow<DocumentInteractorFilterPartialState>
 
     fun initializeFilters(
@@ -641,6 +645,37 @@ class DocumentsInteractorImpl(
     ): Flow<DocumentInteractorDeleteDocumentPartialState> =
         flow {
             walletCoreDocumentsController.deleteDocument(documentId).collect { response ->
+                when (response) {
+                    is DeleteDocumentPartialState.Failure -> {
+                        emit(
+                            DocumentInteractorDeleteDocumentPartialState.Failure(
+                                errorMessage = response.errorMessage,
+                            ),
+                        )
+                    }
+
+                    is DeleteDocumentPartialState.Success -> {
+                        if (configLogic.forcePidActivation &&
+                            walletCoreDocumentsController.getAllDocuments().isEmpty()
+                        ) {
+                            emit(DocumentInteractorDeleteDocumentPartialState.AllDocumentsDeleted)
+                        } else {
+                            emit(DocumentInteractorDeleteDocumentPartialState.SingleDocumentDeleted)
+                        }
+                    }
+                }
+            }
+        }.safeAsync {
+            DocumentInteractorDeleteDocumentPartialState.Failure(
+                errorMessage = it.localizedMessage ?: genericErrorMsg,
+            )
+        }
+
+    override fun deleteDocuments(
+        documentIds: List<String>,
+    ): Flow<DocumentInteractorDeleteDocumentPartialState> =
+        flow {
+            walletCoreDocumentsController.deleteDocuments(documentIds).collect { response ->
                 when (response) {
                     is DeleteDocumentPartialState.Failure -> {
                         emit(

@@ -105,8 +105,7 @@ import com.k689.identid.ui.component.utils.SPACING_MEDIUM
 import com.k689.identid.ui.component.utils.SPACING_SMALL
 import com.k689.identid.ui.component.utils.SPACING_XX_LARGE
 import com.k689.identid.ui.component.wrap.ActionCardConfig
-import com.k689.identid.ui.component.wrap.BottomSheetTextDataUi
-import com.k689.identid.ui.component.wrap.DialogBottomSheet
+import com.k689.identid.ui.component.wrap.WrapConfirmationDialog
 import com.k689.identid.ui.component.wrap.WrapIconButton
 import com.k689.identid.ui.component.wrap.WrapModalBottomSheet
 import com.k689.identid.ui.dashboard.documents.component.DocumentIdentityCard
@@ -320,20 +319,45 @@ fun HomeScreen(
     }
 
     if (state.isBottomSheetOpen && state.sheetContent != HomeScreenBottomSheetContent.None) {
-        WrapModalBottomSheet(
-            onDismissRequest = {
-                viewModel.setEvent(
-                    Event.BottomSheet.UpdateBottomSheetState(
-                        isOpen = false,
-                    ),
-                )
-            },
-            sheetState = bottomSheetState,
-        ) {
-            HomeScreenSheetContent(
-                sheetContent = state.sheetContent,
-                onEventSent = viewModel::setEvent,
+        val content = state.sheetContent
+        if (content is HomeScreenBottomSheetContent.Bluetooth) {
+            WrapConfirmationDialog(
+                title = stringResource(id = R.string.dashboard_bottom_sheet_bluetooth_title),
+                message = stringResource(id = R.string.dashboard_bottom_sheet_bluetooth_subtitle),
+                primaryButtonText = stringResource(id = R.string.dashboard_bottom_sheet_bluetooth_primary_button_text),
+                onPrimaryClick = {
+                    viewModel.setEvent(
+                        Event.BottomSheet.Bluetooth.PrimaryButtonPressed(
+                            content.availability,
+                        ),
+                    )
+                },
+                secondaryButtonText = stringResource(id = R.string.dashboard_bottom_sheet_bluetooth_secondary_button_text),
+                onSecondaryClick = { viewModel.setEvent(Event.BottomSheet.Bluetooth.SecondaryButtonPressed) },
+                onDismissRequest = {
+                    viewModel.setEvent(
+                        Event.BottomSheet.UpdateBottomSheetState(
+                            isOpen = false,
+                        ),
+                    )
+                },
             )
+        } else {
+            WrapModalBottomSheet(
+                onDismissRequest = {
+                    viewModel.setEvent(
+                        Event.BottomSheet.UpdateBottomSheetState(
+                            isOpen = false,
+                        ),
+                    )
+                },
+                sheetState = bottomSheetState,
+            ) {
+                HomeScreenSheetContent(
+                    sheetContent = state.sheetContent,
+                    onEventSent = viewModel::setEvent,
+                )
+            }
         }
     }
 
@@ -743,23 +767,7 @@ private fun HomeScreenSheetContent(
 ) {
     when (sheetContent) {
         is HomeScreenBottomSheetContent.Bluetooth -> {
-            DialogBottomSheet(
-                textData =
-                    BottomSheetTextDataUi(
-                        title = stringResource(id = R.string.dashboard_bottom_sheet_bluetooth_title),
-                        message = stringResource(id = R.string.dashboard_bottom_sheet_bluetooth_subtitle),
-                        positiveButtonText = stringResource(id = R.string.dashboard_bottom_sheet_bluetooth_primary_button_text),
-                        negativeButtonText = stringResource(id = R.string.dashboard_bottom_sheet_bluetooth_secondary_button_text),
-                    ),
-                onPositiveClick = {
-                    onEventSent(
-                        Event.BottomSheet.Bluetooth.PrimaryButtonPressed(
-                            sheetContent.availability,
-                        ),
-                    )
-                },
-                onNegativeClick = { onEventSent(Event.BottomSheet.Bluetooth.SecondaryButtonPressed) },
-            )
+            // Handled by WrapConfirmationDialog
         }
 
         else -> {

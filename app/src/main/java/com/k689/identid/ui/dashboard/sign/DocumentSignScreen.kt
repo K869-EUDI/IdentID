@@ -136,12 +136,9 @@ private fun Content(
         LargeActionFooter(
             modifier =
                 Modifier
-                    .fillMaxWidth()
-                    .padding(
-                        top = SPACING_MEDIUM.dp,
-                        bottom = SPACING_MEDIUM.dp,
-                    ),
+                    .fillMaxWidth(),
             text = stringResource(R.string.issuance_add_document_scan_qr_footer_button_text),
+            icon = AppIcons.QrScanner,
             onClick = { onEventSend(Event.OnScanQrClick) },
         )
     }
