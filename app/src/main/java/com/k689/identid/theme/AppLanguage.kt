@@ -22,6 +22,8 @@ import android.content.Intent
 import android.content.SharedPreferences
 import android.os.Build
 import android.os.LocaleList
+import androidx.annotation.StringRes
+import com.k689.identid.R
 import java.util.Locale
 import kotlin.system.exitProcess
 
@@ -35,15 +37,15 @@ import kotlin.system.exitProcess
  * manually via [wrapContext] in `attachBaseContext`.
  *
  * @property tag The BCP-47 language tag (e.g. "en", "lt"), or empty for system default.
- * @property displayName The user-facing name of the language.
+ * @property labelRes The resource ID for the user-facing name of the language.
  */
 enum class AppLanguage(
     val tag: String,
-    val displayName: String,
+    @StringRes val labelRes: Int,
 ) {
-    SYSTEM(tag = "", displayName = "System"),
-    ENGLISH(tag = "en", displayName = "English"),
-    LITHUANIAN(tag = "lt", displayName = "Lietuvių"),
+    SYSTEM(tag = "", labelRes = R.string.language_system),
+    ENGLISH(tag = "en", labelRes = R.string.language_english),
+    LITHUANIAN(tag = "lt", labelRes = R.string.language_lithuanian),
     ;
 
     companion object {

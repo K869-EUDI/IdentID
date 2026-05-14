@@ -27,7 +27,6 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.SheetState
 import androidx.compose.material3.Text
 import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
@@ -87,11 +86,6 @@ fun PinScreen(
     var pinInput by rememberSaveable(state.pinState, state.quickPinSize) { mutableStateOf("") }
 
     val isBottomSheetOpen = state.isBottomSheetOpen
-    val scope = rememberCoroutineScope()
-    val bottomSheetState =
-        rememberModalBottomSheetState(
-            skipPartiallyExpanded = true,
-        )
 
     LaunchedEffect(state.resetPin) {
         if (state.resetPin) {
@@ -133,7 +127,6 @@ fun PinScreen(
             Content(
                 state = state,
                 effectFlow = viewModel.effect,
-                onEventSend = { event -> viewModel.setEvent(event) },
                 onNavigationRequested = { navigationEffect ->
                     handleNavigationEffect(
                         context,
@@ -145,8 +138,6 @@ fun PinScreen(
                 onPinInput = { pinInput = it },
                 quickPinError = quickPinError,
                 paddingValues = paddingValues,
-                coroutineScope = scope,
-                modalBottomSheetState = bottomSheetState,
             )
 
             if (isBottomSheetOpen) {
@@ -203,14 +194,11 @@ private fun handleNavigationEffect(
 private fun ColumnScope.Content(
     state: State,
     effectFlow: Flow<Effect>,
-    onEventSend: (Event) -> Unit,
     onNavigationRequested: (Effect.Navigation) -> Unit,
     pinInput: String,
     onPinInput: (String) -> Unit,
     quickPinError: String?,
     paddingValues: PaddingValues,
-    coroutineScope: CoroutineScope,
-    modalBottomSheetState: SheetState,
     textFontSize: TextUnit = 16.sp,
 ) {
     Column(
@@ -276,19 +264,8 @@ private fun ColumnScope.Content(
                         onNavigationRequested(effect)
                     }
 
-                    is Effect.CloseBottomSheet -> {
-                        coroutineScope
-                            .launch {
-                                modalBottomSheetState.hide()
-                            }.invokeOnCompletion {
-                                if (!modalBottomSheetState.isVisible) {
-                                    onEventSend(Event.BottomSheet.UpdateBottomSheetState(isOpen = false))
-                                }
-                            }
-                    }
-
-                    is Effect.ShowBottomSheet -> {
-                        onEventSend(Event.BottomSheet.UpdateBottomSheetState(isOpen = true))
+                    else -> {
+                        /* other effects handled elsewhere if any */
                     }
                 }
             }.collect()
@@ -330,14 +307,11 @@ private fun PinScreenEmptyPreview() {
                         pinState = PinValidationState.ENTER,
                     ),
                 effectFlow = Channel<Effect>().receiveAsFlow(),
-                onEventSend = {},
                 onNavigationRequested = {},
                 pinInput = "",
                 onPinInput = {},
                 quickPinError = null,
                 paddingValues = PaddingValues(10.dp),
-                coroutineScope = rememberCoroutineScope(),
-                modalBottomSheetState = rememberModalBottomSheetState(),
             )
         }
     }

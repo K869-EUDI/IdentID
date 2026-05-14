@@ -23,6 +23,7 @@ import com.k689.identid.extension.business.shuffle
 import com.k689.identid.extension.business.unShuffle
 import com.k689.identid.provider.resources.ResourceProvider
 import com.k689.identid.theme.AppTheme
+import com.k689.identid.theme.ThemeStyle
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -153,6 +154,16 @@ interface PrefsController {
         key: String,
         defaultValue: Int,
     ): Int
+
+    fun setFloat(
+        key: String,
+        value: Float,
+    )
+
+    fun getFloat(
+        key: String,
+        defaultValue: Float,
+    ): Float
 }
 
 /**
@@ -337,6 +348,20 @@ class PrefsControllerImpl(
             putInt(key, value)
         }
     }
+
+    override fun setFloat(
+        key: String,
+        value: Float,
+    ) {
+        getSharedPrefs().edit {
+            putFloat(key, value)
+        }
+    }
+
+    override fun getFloat(
+        key: String,
+        defaultValue: Float,
+    ): Float = getSharedPrefs().getFloat(key, defaultValue)
 }
 
 interface PrefKeys {
@@ -361,6 +386,22 @@ interface PrefKeys {
     fun setTheme(theme: AppTheme)
 
     fun loadTheme(): AppTheme
+
+    val themeStyle: StateFlow<ThemeStyle>
+
+    fun setThemeStyle(style: ThemeStyle)
+
+    val seedHue: StateFlow<Float>
+
+    fun setSeedHue(hue: Float)
+
+    val seedSaturation: StateFlow<Float>
+
+    fun setSeedSaturation(saturation: Float)
+
+    val seedValue: StateFlow<Float>
+
+    fun setSeedValue(value: Float)
 }
 
 class PrefKeysImpl(
@@ -368,6 +409,10 @@ class PrefKeysImpl(
 ) : PrefKeys {
     companion object {
         private const val THEME_KEY = "AppTheme"
+        private const val THEME_STYLE_KEY = "ThemeStyle"
+        private const val SEED_HUE_KEY = "SeedHue"
+        private const val SEED_SATURATION_KEY = "SeedSaturation"
+        private const val SEED_VALUE_KEY = "SeedValue"
         private const val CRYPTO_KEY = "CryptoAlias"
         private const val SEED_COLOR_KEY = "SeedColor"
         private const val OLED_MODE_KEY = "OledMode"
@@ -377,6 +422,22 @@ class PrefKeysImpl(
     private val _theme = MutableStateFlow(loadTheme())
 
     override val theme = _theme.asStateFlow()
+
+    private val _themeStyle = MutableStateFlow(loadThemeStyle())
+
+    override val themeStyle = _themeStyle.asStateFlow()
+
+    private val _seedHue = MutableStateFlow(loadSeedHue())
+
+    override val seedHue = _seedHue.asStateFlow()
+
+    private val _seedSaturation = MutableStateFlow(loadSeedSaturation())
+
+    override val seedSaturation = _seedSaturation.asStateFlow()
+
+    private val _seedValue = MutableStateFlow(loadSeedValue())
+
+    override val seedValue = _seedValue.asStateFlow()
 
     private val _seedColor = MutableStateFlow(loadSeedColor())
 
@@ -402,6 +463,41 @@ class PrefKeysImpl(
     override fun setTheme(theme: AppTheme) {
         prefsController.setString(THEME_KEY, theme.name)
         _theme.value = theme
+    }
+
+    fun loadThemeStyle(): ThemeStyle {
+        val style = prefsController.getString(THEME_STYLE_KEY, "")
+        return try {
+            ThemeStyle.valueOf(style)
+        } catch (_: Exception) {
+            ThemeStyle.TONAL
+        }
+    }
+
+    override fun setThemeStyle(style: ThemeStyle) {
+        prefsController.setString(THEME_STYLE_KEY, style.name)
+        _themeStyle.value = style
+    }
+
+    fun loadSeedHue(): Float = prefsController.getFloat(SEED_HUE_KEY, 225f) // Default Blue hue
+
+    override fun setSeedHue(hue: Float) {
+        prefsController.setFloat(SEED_HUE_KEY, hue)
+        _seedHue.value = hue
+    }
+
+    fun loadSeedSaturation(): Float = prefsController.getFloat(SEED_SATURATION_KEY, 0.8f)
+
+    override fun setSeedSaturation(saturation: Float) {
+        prefsController.setFloat(SEED_SATURATION_KEY, saturation)
+        _seedSaturation.value = saturation
+    }
+
+    fun loadSeedValue(): Float = prefsController.getFloat(SEED_VALUE_KEY, 0.85f)
+
+    override fun setSeedValue(value: Float) {
+        prefsController.setFloat(SEED_VALUE_KEY, value)
+        _seedValue.value = value
     }
 
     fun loadSeedColor(): Int? {

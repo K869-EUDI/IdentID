@@ -19,6 +19,9 @@ package com.k689.identid.ui.component.wrap
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.RowScope
+import androidx.compose.foundation.layout.heightIn
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonColors
@@ -29,23 +32,27 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Shape
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
+import com.k689.identid.ui.component.IconDataUi
 import com.k689.identid.ui.component.preview.PreviewTheme
 import com.k689.identid.ui.component.preview.ThemeModePreviews
 import com.k689.identid.ui.component.utils.ALPHA_DISABLED
-import com.k689.identid.ui.component.utils.SIZE_100
+import com.k689.identid.ui.component.utils.SIZE_MEDIUM
 import com.k689.identid.ui.component.utils.SPACING_LARGE
+import com.k689.identid.ui.component.utils.SPACING_SMALL
 
 enum class ButtonType {
     PRIMARY,
     SECONDARY,
 }
 
-private val buttonsShape: RoundedCornerShape = RoundedCornerShape(SIZE_100.dp)
+private val buttonsShape: RoundedCornerShape = RoundedCornerShape(SIZE_MEDIUM.dp)
 
 private val buttonsContentPadding: PaddingValues =
     PaddingValues(
-        vertical = 10.dp,
+        vertical = 12.dp,
         horizontal = SPACING_LARGE.dp,
     )
 
@@ -65,10 +72,11 @@ fun WrapButton(
     buttonConfig: ButtonConfig,
     content: @Composable RowScope.() -> Unit,
 ) {
+    val buttonModifier = modifier.heightIn(min = 48.dp)
     when (buttonConfig.type) {
         ButtonType.PRIMARY -> {
             WrapPrimaryButton(
-                modifier = modifier,
+                modifier = buttonModifier,
                 buttonConfig = buttonConfig,
                 content = content,
             )
@@ -76,11 +84,52 @@ fun WrapButton(
 
         ButtonType.SECONDARY -> {
             WrapSecondaryButton(
-                modifier = modifier,
+                modifier = buttonModifier,
                 buttonConfig = buttonConfig,
                 content = content,
             )
         }
+    }
+}
+
+/**
+ * A convenience [WrapButton] that includes a label and an optional icon,
+ * matching the design of the Large Action Footer.
+ */
+@Composable
+fun WrapButton(
+    modifier: Modifier = Modifier,
+    text: String,
+    onClick: () -> Unit,
+    enabled: Boolean = true,
+    icon: IconDataUi? = null,
+    buttonType: ButtonType = ButtonType.PRIMARY,
+    isWarning: Boolean = false,
+) {
+    WrapButton(
+        modifier = modifier,
+        buttonConfig =
+            ButtonConfig(
+                type = buttonType,
+                enabled = enabled,
+                onClick = onClick,
+                isWarning = isWarning,
+            ),
+    ) {
+        if (icon != null) {
+            WrapIcon(
+                iconData = icon,
+                modifier = Modifier.padding(end = SPACING_SMALL.dp).size(36.dp),
+            )
+        }
+        Text(
+            text = text,
+            style =
+                MaterialTheme.typography.headlineSmall.copy(
+                    fontWeight = FontWeight.Bold,
+                    fontSize = 16.sp,
+                ),
+        )
     }
 }
 

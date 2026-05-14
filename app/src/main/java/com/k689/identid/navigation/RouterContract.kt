@@ -72,6 +72,8 @@ sealed class DashboardScreens {
 
     data object Preferences : Screen(name = "PREFERENCES")
 
+    data object ThemeCustomization : Screen(name = "THEME_CUSTOMIZATION")
+
     data object DocumentSign : Screen(name = "DOCUMENT_SIGN")
 
     data object Authenticate : Screen(name = "AUTHENTICATE")

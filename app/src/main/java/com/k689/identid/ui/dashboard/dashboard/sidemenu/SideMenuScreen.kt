@@ -142,25 +142,6 @@ private fun SideMenuContentPreview() {
                     sideMenuOptions =
                         listOf(
                             SideMenuItemUi(
-                                type = SideMenuTypeUi.CHANGE_PIN,
-                                data =
-                                    ListItemDataUi(
-                                        itemId = stringResource(R.string.dashboard_side_menu_option_change_pin_id),
-                                        mainContentData =
-                                            ListItemMainContentDataUi.Text(
-                                                text = stringResource(R.string.dashboard_side_menu_option_change_pin),
-                                            ),
-                                        leadingContentData =
-                                            ListItemLeadingContentDataUi.Icon(
-                                                iconData = AppIcons.ChangePin,
-                                            ),
-                                        trailingContentData =
-                                            ListItemTrailingContentDataUi.Icon(
-                                                iconData = AppIcons.KeyboardArrowRight,
-                                            ),
-                                    ),
-                            ),
-                            SideMenuItemUi(
                                 type = SideMenuTypeUi.SETTINGS,
                                 data =
                                     ListItemDataUi(

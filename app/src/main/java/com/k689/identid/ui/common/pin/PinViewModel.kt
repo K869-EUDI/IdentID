@@ -119,10 +119,6 @@ sealed class Effect : ViewSideEffect {
 
         data object Finish : Navigation()
     }
-
-    data object ShowBottomSheet : Effect()
-
-    data object CloseBottomSheet : Effect()
 }
 
 @KoinViewModel
@@ -200,7 +196,7 @@ class PinViewModel(
             }
 
             is Event.CancelPressed -> {
-                showBottomSheet()
+                setState { copy(isBottomSheetOpen = true) }
             }
 
             is Event.BottomSheet.UpdateBottomSheetState -> {
@@ -210,13 +206,13 @@ class PinViewModel(
             }
 
             is Event.BottomSheet.Cancel.PrimaryButtonPressed -> {
-                hideBottomSheet()
+                setState { copy(isBottomSheetOpen = false) }
             }
 
             is Event.BottomSheet.Cancel.SecondaryButtonPressed -> {
                 viewModelScope.launch {
-                    hideBottomSheet()
-                    delay(200L)
+                    setState { copy(isBottomSheetOpen = false) }
+                    delay(100L)
                     setEffect { Effect.Navigation.Pop }
                 }
             }
@@ -462,17 +458,5 @@ class PinViewModel(
                     ),
                 ),
         )
-    }
-
-    private fun showBottomSheet() {
-        setEffect {
-            Effect.ShowBottomSheet
-        }
-    }
-
-    private fun hideBottomSheet() {
-        setEffect {
-            Effect.CloseBottomSheet
-        }
     }
 }

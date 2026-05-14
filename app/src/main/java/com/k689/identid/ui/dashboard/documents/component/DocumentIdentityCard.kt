@@ -110,13 +110,14 @@ fun DocumentIdentityCard(
                     verticalAlignment = Alignment.CenterVertically,
                 ) {
                     Surface(
-                        color = if (isSelected) MaterialTheme.colorScheme.onPrimaryContainer.copy(alpha = 0.1f) else MaterialTheme.colorScheme.surfaceContainerHighest,
+                        color = if (isSelected) MaterialTheme.colorScheme.onPrimaryContainer.copy(alpha = 0.1f) else MaterialTheme.colorScheme.secondaryContainer,
                         shape = MaterialTheme.shapes.small,
                     ) {
                         Text(
                             modifier = Modifier.padding(horizontal = SPACING_SMALL.dp, vertical = SPACING_EXTRA_SMALL.dp),
                             text = identification,
                             style = MaterialTheme.typography.labelMedium,
+                            color = if (isSelected) MaterialTheme.colorScheme.onPrimaryContainer else MaterialTheme.colorScheme.onSecondaryContainer,
                             maxLines = 1,
                             overflow = TextOverflow.Ellipsis,
                         )

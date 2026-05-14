@@ -329,6 +329,39 @@
     <string name="preferences_theme_option_light">Light</string>
     <string name="preferences_theme_option_dark">Dark</string>
     <string name="preferences_theme_option_system_default">System Default</string>
+    <string name="preferences_oled_mode_label">OLED Mode</string>
+    <string name="preferences_dynamic_color_label">Dynamic Color</string>
+    <string name="preferences_seed_color_label">Seed Color</string>
+    <string name="preferences_color_style_label">Color Style</string>
+    <string name="preferences_color_tuning_label">Color Tuning</string>
+    <string name="preferences_hue_label">Hue</string>
+    <string name="preferences_saturation_label">Saturation</string>
+    <string name="preferences_value_label">Value</string>
+    <string name="preferences_theme_preview_label">Theme Preview</string>
+    <string name="preferences_theme_customization_label">Theme Customization</string>
+    <string name="preferences_theme_customization_supporting_text">Colors, styles, and OLED mode</string>
+    <string name="preferences_dynamic_color_supporting_text">Use system colors (Android 12+)</string>
+    <string name="preferences_oled_mode_supporting_text">Pure black backgrounds</string>
+    <string name="preferences_palette_style_label">Palette Style</string>
+    <string name="preferences_preset_colors_label">Preset Colors</string>
+    <string name="preferences_fine_tune_colors_label">Fine-tune Colors</string>
+    <string name="preferences_brightness_label">Brightness</string>
+    <string name="preferences_design_preview_title">Design Preview</string>
+    <string name="preferences_design_preview_primary_accent">Primary Accent</string>
+    <string name="preferences_design_preview_secondary">Secondary</string>
+    <string name="preferences_design_preview_tertiary">Tertiary</string>
+    <string name="theme_style_tonal">Tonal</string>
+    <string name="theme_style_monochromatic">Monochromatic</string>
+    <string name="theme_style_analogous">Analogous</string>
+    <string name="theme_style_vibrant">Vibrant</string>
+    <string name="theme_style_expressive">Expressive</string>
+    <string name="language_system">System</string>
+    <string name="language_english">English</string>
+    <string name="language_lithuanian">Lietuvių</string>
+    <string name="preferences_wallet_section_label">Wallet Operations</string>
+    <string name="preferences_change_pin_label">Change PIN</string>
+    <string name="preferences_move_wallet_label">Move wallet to new device</string>
+    <string name="preferences_receive_wallet_label">Receive wallet from device</string>
     <!--endregion-->
     <!-- region Home Screen -->
     <string name="app_title" translatable="false">IdentID</string>

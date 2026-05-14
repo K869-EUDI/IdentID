@@ -122,6 +122,7 @@ open class EudiComponentActivity : FragmentActivity() {
         builder: NavGraphBuilder.(NavController) -> Unit,
     ) {
         val themeMode by prefKeys.theme.collectAsState()
+        val themeStyle by prefKeys.themeStyle.collectAsState()
         val seedColor by prefKeys.seedColor.collectAsState()
         val oledMode by prefKeys.oledMode.collectAsState()
         val useDynamicColor by prefKeys.useDynamicColor.collectAsState()
@@ -144,6 +145,7 @@ open class EudiComponentActivity : FragmentActivity() {
                 seedColor?.let {
                     Color(it)
                 },
+            themeStyle = themeStyle,
             isOledMode = oledMode,
             useDynamicColor = useDynamicColor,
         ) {

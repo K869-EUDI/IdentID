@@ -46,7 +46,7 @@ fun BarcodeVisual(
             modifier
                 .fillMaxWidth()
                 .background(
-                    color = MaterialTheme.colorScheme.surfaceContainerHigh,
+                    color = MaterialTheme.colorScheme.surfaceContainerHighest,
                     shape = RoundedCornerShape(20.dp),
                 ).padding(16.dp),
         contentAlignment = Alignment.Center,

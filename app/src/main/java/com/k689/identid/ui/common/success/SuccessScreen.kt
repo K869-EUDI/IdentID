@@ -48,6 +48,7 @@ import com.k689.identid.navigation.StartupScreens
 import com.k689.identid.theme.values.ThemeColors
 import com.k689.identid.theme.values.success
 import com.k689.identid.ui.component.AppIcons
+import com.k689.identid.ui.component.LargeActionFooter
 import com.k689.identid.ui.component.content.ContentHeader
 import com.k689.identid.ui.component.content.ContentScreen
 import com.k689.identid.ui.component.content.ScreenNavigateAction
@@ -231,35 +232,19 @@ private fun Button(
 ) {
     when (config.style) {
         SuccessUIConfig.ButtonConfig.Style.PRIMARY -> {
-            WrapButton(
-                buttonConfig =
-                    ButtonConfig(
-                        type = ButtonType.PRIMARY,
-                        onClick = { onEventSent(Event.ButtonClicked(config)) },
-                    ),
-                modifier =
-                    Modifier
-                        .testTag(TestTag.SuccessScreen.PRIMARY_BUTTON)
-                        .fillMaxWidth(),
-            ) {
-                ButtonRow(text = config.text)
-            }
+            LargeActionFooter(
+                modifier = Modifier.fillMaxWidth(),
+                text = config.text,
+                onClick = { onEventSent(Event.ButtonClicked(config)) },
+            )
         }
 
         SuccessUIConfig.ButtonConfig.Style.OUTLINE -> {
-            WrapButton(
-                buttonConfig =
-                    ButtonConfig(
-                        type = ButtonType.SECONDARY,
-                        onClick = { onEventSent(Event.ButtonClicked(config)) },
-                    ),
-                modifier =
-                    Modifier
-                        .testTag(TestTag.SuccessScreen.SECONDARY_BUTTON)
-                        .fillMaxWidth(),
-            ) {
-                ButtonRow(text = config.text)
-            }
+            LargeActionFooter(
+                modifier = Modifier.fillMaxWidth(),
+                text = config.text,
+                onClick = { onEventSent(Event.ButtonClicked(config)) },
+            )
         }
     }
 }

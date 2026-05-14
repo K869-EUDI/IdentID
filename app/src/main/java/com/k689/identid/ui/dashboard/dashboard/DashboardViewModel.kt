@@ -426,7 +426,13 @@ class DashboardViewModel(
 
     private fun handleSideMenuItemClicked(itemType: SideMenuTypeUi) {
         when (itemType) {
+            SideMenuTypeUi.SETTINGS -> {
+                hideSideMenu()
+                setEffect { Effect.Navigation.SwitchScreen(screenRoute = DashboardScreens.Settings.screenRoute) }
+            }
+
             SideMenuTypeUi.CHANGE_PIN -> {
+                hideSideMenu()
                 val nextScreenRoute =
                     generateComposableNavigationLink(
                         screen = CommonScreens.QuickPin,
@@ -435,14 +441,7 @@ class DashboardViewModel(
                                 mapOf("pinFlow" to PinFlow.UPDATE),
                             ),
                     )
-
-                hideSideMenu()
                 setEffect { Effect.Navigation.SwitchScreen(screenRoute = nextScreenRoute) }
-            }
-
-            SideMenuTypeUi.SETTINGS -> {
-                hideSideMenu()
-                setEffect { Effect.Navigation.SwitchScreen(screenRoute = DashboardScreens.Settings.screenRoute) }
             }
 
             SideMenuTypeUi.MOVE_WALLET -> {

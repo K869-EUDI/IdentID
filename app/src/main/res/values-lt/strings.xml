@@ -335,6 +335,30 @@
     <string name="preferences_theme_option_light">Šviesus</string>
     <string name="preferences_theme_option_dark">Tamsus</string>
     <string name="preferences_theme_option_system_default">Įrenginio</string>
+    <string name="preferences_theme_customization_label">Temos pritaikymas</string>
+    <string name="preferences_theme_customization_supporting_text">Spalvos, stiliai ir OLED režimas</string>
+    <string name="preferences_dynamic_color_supporting_text">Naudoti sistemos spalvas („Android 12+“)</string>
+    <string name="preferences_oled_mode_supporting_text">Grynai juodas fonas</string>
+    <string name="preferences_palette_style_label">Paletės stilius</string>
+    <string name="preferences_preset_colors_label">Išankstinės spalvos</string>
+    <string name="preferences_fine_tune_colors_label">Tikslus spalvų derinimas</string>
+    <string name="preferences_brightness_label">Šviesumas</string>
+    <string name="preferences_design_preview_title">Dizaino peržiūra</string>
+    <string name="preferences_design_preview_primary_accent">Pagrindinis akcentas</string>
+    <string name="preferences_design_preview_secondary">Antrinis</string>
+    <string name="preferences_design_preview_tertiary">Tretinis</string>
+    <string name="theme_style_tonal">Tonalinis</string>
+    <string name="theme_style_monochromatic">Monochrominis</string>
+    <string name="theme_style_analogous">Analogiškas</string>
+    <string name="theme_style_vibrant">Ryškus</string>
+    <string name="theme_style_expressive">Išraiškingas</string>
+    <string name="language_system">Sistemos numatytoji</string>
+    <string name="language_english">Anglų</string>
+    <string name="language_lithuanian">Lietuvių</string>
+    <string name="preferences_wallet_section_label">Piniginės operacijos</string>
+    <string name="preferences_change_pin_label">Keisti PIN kodą</string>
+    <string name="preferences_move_wallet_label">Perkelti piniginę į naują įrenginį</string>
+    <string name="preferences_receive_wallet_label">Gauti piniginę iš įrenginio</string>
     <!--endregion-->
     <!-- region Home Screen -->
     <string name="home_screen_title">Pradžia</string>

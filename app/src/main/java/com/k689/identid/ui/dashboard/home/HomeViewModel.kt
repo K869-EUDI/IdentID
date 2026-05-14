@@ -348,27 +348,8 @@ class HomeViewModel(
     }
 
     private fun onDrawerMenuItemClicked(item: DrawerMenuItem) {
-        when (item) {
-            DrawerMenuItem.ChangePin -> {
-                setEffect {
-                    Effect.Navigation.SwitchScreen(
-                        screenRoute =
-                            generateComposableNavigationLink(
-                                screen = CommonScreens.QuickPin,
-                                arguments =
-                                    generateComposableArguments(
-                                        mapOf("pinFlow" to PinFlow.UPDATE),
-                                    ),
-                            ),
-                    )
-                }
-            }
-
-            else -> {
-                item.route?.let { route ->
-                    setEffect { Effect.Navigation.SwitchScreen(screenRoute = route) }
-                }
-            }
+        item.route?.let { route ->
+            setEffect { Effect.Navigation.SwitchScreen(screenRoute = route) }
         }
     }
 

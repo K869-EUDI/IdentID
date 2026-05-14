@@ -125,14 +125,14 @@ fun WrapActionCard(
                     WrapIcon(
                         modifier = Modifier.size(SPACING_MEDIUM.dp),
                         iconData = AppIcons.Info,
-                        customTint = MaterialTheme.colorScheme.primary,
+                        customTint = MaterialTheme.colorScheme.tertiary,
                     )
 
                     HSpacer.Small()
 
                     Text(
                         text = config.secondaryButtonText,
-                        color = MaterialTheme.colorScheme.primary,
+                        color = MaterialTheme.colorScheme.tertiary,
                     )
                 }
             }

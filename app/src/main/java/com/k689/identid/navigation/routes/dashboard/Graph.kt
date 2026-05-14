@@ -35,6 +35,7 @@ import com.k689.identid.ui.dashboard.loyaltycards.scan.LoyaltyCardScanScreen
 import com.k689.identid.ui.dashboard.documents.detail.DocumentDetailsScreen
 import com.k689.identid.ui.dashboard.documents.list.DocumentsScreen
 import com.k689.identid.ui.dashboard.preferences.PreferencesScreen
+import com.k689.identid.ui.dashboard.preferences.ThemeCustomizationScreen
 import com.k689.identid.ui.dashboard.settings.SettingsScreen
 import com.k689.identid.ui.dashboard.sign.DocumentSignScreen
 import com.k689.identid.ui.dashboard.transactions.detail.TransactionDetailsScreen
@@ -168,6 +169,12 @@ fun NavGraphBuilder.featureDashboardGraph(navController: NavController) {
             route = DashboardScreens.Preferences.screenRoute,
         ) {
             PreferencesScreen(navController, koinViewModel())
+        }
+
+        composable(
+            route = DashboardScreens.ThemeCustomization.screenRoute,
+        ) {
+            ThemeCustomizationScreen(navController, koinViewModel())
         }
 
         composable(

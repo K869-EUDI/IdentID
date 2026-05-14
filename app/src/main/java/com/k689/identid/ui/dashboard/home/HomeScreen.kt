@@ -175,7 +175,7 @@ fun HomeScreen(
                 BottomSheetScaffold(
                     modifier = Modifier.fillMaxSize().statusBarsPadding(),
                     scaffoldState = scaffoldState,
-                    sheetShadowElevation = 0.dp,
+                    sheetShadowElevation = 8.dp,
                     sheetPeekHeight = 410.dp,
                     sheetContainerColor = MaterialTheme.colorScheme.surfaceContainerLow,
                     sheetShape = RoundedCornerShape(topStart = 32.dp, topEnd = 32.dp),
@@ -309,8 +309,8 @@ fun HomeScreen(
 
                 FloatingActionButton(
                     onClick = { viewModel.setEvent(Event.AddDocumentsClicked) },
-                    containerColor = MaterialTheme.colorScheme.primaryContainer,
-                    contentColor = MaterialTheme.colorScheme.onPrimaryContainer,
+                    containerColor = MaterialTheme.colorScheme.primary,
+                    contentColor = MaterialTheme.colorScheme.onPrimary,
                     shape = RoundedCornerShape(16.dp),
                     elevation = FloatingActionButtonDefaults.bottomAppBarFabElevation(4.dp),
                     modifier =
@@ -398,7 +398,7 @@ private fun QuickActions(
     Surface(
         modifier = modifier,
         shape = RoundedCornerShape(32.dp),
-        color = MaterialTheme.colorScheme.primaryContainer,
+        color = MaterialTheme.colorScheme.secondaryContainer,
         shadowElevation = 4.dp,
     ) {
         Row(
@@ -409,14 +409,14 @@ private fun QuickActions(
                 Icon(
                     imageVector = Icons.Default.MobileFriendly,
                     contentDescription = "Authenticate",
-                    tint = MaterialTheme.colorScheme.onPrimaryContainer,
+                    tint = MaterialTheme.colorScheme.onSecondaryContainer,
                 )
             }
             IconButton(onClick = onSignDocumentClick) {
                 Icon(
                     imageVector = Icons.Default.Edit,
                     contentDescription = "Sign document",
-                    tint = MaterialTheme.colorScheme.onPrimaryContainer,
+                    tint = MaterialTheme.colorScheme.onSecondaryContainer,
                 )
             }
         }
@@ -778,7 +778,7 @@ private fun SeeAllDocumentsCard(
                     .padding(horizontal = 110.dp)
                     .clip(MaterialTheme.shapes.extraLarge)
                     .clickable { onClicked() },
-            color = MaterialTheme.colorScheme.primaryContainer,
+            color = MaterialTheme.colorScheme.secondaryContainer,
             shape = MaterialTheme.shapes.extraLarge,
         ) {
             Box(
@@ -790,12 +790,12 @@ private fun SeeAllDocumentsCard(
                         imageVector = Icons.AutoMirrored.Filled.ArrowForward,
                         contentDescription = null,
                         modifier = Modifier.size(36.dp),
-                        tint = MaterialTheme.colorScheme.onPrimaryContainer,
+                        tint = MaterialTheme.colorScheme.onSecondaryContainer,
                     )
                     Text(
                         text = stringResource(R.string.generic_view_all),
                         style = MaterialTheme.typography.labelLarge,
-                        color = MaterialTheme.colorScheme.onPrimaryContainer,
+                        color = MaterialTheme.colorScheme.onSecondaryContainer,
                         textAlign = TextAlign.Center,
                     )
                 }
@@ -843,7 +843,7 @@ private fun RecentTransactionItem(
         Icon(
             imageVector = if (isFailed) Icons.Default.Cancel else Icons.Default.CheckCircle,
             contentDescription = status.name,
-            tint = if (isFailed) MaterialTheme.colorScheme.error else MaterialTheme.colorScheme.primary,
+            tint = if (isFailed) MaterialTheme.colorScheme.error else MaterialTheme.colorScheme.secondary,
             modifier = Modifier.size(24.dp),
         )
     }

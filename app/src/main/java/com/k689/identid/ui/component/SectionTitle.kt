@@ -39,8 +39,8 @@ fun SectionTitle(
     text: String,
     textConfig: TextConfig =
         TextConfig(
-            style = MaterialTheme.typography.labelSmall,
-            color = MaterialTheme.colorScheme.onSurfaceVariant,
+            style = MaterialTheme.typography.titleSmall,
+            color = MaterialTheme.colorScheme.primary,
         ),
 ) {
     WrapText(
