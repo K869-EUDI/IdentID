@@ -23,6 +23,8 @@ import com.k689.identid.controller.log.LogController
 import com.k689.identid.controller.pseudonym.PseudonymTransactionLogger
 import com.k689.identid.interactor.dashboard.DashboardInteractor
 import com.k689.identid.interactor.dashboard.DashboardInteractorImpl
+import com.k689.identid.interactor.dashboard.DocumentCustomizationInteractor
+import com.k689.identid.interactor.dashboard.DocumentCustomizationInteractorImpl
 import com.k689.identid.interactor.dashboard.DocumentDetailsInteractor
 import com.k689.identid.interactor.dashboard.DocumentDetailsInteractorImpl
 import com.k689.identid.interactor.dashboard.DocumentSignInteractor
@@ -42,6 +44,7 @@ import com.k689.identid.interactor.dashboard.TransactionsInteractorImpl
 import com.k689.identid.provider.UuidProvider
 import com.k689.identid.provider.resources.ResourceProvider
 import com.k689.identid.storage.dao.BookmarkDao
+import com.k689.identid.storage.dao.DocumentCustomizationDao
 import com.k689.identid.storage.dao.LoyaltyCardDao
 import com.k689.identid.validator.FilterValidator
 import org.koin.core.annotation.ComponentScan
@@ -95,17 +98,27 @@ fun provideLoyaltyCardsInteractor(
     )
 
 @Factory
+fun provideDocumentCustomizationInteractor(
+    documentCustomizationDao: DocumentCustomizationDao,
+): DocumentCustomizationInteractor =
+    DocumentCustomizationInteractorImpl(
+        documentCustomizationDao,
+    )
+
+@Factory
 fun provideDocumentsInteractor(
     resourceProvider: ResourceProvider,
     documentsController: WalletCoreDocumentsController,
     filterValidator: FilterValidator,
     configLogic: ConfigLogic,
+    documentCustomizationDao: DocumentCustomizationDao,
 ): DocumentsInteractor =
     DocumentsInteractorImpl(
         resourceProvider,
         documentsController,
         filterValidator,
         configLogic,
+        documentCustomizationDao,
     )
 
 @Factory
@@ -136,12 +149,14 @@ fun provideDocumentDetailsInteractor(
     resourceProvider: ResourceProvider,
     uuidProvider: UuidProvider,
     configLogic: ConfigLogic,
+    documentCustomizationDao: DocumentCustomizationDao,
 ): DocumentDetailsInteractor =
     DocumentDetailsInteractorImpl(
         walletCoreDocumentsController,
         resourceProvider,
         uuidProvider,
         configLogic,
+        documentCustomizationDao,
     )
 
 @Factory

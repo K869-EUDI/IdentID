@@ -506,6 +506,11 @@
     <string name="document_details_bottom_sheet_badge_title">Trusted Relying Party</string>
     <string name="document_details_bottom_sheet_badge_subtitle">A Relying Party is considered trusted when it meets
         predefined criteria for security, data protection, compliance, and responsible data handling.</string>
+    <string name="document_details_edit_customization_title">Customize Document</string>
+    <string name="document_details_edit_customization_label_title">Title</string>
+    <string name="document_details_edit_customization_label_color">Color</string>
+    <string name="document_details_edit_customization_button_save">Save</string>
+    <string name="document_details_edit_customization_button_reset">Reset</string>
     <!--endregion-->
     <!-- region Transaction Details -->
     <string name="transaction_details_screen_title">Transaction information</string>

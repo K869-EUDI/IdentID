@@ -206,6 +206,10 @@ fun NavGraphBuilder.featureDashboardGraph(navController: NavController) {
                     navArgument("documentId") {
                         type = NavType.StringType
                     },
+                    navArgument("isEdit") {
+                        type = NavType.BoolType
+                        defaultValue = false
+                    },
                 ),
         ) {
             DocumentDetailsScreen(
@@ -214,6 +218,7 @@ fun NavGraphBuilder.featureDashboardGraph(navController: NavController) {
                     parameters = {
                         parametersOf(
                             it.arguments?.getString("documentId").orEmpty(),
+                            it.arguments?.getBoolean("isEdit") ?: false,
                         )
                     },
                 ),

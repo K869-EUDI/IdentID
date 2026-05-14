@@ -528,6 +528,7 @@ private fun Content(
                                     stringResource(R.string.home_screen_document_usages_left, doc.usagesLeft),
                                     stringResource(R.string.home_screen_document_expires, doc.expiresAt),
                                 ),
+                            customColor = doc.documentUi.customColor,
                             onClick = { onEventSent(Event.DocumentClicked(doc.documentUi.uiData.itemId)) },
                             modifier = Modifier.pagerCardTransform(page, pagerState.currentPage, pagerState.currentPageOffsetFraction),
                         )

@@ -122,6 +122,10 @@ sealed class Event : ViewEvent {
         val docId: DocumentId,
     ) : Event()
 
+    data class OnDocumentEditClick(
+        val docId: DocumentId,
+    ) : Event()
+
     data object OnCancelSelectionMode : Event()
 
     data object OnDeleteSelectedDocuments : Event()
@@ -301,6 +305,10 @@ class DocumentsViewModel(
                         )
                     }
                 }
+            }
+
+            is Event.OnDocumentEditClick -> {
+                goToDocumentDetails(event.docId, isEdit = true)
             }
 
             is Event.OnCancelSelectionMode -> {
@@ -618,7 +626,7 @@ class DocumentsViewModel(
         }
     }
 
-    private fun goToDocumentDetails(docId: DocumentId) {
+    private fun goToDocumentDetails(docId: DocumentId, isEdit: Boolean = false) {
         setEffect {
             Effect.Navigation.SwitchScreen(
                 screenRoute =
@@ -628,6 +636,7 @@ class DocumentsViewModel(
                             generateComposableArguments(
                                 mapOf(
                                     "documentId" to docId,
+                                    "isEdit" to isEdit.toString(),
                                 ),
                             ),
                     ),

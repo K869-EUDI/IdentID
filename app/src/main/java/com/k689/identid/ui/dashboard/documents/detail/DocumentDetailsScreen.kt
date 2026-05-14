@@ -18,6 +18,7 @@ package com.k689.identid.ui.dashboard.documents.detail
 
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.background
+import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -29,18 +30,27 @@ import androidx.compose.foundation.layout.calculateStartPadding
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material3.Button
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.SheetState
 import androidx.compose.material3.Text
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Check
+import androidx.compose.material.icons.filled.Close
 import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -51,10 +61,15 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.luminance
+import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.platform.testTag
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.LayoutDirection
@@ -130,19 +145,21 @@ fun DocumentDetailsScreen(
         ToolbarConfig(
             actions =
                 if (state.error == null) {
-                    listOf(
+                    listOfNotNull(
                         ToolbarActionUi(
-                            icon = if (state.isDocumentBookmarked) AppIcons.BookmarkFilled else AppIcons.Bookmark,
-                            onClick = { onEventSend(Event.BookmarkPressed) },
+                            icon = if (state.isEditingCustomization) AppIcons.Close else AppIcons.Edit,
+                            onClick = { onEventSend(Event.ToggleEditingCustomization(!state.isEditingCustomization)) },
                             enabled = !state.isLoading,
                             throttleClicks = true,
                         ),
-                        ToolbarActionUi(
-                            icon = if (state.hideSensitiveContent) AppIcons.VisibilityOff else AppIcons.Visibility,
-                            onClick = { onEventSend(Event.ChangeContentVisibility) },
-                            enabled = !state.isLoading,
-                            throttleClicks = false,
-                        ),
+                        if (!state.isEditingCustomization) {
+                            ToolbarActionUi(
+                                icon = if (state.isDocumentBookmarked) AppIcons.BookmarkFilled else AppIcons.Bookmark,
+                                onClick = { onEventSend(Event.BookmarkPressed) },
+                                enabled = !state.isLoading,
+                                throttleClicks = true,
+                            )
+                        } else null,
                     )
                 } else {
                     emptyList()
@@ -198,7 +215,6 @@ fun DocumentDetailsScreen(
                     ) {
                         SheetContent(
                             sheetContent = content,
-                            onEventSent = onEventSend,
                         )
                     }
                 }
@@ -271,7 +287,7 @@ private fun Content(
             ) {
                 AnimatedVisibility(visible = state.isRevoked) {
                     WrapCard(
-                        modifier = Modifier.fillMaxWidth(),
+                        modifier = Modifier.fillMaxWidth().padding(horizontal = SPACING_MEDIUM.dp),
                         shape = MaterialTheme.shapes.small,
                         colors =
                             CardDefaults.cardColors(
@@ -307,28 +323,28 @@ private fun Content(
             }
 
             // sheet
-            if (topContentHeight > 0) {
-                Column(
-                    modifier =
-                        Modifier
-                            .fillMaxSize()
-                            .verticalScroll(rememberScrollState()),
-                ) {
-                    val topOffset = with(density) { topContentHeight.toDp() }
-                    Spacer(modifier = Modifier.height(topOffset))
+            Column(
+                modifier =
+                    Modifier
+                        .fillMaxSize()
+                        .verticalScroll(rememberScrollState()),
+            ) {
+                val topOffset = with(density) { (topContentHeight.toDp() - 24.dp).coerceAtLeast(0.dp) }
+                Spacer(modifier = Modifier.height(topOffset))
 
-                    FauxModalDetailsPanel(
-                        modifier = Modifier.fillMaxWidth(),
-                        onEventSend = onEventSend,
-                        sectionTitle = stringResource(R.string.document_details_main_section_text),
-                        documentDetailsUi = safeDocumentDetailsUi,
-                        hideSensitiveContent = state.hideSensitiveContent,
-                        issuerSectionTitle = stringResource(R.string.document_details_issuer_section_text),
-                        issuerName = state.issuerName,
-                        issuerLogo = state.issuerLogo,
-                        reissueButtonText = state.documentCredentialsInfoUi?.expandedInfo?.updateNowButtonText,
-                    )
-                }
+                FauxModalDetailsPanel(
+                    modifier = Modifier.fillMaxWidth().heightIn(min = 600.dp),
+                    onEventSend = onEventSend,
+                    sectionTitle = if (state.isEditingCustomization) stringResource(R.string.document_details_edit_customization_title) else stringResource(R.string.document_details_main_section_text),
+                    documentDetailsUi = safeDocumentDetailsUi,
+                    hideSensitiveContent = state.hideSensitiveContent,
+                    issuerSectionTitle = stringResource(R.string.document_details_issuer_section_text),
+                    issuerName = state.issuerName,
+                    issuerLogo = state.issuerLogo,
+                    reissueButtonText = state.documentCredentialsInfoUi?.expandedInfo?.updateNowButtonText,
+                    isEditingCustomization = state.isEditingCustomization,
+                    state = state,
+                )
             }
         }
     }
@@ -377,15 +393,18 @@ private fun FauxModalDetailsPanel(
     issuerName: String?,
     issuerLogo: URI?,
     reissueButtonText: String?,
+    isEditingCustomization: Boolean,
+    state: State,
 ) {
     WrapCard(
-        modifier = modifier,
+        modifier = modifier.fillMaxSize(),
         shape = RoundedCornerShape(topStart = 26.dp, topEnd = 26.dp),
         colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surfaceContainerLow),
     ) {
         Column(
             modifier =
                 Modifier
+                    .fillMaxSize()
                     .padding(
                         start = SPACING_LARGE.dp,
                         end = SPACING_LARGE.dp,
@@ -410,28 +429,35 @@ private fun FauxModalDetailsPanel(
                 )
             }
 
-            DocumentDetails(
-                modifier = Modifier.fillMaxWidth(),
-                onEventSend = onEventSend,
-                sectionTitle = sectionTitle,
-                documentDetailsUi = documentDetailsUi,
-                hideSensitiveContent = hideSensitiveContent,
-            )
-
-            if (issuerName != null || issuerLogo != null) {
-                VSpacer.Medium()
-                IssuerDetails(
+            if (isEditingCustomization) {
+                EditCustomizationContent(
+                    state = state,
+                    onEventSend = onEventSend,
+                )
+            } else {
+                DocumentDetails(
                     modifier = Modifier.fillMaxWidth(),
-                    sectionTitle = issuerSectionTitle,
-                    issuerName = issuerName,
-                    issuerLogo = issuerLogo,
+                    onEventSend = onEventSend,
+                    sectionTitle = sectionTitle,
+                    documentDetailsUi = documentDetailsUi,
+                    hideSensitiveContent = hideSensitiveContent,
+                )
+
+                if (issuerName != null || issuerLogo != null) {
+                    VSpacer.Medium()
+                    IssuerDetails(
+                        modifier = Modifier.fillMaxWidth(),
+                        sectionTitle = issuerSectionTitle,
+                        issuerName = issuerName,
+                        issuerLogo = issuerLogo,
+                    )
+                }
+
+                ButtonsSection(
+                    reissueButtonText = reissueButtonText,
+                    onEventSend = onEventSend,
                 )
             }
-
-            ButtonsSection(
-                reissueButtonText = reissueButtonText,
-                onEventSend = onEventSend,
-            )
         }
     }
 }
@@ -439,7 +465,6 @@ private fun FauxModalDetailsPanel(
 @Composable
 private fun SheetContent(
     sheetContent: DocumentDetailsBottomSheetContent,
-    onEventSent: (event: Event) -> Unit,
 ) {
     when (sheetContent) {
         is DocumentDetailsBottomSheetContent.DeleteDocumentConfirmation -> {
@@ -516,7 +541,6 @@ private fun IssuerDetails(
     }
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun DocumentCredentialsSection(
     modifier: Modifier = Modifier,
@@ -532,17 +556,135 @@ private fun DocumentCredentialsSection(
             }
         }
 
-    Column(
-        modifier = modifier.fillMaxWidth(),
-        verticalArrangement = Arrangement.spacedBy(SPACING_SMALL.dp),
+    Box(
+        modifier = modifier
+            .fillMaxWidth()
+            .padding(horizontal = SPACING_MEDIUM.dp)
     ) {
         DocumentIdentityCard(
             title = state.title.orEmpty(),
             identification = state.documentDetailsUi?.documentIdentifier?.toCardIdentificationTag() ?: stringResource(R.string.generic_dash),
             supportingLines = supportingLines,
             status = state.documentDetailsUi?.documentIssuanceStateUi?.toStatusLabel(),
-            onClick = null,
+            customColor = state.customColor,
+            onClick = {}, // Make it clickable to fix interaction issues if any
         )
+    }
+}
+
+@Composable
+private fun EditCustomizationContent(
+    state: State,
+    onEventSend: (Event) -> Unit,
+) {
+    Column(
+        modifier = Modifier.fillMaxWidth(),
+        verticalArrangement = Arrangement.spacedBy(SPACING_MEDIUM.dp),
+    ) {
+        SectionTitle(
+            modifier =
+                Modifier
+                    .fillMaxWidth()
+                    .padding(
+                        top = SPACING_LARGE.dp,
+                        bottom = SPACING_SMALL.dp,
+                    ),
+            text = stringResource(R.string.document_details_edit_customization_title).toSentenceCaseHeading(),
+            textConfig =
+                TextConfig(
+                    style =
+                        MaterialTheme.typography.headlineSmall.copy(
+                            color = MaterialTheme.colorScheme.onSurface,
+                            fontWeight = FontWeight.Bold,
+                        ),
+                ),
+        )
+
+        OutlinedTextField(
+            value = state.customTitle ?: "",
+            onValueChange = { onEventSend(Event.OnCustomTitleChanged(it)) },
+            label = { Text(stringResource(R.string.document_details_edit_customization_label_title)) },
+            modifier = Modifier.fillMaxWidth(),
+            singleLine = true,
+        )
+
+        val colors = listOf(
+            Color(0xFF2A5FD9), // Theme Blue
+            Color(0xFF55953B), // Theme Green
+            Color(0xFFF39626), // Theme Orange
+            Color(0xFFB3261E), // Theme Red
+            Color(0xFF6750A4), // Purple
+            Color(0xFF006A6A), // Teal
+            Color(0xFF333333), // Charcoal
+            Color(0xFF795548), // Brown
+        )
+
+        Column(verticalArrangement = Arrangement.spacedBy(SPACING_SMALL.dp)) {
+            Text(
+                text = stringResource(R.string.document_details_edit_customization_label_color),
+                style = MaterialTheme.typography.labelLarge,
+                color = MaterialTheme.colorScheme.onSurfaceVariant
+            )
+            androidx.compose.foundation.layout.FlowRow(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.spacedBy(SPACING_SMALL.dp),
+                verticalArrangement = Arrangement.spacedBy(SPACING_SMALL.dp),
+            ) {
+                colors.forEach { color ->
+                    val isSelected = state.customColor == color.toArgb().toLong()
+                    Box(
+                        modifier = Modifier
+                            .size(40.dp)
+                            .clip(CircleShape)
+                            .background(color)
+                            .combinedClickable(
+                                onClick = { onEventSend(Event.OnCustomColorChanged(color.toArgb().toLong())) }
+                            )
+                            .then(
+                                if (isSelected) {
+                                    Modifier.background(color.copy(alpha = 0.5f)) // Visual feedback for selection
+                                } else {
+                                    Modifier
+                                }
+                            ),
+                        contentAlignment = Alignment.Center
+                    ) {
+                        if (isSelected) {
+                            Icon(
+                                imageVector = Icons.Default.Check,
+                                contentDescription = null,
+                                tint = if (color.luminance() > 0.5f) Color.Black else Color.White,
+                                modifier = Modifier.size(24.dp)
+                            )
+                        }
+                    }
+                }
+            }
+        }
+
+        Row(
+            modifier = Modifier.fillMaxWidth().padding(top = SPACING_MEDIUM.dp),
+            horizontalArrangement = Arrangement.spacedBy(SPACING_SMALL.dp),
+        ) {
+            WrapButton(
+                modifier = Modifier.weight(1f),
+                buttonConfig = ButtonConfig(
+                    type = ButtonType.SECONDARY,
+                    onClick = { onEventSend(Event.ResetCustomization) },
+                ),
+            ) {
+                Text(stringResource(R.string.document_details_edit_customization_button_reset))
+            }
+            WrapButton(
+                modifier = Modifier.weight(1f),
+                buttonConfig = ButtonConfig(
+                    type = ButtonType.PRIMARY,
+                    onClick = { onEventSend(Event.SaveCustomization) },
+                ),
+            ) {
+                Text(stringResource(R.string.document_details_edit_customization_button_save))
+            }
+        }
     }
 }
 
@@ -568,24 +710,35 @@ private fun DocumentDetails(
         modifier = modifier,
         verticalArrangement = Arrangement.spacedBy(SPACING_MEDIUM.dp),
     ) {
-        SectionTitle(
-            modifier =
-                Modifier
-                    .fillMaxWidth()
-                    .padding(
-                        top = SPACING_LARGE.dp,
-                        bottom = SPACING_SMALL.dp,
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(top = SPACING_LARGE.dp, bottom = SPACING_SMALL.dp),
+            horizontalArrangement = Arrangement.SpaceBetween,
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            SectionTitle(
+                modifier = Modifier.weight(1f),
+                text = sectionTitle.toSentenceCaseHeading(),
+                textConfig =
+                    TextConfig(
+                        style =
+                            MaterialTheme.typography.headlineSmall.copy(
+                                color = MaterialTheme.colorScheme.onSurface,
+                                fontWeight = FontWeight.Bold,
+                            ),
                     ),
-            text = sectionTitle.toSentenceCaseHeading(),
-            textConfig =
-                TextConfig(
-                    style =
-                        MaterialTheme.typography.headlineSmall.copy(
-                            color = MaterialTheme.colorScheme.onSurface,
-                            fontWeight = FontWeight.Bold,
-                        ),
-                ),
-        )
+            )
+            IconButton(
+                onClick = { onEventSend(Event.ChangeContentVisibility) }
+            ) {
+                Icon(
+                    painter = painterResource(id = if (hideSensitiveContent) AppIcons.VisibilityOff.resourceId!! else AppIcons.Visibility.resourceId!!),
+                    contentDescription = stringResource(if (hideSensitiveContent) R.string.content_description_visibility_icon else R.string.content_description_visibility_off_icon),
+                    tint = MaterialTheme.colorScheme.primary
+                )
+            }
+        }
 
         WrapListItems(
             modifier = Modifier.fillMaxWidth(),

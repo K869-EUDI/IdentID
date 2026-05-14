@@ -38,6 +38,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.luminance
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.Dp
@@ -48,7 +49,6 @@ import com.k689.identid.ui.component.preview.PreviewTheme
 import com.k689.identid.ui.component.preview.ThemeModePreviews
 import com.k689.identid.ui.component.utils.SPACING_EXTRA_SMALL
 import com.k689.identid.ui.component.utils.SPACING_LARGE
-import com.k689.identid.ui.component.utils.SPACING_MEDIUM
 import com.k689.identid.ui.component.utils.SPACING_SMALL
 import com.k689.identid.ui.component.wrap.WrapCard
 import java.util.Locale
@@ -66,15 +66,32 @@ fun DocumentIdentityCard(
     onLongClick: (() -> Unit)? = null,
     isSelected: Boolean = false,
     isSelectionModeActive: Boolean = false,
+    customColor: Long? = null,
     modifier: Modifier = Modifier,
     height: Dp = UNIVERSAL_DOCUMENT_CARD_HEIGHT,
 ) {
     val normalizedSupportingLines = supportingLines.take(2).let { lines -> lines + List((2 - lines.size).coerceAtLeast(0)) { "" } }
 
-    val containerColor = if (isSelected) {
-        MaterialTheme.colorScheme.primaryContainer
-    } else {
-        MaterialTheme.colorScheme.surfaceContainerHigh
+    val containerColor = when {
+        isSelected -> MaterialTheme.colorScheme.primaryContainer
+        customColor != null -> Color(customColor)
+        else -> MaterialTheme.colorScheme.surfaceContainerHigh
+    }
+
+    val isDarkBackground = containerColor.luminance() < 0.5f
+    val contentColor = if (isDarkBackground) Color.White else MaterialTheme.colorScheme.onSurface
+    val contentVariantColor = if (isDarkBackground) Color.White.copy(alpha = 0.7f) else MaterialTheme.colorScheme.onSurfaceVariant
+
+    // Complementary tag colors
+    val tagContainerColor = when {
+        isSelected -> MaterialTheme.colorScheme.onPrimaryContainer.copy(alpha = 0.15f)
+        customColor != null -> if (isDarkBackground) Color.White.copy(alpha = 0.2f) else Color.Black.copy(alpha = 0.1f)
+        else -> MaterialTheme.colorScheme.secondaryContainer
+    }
+    val tagContentColor = when {
+        isSelected -> MaterialTheme.colorScheme.onPrimaryContainer
+        customColor != null -> contentColor
+        else -> MaterialTheme.colorScheme.onSecondaryContainer
     }
 
     WrapCard(
@@ -84,7 +101,10 @@ fun DocumentIdentityCard(
         enabled = true,
         onClick = null, // We handle clicks via combinedClickable below
         shape = RoundedCornerShape(22.dp),
-        colors = CardDefaults.cardColors(containerColor = containerColor),
+        colors = CardDefaults.cardColors(
+            containerColor = containerColor,
+            contentColor = contentColor
+        ),
     ) {
         Box(
             modifier = Modifier
@@ -101,8 +121,10 @@ fun DocumentIdentityCard(
                 )
         ) {
             Column(
-                modifier = Modifier.padding(SPACING_LARGE.dp),
-                verticalArrangement = Arrangement.spacedBy(SPACING_MEDIUM.dp),
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(SPACING_LARGE.dp),
+                verticalArrangement = Arrangement.SpaceBetween,
             ) {
                 Row(
                     modifier = Modifier.fillMaxWidth(),
@@ -110,62 +132,69 @@ fun DocumentIdentityCard(
                     verticalAlignment = Alignment.CenterVertically,
                 ) {
                     Surface(
-                        color = if (isSelected) MaterialTheme.colorScheme.onPrimaryContainer.copy(alpha = 0.1f) else MaterialTheme.colorScheme.secondaryContainer,
+                        color = tagContainerColor,
                         shape = MaterialTheme.shapes.small,
                     ) {
                         Text(
                             modifier = Modifier.padding(horizontal = SPACING_SMALL.dp, vertical = SPACING_EXTRA_SMALL.dp),
                             text = identification,
                             style = MaterialTheme.typography.labelMedium,
-                            color = if (isSelected) MaterialTheme.colorScheme.onPrimaryContainer else MaterialTheme.colorScheme.onSecondaryContainer,
+                            color = tagContentColor,
                             maxLines = 1,
                             overflow = TextOverflow.Ellipsis,
                         )
                     }
 
-                    if (!status.isNullOrBlank() && !isSelectionModeActive) {
-                        Surface(
-                            color = MaterialTheme.colorScheme.secondaryContainer,
-                            shape = MaterialTheme.shapes.small,
-                        ) {
-                            Text(
-                                modifier = Modifier.padding(horizontal = SPACING_SMALL.dp, vertical = SPACING_EXTRA_SMALL.dp),
-                                text = status,
-                                style = MaterialTheme.typography.labelMedium,
-                                maxLines = 1,
-                                overflow = TextOverflow.Ellipsis,
-                                color = MaterialTheme.colorScheme.onSecondaryContainer,
+                    Row(
+                        verticalAlignment = Alignment.CenterVertically,
+                        horizontalArrangement = Arrangement.spacedBy(SPACING_SMALL.dp)
+                    ) {
+                        if (!status.isNullOrBlank() && !isSelectionModeActive) {
+                            Surface(
+                                color = tagContainerColor,
+                                shape = MaterialTheme.shapes.small,
+                            ) {
+                                Text(
+                                    modifier = Modifier.padding(horizontal = SPACING_SMALL.dp, vertical = SPACING_EXTRA_SMALL.dp),
+                                    text = status,
+                                    style = MaterialTheme.typography.labelMedium,
+                                    maxLines = 1,
+                                    overflow = TextOverflow.Ellipsis,
+                                    color = tagContentColor,
+                                )
+                            }
+                        }
+
+                        if (isSelectionModeActive) {
+                            Icon(
+                                imageVector = Icons.Default.CheckCircle,
+                                contentDescription = null,
+                                tint = if (isSelected) MaterialTheme.colorScheme.primary else contentColor.copy(alpha = 0.5f),
+                                modifier = Modifier.size(24.dp)
                             )
                         }
-                    }
-
-                    if (isSelectionModeActive) {
-                        Icon(
-                            imageVector = Icons.Default.CheckCircle,
-                            contentDescription = null,
-                            tint = if (isSelected) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.outline.copy(alpha = 0.5f),
-                            modifier = Modifier.size(24.dp)
-                        )
                     }
                 }
 
                 Text(
                     text = title,
-                    style = MaterialTheme.typography.titleLarge,
-                    fontWeight = FontWeight.SemiBold,
+                    style = MaterialTheme.typography.headlineSmall,
+                    fontWeight = FontWeight.Bold,
                     maxLines = 2,
                     overflow = TextOverflow.Ellipsis,
-                    color = MaterialTheme.colorScheme.onSurface,
+                    color = contentColor,
+                    modifier = Modifier.fillMaxWidth()
                 )
 
                 Column(
                     verticalArrangement = Arrangement.spacedBy(SPACING_EXTRA_SMALL.dp),
+                    modifier = Modifier.fillMaxWidth()
                 ) {
                     normalizedSupportingLines.forEach { line ->
                         Text(
                             text = line,
                             style = MaterialTheme.typography.bodyMedium,
-                            color = MaterialTheme.colorScheme.onSurfaceVariant,
+                            color = contentVariantColor,
                             maxLines = 1,
                             overflow = TextOverflow.Ellipsis,
                         )
@@ -186,6 +215,7 @@ fun StackedDocumentIdentityCard(
     onLongClick: (() -> Unit)? = null,
     isSelected: Boolean = false,
     isSelectionModeActive: Boolean = false,
+    customColor: Long? = null,
     modifier: Modifier = Modifier,
     height: Dp = UNIVERSAL_DOCUMENT_CARD_HEIGHT,
 ) {
@@ -198,6 +228,7 @@ fun StackedDocumentIdentityCard(
         onLongClick = onLongClick,
         isSelected = isSelected,
         isSelectionModeActive = isSelectionModeActive,
+        customColor = customColor,
         height = height,
         modifier = modifier,
     )

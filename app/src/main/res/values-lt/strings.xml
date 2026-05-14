@@ -512,6 +512,11 @@
     <string name="document_details_bottom_sheet_badge_title">Patikima pasikliaujančioji šalis</string>
     <string name="document_details_bottom_sheet_badge_subtitle">Pasikliaujančioji šalis laikoma patikima, kai atitinka
         iš anksto nustatytus saugumo, duomenų apsaugos, atitikties ir atsakingo duomenų tvarkymo kriterijus.</string>
+    <string name="document_details_edit_customization_title">Redaguoti dokumentą</string>
+    <string name="document_details_edit_customization_label_title">Pavadinimas</string>
+    <string name="document_details_edit_customization_label_color">Spalva</string>
+    <string name="document_details_edit_customization_button_save">Išsaugoti</string>
+    <string name="document_details_edit_customization_button_reset">Atstatyti</string>
     <!--endregion-->
     <!-- region Transaction Details -->
     <string name="transaction_details_screen_title">Operacijos informacija</string>

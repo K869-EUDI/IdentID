@@ -21,12 +21,14 @@ import androidx.room.RoomDatabase
 import androidx.room.migration.Migration
 import androidx.sqlite.db.SupportSQLiteDatabase
 import com.k689.identid.model.storage.Bookmark
+import com.k689.identid.model.storage.DocumentCustomization
 import com.k689.identid.model.storage.LoyaltyCard
 import com.k689.identid.model.storage.Pseudonym
 import com.k689.identid.model.storage.PseudonymTransactionLog
 import com.k689.identid.model.storage.RevokedDocument
 import com.k689.identid.model.storage.TransactionLog
 import com.k689.identid.storage.dao.BookmarkDao
+import com.k689.identid.storage.dao.DocumentCustomizationDao
 import com.k689.identid.storage.dao.LoyaltyCardDao
 import com.k689.identid.storage.dao.PseudonymDao
 import com.k689.identid.storage.dao.PseudonymTransactionLogDao
@@ -41,11 +43,14 @@ import com.k689.identid.storage.dao.TransactionLogDao
         Pseudonym::class,
         PseudonymTransactionLog::class,
         LoyaltyCard::class,
+        DocumentCustomization::class,
     ],
-    version = 5,
+    version = 6,
 )
 abstract class DatabaseService : RoomDatabase() {
     abstract fun bookmarkDao(): BookmarkDao
+
+    abstract fun documentCustomizationDao(): DocumentCustomizationDao
 
     abstract fun loyaltyCardDao(): LoyaltyCardDao
 
@@ -80,6 +85,21 @@ abstract class DatabaseService : RoomDatabase() {
                             `createdAt` INTEGER NOT NULL,
                             `updatedAt` INTEGER NOT NULL,
                             PRIMARY KEY(`id`)
+                        )
+                        """.trimIndent()
+                    )
+                }
+            }
+        val MIGRATION_5_6 =
+            object : Migration(5, 6) {
+                override fun migrate(db: SupportSQLiteDatabase) {
+                    db.execSQL(
+                        """
+                        CREATE TABLE IF NOT EXISTS `document_customizations` (
+                            `identifier` TEXT NOT NULL,
+                            `customTitle` TEXT,
+                            `customColor` INTEGER,
+                            PRIMARY KEY(`identifier`)
                         )
                         """.trimIndent()
                     )

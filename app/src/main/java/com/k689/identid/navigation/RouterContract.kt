@@ -80,7 +80,7 @@ sealed class DashboardScreens {
 
     data object DocumentDetails : Screen(
         name = "DOCUMENT_DETAILS",
-        parameters = "?documentId={documentId}",
+        parameters = "?documentId={documentId}&isEdit={isEdit}",
     )
 
     data object TransactionDetails : Screen(

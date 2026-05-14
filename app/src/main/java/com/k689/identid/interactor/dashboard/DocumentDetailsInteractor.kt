@@ -24,8 +24,10 @@ import com.k689.identid.extension.business.safeAsync
 import com.k689.identid.extension.core.localizedIssuerMetadata
 import com.k689.identid.model.core.DocumentIdentifier
 import com.k689.identid.model.core.toDocumentIdentifier
+import com.k689.identid.model.storage.DocumentCustomization
 import com.k689.identid.provider.UuidProvider
 import com.k689.identid.provider.resources.ResourceProvider
+import com.k689.identid.storage.dao.DocumentCustomizationDao
 import com.k689.identid.ui.dashboard.documents.detail.model.DocumentDetailsDomain
 import com.k689.identid.ui.dashboard.documents.detail.transformer.DocumentDetailsTransformer
 import com.k689.identid.ui.dashboard.documents.detail.transformer.DocumentDetailsTransformer.createDocumentCredentialsInfoUi
@@ -47,6 +49,7 @@ sealed class DocumentDetailsInteractorPartialState {
         val documentIsBookmarked: Boolean,
         val isRevoked: Boolean,
         val documentCredentialsInfoUi: DocumentCredentialsInfoUi,
+        val customization: DocumentCustomization? = null,
     ) : DocumentDetailsInteractorPartialState()
 
     data class Failure(
@@ -101,6 +104,7 @@ class DocumentDetailsInteractorImpl(
     private val resourceProvider: ResourceProvider,
     private val uuidProvider: UuidProvider,
     private val configLogic: ConfigLogic,
+    private val documentCustomizationDao: DocumentCustomizationDao,
 ) : DocumentDetailsInteractor {
     private val genericErrorMsg
         get() = resourceProvider.genericErrorMessage()
@@ -142,6 +146,8 @@ class DocumentDetailsInteractorImpl(
 
                 val documentIsRevoked = walletCoreDocumentsController.isDocumentRevoked(documentId)
 
+                val customization = documentCustomizationDao.retrieve(documentId)
+
                 emit(
                     DocumentDetailsInteractorPartialState.Success(
                         issuerName = issuerName,
@@ -150,6 +156,7 @@ class DocumentDetailsInteractorImpl(
                         issuerLogo = issuerLogo?.uri,
                         isRevoked = documentIsRevoked,
                         documentCredentialsInfoUi = documentCredentialsInfo,
+                        customization = customization,
                     ),
                 )
             } ?: emit(DocumentDetailsInteractorPartialState.Failure(error = genericErrorMsg))

@@ -22,6 +22,7 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -456,6 +457,7 @@ private fun DocumentCategorySection(
                 status = documentItem.documentIssuanceState.toCardStatusLabel(),
                 isSelected = selectedDocumentIds.contains(documentItem.uiData.itemId),
                 isSelectionModeActive = isSelectionModeActive,
+                customColor = documentItem.customColor,
                 onClick = {
                     onEventSend(Event.OnDocumentClick(documentItem.uiData.itemId))
                 },

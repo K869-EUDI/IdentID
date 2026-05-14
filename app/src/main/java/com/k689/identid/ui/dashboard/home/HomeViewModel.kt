@@ -161,6 +161,10 @@ sealed class Event : ViewEvent {
         val documentId: String,
     ) : Event()
 
+    data class DocumentEditClicked(
+        val documentId: String,
+    ) : Event()
+
     data class LoyaltyCardClicked(
         val loyaltyCardId: String,
     ) : Event()
@@ -325,6 +329,10 @@ class HomeViewModel(
                 navigateToDocumentDetails(event.documentId)
             }
 
+            is Event.DocumentEditClicked -> {
+                navigateToDocumentDetails(event.documentId, isEdit = true)
+            }
+
             is Event.LoyaltyCardClicked -> {
                 navigateToLoyaltyCardDetails(event.loyaltyCardId)
             }
@@ -428,13 +436,16 @@ class HomeViewModel(
         }
     }
 
-    private fun navigateToDocumentDetails(documentId: String) {
+    private fun navigateToDocumentDetails(documentId: String, isEdit: Boolean = false) {
         setEffect {
             Effect.Navigation.SwitchScreen(
                 screenRoute =
                     generateComposableNavigationLink(
                         screen = DashboardScreens.DocumentDetails,
-                        arguments = generateComposableArguments(mapOf("documentId" to documentId)),
+                        arguments = generateComposableArguments(mapOf(
+                            "documentId" to documentId,
+                            "isEdit" to isEdit.toString()
+                        )),
                     ),
             )
         }

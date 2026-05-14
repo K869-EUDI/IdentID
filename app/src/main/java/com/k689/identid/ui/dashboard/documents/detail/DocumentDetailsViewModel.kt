@@ -21,12 +21,15 @@ import com.k689.identid.R
 import com.k689.identid.config.IssuanceFlowType
 import com.k689.identid.config.IssuanceUiConfig
 import com.k689.identid.extension.ui.toggleExpansionState
+import com.k689.identid.interactor.dashboard.DocumentCustomizationInteractor
+import com.k689.identid.interactor.dashboard.DocumentCustomizationPartialState
 import com.k689.identid.interactor.dashboard.DocumentDetailsInteractor
 import com.k689.identid.interactor.dashboard.DocumentDetailsInteractorDeleteBookmarkPartialState
 import com.k689.identid.interactor.dashboard.DocumentDetailsInteractorDeleteDocumentPartialState
 import com.k689.identid.interactor.dashboard.DocumentDetailsInteractorPartialState
 import com.k689.identid.interactor.dashboard.DocumentDetailsInteractorStoreBookmarkPartialState
 import com.k689.identid.model.core.FormatType
+import com.k689.identid.model.storage.DocumentCustomization
 import com.k689.identid.navigation.DashboardScreens
 import com.k689.identid.navigation.IssuanceScreens
 import com.k689.identid.navigation.StartupScreens
@@ -65,6 +68,9 @@ data class State(
     val hideSensitiveContent: Boolean = true,
     val sheetContent: DocumentDetailsBottomSheetContent = DocumentDetailsBottomSheetContent.DeleteDocumentConfirmation,
     val expiresAt: String = "",
+    val customTitle: String? = null,
+    val customColor: Long? = null,
+    val isEditingCustomization: Boolean = false,
 ) : ViewState
 
 sealed class Event : ViewEvent {
@@ -109,6 +115,16 @@ sealed class Event : ViewEvent {
     data object ToggleExpansionStateOfDocumentCredentialsSection : Event()
 
     data object DocumentCredentialsSectionPrimaryButtonPressed : Event()
+
+    data class OnCustomTitleChanged(val title: String) : Event()
+
+    data class OnCustomColorChanged(val color: Long) : Event()
+
+    data object SaveCustomization : Event()
+
+    data object ResetCustomization : Event()
+
+    data class ToggleEditingCustomization(val isEditing: Boolean) : Event()
 }
 
 sealed class Effect : ViewSideEffect {
@@ -150,14 +166,17 @@ sealed class DocumentDetailsBottomSheetContent {
 @KoinViewModel
 class DocumentDetailsViewModel(
     private val documentDetailsInteractor: DocumentDetailsInteractor,
+    private val documentCustomizationInteractor: DocumentCustomizationInteractor,
     private val uiSerializer: UiSerializer,
     private val resourceProvider: ResourceProvider,
     @InjectedParam private val documentId: DocumentId,
+    @InjectedParam private val isEdit: Boolean,
 ) : MviViewModel<Event, State, Effect>() {
     override fun setInitialState(): State =
         State(
             documentDetailsSectionTitle = resourceProvider.getString(R.string.document_details_main_section_text),
             documentIssuerSectionTitle = resourceProvider.getString(R.string.document_details_issuer_section_text),
+            isEditingCustomization = isEdit,
         )
 
     override fun handleEvents(event: Event) {
@@ -258,6 +277,26 @@ class DocumentDetailsViewModel(
                     goToAddDocumentScreen(documentFormatType = safeDocumentDetailsUi.documentIdentifier.formatType)
                 }
             }
+
+            is Event.OnCustomTitleChanged -> {
+                setState { copy(customTitle = event.title) }
+            }
+
+            is Event.OnCustomColorChanged -> {
+                setState { copy(customColor = event.color) }
+            }
+
+            is Event.SaveCustomization -> {
+                saveCustomization()
+            }
+
+            is Event.ResetCustomization -> {
+                resetCustomization()
+            }
+
+            is Event.ToggleEditingCustomization -> {
+                setState { copy(isEditingCustomization = event.isEditing) }
+            }
         }
     }
 
@@ -286,11 +325,13 @@ class DocumentDetailsViewModel(
                                     error = null,
                                     documentDetailsUi = documentDetailsUi,
                                     documentCredentialsInfoUi = response.documentCredentialsInfoUi,
-                                    title = documentDetailsUi.documentName,
+                                    title = response.customization?.customTitle ?: documentDetailsUi.documentName,
                                     isDocumentBookmarked = response.documentIsBookmarked,
                                     isRevoked = response.isRevoked,
                                     issuerName = response.issuerName,
                                     issuerLogo = response.issuerLogo,
+                                    customTitle = response.customization?.customTitle,
+                                    customColor = response.customization?.customColor,
                                 )
                             }
                         }
@@ -499,6 +540,46 @@ class DocumentDetailsViewModel(
                 popUpToScreenRoute = null,
                 inclusive = null,
             )
+        }
+    }
+
+    private fun saveCustomization() {
+        viewModelScope.launch {
+            documentCustomizationInteractor.saveCustomization(
+                DocumentCustomization(
+                    identifier = documentId,
+                    customTitle = viewState.value.customTitle,
+                    customColor = viewState.value.customColor,
+                )
+            ).collect { response ->
+                if (response is DocumentCustomizationPartialState.Success) {
+                    setState {
+                        copy(
+                            title = response.customization?.customTitle ?: documentDetailsUi?.documentName,
+                            customTitle = response.customization?.customTitle,
+                            customColor = response.customization?.customColor,
+                            isEditingCustomization = false,
+                        )
+                    }
+                }
+            }
+        }
+    }
+
+    private fun resetCustomization() {
+        viewModelScope.launch {
+            documentCustomizationInteractor.deleteCustomization(documentId).collect { response ->
+                if (response is DocumentCustomizationPartialState.Success) {
+                    setState {
+                        copy(
+                            title = documentDetailsUi?.documentName,
+                            customTitle = null,
+                            customColor = null,
+                            isEditingCustomization = false,
+                        )
+                    }
+                }
+            }
         }
     }
 }

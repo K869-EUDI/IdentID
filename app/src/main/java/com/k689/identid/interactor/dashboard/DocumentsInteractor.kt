@@ -33,6 +33,7 @@ import com.k689.identid.model.core.DocumentCategory
 import com.k689.identid.model.core.FormatType
 import com.k689.identid.model.core.toDocumentCategory
 import com.k689.identid.model.core.toDocumentIdentifier
+import com.k689.identid.model.storage.DocumentCustomization
 import com.k689.identid.model.validator.FilterAction
 import com.k689.identid.model.validator.FilterElement.FilterItem
 import com.k689.identid.model.validator.FilterGroup
@@ -42,6 +43,7 @@ import com.k689.identid.model.validator.FilterableList
 import com.k689.identid.model.validator.Filters
 import com.k689.identid.model.validator.SortOrder
 import com.k689.identid.provider.resources.ResourceProvider
+import com.k689.identid.storage.dao.DocumentCustomizationDao
 import com.k689.identid.theme.values.ThemeColors
 import com.k689.identid.ui.component.AppIcons
 import com.k689.identid.ui.component.DualSelectorButton
@@ -192,6 +194,7 @@ class DocumentsInteractorImpl(
     private val walletCoreDocumentsController: WalletCoreDocumentsController,
     private val filterValidator: FilterValidator,
     private val configLogic: ConfigLogic,
+    private val documentCustomizationDao: DocumentCustomizationDao,
 ) : DocumentsInteractor {
     private val genericErrorMsg
         get() = resourceProvider.genericErrorMessage()
@@ -321,6 +324,8 @@ class DocumentsInteractorImpl(
 
     override fun getDocuments(): Flow<DocumentInteractorGetDocumentsPartialState> =
         flow<DocumentInteractorGetDocumentsPartialState> {
+            val allCustomizations = documentCustomizationDao.retrieveAll().associateBy { it.identifier }
+
             val shouldAllowUserInteraction =
                 walletCoreDocumentsController.getMainPidDocument() != null
 
@@ -441,6 +446,9 @@ class DocumentsInteractorImpl(
                                             }
                                         }
 
+                                    val customization = allCustomizations[document.id]
+                                    val finalDocumentName = customization?.customTitle ?: documentName
+
                                     FilterableItem(
                                         payload =
                                             DocumentUi(
@@ -448,7 +456,7 @@ class DocumentsInteractorImpl(
                                                 uiData =
                                                     ListItemDataUi(
                                                         itemId = document.id,
-                                                        mainContentData = ListItemMainContentDataUi.Text(text = documentName),
+                                                        mainContentData = ListItemMainContentDataUi.Text(text = finalDocumentName),
                                                         overlineText = issuerName,
                                                         supportingText = supportingText,
                                                         leadingContentData =
@@ -461,6 +469,8 @@ class DocumentsInteractorImpl(
                                                     ),
                                                 documentIdentifier = documentIdentifier,
                                                 documentCategory = documentCategory,
+                                                customTitle = customization?.customTitle,
+                                                customColor = customization?.customColor,
                                             ),
                                         attributes =
                                             DocumentsFilterableAttributes(
@@ -468,7 +478,7 @@ class DocumentsInteractorImpl(
                                                 issuedDate = document.issuedAt,
                                                 expiryDate = documentExpirationDate,
                                                 issuer = issuerName,
-                                                name = documentName,
+                                                name = finalDocumentName,
                                                 category = documentCategory,
                                                 isRevoked = documentIsRevoked,
                                             ),
@@ -500,6 +510,9 @@ class DocumentsInteractorImpl(
                                             }
                                         }
 
+                                    val customization = allCustomizations[document.id]
+                                    val finalDocumentName = customization?.customTitle ?: documentName
+
                                     FilterableItem(
                                         payload =
                                             DocumentUi(
@@ -507,7 +520,7 @@ class DocumentsInteractorImpl(
                                                 uiData =
                                                     ListItemDataUi(
                                                         itemId = document.id,
-                                                        mainContentData = ListItemMainContentDataUi.Text(text = documentName),
+                                                        mainContentData = ListItemMainContentDataUi.Text(text = finalDocumentName),
                                                         overlineText = issuerName,
                                                         supportingText = resourceProvider.getString(R.string.dashboard_document_deferred_pending),
                                                         leadingContentData =
@@ -524,6 +537,8 @@ class DocumentsInteractorImpl(
                                                     ),
                                                 documentIdentifier = documentIdentifier,
                                                 documentCategory = documentCategory,
+                                                customTitle = customization?.customTitle,
+                                                customColor = customization?.customColor,
                                             ),
                                         attributes =
                                             DocumentsFilterableAttributes(
@@ -531,7 +546,7 @@ class DocumentsInteractorImpl(
                                                 issuedDate = null,
                                                 expiryDate = null,
                                                 issuer = issuerName,
-                                                name = documentName,
+                                                name = finalDocumentName,
                                                 category = documentCategory,
                                                 isRevoked = documentIsRevoked,
                                             ),
