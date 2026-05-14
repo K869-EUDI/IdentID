@@ -175,42 +175,42 @@ private fun ThemeSection(
             text = stringResource(R.string.preferences_theme_label),
         )
 
-        Box {
-            ListItem(
-                modifier = Modifier.clickable { expanded = true },
-                headlineContent = { Text(stringResource(state.selectedTheme.labelRes)) },
-                supportingContent = { Text(stringResource(R.string.preferences_theme_label)) },
-                trailingContent = {
+        ListItem(
+            modifier = Modifier.clickable { expanded = true },
+            headlineContent = { Text(stringResource(state.selectedTheme.labelRes)) },
+            supportingContent = { Text(stringResource(R.string.preferences_theme_label)) },
+            trailingContent = {
+                Box {
                     WrapIcon(
                         iconData = if (expanded) AppIcons.KeyboardArrowUp else AppIcons.KeyboardArrowDown,
                         customTint = MaterialTheme.colorScheme.onSurfaceVariant,
                     )
-                },
-            )
 
-            DropdownMenu(
-                expanded = expanded,
-                onDismissRequest = { expanded = false },
-            ) {
-                AppTheme.entries.forEach { theme ->
-                    DropdownMenuItem(
-                        text = { Text(stringResource(theme.labelRes)) },
-                        onClick = {
-                            onEvent(Event.OnThemeSelected(theme))
-                            expanded = false
-                        },
-                        trailingIcon = {
-                            if (state.selectedTheme == theme) {
-                                WrapIcon(
-                                    iconData = AppIcons.Check,
-                                    customTint = MaterialTheme.colorScheme.primary,
-                                )
-                            }
-                        },
-                    )
+                    DropdownMenu(
+                        expanded = expanded,
+                        onDismissRequest = { expanded = false },
+                    ) {
+                        AppTheme.entries.forEach { theme ->
+                            DropdownMenuItem(
+                                text = { Text(stringResource(theme.labelRes)) },
+                                onClick = {
+                                    onEvent(Event.OnThemeSelected(theme))
+                                    expanded = false
+                                },
+                                trailingIcon = {
+                                    if (state.selectedTheme == theme) {
+                                        WrapIcon(
+                                            iconData = AppIcons.Check,
+                                            customTint = MaterialTheme.colorScheme.primary,
+                                        )
+                                    }
+                                },
+                            )
+                        }
+                    }
                 }
-            }
-        }
+            },
+        )
 
         ListItem(
             modifier = Modifier.clickable { onEvent(Event.OnThemeCustomizationClicked) },
@@ -244,42 +244,42 @@ private fun LanguageSection(
             text = stringResource(R.string.preferences_language_label),
         )
 
-        Box {
-            ListItem(
-                modifier = Modifier.clickable { expanded = true },
-                headlineContent = { Text(stringResource(state.selectedLanguage.labelRes)) },
-                supportingContent = { Text(stringResource(R.string.preferences_language_label)) },
-                trailingContent = {
+        ListItem(
+            modifier = Modifier.clickable { expanded = true },
+            headlineContent = { Text(stringResource(state.selectedLanguage.labelRes)) },
+            supportingContent = { Text(stringResource(R.string.preferences_language_label)) },
+            trailingContent = {
+                Box {
                     WrapIcon(
                         iconData = if (expanded) AppIcons.KeyboardArrowUp else AppIcons.KeyboardArrowDown,
                         customTint = MaterialTheme.colorScheme.onSurfaceVariant,
                     )
-                },
-            )
 
-            DropdownMenu(
-                expanded = expanded,
-                onDismissRequest = { expanded = false },
-            ) {
-                AppLanguage.entries.forEach { language ->
-                    DropdownMenuItem(
-                        text = { Text(stringResource(language.labelRes)) },
-                        onClick = {
-                            onEvent(Event.OnLanguageSelected(language))
-                            expanded = false
-                        },
-                        trailingIcon = {
-                            if (state.selectedLanguage == language) {
-                                WrapIcon(
-                                    iconData = AppIcons.Check,
-                                    customTint = MaterialTheme.colorScheme.primary,
-                                )
-                            }
-                        },
-                    )
+                    DropdownMenu(
+                        expanded = expanded,
+                        onDismissRequest = { expanded = false },
+                    ) {
+                        AppLanguage.entries.forEach { language ->
+                            DropdownMenuItem(
+                                text = { Text(stringResource(language.labelRes)) },
+                                onClick = {
+                                    onEvent(Event.OnLanguageSelected(language))
+                                    expanded = false
+                                },
+                                trailingIcon = {
+                                    if (state.selectedLanguage == language) {
+                                        WrapIcon(
+                                            iconData = AppIcons.Check,
+                                            customTint = MaterialTheme.colorScheme.primary,
+                                        )
+                                    }
+                                },
+                            )
+                        }
+                    }
                 }
-            }
-        }
+            },
+        )
     }
 }
 
