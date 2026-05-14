@@ -29,6 +29,7 @@ import java.time.format.DateTimeFormatter
 import java.time.temporal.ChronoUnit
 import java.time.temporal.TemporalAdjusters
 import java.util.Date
+import java.util.Locale
 
 private val dtoDateFormatters =
     listOf(
@@ -132,13 +133,13 @@ fun String.toLocalDate(
 fun Instant.formatInstant(
     pattern: String = DAY_MONTH_YEAR_SHORT_PATTERN,
     zoneId: ZoneId = ZoneId.systemDefault(),
-    selectedLanguage: String = LocaleUtils.PROJECT_DEFAULT_LOCALE,
+    locale: Locale = Locale.getDefault(),
 ): String {
     val formatter =
         DateTimeFormatter
             .ofPattern(
                 pattern,
-                LocaleUtils.getLocaleFromSelectedLanguage(selectedLanguage),
+                locale,
             ).withZone(zoneId)
     return formatter.format(this)
 }

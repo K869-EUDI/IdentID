@@ -59,10 +59,8 @@ import kotlinx.coroutines.async
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import org.koin.android.annotation.KoinViewModel
+import com.k689.identid.util.business.formatInstant
 import java.time.Instant
-import java.time.ZoneId
-import java.time.format.DateTimeFormatter
-import java.util.Locale
 
 enum class BleAvailability {
     AVAILABLE,
@@ -515,15 +513,6 @@ class HomeViewModel(
                     ),
             )
         }
-    }
-
-    private fun Instant.formatInstant(): String {
-        val formatter =
-            DateTimeFormatter
-                .ofPattern("dd/MM/yyyy", Locale.getDefault())
-                .withZone(ZoneId.systemDefault())
-
-        return formatter.format(this)
     }
 
     private fun getRecentData(): Job =
