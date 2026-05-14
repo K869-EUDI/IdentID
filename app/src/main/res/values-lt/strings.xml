@@ -241,6 +241,11 @@
     <!-- region Settings Screen -->
     <string name="settings_screen_title">Nustatymai</string>
     <string name="settings_screen_option_preferences">Nuostatos</string>
+    <string name="settings_screen_option_system_colors">Naudoti Numatytasias Spalvas</string>
+    <string name="settings_screen_option_system_colors_description">Sekti Android 12+ numatytomis spalvomis</string>
+    <string name="settings_screen_option_theme_mode">Šviesos režimas</string>
+    <string name="settings_screen_option_oled_dark_mode">OLED Tamsus Režimas</string>
+    <string name="settings_screen_option_oled_dark_mode_description">Sodrios juodos spalvos tamsiame režime</string>
     <string name="settings_screen_option_preferences_id">preferencesId</string>
     <string name="settings_screen_option_retrieve_logs">Gauti žurnalus</string>
     <string name="settings_screen_option_retrieve_logs_id">retrieveLogsId</string>

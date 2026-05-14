@@ -235,6 +235,11 @@
     <!-- region Settings Screen -->
     <string name="settings_screen_title">Settings</string>
     <string name="settings_screen_option_preferences">Preferences</string>
+    <string name="settings_screen_option_system_colors">Use System Colors</string>
+    <string name="settings_screen_option_system_colors_description">Follow Android 12+ wallpaper colors</string>
+    <string name="settings_screen_option_theme_mode">Theme Mode</string>
+    <string name="settings_screen_option_oled_dark_mode">OLED Dark Mode</string>
+    <string name="settings_screen_option_oled_dark_mode_description">Pure black backgrounds in dark mode</string>
     <string name="settings_screen_option_preferences_id">preferencesId</string>
     <string name="settings_screen_option_retrieve_logs">Retrieve logs</string>
     <string name="settings_screen_option_retrieve_logs_id">retrieveLogsId</string>

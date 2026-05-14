@@ -22,9 +22,11 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
+import com.k689.identid.R
 import com.k689.identid.theme.AppLanguage
 import com.k689.identid.ui.component.AppIcons
 import com.k689.identid.ui.component.ListItemDataUi
@@ -97,9 +99,9 @@ fun PreferencesScreen(
                                 itemId = "dynamic_color",
                                 mainContentData =
                                     ListItemMainContentDataUi.Text(
-                                        text = "Use System Colors",
+                                        text = stringResource(R.string.settings_screen_option_system_colors),
                                     ),
-                                supportingText = "Follow Android 12+ wallpaper colors",
+                                supportingText = stringResource(R.string.settings_screen_option_system_colors_description),
                                 trailingContentData =
                                     ListItemTrailingContentDataUi.Switch(
                                         switchData =
@@ -130,7 +132,7 @@ fun PreferencesScreen(
                                         itemId = "theme_mode",
                                         mainContentData =
                                             ListItemMainContentDataUi.Text(
-                                                text = "Theme Mode",
+                                                text = stringResource(R.string.settings_screen_option_theme_mode),
                                             ),
                                         supportingText = state.themeOptions[state.selectedTheme.ordinal].second,
                                         trailingContentData =
@@ -167,9 +169,9 @@ fun PreferencesScreen(
                                 itemId = "oled_mode",
                                 mainContentData =
                                     ListItemMainContentDataUi.Text(
-                                        text = "OLED Dark Mode",
+                                        text = stringResource(R.string.settings_screen_option_oled_dark_mode),
                                     ),
-                                supportingText = "Pure black backgrounds in dark mode",
+                                supportingText = stringResource(R.string.settings_screen_option_oled_dark_mode_description),
                                 trailingContentData =
                                     ListItemTrailingContentDataUi.Switch(
                                         switchData =

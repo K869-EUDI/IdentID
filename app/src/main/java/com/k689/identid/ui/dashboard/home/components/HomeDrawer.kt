@@ -39,8 +39,6 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.k689.identid.ui.component.AppIcons
 import com.k689.identid.ui.component.utils.SIZE_LARGE
-import com.k689.identid.ui.component.utils.SPACING_EXTRA_LARGE
-import com.k689.identid.ui.component.utils.SPACING_LARGE
 import com.k689.identid.ui.component.wrap.WrapImage
 
 @Composable
@@ -103,17 +101,6 @@ fun HomeDrawer(
                 }
 
                 Spacer(modifier = Modifier.weight(1f))
-
-                Text(
-                    text = "Made with the sweat and tears of unpaid labour <3",
-                    style =
-                        MaterialTheme.typography.bodySmall.copy(
-                            color = MaterialTheme.colorScheme.onSurfaceVariant,
-                            fontWeight = FontWeight.Light,
-                            fontSize = 13.sp,
-                        ),
-                    modifier = Modifier.padding(start = SPACING_LARGE.dp, end = SPACING_LARGE.dp, bottom = SPACING_EXTRA_LARGE.dp),
-                )
             }
         },
         content = content,
