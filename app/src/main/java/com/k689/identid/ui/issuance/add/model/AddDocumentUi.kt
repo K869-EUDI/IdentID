@@ -20,6 +20,7 @@ import com.k689.identid.ui.component.ListItemDataUi
 
 data class AddDocumentUi(
     val credentialIssuerId: String,
+    val credentialIssuerName: String,
     val configurationIds: List<String>,
     val itemData: ListItemDataUi,
 )
