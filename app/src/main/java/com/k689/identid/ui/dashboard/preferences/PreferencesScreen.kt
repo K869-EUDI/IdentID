@@ -99,9 +99,9 @@ fun PreferencesScreen(
                                 itemId = "dynamic_color",
                                 mainContentData =
                                     ListItemMainContentDataUi.Text(
-                                        text = stringResource(R.string.settings_screen_option_system_colors),
+                                        text = stringResource(R.string.preferences_system_colors),
                                     ),
-                                supportingText = stringResource(R.string.settings_screen_option_system_colors_description),
+                                supportingText = stringResource(R.string.preferences_system_colors_description),
                                 trailingContentData =
                                     ListItemTrailingContentDataUi.Switch(
                                         switchData =
@@ -132,7 +132,7 @@ fun PreferencesScreen(
                                         itemId = "theme_mode",
                                         mainContentData =
                                             ListItemMainContentDataUi.Text(
-                                                text = stringResource(R.string.settings_screen_option_theme_mode),
+                                                text = stringResource(R.string.preferences_theme_mode),
                                             ),
                                         supportingText = state.themeOptions[state.selectedTheme.ordinal].second,
                                         trailingContentData =
@@ -169,9 +169,9 @@ fun PreferencesScreen(
                                 itemId = "oled_mode",
                                 mainContentData =
                                     ListItemMainContentDataUi.Text(
-                                        text = stringResource(R.string.settings_screen_option_oled_dark_mode),
+                                        text = stringResource(R.string.preferences_oled_dark_mode),
                                     ),
-                                supportingText = stringResource(R.string.settings_screen_option_oled_dark_mode_description),
+                                supportingText = stringResource(R.string.preferences_oled_dark_mode_description),
                                 trailingContentData =
                                     ListItemTrailingContentDataUi.Switch(
                                         switchData =
@@ -209,7 +209,7 @@ fun PreferencesScreen(
                                     itemId = "language_selection",
                                     mainContentData =
                                         ListItemMainContentDataUi.Text(
-                                            text = "App Language",
+                                            text = stringResource(R.string.preferences_language_label),
                                         ),
                                     supportingText = AppLanguage.entries[state.selectedLanguage.ordinal].displayName,
                                     trailingContentData =

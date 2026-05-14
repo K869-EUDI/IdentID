@@ -241,11 +241,6 @@
     <!-- region Settings Screen -->
     <string name="settings_screen_title">Nustatymai</string>
     <string name="settings_screen_option_preferences">Nuostatos</string>
-    <string name="settings_screen_option_system_colors">Naudoti Numatytasias Spalvas</string>
-    <string name="settings_screen_option_system_colors_description">Sekti Android 12+ numatytomis spalvomis</string>
-    <string name="settings_screen_option_theme_mode">Šviesos režimas</string>
-    <string name="settings_screen_option_oled_dark_mode">OLED Tamsus Režimas</string>
-    <string name="settings_screen_option_oled_dark_mode_description">Sodrios juodos spalvos tamsiame režime</string>
     <string name="settings_screen_option_preferences_id">preferencesId</string>
     <string name="settings_screen_option_retrieve_logs">Gauti žurnalus</string>
     <string name="settings_screen_option_retrieve_logs_id">retrieveLogsId</string>
@@ -331,10 +326,15 @@
     <!-- region Preferences Screen -->
     <string name="preferences_screen_title">Nuostatos</string>
     <string name="preferences_theme_label">Tema</string>
+    <string name="preferences_system_colors">Naudoti Numatytasias Spalvas</string>
+    <string name="preferences_system_colors_description">Sekti Android 12+ numatytomis spalvomis</string>
+    <string name="preferences_theme_mode">Sąsajos režimas</string>
+    <string name="preferences_oled_dark_mode">OLED Tamsus Režimas</string>
+    <string name="preferences_oled_dark_mode_description">Sodrios juodos spalvos tamsiame režime</string>
     <string name="preferences_language_label">Kalba</string>
-    <string name="preferences_theme_option_light">Šviesi</string>
-    <string name="preferences_theme_option_dark">Tamsi</string>
-    <string name="preferences_theme_option_system_default">Numatytoji</string>
+    <string name="preferences_theme_option_light">Šviesus</string>
+    <string name="preferences_theme_option_dark">Tamsus</string>
+    <string name="preferences_theme_option_system_default">Įrenginio</string>
     <!--endregion-->
     <!-- region Home Screen -->
     <string name="home_screen_title">Pradžia</string>
