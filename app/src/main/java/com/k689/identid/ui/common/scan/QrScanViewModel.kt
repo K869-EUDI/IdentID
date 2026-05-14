@@ -29,6 +29,7 @@ import com.k689.identid.config.QrScanUiConfig
 import com.k689.identid.config.RequestUriConfig
 import com.k689.identid.di.common.getOrCreateCredentialOfferScope
 import com.k689.identid.di.core.getOrCreatePresentationScope
+import com.k689.identid.di.core.resetPresentationScope
 import com.k689.identid.interactor.common.QrScanInteractor
 import com.k689.identid.navigation.DashboardScreens
 import com.k689.identid.navigation.IssuanceScreens
@@ -236,6 +237,7 @@ class QrScanViewModel(
 
     private fun navigateToPresentationRequest(scanResult: String) {
         setEffect {
+            resetPresentationScope()
             getOrCreatePresentationScope()
             Effect.Navigation.SwitchScreen(
                 screenRoute =

@@ -264,6 +264,11 @@ class WalletCorePresentationControllerImpl(
     override var redirectUri: URI? = null
 
     override fun setConfig(config: PresentationControllerConfig) {
+        disclosedDocuments = null
+        processedRequest = null
+        verifierName = null
+        verifierIsTrusted = null
+        redirectUri = null
         presentationConfig = config
     }
 
