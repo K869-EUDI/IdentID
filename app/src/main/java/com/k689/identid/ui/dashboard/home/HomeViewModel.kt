@@ -48,7 +48,6 @@ import com.k689.identid.ui.dashboard.documents.list.model.DocumentUi
 import com.k689.identid.ui.dashboard.documents.list.model.DocumentsFilterableAttributes
 import com.k689.identid.ui.dashboard.home.HomeScreenBottomSheetContent.Bluetooth
 import com.k689.identid.ui.dashboard.home.components.DrawerMenuItem
-import com.k689.identid.ui.dashboard.transactions.list.model.TransactionsFilterableAttributes
 import com.k689.identid.ui.dashboard.transactions.list.model.TransactionUi
 import com.k689.identid.ui.mvi.MviViewModel
 import com.k689.identid.ui.mvi.ViewEvent
@@ -56,7 +55,8 @@ import com.k689.identid.ui.mvi.ViewSideEffect
 import com.k689.identid.ui.mvi.ViewState
 import com.k689.identid.ui.serializer.UiSerializer
 import kotlinx.coroutines.Job
-import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.async
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import org.koin.android.annotation.KoinViewModel
 import java.time.Instant
@@ -106,7 +106,7 @@ private data class HomeDocumentCandidate(
 )
 
 data class State(
-    val isLoading: Boolean = false,
+    val isLoading: Boolean = true,
     val isBottomSheetOpen: Boolean = false,
     val sheetContent: HomeScreenBottomSheetContent = HomeScreenBottomSheetContent.None,
     val welcomeUserMessage: String,
@@ -222,7 +222,6 @@ class HomeViewModel(
     private val uiSerializer: UiSerializer,
     private val resourceProvider: ResourceProvider,
 ) : MviViewModel<Event, State, Effect>() {
-    private var userNameJob: Job? = null
     private var recentDataJob: Job? = null
 
     override fun setInitialState(): State =
@@ -248,9 +247,7 @@ class HomeViewModel(
     override fun handleEvents(event: Event) {
         when (event) {
             is Event.Init -> {
-                userNameJob?.cancel()
                 recentDataJob?.cancel()
-                userNameJob = getUserNameViaMainPidDocument()
                 recentDataJob = getRecentData()
             }
 
@@ -501,33 +498,6 @@ class HomeViewModel(
         }
     }
 
-    private fun getUserNameViaMainPidDocument(): Job =
-        viewModelScope.launch {
-            homeInteractor.getUserNameViaMainPidDocument().collect { response ->
-                when (response) {
-                    is HomeInteractorGetUserNameViaMainPidDocumentPartialState.Failure -> {
-                        // ignore
-                    }
-
-                    is HomeInteractorGetUserNameViaMainPidDocumentPartialState.Success -> {
-                        setState {
-                            copy(
-                                welcomeUserMessage =
-                                    if (response.userFirstName.isNotBlank()) {
-                                        resourceProvider.getString(
-                                            R.string.home_screen_welcome_user_message,
-                                            response.userFirstName,
-                                        )
-                                    } else {
-                                        resourceProvider.getString(R.string.home_screen_welcome)
-                                    },
-                            )
-                        }
-                    }
-                }
-            }
-        }
-
     private fun Instant.formatInstant(): String {
         val formatter =
             DateTimeFormatter
@@ -537,131 +507,128 @@ class HomeViewModel(
         return formatter.format(this)
     }
 
-    private fun java.time.LocalDateTime.toUsageInstant(): Instant =
-        atZone(ZoneId.systemDefault()).toInstant()
-
     private fun getRecentData(): Job =
         viewModelScope.launch {
-            val documentsFlow = documentsInteractor.getDocuments()
-            val transactionsFlow = transactionsInteractor.getTransactions()
-            val loyaltyCardsFlow = loyaltyCardsInteractor.observeLoyaltyCards()
+            val docsDeferred = async { documentsInteractor.getDocuments().first() }
+            val transDeferred = async { transactionsInteractor.getTransactions().first() }
+            val loyaltyDeferred = async { loyaltyCardsInteractor.observeLoyaltyCards().first() }
+            val bookmarksDeferred = async { homeInteractor.getBookmarkedDocumentIds() }
+            val userNameDeferred = async { homeInteractor.getUserNameViaMainPidDocument().first() }
 
-            combine(
-                documentsFlow,
-                transactionsFlow,
-                loyaltyCardsFlow,
-            ) { docsResponse, transResponse, loyaltyCards ->
-                Triple(docsResponse, transResponse, loyaltyCards)
-            }.collect { (docsResponse, transResponse, loyaltyCards) ->
-                val bookmarkedDocumentIds = homeInteractor.getBookmarkedDocumentIds()
+            val docsResponse = docsDeferred.await()
+            val transResponse = transDeferred.await()
+            val loyaltyCards = loyaltyDeferred.await()
+            val bookmarkedDocumentIds = bookmarksDeferred.await()
+            val userNameResponse = userNameDeferred.await()
 
-                val documentCandidates =
-                    if (docsResponse is DocumentInteractorGetDocumentsPartialState.Success) {
-                        docsResponse.allDocuments.items
-                            .sortedByDescending { (it.attributes as? DocumentsFilterableAttributes)?.issuedDate ?: Instant.MIN }
-                            .mapNotNull { item ->
-                                (item.payload as? DocumentUi)?.let { docUi ->
-                                    if (docUi.documentIssuanceState == DocumentIssuanceStateUi.Pending) {
-                                        return@let null
+            val welcomeMessage =
+                when (userNameResponse) {
+                    is HomeInteractorGetUserNameViaMainPidDocumentPartialState.Success -> {
+                        if (userNameResponse.userFirstName.isNotBlank()) {
+                            resourceProvider.getString(
+                                R.string.home_screen_welcome_user_message,
+                                userNameResponse.userFirstName,
+                            )
+                        } else {
+                            resourceProvider.getString(R.string.home_screen_welcome)
+                        }
+                    }
+                    else -> resourceProvider.getString(R.string.home_screen_welcome)
+                }
+
+            val documentCandidates =
+                if (docsResponse is DocumentInteractorGetDocumentsPartialState.Success) {
+                    docsResponse.allDocuments.items
+                        .sortedByDescending { (it.attributes as? DocumentsFilterableAttributes)?.issuedDate ?: Instant.MIN }
+                        .mapNotNull { item ->
+                            (item.payload as? DocumentUi)?.let { docUi ->
+                                if (docUi.documentIssuanceState == DocumentIssuanceStateUi.Pending) {
+                                    return@let null
+                                }
+
+                                val attributes = item.attributes as? DocumentsFilterableAttributes
+                                val usagesLeft =
+                                    when (val trailing = docUi.uiData.trailingContentData) {
+                                        is ListItemTrailingContentDataUi.TextWithIcon -> trailing.text
+                                        else -> "-"
                                     }
 
-                                    val attributes = item.attributes as? DocumentsFilterableAttributes
-                                    val usagesLeft =
-                                        when (val trailing = docUi.uiData.trailingContentData) {
-                                            is ListItemTrailingContentDataUi.TextWithIcon -> trailing.text
-                                            else -> "-"
-                                        }
-
-                                    HomeDocumentCandidate(
-                                        dashboardDocument =
-                                            DashboardDocument(
-                                                documentUi = docUi,
-                                                usagesLeft = usagesLeft,
-                                                expiresAt = attributes?.expiryDate?.formatInstant() ?: "-",
-                                                isPending = false,
-                                            ),
-                                        attributes = attributes,
-                                    )
-                                }
+                                HomeDocumentCandidate(
+                                    dashboardDocument =
+                                        DashboardDocument(
+                                            documentUi = docUi,
+                                            usagesLeft = usagesLeft,
+                                            expiresAt = attributes?.expiryDate?.formatInstant() ?: "-",
+                                            isPending = false,
+                                        ),
+                                    attributes = attributes,
+                                )
                             }
-                    } else {
-                        emptyList()
-                    }
-
-                val allDocs = documentCandidates.map { it.dashboardDocument }
-
-                val allTrans =
-                    if (transResponse is TransactionInteractorGetTransactionsPartialState.Success) {
-                        transResponse.allTransactions.items
-                            .mapNotNull { item ->
-                                (item.payload as? TransactionUi)?.let { transUi ->
-                                    DashboardTransaction(
-                                        transactionUi = transUi,
-                                        isPending = false,
-                                    )
-                                }
-                            }
-                    } else {
-                        emptyList()
-                    }
-
-                val latestUsageByDocumentName =
-                    if (transResponse is TransactionInteractorGetTransactionsPartialState.Success) {
-                        transResponse.allTransactions.items
-                            .mapNotNull { item ->
-                                val attributes = item.attributes as? TransactionsFilterableAttributes ?: return@mapNotNull null
-                                val usageInstant = attributes.creationLocalDateTime?.toUsageInstant() ?: return@mapNotNull null
-                                attributes.documentNames.map { documentName -> documentName to usageInstant }
-                            }.flatten()
-                            .groupBy(keySelector = { it.first }, valueTransform = { it.second })
-                            .mapValues { (_, usages) -> usages.maxOrNull() ?: Instant.MIN }
-                    } else {
-                        emptyMap()
-                    }
-
-                val bookmarkedDocs =
-                    documentCandidates
-                        .filter { it.dashboardDocument.documentUi.uiData.itemId in bookmarkedDocumentIds }
-                        .map { candidate ->
-                            HomeBookmarkedItem.Document(
-                                value = candidate.dashboardDocument,
-                                sortEpochMillis =
-                                    latestUsageByDocumentName[candidate.attributes?.name]?.toEpochMillisSafe()
-                                        ?: candidate.attributes?.issuedDate.toEpochMillisSafe(),
-                            )
                         }
-
-                val bookmarkedLoyaltyCards =
-                    loyaltyCards
-                        .filter { loyaltyCardBookmarkId(it.id) in bookmarkedDocumentIds }
-                        .map { card ->
-                            HomeBookmarkedItem.LoyaltyCard(
-                                id = card.id,
-                                name = card.displayName,
-                                barcodeValue = card.barcodeValue,
-                                barcodeFormat = card.barcodeFormat,
-                                sortEpochMillis = card.updatedAt,
-                            )
-                        }
-
-                val bookmarkedItems =
-                    (bookmarkedDocs + bookmarkedLoyaltyCards)
-                        .sortedByDescending { it.sortEpochMillis }
-
-                val filteredTrans = allTrans.filter { !it.isPending }.reversed()
-                val recentTrans = filteredTrans.take(5)
-                val hasMoreTrans = filteredTrans.size > 5
-
-                setState {
-                    copy(
-                        allDocuments = allDocs,
-                        recentBookmarks = bookmarkedItems,
-                        hasAnyLoyaltyCards = loyaltyCards.isNotEmpty(),
-                        allTransactions = allTrans,
-                        recentTransactions = recentTrans,
-                        hasMoreTransactions = hasMoreTrans,
-                    )
+                } else {
+                    emptyList()
                 }
+
+            val allDocs = documentCandidates.map { it.dashboardDocument }
+
+            val allTrans =
+                if (transResponse is TransactionInteractorGetTransactionsPartialState.Success) {
+                    transResponse.allTransactions.items
+                        .mapNotNull { item ->
+                            (item.payload as? TransactionUi)?.let { transUi ->
+                                DashboardTransaction(
+                                    transactionUi = transUi,
+                                    isPending = false,
+                                )
+                            }
+                        }
+                } else {
+                    emptyList()
+                }
+
+            val bookmarkedDocs =
+                documentCandidates
+                    .filter { it.dashboardDocument.documentUi.uiData.itemId in bookmarkedDocumentIds }
+                    .map { candidate ->
+                        HomeBookmarkedItem.Document(
+                            value = candidate.dashboardDocument,
+                            sortEpochMillis =
+                                candidate.attributes?.issuedDate.toEpochMillisSafe(),
+                        )
+                    }
+
+            val bookmarkedLoyaltyCards =
+                loyaltyCards
+                    .filter { loyaltyCardBookmarkId(it.id) in bookmarkedDocumentIds }
+                    .map { card ->
+                        HomeBookmarkedItem.LoyaltyCard(
+                            id = card.id,
+                            name = card.displayName,
+                            barcodeValue = card.barcodeValue,
+                            barcodeFormat = card.barcodeFormat,
+                            sortEpochMillis = card.updatedAt,
+                        )
+                    }
+
+            val bookmarkedItems =
+                (bookmarkedDocs + bookmarkedLoyaltyCards)
+                    .sortedByDescending { it.sortEpochMillis }
+
+            val filteredTrans = allTrans.filter { !it.isPending }.reversed()
+            val recentTrans = filteredTrans.take(5)
+            val hasMoreTrans = filteredTrans.size > 5
+
+            setState {
+                copy(
+                    isLoading = false,
+                    welcomeUserMessage = welcomeMessage,
+                    allDocuments = allDocs,
+                    recentBookmarks = bookmarkedItems,
+                    hasAnyLoyaltyCards = loyaltyCards.isNotEmpty(),
+                    allTransactions = allTrans,
+                    recentTransactions = recentTrans,
+                    hasMoreTransactions = hasMoreTrans,
+                )
             }
         }
 

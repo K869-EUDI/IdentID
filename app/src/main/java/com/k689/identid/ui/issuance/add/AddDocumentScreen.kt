@@ -367,6 +367,7 @@ private fun Options(
         contentPadding = PaddingValues(bottom = SPACING_LARGE.dp),
     ) {
         options.forEachIndexed { _, (issuerId, items) ->
+            val issuerName = items.firstOrNull()?.credentialIssuerName ?: issuerId.substringAfter("https://")
 
             stickyHeader(key = "hdr-$issuerId") {
                 WrapText(
@@ -374,7 +375,7 @@ private fun Options(
                         Modifier
                             .fillMaxWidth()
                             .background(MaterialTheme.colorScheme.background),
-                    text = issuerId.substringAfter("https://"),
+                    text = issuerName,
                     textConfig =
                         TextConfig(
                             style =
@@ -436,6 +437,7 @@ private fun IssuanceAddDocumentScreenPreview() {
                 listOf(
                     AddDocumentUi(
                         credentialIssuerId = "issuer1",
+                        credentialIssuerName = "Issuer One",
                         configurationIds = listOf("configId1"),
                         itemData =
                             ListItemDataUi(
@@ -452,6 +454,7 @@ private fun IssuanceAddDocumentScreenPreview() {
                 listOf(
                     AddDocumentUi(
                         credentialIssuerId = "issuer2",
+                        credentialIssuerName = "Issuer Two",
                         configurationIds = listOf("configId2"),
                         itemData =
                             ListItemDataUi(

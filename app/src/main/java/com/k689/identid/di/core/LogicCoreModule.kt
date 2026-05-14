@@ -120,3 +120,7 @@ fun provideWalletCoreDocumentsController(
  * Get Koin scope that lives during document presentation flow
  * */
 fun getOrCreatePresentationScope(): org.koin.core.scope.Scope = KoinPlatform.getKoin().getOrCreateScope<WalletPresentationScope>(PRESENTATION_SCOPE_ID)
+
+fun resetPresentationScope() {
+    KoinPlatform.getKoin().getScopeOrNull(PRESENTATION_SCOPE_ID)?.close()
+}

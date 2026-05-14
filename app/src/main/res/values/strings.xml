@@ -319,6 +319,11 @@
     <!-- endregion -->
     <!-- region Preferences Screen -->
     <string name="preferences_screen_title">Preferences</string>
+    <string name="preferences_system_colors">Use System Colors</string>
+    <string name="preferences_system_colors_description">Follow Android 12+ wallpaper colors</string>
+    <string name="preferences_theme_mode">Theme Mode</string>
+    <string name="preferences_oled_dark_mode">OLED Dark Mode</string>
+    <string name="preferences_oled_dark_mode_description">Pure black backgrounds in dark mode</string>
     <string name="preferences_theme_label">Theme</string>
     <string name="preferences_language_label">Language</string>
     <string name="preferences_theme_option_light">Light</string>

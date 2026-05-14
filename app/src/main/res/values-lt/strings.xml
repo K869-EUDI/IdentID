@@ -326,9 +326,15 @@
     <!-- region Preferences Screen -->
     <string name="preferences_screen_title">Nuostatos</string>
     <string name="preferences_theme_label">Tema</string>
+    <string name="preferences_system_colors">Naudoti Numatytasias Spalvas</string>
+    <string name="preferences_system_colors_description">Sekti Android 12+ numatytomis spalvomis</string>
+    <string name="preferences_theme_mode">Sąsajos režimas</string>
+    <string name="preferences_oled_dark_mode">OLED Tamsus Režimas</string>
+    <string name="preferences_oled_dark_mode_description">Sodrios juodos spalvos tamsiame režime</string>
     <string name="preferences_language_label">Kalba</string>
-    <string name="preferences_theme_option_light">Šviesi</string>
-    <string name="preferences_theme_option_dark">Tamsi</string>
+    <string name="preferences_theme_option_light">Šviesus</string>
+    <string name="preferences_theme_option_dark">Tamsus</string>
+    <string name="preferences_theme_option_system_default">Įrenginio</string>
     <string name="preferences_theme_customization_label">Temos pritaikymas</string>
     <string name="preferences_theme_customization_supporting_text">Spalvos, stiliai ir OLED režimas</string>
     <string name="preferences_dynamic_color_supporting_text">Naudoti sistemos spalvas („Android 12+“)</string>
@@ -584,7 +590,7 @@
     <string name="issuance_add_document_deferred_success_description">Jūsų dokumentas buvo užsakytas. Kai jis bus išduotas į jūsų piniginę, gausite pranešimą.</string>
     <string name="issuance_add_document_deferred_success_primary_button_text">@string/generic_ok</string>
     <string name="issuance_add_document_search_hint">Ieškoti dokumento</string>
-    <string name="issuance_add_document_pid_combined">Kombinuotas PID</string>
+    <string name="issuance_add_document_pid_combined">Asmens Dokumentas</string>
     <!--endregion-->
     <!-- region Issuance Success Screen -->
     <string name="issuance_success_header_description">Sėkmingai pridėjote šiuos dokumentus į savo piniginę</string>

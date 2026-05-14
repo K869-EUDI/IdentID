@@ -150,6 +150,7 @@ class AddDocumentInteractorImpl(
                                         listOf(
                                             AddDocumentUi(
                                                 credentialIssuerId = issuer,
+                                                credentialIssuerName = pidDocs.first().credentialIssuerName,
                                                 configurationIds = pidIds,
                                                 itemData =
                                                     ListItemDataUi(
@@ -176,6 +177,7 @@ class AddDocumentInteractorImpl(
                                     otherDocs.map { doc ->
                                         AddDocumentUi(
                                             credentialIssuerId = issuer,
+                                            credentialIssuerName = doc.credentialIssuerName,
                                             configurationIds = listOf(doc.configurationId),
                                             itemData =
                                                 ListItemDataUi(

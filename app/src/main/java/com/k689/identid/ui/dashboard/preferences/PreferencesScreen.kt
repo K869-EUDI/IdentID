@@ -36,6 +36,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -183,6 +184,26 @@ private fun ThemeSection(
                     WrapIcon(
                         iconData = if (expanded) AppIcons.KeyboardArrowUp else AppIcons.KeyboardArrowDown,
                         customTint = MaterialTheme.colorScheme.onSurfaceVariant,
+                    // Dynamic Color toggle
+                    WrapListItem(
+                        item =
+                            ListItemDataUi(
+                                itemId = "dynamic_color",
+                                mainContentData =
+                                    ListItemMainContentDataUi.Text(
+                                        text = stringResource(R.string.preferences_system_colors),
+                                    ),
+                                supportingText = stringResource(R.string.preferences_system_colors_description),
+                                trailingContentData =
+                                    ListItemTrailingContentDataUi.Switch(
+                                        switchData =
+                                            SwitchDataUi(
+                                                isChecked = state.useDynamicColor,
+                                            ),
+                                    ),
+                            ),
+                        onItemClick = { viewModel.setEvent(Event.OnUseDynamicColorChanged(!state.useDynamicColor)) },
+                        colors = CardDefaults.cardColors(containerColor = Color.Transparent),
                     )
 
                     DropdownMenu(
@@ -204,6 +225,28 @@ private fun ThemeSection(
                                         )
                                     }
                                 },
+                        Box(
+                            modifier =
+                                Modifier
+                                    .menuAnchor(ExposedDropdownMenuAnchorType.PrimaryNotEditable)
+                                    .fillMaxWidth(),
+                        ) {
+                            WrapListItem(
+                                item =
+                                    ListItemDataUi(
+                                        itemId = "theme_mode",
+                                        mainContentData =
+                                            ListItemMainContentDataUi.Text(
+                                                text = stringResource(R.string.preferences_theme_mode),
+                                            ),
+                                        supportingText = state.themeOptions[state.selectedTheme.ordinal].second,
+                                        trailingContentData =
+                                            ListItemTrailingContentDataUi.Icon(
+                                                iconData = AppIcons.KeyboardArrowDown,
+                                            ),
+                                    ),
+                                onItemClick = { themeExpanded = true },
+                                colors = CardDefaults.cardColors(containerColor = Color.Transparent),
                             )
                         }
                     }
@@ -253,6 +296,65 @@ private fun LanguageSection(
                         iconData = if (expanded) AppIcons.KeyboardArrowUp else AppIcons.KeyboardArrowDown,
                         customTint = MaterialTheme.colorScheme.onSurfaceVariant,
                     )
+                    // OLED Mode toggle
+                    WrapListItem(
+                        item =
+                            ListItemDataUi(
+                                itemId = "oled_mode",
+                                mainContentData =
+                                    ListItemMainContentDataUi.Text(
+                                        text = stringResource(R.string.preferences_oled_dark_mode),
+                                    ),
+                                supportingText = stringResource(R.string.preferences_oled_dark_mode_description),
+                                trailingContentData =
+                                    ListItemTrailingContentDataUi.Switch(
+                                        switchData =
+                                            SwitchDataUi(
+                                                isChecked = state.isOledMode,
+                                            ),
+                                    ),
+                            ),
+                        onItemClick = { viewModel.setEvent(Event.OnOledModeChanged(!state.isOledMode)) },
+                        colors = CardDefaults.cardColors(containerColor = Color.Transparent),
+                    )
+                }
+            }
+
+            VSpacer.Large()
+
+            // Language section
+            SectionHeader(title = state.languageLabel)
+
+            WrapCard {
+                ExposedDropdownMenuBox(
+                    expanded = languageExpanded,
+                    onExpandedChange = { languageExpanded = !languageExpanded },
+                    modifier = Modifier.fillMaxWidth(),
+                ) {
+                    Box(
+                        modifier =
+                            Modifier
+                                .menuAnchor(ExposedDropdownMenuAnchorType.PrimaryNotEditable)
+                                .fillMaxWidth(),
+                    ) {
+                        WrapListItem(
+                            item =
+                                ListItemDataUi(
+                                    itemId = "language_selection",
+                                    mainContentData =
+                                        ListItemMainContentDataUi.Text(
+                                            text = stringResource(R.string.preferences_language_label),
+                                        ),
+                                    supportingText = AppLanguage.entries[state.selectedLanguage.ordinal].displayName,
+                                    trailingContentData =
+                                        ListItemTrailingContentDataUi.Icon(
+                                            iconData = AppIcons.KeyboardArrowDown,
+                                        ),
+                                ),
+                            onItemClick = { languageExpanded = true },
+                            colors = CardDefaults.cardColors(containerColor = Color.Transparent),
+                        )
+                    }
 
                     DropdownMenu(
                         expanded = expanded,

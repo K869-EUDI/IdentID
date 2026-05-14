@@ -19,9 +19,17 @@ package com.k689.identid.ui.dashboard.home
 import android.Manifest
 import android.content.Context
 import android.os.Build
+import androidx.compose.animation.core.RepeatMode
+import androidx.compose.animation.core.animateFloat
+import androidx.compose.animation.core.infiniteRepeatable
+import androidx.compose.animation.core.rememberInfiniteTransition
+import androidx.compose.animation.core.tween
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
@@ -159,7 +167,7 @@ fun HomeScreen(
         },
     ) {
         ContentScreen(
-            isLoading = state.isLoading,
+            isLoading = false,
             navigatableAction = ScreenNavigateAction.NONE,
             onBack = { context.finish() },
         ) { paddingValues ->
@@ -199,7 +207,7 @@ fun HomeScreen(
                                 )
                             }
 
-                            if (displayedTransactions.isEmpty()) {
+                            if (displayedTransactions.isEmpty() && !state.isLoading) {
                                 item(key = "empty_transactions") {
                                     Box(
                                         modifier =
@@ -214,6 +222,10 @@ fun HomeScreen(
                                             modifier = Modifier.align(Alignment.Center),
                                         )
                                     }
+                                }
+                            } else if (displayedTransactions.isEmpty() && state.isLoading) {
+                                items(3, key = { "skeleton_trans_$it" }) {
+                                    TransactionSkeletonItem()
                                 }
                             } else {
                                 items(
@@ -471,20 +483,23 @@ private fun Content(
                     bottom = paddingValues.calculateBottomPadding(),
                 ).verticalScroll(scrollState),
     ) {
-        Text(
-            text = state.welcomeUserMessage,
-            style =
-                MaterialTheme.typography.headlineMedium.copy(
-                    color = MaterialTheme.colorScheme.onSurface,
-                ),
-            modifier =
-                Modifier.padding(
-                    start = SPACING_EXTRA_LARGE.dp,
-                    end = SPACING_EXTRA_LARGE.dp,
-                    top = SPACING_SMALL.dp,
-                    bottom = SPACING_EXTRA_LARGE.dp,
-                ),
-        )
+        if (state.isLoading) {
+            HomeSkeleton()
+        } else {
+            Text(
+                text = state.welcomeUserMessage,
+                style =
+                    MaterialTheme.typography.headlineMedium.copy(
+                        color = MaterialTheme.colorScheme.onSurface,
+                    ),
+                modifier =
+                    Modifier.padding(
+                        start = SPACING_EXTRA_LARGE.dp,
+                        end = SPACING_EXTRA_LARGE.dp,
+                        top = SPACING_SMALL.dp,
+                        bottom = SPACING_EXTRA_LARGE.dp,
+                    ),
+            )
 
         HorizontalPager(
             state = pagerState,
@@ -545,6 +560,7 @@ private fun Content(
                 )
             }
         }
+        } // else
     }
 
     if (state.bleAvailability == BleAvailability.NO_PERMISSION) {
@@ -578,6 +594,104 @@ private fun Content(
                     }
                 }
             }.collect()
+    }
+}
+
+@Composable
+private fun HomeSkeleton() {
+    val infiniteTransition = rememberInfiniteTransition(label = "skeleton")
+    val alpha by infiniteTransition.animateFloat(
+        initialValue = 0.15f,
+        targetValue = 0.4f,
+        animationSpec = infiniteRepeatable(
+            animation = tween(durationMillis = 900),
+            repeatMode = RepeatMode.Reverse,
+        ),
+        label = "skeleton_alpha",
+    )
+    val skeletonColor = MaterialTheme.colorScheme.onSurface.copy(alpha = alpha)
+
+    // Welcome text skeleton
+    Box(
+        modifier = Modifier
+            .padding(
+                start = SPACING_EXTRA_LARGE.dp,
+                end = SPACING_EXTRA_LARGE.dp,
+                top = SPACING_SMALL.dp,
+                bottom = SPACING_EXTRA_LARGE.dp,
+            )
+            .width(180.dp)
+            .height(28.dp)
+            .clip(RoundedCornerShape(8.dp))
+            .background(skeletonColor),
+    )
+
+    // Document card skeleton
+    Box(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(horizontal = 32.dp)
+            .height(220.dp)
+            .clip(RoundedCornerShape(24.dp))
+            .background(skeletonColor),
+    )
+}
+
+@Composable
+private fun TransactionSkeletonItem() {
+    val infiniteTransition = rememberInfiniteTransition(label = "trans_skeleton")
+    val alpha by infiniteTransition.animateFloat(
+        initialValue = 0.15f,
+        targetValue = 0.4f,
+        animationSpec = infiniteRepeatable(
+            animation = tween(durationMillis = 900),
+            repeatMode = RepeatMode.Reverse,
+        ),
+        label = "trans_skeleton_alpha",
+    )
+    val skeletonColor = MaterialTheme.colorScheme.onSurface.copy(alpha = alpha)
+
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(horizontal = SPACING_LARGE.dp, vertical = 12.dp),
+        verticalAlignment = Alignment.CenterVertically,
+    ) {
+        // Icon placeholder
+        Box(
+            modifier = Modifier
+                .size(40.dp)
+                .clip(RoundedCornerShape(12.dp))
+                .background(skeletonColor),
+        )
+        Spacer(modifier = Modifier.width(12.dp))
+        Column(modifier = Modifier.weight(1f)) {
+            // Title line
+            Box(
+                modifier = Modifier
+                    .width(140.dp)
+                    .height(14.dp)
+                    .clip(RoundedCornerShape(4.dp))
+                    .background(skeletonColor),
+            )
+            Spacer(modifier = Modifier.height(8.dp))
+            // Subtitle line
+            Box(
+                modifier = Modifier
+                    .width(90.dp)
+                    .height(12.dp)
+                    .clip(RoundedCornerShape(4.dp))
+                    .background(skeletonColor),
+            )
+        }
+        // Trailing placeholder
+        Box(
+            modifier = Modifier
+                .width(50.dp)
+                .height(14.dp)
+                .clip(RoundedCornerShape(4.dp))
+                .background(skeletonColor),
+        )
     }
 }
 

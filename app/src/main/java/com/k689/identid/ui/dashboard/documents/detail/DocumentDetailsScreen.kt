@@ -301,7 +301,6 @@ private fun Content(
                                 .padding(vertical = SPACING_SMALL.dp),
                         state = state,
                         info = safeDocumentCredentialsInfo,
-                        onUpdateClicked = { onEventSend(Event.DocumentCredentialsSectionPrimaryButtonPressed) },
                     )
                     VSpacer.ExtraLarge()
                 }
@@ -327,6 +326,7 @@ private fun Content(
                         issuerSectionTitle = stringResource(R.string.document_details_issuer_section_text),
                         issuerName = state.issuerName,
                         issuerLogo = state.issuerLogo,
+                        reissueButtonText = state.documentCredentialsInfoUi?.expandedInfo?.updateNowButtonText,
                     )
                 }
             }
@@ -376,6 +376,7 @@ private fun FauxModalDetailsPanel(
     issuerSectionTitle: String,
     issuerName: String?,
     issuerLogo: URI?,
+    reissueButtonText: String?,
 ) {
     WrapCard(
         modifier = modifier,
@@ -428,6 +429,7 @@ private fun FauxModalDetailsPanel(
             }
 
             ButtonsSection(
+                reissueButtonText = reissueButtonText,
                 onEventSend = onEventSend,
             )
         }
@@ -519,10 +521,8 @@ private fun IssuerDetails(
 private fun DocumentCredentialsSection(
     modifier: Modifier = Modifier,
     state: State,
-    onUpdateClicked: () -> Unit,
     info: DocumentCredentialsInfoUi,
 ) {
-    val expandedInfo = info.expandedInfo
     val credentialsInfo = "${info.availableCredentials} / ${info.totalCredentials}"
     val supportingLines =
         buildList {
@@ -543,27 +543,6 @@ private fun DocumentCredentialsSection(
             status = state.documentDetailsUi?.documentIssuanceStateUi?.toStatusLabel(),
             onClick = null,
         )
-
-        expandedInfo?.updateNowButtonText?.let { safeUpdateNowButtonText ->
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.Start,
-            ) {
-                WrapButton(
-                    modifier = Modifier.wrapContentWidth(),
-                    buttonConfig =
-                        ButtonConfig(
-                            type = ButtonType.PRIMARY,
-                            onClick = onUpdateClicked,
-                        ),
-                ) {
-                    Text(
-                        text = safeUpdateNowButtonText,
-                        style = MaterialTheme.typography.labelLarge,
-                    )
-                }
-            }
-        }
     }
 }
 
@@ -639,7 +618,10 @@ private fun String.toSentenceCaseHeading(): String {
 }
 
 @Composable
-private fun ButtonsSection(onEventSend: (Event) -> Unit) {
+private fun ButtonsSection(
+    reissueButtonText: String?,
+    onEventSend: (Event) -> Unit,
+) {
     Column(
         modifier =
             Modifier
@@ -647,7 +629,24 @@ private fun ButtonsSection(onEventSend: (Event) -> Unit) {
                 .padding(
                     vertical = SPACING_MEDIUM.dp,
                 ).navigationBarsPadding(),
+        verticalArrangement = Arrangement.spacedBy(SPACING_SMALL.dp),
     ) {
+        reissueButtonText?.let { safeReissueButtonText ->
+            WrapButton(
+                modifier = Modifier.fillMaxWidth(),
+                buttonConfig =
+                    ButtonConfig(
+                        type = ButtonType.PRIMARY,
+                        onClick = { onEventSend(Event.DocumentCredentialsSectionPrimaryButtonPressed) },
+                    ),
+            ) {
+                Text(
+                    text = safeReissueButtonText,
+                    style = MaterialTheme.typography.labelLarge,
+                )
+            }
+        }
+
         WrapButton(
             modifier =
                 Modifier

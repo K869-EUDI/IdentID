@@ -21,6 +21,7 @@ import com.k689.identid.R
 import com.k689.identid.config.VciConfig
 import com.k689.identid.config.WalletCoreConfig
 import com.k689.identid.controller.authentication.DeviceAuthenticationResult
+import com.k689.identid.extension.business.getLocalizedString
 import com.k689.identid.extension.business.safeAsync
 import com.k689.identid.extension.core.documentIdentifier
 import com.k689.identid.extension.core.getLocalizedDisplayName
@@ -263,6 +264,13 @@ class WalletCoreDocumentsControllerImpl(
                 val documents: List<ScopedDocumentDomain> =
                     metadata.flatMap { (vciConfig, meta) ->
                         meta.credentialConfigurationsSupported.map { (id, config) ->
+                            val issuerName =
+                                meta.display.getLocalizedString(
+                                    userLocale = locale,
+                                    localeExtractor = { it.locale },
+                                    stringExtractor = { it.name },
+                                    fallback = vciConfig.config.issuerUrl.toUri().host ?: vciConfig.config.issuerUrl,
+                                )
 
                             val name: String =
                                 config.credentialMetadata.getLocalizedDisplayName(
@@ -288,6 +296,7 @@ class WalletCoreDocumentsControllerImpl(
                                 name = name,
                                 configurationId = id.value,
                                 credentialIssuerId = vciConfig.config.issuerUrl,
+                                credentialIssuerName = issuerName,
                                 credentialIssuerOrder = vciConfig.order,
                                 formatType = formatType,
                                 isPid = isPid,
