@@ -22,6 +22,7 @@ import com.k689.identid.controller.core.WalletCorePresentationController
 import com.k689.identid.extension.business.ifEmptyOrNull
 import com.k689.identid.extension.business.safeAsync
 import com.k689.identid.extension.common.toExpandableListItems
+import com.k689.identid.extension.core.localizedDocumentName
 import com.k689.identid.extension.core.toClaimPath
 import com.k689.identid.interactor.common.ScopedPresentationInteractor
 import com.k689.identid.interactor.common.ScopedPresentationInteractorDelegate
@@ -104,7 +105,10 @@ class ProximitySuccessInteractorImpl(
                                 header =
                                     ListItemDataUi(
                                         itemId = documentId,
-                                        mainContentData = ListItemMainContentDataUi.Text(text = document.name),
+                                        mainContentData =
+                                            ListItemMainContentDataUi.Text(
+                                                text = document.localizedDocumentName(resourceProvider.getLocale()),
+                                            ),
                                         supportingText = resourceProvider.getString(R.string.document_success_collapsed_supporting_text),
                                         trailingContentData =
                                             ListItemTrailingContentDataUi.Icon(

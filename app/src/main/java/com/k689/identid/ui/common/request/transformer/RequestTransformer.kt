@@ -18,6 +18,7 @@ package com.k689.identid.ui.common.request.transformer
 
 import com.k689.identid.R
 import com.k689.identid.extension.common.toSelectiveExpandableListItems
+import com.k689.identid.extension.core.localizedDocumentName
 import com.k689.identid.extension.core.toClaimPath
 import com.k689.identid.extension.core.toClaimPaths
 import com.k689.identid.model.core.ClaimPathDomain
@@ -84,7 +85,7 @@ object RequestTransformer {
                 if (domainClaims.isNotEmpty()) {
                     resultList.add(
                         DocumentPayloadDomain(
-                            docName = storageDocument.name,
+                            docName = storageDocument.localizedDocumentName(resourceProvider.getLocale()),
                             docId = storageDocument.id,
                             domainDocFormat =
                                 DomainDocumentFormat.getFormat(
