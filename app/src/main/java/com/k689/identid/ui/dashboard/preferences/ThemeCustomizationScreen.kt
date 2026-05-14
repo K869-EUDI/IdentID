@@ -100,7 +100,10 @@ fun ThemeCustomizationScreen(
         viewModel.effect
             .onEach { effect ->
                 when (effect) {
-                    is Effect.Navigation.Pop -> navController.popBackStack()
+                    is Effect.Navigation.Pop -> {
+                        navController.popBackStack()
+                    }
+
                     else -> {}
                 }
             }.collect()
@@ -115,10 +118,11 @@ private fun ThemeCustomizationContent(
 ) {
     LazyColumn(
         modifier = Modifier.fillMaxSize(),
-        contentPadding = PaddingValues(
-            top = paddingValues.calculateTopPadding() + SPACING_MEDIUM.dp,
-            bottom = paddingValues.calculateBottomPadding() + SPACING_MEDIUM.dp,
-        ),
+        contentPadding =
+            PaddingValues(
+                top = paddingValues.calculateTopPadding() + SPACING_MEDIUM.dp,
+                bottom = paddingValues.calculateBottomPadding() + SPACING_MEDIUM.dp,
+            ),
     ) {
         item {
             LargeThemePreview(state)
@@ -127,14 +131,14 @@ private fun ThemeCustomizationContent(
 
         item {
             ListItem(
-                headlineContent = { Text(stringResource(R.string.preferences_dynamic_color_label)) },
-                supportingContent = { Text(stringResource(R.string.preferences_dynamic_color_supporting_text)) },
+                headlineContent = { Text(stringResource(R.string.preferences_system_colors)) },
+                supportingContent = { Text(stringResource(R.string.preferences_system_colors_description)) },
                 trailingContent = {
                     Switch(
                         checked = state.useDynamicColor,
-                        onCheckedChange = { onEvent(Event.OnUseDynamicColorChanged(it)) }
+                        onCheckedChange = { onEvent(Event.OnUseDynamicColorChanged(it)) },
                     )
-                }
+                },
             )
         }
 
@@ -159,17 +163,17 @@ private fun ThemeCustomizationContent(
             VSpacer.Medium()
             HorizontalDivider(
                 modifier = Modifier.padding(horizontal = SPACING_MEDIUM.dp, vertical = SPACING_MEDIUM.dp),
-                color = MaterialTheme.colorScheme.outlineVariant.copy(alpha = 0.5f)
+                color = MaterialTheme.colorScheme.outlineVariant.copy(alpha = 0.5f),
             )
             ListItem(
                 headlineContent = { Text(stringResource(R.string.preferences_oled_mode_label)) },
-                supportingContent = { Text(stringResource(R.string.preferences_oled_mode_supporting_text)) },
+                supportingContent = { Text(stringResource(R.string.preferences_oled_dark_mode_description)) },
                 trailingContent = {
                     Switch(
                         checked = state.isOledMode,
-                        onCheckedChange = { onEvent(Event.OnOledModeChanged(it)) }
+                        onCheckedChange = { onEvent(Event.OnOledModeChanged(it)) },
                     )
-                }
+                },
             )
         }
     }
@@ -178,24 +182,28 @@ private fun ThemeCustomizationContent(
 @Composable
 private fun LargeThemePreview(state: State) {
     Column(
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(horizontal = SPACING_MEDIUM.dp),
+        modifier =
+            Modifier
+                .fillMaxWidth()
+                .padding(horizontal = SPACING_MEDIUM.dp),
         horizontalAlignment = Alignment.CenterHorizontally,
     ) {
         ElevatedCard(
-            modifier = Modifier
-                .fillMaxWidth()
-                .aspectRatio(1.1f),
+            modifier =
+                Modifier
+                    .fillMaxWidth()
+                    .aspectRatio(1.1f),
             shape = RoundedCornerShape(32.dp),
-            colors = CardDefaults.elevatedCardColors(
-                containerColor = MaterialTheme.colorScheme.surfaceContainerHigh
-            ),
+            colors =
+                CardDefaults.elevatedCardColors(
+                    containerColor = MaterialTheme.colorScheme.surfaceContainerHigh,
+                ),
         ) {
             Box(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .padding(24.dp),
+                modifier =
+                    Modifier
+                        .fillMaxSize()
+                        .padding(24.dp),
             ) {
                 Column(verticalArrangement = Arrangement.spacedBy(16.dp)) {
                     // Mock Status Bar
@@ -222,11 +230,18 @@ private fun LargeThemePreview(state: State) {
                     ElevatedCard(
                         modifier = Modifier.fillMaxWidth(),
                         colors = CardDefaults.elevatedCardColors(containerColor = MaterialTheme.colorScheme.primaryContainer),
-                        shape = RoundedCornerShape(16.dp)
+                        shape = RoundedCornerShape(16.dp),
                     ) {
                         Column(modifier = Modifier.padding(16.dp)) {
                             Text(text = stringResource(R.string.preferences_design_preview_primary_accent), style = MaterialTheme.typography.titleSmall, color = MaterialTheme.colorScheme.onPrimaryContainer)
-                            Box(modifier = Modifier.padding(top = 4.dp).size(60.dp, 8.dp).clip(CircleShape).background(MaterialTheme.colorScheme.onPrimaryContainer.copy(alpha = 0.3f)))
+                            Box(
+                                modifier =
+                                    Modifier
+                                        .padding(top = 4.dp)
+                                        .size(60.dp, 8.dp)
+                                        .clip(CircleShape)
+                                        .background(MaterialTheme.colorScheme.onPrimaryContainer.copy(alpha = 0.3f)),
+                            )
                         }
                     }
 
@@ -234,24 +249,38 @@ private fun LargeThemePreview(state: State) {
                         ElevatedCard(
                             modifier = Modifier.weight(1f),
                             colors = CardDefaults.elevatedCardColors(containerColor = MaterialTheme.colorScheme.secondaryContainer),
-                            shape = RoundedCornerShape(16.dp)
+                            shape = RoundedCornerShape(16.dp),
                         ) {
                             Box(modifier = Modifier.padding(16.dp), contentAlignment = Alignment.CenterStart) {
                                 Column {
                                     Text(text = stringResource(R.string.preferences_design_preview_secondary), style = MaterialTheme.typography.labelSmall, color = MaterialTheme.colorScheme.onSecondaryContainer)
-                                    Box(modifier = Modifier.padding(top = 4.dp).size(30.dp, 6.dp).clip(CircleShape).background(MaterialTheme.colorScheme.onSecondaryContainer.copy(alpha = 0.3f)))
+                                    Box(
+                                        modifier =
+                                            Modifier
+                                                .padding(top = 4.dp)
+                                                .size(30.dp, 6.dp)
+                                                .clip(CircleShape)
+                                                .background(MaterialTheme.colorScheme.onSecondaryContainer.copy(alpha = 0.3f)),
+                                    )
                                 }
                             }
                         }
                         ElevatedCard(
                             modifier = Modifier.weight(1f),
                             colors = CardDefaults.elevatedCardColors(containerColor = MaterialTheme.colorScheme.tertiaryContainer),
-                            shape = RoundedCornerShape(16.dp)
+                            shape = RoundedCornerShape(16.dp),
                         ) {
                             Box(modifier = Modifier.padding(16.dp), contentAlignment = Alignment.CenterStart) {
                                 Column {
                                     Text(text = stringResource(R.string.preferences_design_preview_tertiary), style = MaterialTheme.typography.labelSmall, color = MaterialTheme.colorScheme.onTertiaryContainer)
-                                    Box(modifier = Modifier.padding(top = 4.dp).size(30.dp, 6.dp).clip(CircleShape).background(MaterialTheme.colorScheme.onTertiaryContainer.copy(alpha = 0.3f)))
+                                    Box(
+                                        modifier =
+                                            Modifier
+                                                .padding(top = 4.dp)
+                                                .size(30.dp, 6.dp)
+                                                .clip(CircleShape)
+                                                .background(MaterialTheme.colorScheme.onTertiaryContainer.copy(alpha = 0.3f)),
+                                    )
                                 }
                             }
                         }
@@ -259,17 +288,19 @@ private fun LargeThemePreview(state: State) {
 
                     // Mock Bottom Navigation
                     Row(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(top = 8.dp),
+                        modifier =
+                            Modifier
+                                .fillMaxWidth()
+                                .padding(top = 8.dp),
                         horizontalArrangement = Arrangement.SpaceEvenly,
                     ) {
                         repeat(4) { i ->
                             Box(
-                                modifier = Modifier
-                                    .size(36.dp)
-                                    .clip(CircleShape)
-                                    .background(if (i == 0) MaterialTheme.colorScheme.primary.copy(alpha = 0.2f) else MaterialTheme.colorScheme.surfaceVariant)
+                                modifier =
+                                    Modifier
+                                        .size(36.dp)
+                                        .clip(CircleShape)
+                                        .background(if (i == 0) MaterialTheme.colorScheme.primary.copy(alpha = 0.2f) else MaterialTheme.colorScheme.surfaceVariant),
                             )
                         }
                     }
@@ -288,11 +319,12 @@ private fun ColorStyleSelection(
 
     Column {
         SectionTitle(
-            modifier = Modifier.padding(
-                start = SPACING_MEDIUM.dp,
-                end = SPACING_MEDIUM.dp,
-                bottom = SPACING_SMALL.dp,
-            ),
+            modifier =
+                Modifier.padding(
+                    start = SPACING_MEDIUM.dp,
+                    end = SPACING_MEDIUM.dp,
+                    bottom = SPACING_SMALL.dp,
+                ),
             text = stringResource(R.string.preferences_palette_style_label),
         )
 
@@ -336,15 +368,19 @@ private fun ColorStyleSelection(
 }
 
 @Composable
-private fun PresetColorSelection(state: State, onEvent: (Event) -> Unit) {
-    val presets = listOf(
-        PresetColor(225f, 0.8f, 0.85f), // Blue
-        PresetColor(150f, 0.7f, 0.8f),  // Green
-        PresetColor(280f, 0.65f, 0.85f), // Purple
-        PresetColor(30f, 0.85f, 0.95f),  // Orange
-        PresetColor(0f, 0.75f, 0.9f),    // Red
-        PresetColor(330f, 0.7f, 0.9f)    // Pink
-    )
+private fun PresetColorSelection(
+    state: State,
+    onEvent: (Event) -> Unit,
+) {
+    val presets =
+        listOf(
+            PresetColor(225f, 0.8f, 0.85f), // Blue
+            PresetColor(150f, 0.7f, 0.8f), // Green
+            PresetColor(280f, 0.65f, 0.85f), // Purple
+            PresetColor(30f, 0.85f, 0.95f), // Orange
+            PresetColor(0f, 0.75f, 0.9f), // Red
+            PresetColor(330f, 0.7f, 0.9f), // Pink
+        )
 
     Column {
         SectionTitle(
@@ -357,33 +393,46 @@ private fun PresetColorSelection(state: State, onEvent: (Event) -> Unit) {
         ) {
             items(presets) { preset ->
                 val presetColor = Color(android.graphics.Color.HSVToColor(floatArrayOf(preset.hue, preset.saturation, preset.value)))
-                val isSelected = (state.seedHue - preset.hue).let { it * it } < 1f &&
+                val isSelected =
+                    (state.seedHue - preset.hue).let { it * it } < 1f &&
                         (state.seedSaturation - preset.saturation).let { it * it } < 0.001f &&
                         (state.seedValue - preset.value).let { it * it } < 0.001f
 
                 Box(
-                    modifier = Modifier
-                        .size(44.dp)
-                        .clip(CircleShape)
-                        .background(presetColor)
-                        .clickable { onEvent(Event.OnPresetColorSelected(preset.hue, preset.saturation, preset.value)) }
-                        .then(
-                            if (isSelected) Modifier.border(
-                                3.dp,
-                                MaterialTheme.colorScheme.onSurface,
-                                CircleShape
-                            ) else Modifier
-                        )
+                    modifier =
+                        Modifier
+                            .size(44.dp)
+                            .clip(CircleShape)
+                            .background(presetColor)
+                            .clickable { onEvent(Event.OnPresetColorSelected(preset.hue, preset.saturation, preset.value)) }
+                            .then(
+                                if (isSelected) {
+                                    Modifier.border(
+                                        3.dp,
+                                        MaterialTheme.colorScheme.onSurface,
+                                        CircleShape,
+                                    )
+                                } else {
+                                    Modifier
+                                },
+                            ),
                 )
             }
         }
     }
 }
 
-private data class PresetColor(val hue: Float, val saturation: Float, val value: Float)
+private data class PresetColor(
+    val hue: Float,
+    val saturation: Float,
+    val value: Float,
+)
 
 @Composable
-private fun ColorTuningSelection(state: State, onEvent: (Event) -> Unit) {
+private fun ColorTuningSelection(
+    state: State,
+    onEvent: (Event) -> Unit,
+) {
     Column(modifier = Modifier.padding(horizontal = SPACING_MEDIUM.dp)) {
         SectionTitle(
             modifier = Modifier.padding(bottom = SPACING_SMALL.dp),
@@ -428,7 +477,7 @@ private fun TuningSlider(
         Row(
             modifier = Modifier.fillMaxWidth(),
             horizontalArrangement = Arrangement.SpaceBetween,
-            verticalAlignment = Alignment.Bottom
+            verticalAlignment = Alignment.Bottom,
         ) {
             Text(text = label, style = MaterialTheme.typography.labelLarge, color = MaterialTheme.colorScheme.onSurface)
             Text(text = String.format(Locale.getDefault(), "%.0f", value), style = MaterialTheme.typography.labelSmall, color = MaterialTheme.colorScheme.primary, fontWeight = FontWeight.Bold)
@@ -446,14 +495,15 @@ private fun TuningSlider(
 private fun ThemeCustomizationScreenPreview() {
     PreviewTheme {
         ThemeCustomizationContent(
-            state = State(
-                screenTitle = "Customize",
-                useDynamicColor = false,
-                selectedThemeStyle = ThemeStyle.EXPRESSIVE,
-                seedHue = 0f, // Red
-                seedSaturation = 0.8f,
-                seedValue = 0.9f
-            ),
+            state =
+                State(
+                    screenTitle = "Customize",
+                    useDynamicColor = false,
+                    selectedThemeStyle = ThemeStyle.EXPRESSIVE,
+                    seedHue = 0f, // Red
+                    seedSaturation = 0.8f,
+                    seedValue = 0.9f,
+                ),
             onEvent = {},
             paddingValues = PaddingValues(0.dp),
         )

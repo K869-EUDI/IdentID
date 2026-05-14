@@ -17,9 +17,9 @@
 package com.k689.identid.ui.dashboard.preferences
 
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
@@ -36,7 +36,6 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -124,10 +123,11 @@ private fun PreferencesContent(
 ) {
     LazyColumn(
         modifier = Modifier.fillMaxSize(),
-        contentPadding = PaddingValues(
-            top = paddingValues.calculateTopPadding() + SPACING_MEDIUM.dp,
-            bottom = paddingValues.calculateBottomPadding() + SPACING_MEDIUM.dp,
-        ),
+        contentPadding =
+            PaddingValues(
+                top = paddingValues.calculateTopPadding() + SPACING_MEDIUM.dp,
+                bottom = paddingValues.calculateBottomPadding() + SPACING_MEDIUM.dp,
+            ),
     ) {
         item {
             ThemeSection(state, onEvent)
@@ -175,84 +175,42 @@ private fun ThemeSection(
             text = stringResource(R.string.preferences_theme_label),
         )
 
-        ListItem(
-            modifier = Modifier.clickable { expanded = true },
-            headlineContent = { Text(stringResource(state.selectedTheme.labelRes)) },
-            supportingContent = { Text(stringResource(R.string.preferences_theme_label)) },
-            trailingContent = {
-                Row {
+        Box {
+            ListItem(
+                modifier = Modifier.clickable { expanded = true },
+                headlineContent = { Text(stringResource(state.selectedTheme.labelRes)) },
+                supportingContent = { Text(stringResource(R.string.preferences_theme_label)) },
+                trailingContent = {
                     WrapIcon(
                         iconData = if (expanded) AppIcons.KeyboardArrowUp else AppIcons.KeyboardArrowDown,
                         customTint = MaterialTheme.colorScheme.onSurfaceVariant,
-                    // Dynamic Color toggle
-                    WrapListItem(
-                        item =
-                            ListItemDataUi(
-                                itemId = "dynamic_color",
-                                mainContentData =
-                                    ListItemMainContentDataUi.Text(
-                                        text = stringResource(R.string.preferences_system_colors),
-                                    ),
-                                supportingText = stringResource(R.string.preferences_system_colors_description),
-                                trailingContentData =
-                                    ListItemTrailingContentDataUi.Switch(
-                                        switchData =
-                                            SwitchDataUi(
-                                                isChecked = state.useDynamicColor,
-                                            ),
-                                    ),
-                            ),
-                        onItemClick = { viewModel.setEvent(Event.OnUseDynamicColorChanged(!state.useDynamicColor)) },
-                        colors = CardDefaults.cardColors(containerColor = Color.Transparent),
                     )
+                },
+            )
 
-                    DropdownMenu(
-                        expanded = expanded,
-                        onDismissRequest = { expanded = false },
-                    ) {
-                        AppTheme.entries.forEach { theme ->
-                            DropdownMenuItem(
-                                text = { Text(stringResource(theme.labelRes)) },
-                                onClick = {
-                                    onEvent(Event.OnThemeSelected(theme))
-                                    expanded = false
-                                },
-                                trailingIcon = {
-                                    if (state.selectedTheme == theme) {
-                                        WrapIcon(
-                                            iconData = AppIcons.Check,
-                                            customTint = MaterialTheme.colorScheme.primary,
-                                        )
-                                    }
-                                },
-                        Box(
-                            modifier =
-                                Modifier
-                                    .menuAnchor(ExposedDropdownMenuAnchorType.PrimaryNotEditable)
-                                    .fillMaxWidth(),
-                        ) {
-                            WrapListItem(
-                                item =
-                                    ListItemDataUi(
-                                        itemId = "theme_mode",
-                                        mainContentData =
-                                            ListItemMainContentDataUi.Text(
-                                                text = stringResource(R.string.preferences_theme_mode),
-                                            ),
-                                        supportingText = state.themeOptions[state.selectedTheme.ordinal].second,
-                                        trailingContentData =
-                                            ListItemTrailingContentDataUi.Icon(
-                                                iconData = AppIcons.KeyboardArrowDown,
-                                            ),
-                                    ),
-                                onItemClick = { themeExpanded = true },
-                                colors = CardDefaults.cardColors(containerColor = Color.Transparent),
-                            )
-                        }
-                    }
+            DropdownMenu(
+                expanded = expanded,
+                onDismissRequest = { expanded = false },
+            ) {
+                AppTheme.entries.forEach { theme ->
+                    DropdownMenuItem(
+                        text = { Text(stringResource(theme.labelRes)) },
+                        onClick = {
+                            onEvent(Event.OnThemeSelected(theme))
+                            expanded = false
+                        },
+                        trailingIcon = {
+                            if (state.selectedTheme == theme) {
+                                WrapIcon(
+                                    iconData = AppIcons.Check,
+                                    customTint = MaterialTheme.colorScheme.primary,
+                                )
+                            }
+                        },
+                    )
                 }
-            },
-        )
+            }
+        }
 
         ListItem(
             modifier = Modifier.clickable { onEvent(Event.OnThemeCustomizationClicked) },
@@ -286,101 +244,42 @@ private fun LanguageSection(
             text = stringResource(R.string.preferences_language_label),
         )
 
-        ListItem(
-            modifier = Modifier.clickable { expanded = true },
-            headlineContent = { Text(stringResource(state.selectedLanguage.labelRes)) },
-            supportingContent = { Text(stringResource(R.string.preferences_language_label)) },
-            trailingContent = {
-                Row {
+        Box {
+            ListItem(
+                modifier = Modifier.clickable { expanded = true },
+                headlineContent = { Text(stringResource(state.selectedLanguage.labelRes)) },
+                supportingContent = { Text(stringResource(R.string.preferences_language_label)) },
+                trailingContent = {
                     WrapIcon(
                         iconData = if (expanded) AppIcons.KeyboardArrowUp else AppIcons.KeyboardArrowDown,
                         customTint = MaterialTheme.colorScheme.onSurfaceVariant,
                     )
-                    // OLED Mode toggle
-                    WrapListItem(
-                        item =
-                            ListItemDataUi(
-                                itemId = "oled_mode",
-                                mainContentData =
-                                    ListItemMainContentDataUi.Text(
-                                        text = stringResource(R.string.preferences_oled_dark_mode),
-                                    ),
-                                supportingText = stringResource(R.string.preferences_oled_dark_mode_description),
-                                trailingContentData =
-                                    ListItemTrailingContentDataUi.Switch(
-                                        switchData =
-                                            SwitchDataUi(
-                                                isChecked = state.isOledMode,
-                                            ),
-                                    ),
-                            ),
-                        onItemClick = { viewModel.setEvent(Event.OnOledModeChanged(!state.isOledMode)) },
-                        colors = CardDefaults.cardColors(containerColor = Color.Transparent),
+                },
+            )
+
+            DropdownMenu(
+                expanded = expanded,
+                onDismissRequest = { expanded = false },
+            ) {
+                AppLanguage.entries.forEach { language ->
+                    DropdownMenuItem(
+                        text = { Text(stringResource(language.labelRes)) },
+                        onClick = {
+                            onEvent(Event.OnLanguageSelected(language))
+                            expanded = false
+                        },
+                        trailingIcon = {
+                            if (state.selectedLanguage == language) {
+                                WrapIcon(
+                                    iconData = AppIcons.Check,
+                                    customTint = MaterialTheme.colorScheme.primary,
+                                )
+                            }
+                        },
                     )
                 }
             }
-
-            VSpacer.Large()
-
-            // Language section
-            SectionHeader(title = state.languageLabel)
-
-            WrapCard {
-                ExposedDropdownMenuBox(
-                    expanded = languageExpanded,
-                    onExpandedChange = { languageExpanded = !languageExpanded },
-                    modifier = Modifier.fillMaxWidth(),
-                ) {
-                    Box(
-                        modifier =
-                            Modifier
-                                .menuAnchor(ExposedDropdownMenuAnchorType.PrimaryNotEditable)
-                                .fillMaxWidth(),
-                    ) {
-                        WrapListItem(
-                            item =
-                                ListItemDataUi(
-                                    itemId = "language_selection",
-                                    mainContentData =
-                                        ListItemMainContentDataUi.Text(
-                                            text = stringResource(R.string.preferences_language_label),
-                                        ),
-                                    supportingText = AppLanguage.entries[state.selectedLanguage.ordinal].displayName,
-                                    trailingContentData =
-                                        ListItemTrailingContentDataUi.Icon(
-                                            iconData = AppIcons.KeyboardArrowDown,
-                                        ),
-                                ),
-                            onItemClick = { languageExpanded = true },
-                            colors = CardDefaults.cardColors(containerColor = Color.Transparent),
-                        )
-                    }
-
-                    DropdownMenu(
-                        expanded = expanded,
-                        onDismissRequest = { expanded = false },
-                    ) {
-                        AppLanguage.entries.forEach { language ->
-                            DropdownMenuItem(
-                                text = { Text(stringResource(language.labelRes)) },
-                                onClick = {
-                                    onEvent(Event.OnLanguageSelected(language))
-                                    expanded = false
-                                },
-                                trailingIcon = {
-                                    if (state.selectedLanguage == language) {
-                                        WrapIcon(
-                                            iconData = AppIcons.Check,
-                                            customTint = MaterialTheme.colorScheme.primary,
-                                        )
-                                    }
-                                },
-                            )
-                        }
-                    }
-                }
-            },
-        )
+        }
     }
 }
 
@@ -437,12 +336,13 @@ private fun WalletSection(onEvent: (Event) -> Unit) {
 private fun PreferencesScreenPreview() {
     PreviewTheme {
         PreferencesContent(
-            state = State(
-                screenTitle = "Preferences",
-                useDynamicColor = false
-            ),
+            state =
+                State(
+                    screenTitle = "Preferences",
+                    useDynamicColor = false,
+                ),
             onEvent = {},
-            paddingValues = PaddingValues(0.dp)
+            paddingValues = PaddingValues(0.dp),
         )
     }
 }
