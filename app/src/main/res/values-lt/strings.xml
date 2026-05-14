@@ -566,7 +566,7 @@
     <string name="issuance_add_document_deferred_success_description">Jūsų dokumentas buvo užsakytas. Kai jis bus išduotas į jūsų piniginę, gausite pranešimą.</string>
     <string name="issuance_add_document_deferred_success_primary_button_text">@string/generic_ok</string>
     <string name="issuance_add_document_search_hint">Ieškoti dokumento</string>
-    <string name="issuance_add_document_pid_combined">Kombinuotas PID</string>
+    <string name="issuance_add_document_pid_combined">Asmens Dokumentas</string>
     <!--endregion-->
     <!-- region Issuance Success Screen -->
     <string name="issuance_success_header_description">Sėkmingai pridėjote šiuos dokumentus į savo piniginę</string>
