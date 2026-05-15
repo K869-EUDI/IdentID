@@ -28,11 +28,10 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -40,6 +39,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.statusBarsPadding
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.pager.HorizontalPager
@@ -118,9 +118,9 @@ import com.k689.identid.ui.component.wrap.WrapIconButton
 import com.k689.identid.ui.component.wrap.WrapModalBottomSheet
 import com.k689.identid.ui.dashboard.documents.component.DocumentIdentityCard
 import com.k689.identid.ui.dashboard.documents.component.toCardIdentificationTag
-import com.k689.identid.ui.dashboard.loyaltycards.component.BarcodeVisual
 import com.k689.identid.ui.dashboard.home.components.DrawerMenuItem
 import com.k689.identid.ui.dashboard.home.components.HomeDrawer
+import com.k689.identid.ui.dashboard.loyaltycards.component.BarcodeVisual
 import com.k689.identid.ui.dashboard.transactions.model.TransactionStatusUi
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.channels.Channel
@@ -216,7 +216,7 @@ fun HomeScreen(
                                                 .padding(vertical = 64.dp),
                                     ) {
                                         Text(
-                                            text = "No recent transactions",
+                                            text = stringResource(R.string.home_screen_no_recent_transactions),
                                             style = MaterialTheme.typography.bodyLarge,
                                             color = MaterialTheme.colorScheme.onSurfaceVariant,
                                             modifier = Modifier.align(Alignment.Center),
@@ -254,7 +254,7 @@ fun HomeScreen(
                                                     ),
                                         ) {
                                             Text(
-                                                text = "Show all transactions",
+                                                text = stringResource(R.string.home_screen_show_all_transactions),
                                                 style = MaterialTheme.typography.labelLarge,
                                                 color = MaterialTheme.colorScheme.primary,
                                                 fontWeight = FontWeight.Bold,
@@ -501,66 +501,66 @@ private fun Content(
                     ),
             )
 
-        HorizontalPager(
-            state = pagerState,
-            modifier =
-                Modifier
-                    .fillMaxWidth()
-                    .height(246.dp),
-            contentPadding = PaddingValues(horizontal = 32.dp, vertical = 6.dp),
-            pageSpacing = 16.dp,
-            verticalAlignment = Alignment.CenterVertically,
-            beyondViewportPageCount = 1,
-        ) { page ->
-            if (page < recentDocs.size) {
-                val item = recentDocs[page]
-                when (item) {
-                    is HomeBookmarkedItem.Document -> {
-                        val doc = item.value
-                        val documentTitle = (doc.documentUi.uiData.mainContentData as? ListItemMainContentDataUi.Text)?.text ?: ""
-                        val categoryLabel = stringResource(doc.documentUi.documentCategory.stringResId)
+            HorizontalPager(
+                state = pagerState,
+                modifier =
+                    Modifier
+                        .fillMaxWidth()
+                        .height(246.dp),
+                contentPadding = PaddingValues(horizontal = 32.dp, vertical = 6.dp),
+                pageSpacing = 16.dp,
+                verticalAlignment = Alignment.CenterVertically,
+                beyondViewportPageCount = 1,
+            ) { page ->
+                if (page < recentDocs.size) {
+                    val item = recentDocs[page]
+                    when (item) {
+                        is HomeBookmarkedItem.Document -> {
+                            val doc = item.value
+                            val documentTitle = (doc.documentUi.uiData.mainContentData as? ListItemMainContentDataUi.Text)?.text ?: ""
+                            val categoryLabel = stringResource(doc.documentUi.documentCategory.stringResId)
 
-                        DocumentIdentityCard(
-                            title = documentTitle,
-                            identification = "$categoryLabel • ${doc.documentUi.documentIdentifier.toCardIdentificationTag()}",
-                            supportingLines =
-                                listOf(
-                                    stringResource(R.string.home_screen_document_usages_left, doc.usagesLeft),
-                                    stringResource(R.string.home_screen_document_expires, doc.expiresAt),
-                                ),
-                            customColor = doc.documentUi.customColor,
-                            onClick = { onEventSent(Event.DocumentClicked(doc.documentUi.uiData.itemId)) },
-                            modifier = Modifier.pagerCardTransform(page, pagerState.currentPage, pagerState.currentPageOffsetFraction),
-                        )
-                    }
-
-                    is HomeBookmarkedItem.LoyaltyCard -> {
-                        LoyaltyCardPagerCard(
-                            name = item.name,
-                            barcodeValue = item.barcodeValue,
-                            barcodeFormat = item.barcodeFormat,
-                            onClick = { onEventSent(Event.LoyaltyCardClicked(item.id)) },
-                            modifier = Modifier.pagerCardTransform(page, pagerState.currentPage, pagerState.currentPageOffsetFraction),
-                        )
-                    }
-                }
-            } else {
-                SeeAllDocumentsCard(
-                    recentDocsCount = recentDocs.size,
-                    hasAnyDocuments = state.allDocuments.isNotEmpty() || state.hasAnyLoyaltyCards,
-                    onClicked = {
-                        if (state.allDocuments.isEmpty() && !state.hasAnyLoyaltyCards) {
-                            onEventSent(Event.AddDocumentsClicked)
-                        } else if (state.allDocuments.isEmpty() && state.hasAnyLoyaltyCards) {
-                            onEventSent(Event.DrawerMenuItemClicked(DrawerMenuItem.LoyaltyCards))
-                        } else {
-                            onEventSent(Event.SeeAllDocumentsClicked)
+                            DocumentIdentityCard(
+                                title = documentTitle,
+                                identification = "$categoryLabel • ${doc.documentUi.documentIdentifier.toCardIdentificationTag()}",
+                                supportingLines =
+                                    listOf(
+                                        stringResource(R.string.home_screen_document_usages_left, doc.usagesLeft),
+                                        stringResource(R.string.home_screen_document_expires, doc.expiresAt),
+                                    ),
+                                customColor = doc.documentUi.customColor,
+                                onClick = { onEventSent(Event.DocumentClicked(doc.documentUi.uiData.itemId)) },
+                                modifier = Modifier.pagerCardTransform(page, pagerState.currentPage, pagerState.currentPageOffsetFraction),
+                            )
                         }
-                    },
-                    modifier = Modifier.pagerCardTransform(page, pagerState.currentPage, pagerState.currentPageOffsetFraction),
-                )
+
+                        is HomeBookmarkedItem.LoyaltyCard -> {
+                            LoyaltyCardPagerCard(
+                                name = item.name,
+                                barcodeValue = item.barcodeValue,
+                                barcodeFormat = item.barcodeFormat,
+                                onClick = { onEventSent(Event.LoyaltyCardClicked(item.id)) },
+                                modifier = Modifier.pagerCardTransform(page, pagerState.currentPage, pagerState.currentPageOffsetFraction),
+                            )
+                        }
+                    }
+                } else {
+                    SeeAllDocumentsCard(
+                        recentDocsCount = recentDocs.size,
+                        hasAnyDocuments = state.allDocuments.isNotEmpty() || state.hasAnyLoyaltyCards,
+                        onClicked = {
+                            if (state.allDocuments.isEmpty() && !state.hasAnyLoyaltyCards) {
+                                onEventSent(Event.AddDocumentsClicked)
+                            } else if (state.allDocuments.isEmpty() && state.hasAnyLoyaltyCards) {
+                                onEventSent(Event.DrawerMenuItemClicked(DrawerMenuItem.LoyaltyCards))
+                            } else {
+                                onEventSent(Event.SeeAllDocumentsClicked)
+                            }
+                        },
+                        modifier = Modifier.pagerCardTransform(page, pagerState.currentPage, pagerState.currentPageOffsetFraction),
+                    )
+                }
             }
-        }
         } // else
     }
 
@@ -604,37 +604,39 @@ private fun HomeSkeleton() {
     val alpha by infiniteTransition.animateFloat(
         initialValue = 0.15f,
         targetValue = 0.4f,
-        animationSpec = infiniteRepeatable(
-            animation = tween(durationMillis = 900),
-            repeatMode = RepeatMode.Reverse,
-        ),
+        animationSpec =
+            infiniteRepeatable(
+                animation = tween(durationMillis = 900),
+                repeatMode = RepeatMode.Reverse,
+            ),
         label = "skeleton_alpha",
     )
     val skeletonColor = MaterialTheme.colorScheme.onSurface.copy(alpha = alpha)
 
     // Welcome text skeleton
     Box(
-        modifier = Modifier
-            .padding(
-                start = SPACING_EXTRA_LARGE.dp,
-                end = SPACING_EXTRA_LARGE.dp,
-                top = SPACING_SMALL.dp,
-                bottom = SPACING_EXTRA_LARGE.dp,
-            )
-            .width(180.dp)
-            .height(28.dp)
-            .clip(RoundedCornerShape(8.dp))
-            .background(skeletonColor),
+        modifier =
+            Modifier
+                .padding(
+                    start = SPACING_EXTRA_LARGE.dp,
+                    end = SPACING_EXTRA_LARGE.dp,
+                    top = SPACING_SMALL.dp,
+                    bottom = SPACING_EXTRA_LARGE.dp,
+                ).width(180.dp)
+                .height(28.dp)
+                .clip(RoundedCornerShape(8.dp))
+                .background(skeletonColor),
     )
 
     // Document card skeleton
     Box(
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(horizontal = 32.dp)
-            .height(220.dp)
-            .clip(RoundedCornerShape(24.dp))
-            .background(skeletonColor),
+        modifier =
+            Modifier
+                .fillMaxWidth()
+                .padding(horizontal = 32.dp)
+                .height(220.dp)
+                .clip(RoundedCornerShape(24.dp))
+                .background(skeletonColor),
     )
 }
 
@@ -644,54 +646,60 @@ private fun TransactionSkeletonItem() {
     val alpha by infiniteTransition.animateFloat(
         initialValue = 0.15f,
         targetValue = 0.4f,
-        animationSpec = infiniteRepeatable(
-            animation = tween(durationMillis = 900),
-            repeatMode = RepeatMode.Reverse,
-        ),
+        animationSpec =
+            infiniteRepeatable(
+                animation = tween(durationMillis = 900),
+                repeatMode = RepeatMode.Reverse,
+            ),
         label = "trans_skeleton_alpha",
     )
     val skeletonColor = MaterialTheme.colorScheme.onSurface.copy(alpha = alpha)
 
     Row(
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(horizontal = SPACING_LARGE.dp, vertical = 12.dp),
+        modifier =
+            Modifier
+                .fillMaxWidth()
+                .padding(horizontal = SPACING_LARGE.dp, vertical = 12.dp),
         verticalAlignment = Alignment.CenterVertically,
     ) {
         // Icon placeholder
         Box(
-            modifier = Modifier
-                .size(40.dp)
-                .clip(RoundedCornerShape(12.dp))
-                .background(skeletonColor),
+            modifier =
+                Modifier
+                    .size(40.dp)
+                    .clip(RoundedCornerShape(12.dp))
+                    .background(skeletonColor),
         )
         Spacer(modifier = Modifier.width(12.dp))
         Column(modifier = Modifier.weight(1f)) {
             // Title line
             Box(
-                modifier = Modifier
-                    .width(140.dp)
-                    .height(14.dp)
-                    .clip(RoundedCornerShape(4.dp))
-                    .background(skeletonColor),
+                modifier =
+                    Modifier
+                        .width(140.dp)
+                        .height(14.dp)
+                        .clip(RoundedCornerShape(4.dp))
+                        .background(skeletonColor),
             )
             Spacer(modifier = Modifier.height(8.dp))
             // Subtitle line
             Box(
-                modifier = Modifier
-                    .width(90.dp)
-                    .height(12.dp)
-                    .clip(RoundedCornerShape(4.dp))
-                    .background(skeletonColor),
+                modifier =
+                    Modifier
+                        .width(90.dp)
+                        .height(12.dp)
+                        .clip(RoundedCornerShape(4.dp))
+                        .background(skeletonColor),
             )
         }
         // Trailing placeholder
         Box(
-            modifier = Modifier
-                .width(50.dp)
-                .height(14.dp)
-                .clip(RoundedCornerShape(4.dp))
-                .background(skeletonColor),
+            modifier =
+                Modifier
+                    .width(50.dp)
+                    .height(14.dp)
+                    .clip(RoundedCornerShape(4.dp))
+                    .background(skeletonColor),
         )
     }
 }
