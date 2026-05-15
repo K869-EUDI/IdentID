@@ -342,6 +342,13 @@
     <string name="preferences_palette_style_label">Paletės stilius</string>
     <string name="preferences_preset_colors_label">Išankstinės spalvos</string>
     <string name="preferences_fine_tune_colors_label">Tikslus spalvų derinimas</string>
+    <string name="preferences_seed_color_label">Seed Color</string>
+    <string name="preferences_color_style_label">Color Style</string>
+    <string name="preferences_color_tuning_label">Color Tuning</string>
+    <string name="preferences_hue_label">Atspalvis</string>
+    <string name="preferences_saturation_label">Sodrumas</string>
+    <string name="preferences_value_label">Vertė</string>
+    <string name="preferences_theme_preview_label">Temos peržiūra</string>
     <string name="preferences_brightness_label">Šviesumas</string>
     <string name="preferences_design_preview_title">Dizaino peržiūra</string>
     <string name="preferences_design_preview_primary_accent">Pagrindinis akcentas</string>

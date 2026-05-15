@@ -329,8 +329,6 @@
     <string name="preferences_theme_option_light">Light</string>
     <string name="preferences_theme_option_dark">Dark</string>
     <string name="preferences_theme_option_system_default">System Default</string>
-    <string name="preferences_oled_mode_label">OLED Mode</string>
-    <string name="preferences_dynamic_color_label">Dynamic Color</string>
     <string name="preferences_seed_color_label">Seed Color</string>
     <string name="preferences_color_style_label">Color Style</string>
     <string name="preferences_color_tuning_label">Color Tuning</string>
