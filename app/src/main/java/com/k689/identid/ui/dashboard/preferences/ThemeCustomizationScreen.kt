@@ -166,7 +166,7 @@ private fun ThemeCustomizationContent(
                 color = MaterialTheme.colorScheme.outlineVariant.copy(alpha = 0.5f),
             )
             ListItem(
-                headlineContent = { Text(stringResource(R.string.preferences_oled_mode_label)) },
+                headlineContent = { Text(stringResource(R.string.preferences_oled_dark_mode)) },
                 supportingContent = { Text(stringResource(R.string.preferences_oled_dark_mode_description)) },
                 trailingContent = {
                     Switch(
