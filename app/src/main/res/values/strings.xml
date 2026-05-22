@@ -524,6 +524,8 @@
     <string name="transaction_details_collapsed_supporting_text">@string/generic_view_details</string>
     <!--endregion-->
     <!-- region Proximity QR -->
+    <string name="proximity_permissions_title">Nearby Devices</string>
+    <string name="proximity_permissions_description">To connect with a nearby reader, the app needs permission to find and connect to nearby devices.</string>
     <string name="proximity_permissions_denied_error">Nearby device permissions are required for this feature.</string>
     <string name="proximity_qr_title">Present document in person</string>
     <string name="proximity_qr_subtitle">Show this QR code to a Relying Party to present a digital document.</string>
