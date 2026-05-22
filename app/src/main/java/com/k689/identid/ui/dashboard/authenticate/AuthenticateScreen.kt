@@ -16,8 +16,6 @@
 
 package com.k689.identid.ui.dashboard.authenticate
 
-import android.Manifest
-import android.os.Build
 import androidx.activity.ComponentActivity
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -28,15 +26,12 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.wrapContentHeight
-import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
@@ -49,29 +44,23 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import com.google.accompanist.permissions.rememberMultiplePermissionsState
-import com.google.accompanist.permissions.shouldShowRationale
 import com.k689.identid.R
 import com.k689.identid.extension.ui.openAppSettings
 import com.k689.identid.ui.component.AppIcons
 import com.k689.identid.ui.component.LargeActionFooter
 import com.k689.identid.ui.component.content.ContentScreen
-import com.k689.identid.ui.component.content.ContentTitle
 import com.k689.identid.ui.component.content.ScreenNavigateAction
 import com.k689.identid.ui.component.content.ToolbarConfig
 import com.k689.identid.ui.component.preview.PreviewTheme
 import com.k689.identid.ui.component.preview.ThemeModePreviews
+import com.k689.identid.ui.component.utils.PermissionUtils
 import com.k689.identid.ui.component.utils.SPACING_EXTRA_SMALL
-import com.k689.identid.ui.component.utils.SPACING_MEDIUM
 import com.k689.identid.ui.component.utils.SPACING_SMALL
 import com.k689.identid.ui.component.utils.screenWidthInDp
-import com.k689.identid.ui.component.utils.PermissionUtils
 import com.k689.identid.ui.component.wrap.WrapImage
 import com.k689.identid.ui.proximity.qr.component.rememberQrBitmapPainter
-import kotlinx.coroutines.channels.Channel
-import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.onEach
-import kotlinx.coroutines.flow.receiveAsFlow
 
 @OptIn(ExperimentalPermissionsApi::class)
 @Composable
@@ -88,7 +77,6 @@ internal fun AuthenticateScreen(
         rememberMultiplePermissionsState(permissions = nearbyDevicesPermissions) { results ->
             viewModel.setEvent(Event.PermissionsResult(results.values.all { it }))
         }
-
 
     LaunchedEffect(Unit) {
         viewModel.setEvent(
@@ -256,7 +244,6 @@ private fun QRCode(
         )
     }
 }
-
 
 @ThemeModePreviews
 @Composable

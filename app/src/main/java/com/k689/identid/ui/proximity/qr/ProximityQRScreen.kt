@@ -16,28 +16,21 @@
 
 package com.k689.identid.ui.proximity.qr
 
-import android.os.Build
 import androidx.activity.ComponentActivity
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.wrapContentHeight
-import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.ColorFilter
@@ -51,7 +44,6 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import com.google.accompanist.permissions.rememberMultiplePermissionsState
-import com.google.accompanist.permissions.shouldShowRationale
 import com.k689.identid.R
 import com.k689.identid.extension.ui.openAppSettings
 import com.k689.identid.extension.ui.paddingFrom
@@ -64,19 +56,14 @@ import com.k689.identid.ui.component.preview.PreviewTheme
 import com.k689.identid.ui.component.preview.ThemeModePreviews
 import com.k689.identid.ui.component.utils.LifecycleEffect
 import com.k689.identid.ui.component.utils.OneTimeLaunchedEffect
-import com.k689.identid.ui.component.utils.LifecycleEffect
-import com.k689.identid.ui.component.utils.OneTimeLaunchedEffect
 import com.k689.identid.ui.component.utils.PermissionUtils
 import com.k689.identid.ui.component.utils.SPACING_MEDIUM
 import com.k689.identid.ui.component.utils.SPACING_SMALL
 import com.k689.identid.ui.component.utils.screenWidthInDp
 import com.k689.identid.ui.component.wrap.WrapImage
 import com.k689.identid.ui.proximity.qr.component.rememberQrBitmapPainter
-import kotlinx.coroutines.channels.Channel
-import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.onEach
-import kotlinx.coroutines.flow.receiveAsFlow
 
 @OptIn(ExperimentalPermissionsApi::class)
 @Composable
@@ -93,7 +80,6 @@ fun ProximityQRScreen(
         rememberMultiplePermissionsState(permissions = nearbyDevicesPermissions) { results ->
             viewModel.setEvent(Event.PermissionsResult(results.values.all { it }))
         }
-
 
     ContentScreen(
         isLoading = state.isLoading,
@@ -203,7 +189,6 @@ private fun Content(
         SimplifiedNFCFooter(paddingValues)
     }
 }
-
 
 @Composable
 private fun SimplifiedNFCFooter(paddingValues: PaddingValues) {

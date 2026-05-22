@@ -539,6 +539,9 @@
     <string name="transaction_details_collapsed_supporting_text">@string/generic_view_details</string>
     <!--endregion-->
     <!-- region Proximity QR -->
+    <string name="proximity_permissions_title">Netoliese esantys įrenginiai</string>
+    <string name="proximity_permissions_description">Norint prisijungti prie netoliese esančio skaitytuvo, programai reikia leidimo rasti netoliese esančius įrenginius ir prie jų prisijungti.</string>
+    <string name="proximity_permissions_denied_error">Šiai funkcijai reikalingi leidimai naudoti netoliese esančius įrenginius.</string>
     <string name="proximity_qr_title">Pateikti dokumentą gyvai</string>
     <string name="proximity_qr_subtitle">Parodykite šį QR kodą pasikliaujančiajai šaliai, kad pateiktumėte skaitmeninį dokumentą.</string>
     <string name="proximity_qr_use_nfc">Arba dalinkitės per NFC</string>
